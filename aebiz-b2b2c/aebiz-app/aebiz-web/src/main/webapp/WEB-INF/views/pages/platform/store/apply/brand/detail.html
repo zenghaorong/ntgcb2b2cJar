@@ -1,0 +1,74 @@
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.config.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.all.min.js"></script>
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">${obj.storeMain.storeName} 品牌审核详情</a>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                            <tr>
+                                <td>${msg['goods.brand.column.name']}</td><td>${obj.brandName!}</td>
+                            </tr>
+                            <tr>
+                                <td>${msg['goods.brand.column.aliasName']}</td><td>${obj.aliasName!}</td>
+                            </tr>
+                            <tr>
+                                <td>${msg['goods.brand.column.url']}</td><td>${obj.url!}</td>
+                            </tr>
+                            <tr>
+                                <td>${msg['goods.brand.column.about']}</td>
+                                <td> <!--#for(o in typeList){#-->
+                                        ${o.name!}&nbsp;
+                                <!--#}#--></td>
+                            </tr>
+                            <tr>
+                                <td>${msg['goods.brand.column.imgurl']}</td><td> <!--# if(isNotEmpty(obj.imgurl)){ #--><img src='${obj.imgurl!}'><!--# }else{ #--><span>暂无图片</span><!--# } #--></td>
+                            </tr>
+                            <tr>
+                                <td>${msg['store.apply.brand.column.applyNote']}</td><td>${obj.applyNote}</td>
+                            </tr>
+                            <tr>
+                                <td>${msg['store.apply.brand.column.applyAt']}</td><td>${@date.getDate(obj.applyAt)}</td>
+                            </tr>
+                             <tr>
+                                <td>${msg['store.apply.brand.column.status']}</td><td>${@storeStatus.getStatus(obj.status)}</td>
+                            </tr>
+                             <tr>
+                                <td>${msg['store.apply.brand.column.checkNote']}</td><td>${obj.checkNote}</td>
+                            </tr>
+                         </tbody>
+                    </table>
+                    <div class="form-group col-xs-12">
+                        <label for="note" class="col-xs-2 control-label">${msg['goods.brand.column.note']}</label>
+
+                        <div class="col-xs-10">
+                            <textarea id="note" name="note" style="width:100%;height:200px;" readonly>${obj.note!}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>
+
+<script>
+
+    function clearFile() {
+        $("#img").html("");
+        $("#imgurl").val("");
+    }
+    var ue;
+    setTimeout(function () {
+        ue= new baidu.editor.ui.Editor({readonly:true});
+        ue.render('note');
+    },500);
+</script>

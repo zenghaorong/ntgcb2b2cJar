@@ -1,0 +1,96 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/dec/templates/pages/pagesIndex/${obj.templateUuid}" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/dec/templates/pages/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group" hidden="hidden">
+                            <label for="templateUuid" class="col-sm-2 control-label">${msg['dec.templates.pages.column.templateUuid']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="templateUuid" class="form-control" name="templateUuid" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.pages.column.templateUuid']}" value="${obj.templateUuid}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pageName" class="col-sm-2 control-label">${msg['dec.templates.pages.column.pageName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="pageName" class="form-control" name="pageName" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.pages.column.pageName']}" value="${obj.pageName}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pageFileName" class="col-sm-2 control-label">${msg['dec.templates.pages.column.pageFileName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="pageFileName" class="form-control" name="pageFileName" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.pages.column.pageFileName']}" value="${obj.pageFileName}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pageType" class="col-sm-2 control-label">${msg['dec.templates.pages.column.pageType']}</label>
+                            <div class="col-sm-8">
+                                <select id="pageType" class="select2-me form-control" name="pageType" data-parsley-selectrequired="true">
+                                    <option value="">-请选择-</option>>
+                                    <option value="1" <!--#if(obj.pageType==1){#-->selected<!--#}#-->>首页 </option>
+                                    <option value="2" <!--#if(obj.pageType==2){#-->selected<!--#}#-->>商品列表页</option>
+                                    <option value="3" <!--#if(obj.pageType==3){#-->selected<!--#}#-->>商品详情页</option>
+                                    <option value="4" <!--#if(obj.pageType==4){#-->selected<!--#}#-->>自定义页</option>
+                                    <option value="5" <!--#if(obj.pageType==5){#-->selected<!--#}#-->>频道页</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="col-sm-2 control-label">${msg['dec.templates.pages.column.description']}</label>
+                            <div class="col-sm-8">
+                                <textarea  id="description" class="form-control" name="description" data-parsley-required="true">${obj.description}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<script language="JavaScript">
+    $(document).ready(function () {
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<!--#}#-->

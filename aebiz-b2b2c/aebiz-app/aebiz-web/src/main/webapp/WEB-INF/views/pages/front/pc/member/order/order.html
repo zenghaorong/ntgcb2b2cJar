@@ -1,0 +1,121 @@
+<!--#
+include("/pages/front/pc/member/inc/header.html"){}
+#-->
+<div class="m-bd">
+	<div class="g-center f-push-30-t">
+		<!--#
+			include("/pages/front/pc/member/inc/left.html"){}
+		#-->
+		<div class="ps-main f-fl">
+			<div class="hd f-cb">
+				<ul class="tab-bar f-fl">
+					<li class="active" data-label><a href="javascript:void(0)" onclick="query(0)">全部订单</a></li>
+					<li data-label><a href="javascript:void(0)" onclick="query(1)">待付款</a></li>
+					<li data-label><a href="javascript:void(0)" onclick="query(2)">待发货</a></li>
+					<li data-label><a href="javascript:void(0)" onclick="query(3)">待收货</a></li>
+					<li data-label><a href="javascript:void(0)" onclick="query(4)">待评价</a><sup>有礼</sup></li>
+				</ul>
+				<div class="qwang-search">
+					<div class="search-input">
+						<input type="" name="id" id="" value="" placeholder="订单编号搜索" /><button type="submit" onclick="search()">搜索</button>
+					</div>
+				</div>
+			</div>
+
+			<div id="content" class="bd">
+
+			</div>
+
+			<div class="f-tar">
+				<div class="u-page-l page f-cb">
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--#
+	include("/pages/front/pc/member/inc/foot.html"){}
+#-->
+<!--#
+	include("/pages/front/pc/member/inc/tail.html"){}
+#-->
+<script src="/assets/front/pc/vendor/layer/layer.js"></script>
+<!--确认收货-->
+<div id="ly-receipt" class="m-layer-pop"><div class="info"><i class="iconfont icon-jinggao orange" style="font-size: 30px;"></i>&nbsp;确认收货?</div></div>
+<!--取消订单-->
+<div id="cancelOrder" class="m-layer-pop pop-cancelOrder">
+	<ul>
+		<li>
+			<label><span>*</span>取消原因：</label>
+			<select name="dictId" id="dictId">
+				<!--# for(var reason in cancelReasonList){ #-->
+				<option value="${reason.id!}">${reason.name!}</option>
+				<!--# } #-->
+			</select>
+		</li>
+	</ul>
+	<br /><br />
+	<div class="orange">
+		温馨提示:
+		<p>订单成功取消后无法恢复</p>
+		<p>该订单已付金额将返回银行卡/京东账户</p>
+		<p>这单后取消订单，使用的优惠劵将不再返还</p>
+	</div>
+</div>
+<!-- end -->
+
+<script src="${base!}/assets/front/pc/member/vendor/page/page.js"></script>
+<script src="${base!}/assets/front/pc/member/scripts/order.js"></script>
+<script language="JavaScript">
+    $(document).ready(function () {
+        //设置左侧选择框被选中是变红
+        $("#member_left li a[href|='/member/order']").parent("li").addClass("active").siblings("li").removeClass("active");
+
+        //alert($("#ulTop li a:checked").val());
+
+        //删除订单弹层
+        var id = " ";
+        $(document).on("click",".qx-delete",function(){
+            id = $(this).prev().val();
+            $("#prompt").text(" ");
+            var indexCause = layer.open({
+                type: 1,
+                content: $('#ly-delete'),
+                offset: '200px',
+                area: "560px",
+                title: ['取消订单(取消后不能恢复)', 'font-size:18px;color:#ba9963;font-weight:600'],
+                btn: ['确定', '取消']
+                ,yes: function(index, layero){
+                    //按钮【按钮一】的回调
+                    if($("#cause").val() != 0){
+                        layer.close(indexCause);
+                    }else{
+                        return false
+                    }
+                },
+                shadeClose: true,
+                btnAlign: 'c',
+                scrollbar: false,
+            })
+        });
+        //alert(status);
+       /* $(document).on("click",".layui-layer-btn0",function(){
+            //$.post("/member/order/update/"+id);
+            var cause = $("#cause").val();
+            if(cause == 0){
+                $("#prompt").text("请先选择一种理由");
+            }else{
+                $.ajax({
+                    type: "POST",
+                    url: "/member/order/update",
+                    data:{"id":id,"cause":cause},
+                    dataType: "JSON",
+                    success: function (data) {
+                        query(status);
+                    }
+                });
+            }
+        });*/
+    });
+</script>

@@ -1,0 +1,231 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/member/level" id="goBack" data-pjax><i
+                class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/member/level/addDo" method="post">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="typeId" class="col-sm-2 control-label">${msg['member.type.memberType']}</label>
+                            <div class="col-sm-8">
+                                <select id="typeId" name="typeId" class="form-control">
+                                    <!--# for(type in typeList){#-->
+                                    <option value="${type.id}">${type.name}</option>
+                                    <!--#} #-->
+                                </select>
+                            </div>
+                        </div>
+                            <div class="form-group">
+                                <label for="name"
+                                       class="col-sm-2 control-label">${msg['member.level.column.name']}</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="name" class="form-control" name="name"
+                                           data-parsley-required="true"
+                                           placeholder="${msg['member.level.column.name']}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['member.level.column.imgurl']}</label>
+                                <div class="col-sm-8">
+                                    <div id="queue"></div>
+                                    <div>
+                                        <input id="file_upload"  type="file" multiple="true">
+                                    </div>
+                                    <div id="img" class="div-img-album"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="dis_count" class="col-sm-2 control-label">${msg['member.level.column.dis_count']}</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="dis_count" data-parsley-min="1" data-parsley-max="100"
+                                           class="form-control" data-parsley-type="integer" name="dis_count"
+                                           data-parsley-required="true"
+                                           placeholder="${msg['member.level.disCount.tip']}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="point"
+                                       class="col-sm-2 control-label">${msg['member.level.column.point']}</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="point" data-parsley-min="0" class="form-control"
+                                           data-parsley-type="integer" name="point" data-parsley-required="true"
+                                           placeholder="${msg['member.level.column.point']}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="defaultValue" class="col-sm-2 control-label">${msg['member.level.column.defaultValue']}</label>
+                                <div class="col-sm-8">
+                                    <input type="checkbox" id="defaultValue" name="defaultValue" class="js-switch-blue">
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley"
+                                    data-loading-text="${msg['globals.button.submit.tip']}">
+                                ${msg['globals.button.submit']}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+<style>
+    .div-img-album{
+        list-style-type: none;
+        margin: 2px;
+        height: 118px;
+        float: left;
+    }
+    .divImg{
+        float: left;
+        margin: 2px;
+        padding: 2px;
+        height:108px;
+        width:100px;
+        border: 1px solid #dcdcdc;
+        cursor: pointer;
+    }
+    .divImgD{
+        float: left;
+        margin: 2px;
+        padding: 2px;
+        height:108px;
+        width:100px;
+        border: 1px solid red;
+        cursor: pointer;
+    }
+</style>
+<script language="JavaScript">
+    function clearFile() {
+        $("#img").html("");
+        $("#queue").html("");
+        $("#imgurl").val("");
+    }
+    var uploadImageList = [];//上传图片
+
+    /*添加图片*/
+    function setAlbumImg(id){
+        $("#"+id).removeClass("divImg").addClass("divImgD").siblings().removeClass("divImgD").addClass("divImg");
+    }
+    /*删除图片*/
+    function delAlbumImg(id){
+        var data = $(this).prev('img').attr("src");
+        uploadImageList.splice(getImageListIndex(data),1);
+        $("#"+id).remove();
+    }
+
+    //获取上传图片的索引下标
+    function  getImageListIndex(val) {
+        for(var i=0;i<uploadImageList.length;i++){
+            if(uploadImageList[i] == val){
+                return i;
+            }
+        }
+    }
+
+    /**
+     * 初始化相册图方法
+     * @param queueId 队列元素ID
+     * @param fileuploadId 上传容器ID
+     * @param imgDivIdPrefix 图片DIV的名称前缀
+     * @param albumContainer 相册图容器Id
+     */
+    function initAlbumOptions(queueId,imgDivIdPrefix,albumContainerId) {
+        var albumContainer = document.getElementById(albumContainerId);
+        var sort = Sortable.create(albumContainer);
+        var imgIndex = $(albumContainer).children().size();
+        return {
+            'auto': true,
+            'multi': true,
+            'width': '100%',
+            'height': '35',
+            'buttonText': "请选择图片",
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024*5,
+            'queueSizeLimit': 1,
+            'formData': {},
+            'queueID': queueId,
+            'removeCompleted':true,
+            'removeTimeout':0,
+            'uploadScript': '${base!}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    uploadImageList.push(data.data);
+                    Toast.success(data.msg);
+                    var c = "divImg";
+                    imgIndex++;
+                    if(imgIndex == 1){
+                        c = "divImgD";
+                    }
+                    var imgDivId = imgDivIdPrefix + imgIndex;
+                    $(albumContainer).append("<div id='"+imgDivId+"' class='"+c+"'>" +
+                        "<img  onclick=\"setAlbumImg('"+imgDivId+"')\" src='" + data.data+ "' style='width:100px;height: 80px;margin-bottom: 1px;'><br>" +
+                        "<i style='float: right;padding-top: 4px;' class='fa fa-close' onclick=\"delAlbumImg('"+imgDivId+"')\"></i></div>");
+                    sort.destroy();
+                    sort = Sortable.create(albumContainer);
+                    $("#"+queueId).empty();
+                } else {
+                    Toast.error(data.msg);
+                }
+            },
+            'onSelect':function () {
+                if($("#img").children().size() >= 6){
+                    Toast.warning("${msg['goods.main.tip.selectimagessizestart'] + '1' + msg['goods.main.tip.selectimagessizeend']}");
+                    $("#file_upload").uploadifive('cancel', $('.uploadifive-queue-item').first().data('file'));
+                }
+            }
+        };
+    }
+
+    $(document).ready(function () {
+        myForm.init();
+        $('#file_upload').uploadifive(initAlbumOptions('queue','imgItem','img'));
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                if(uploadImageList.length > 0){
+                    var uploadInfo = {
+                        name : "uploadInfo",
+                        required: false
+                    }
+                    var data = JSON.stringify(uploadImageList);
+                    uploadInfo.value = data;
+                }else{
+                    uploadInfo.value = "";
+                }
+                arr.push(uploadInfo);
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    form.resetForm();
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<!--#}#-->
+
+

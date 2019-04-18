@@ -1,0 +1,265 @@
+<!--#
+layout("/layouts/store.html"){
+#-->
+<style>
+    .tool-search-line{
+        padding-top: 8px;
+    }
+    .goods-search-class {
+        width: 30%;min-width: 160px;
+    }
+    #classId{
+        cursor: pointer;
+    }
+</style>
+
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <div class="btn-group tool-button tool-search-line">
+            <form class="form-inline" id="search_form">
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <input type="text" class="form-control" name="id" placeholder="${msg['order.after.main.column.id']}">
+                </div>
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <select class="form-control" name="reason" placeholder="${msg['order.after.main.column.returnReason']}">
+                        <option value="">${msg['order.after.main.column.returnReason']}</option>
+                        <!--#for(reason in reasons){#-->
+                        <option value="${reason.name}">${reason.name}</option>
+                        <!--#}#-->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <select class="form-control" name="state" placeholder="${msg['order.after.main.column.returnReason']}">
+                        <option value="">${msg['order.after.main.column.afterSaleState']}</option>
+                        <!--#for(state in states){#-->
+                        <option value="${state.key}">${state.value}</option>
+                        <!--#}#-->
+                    </select>
+                </div>
+                <div class="form-group">
+                    ${msg['order.after.main.column.applyTime']}
+                </div>
+                <div class="input-group date form_datetime " style="width:140px;" >
+                    <input type="text" name="applyTime1" size="16" readonly="true" class="form-control" value=""
+                           data-parsley-required="true">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                </div>
+                <span>--</span>
+                <div class="input-group date form_datetime " style="width:140px;" >
+                    <input type="text" name="applyTime2" size="16" readonly="true" class="form-control" value=""
+                           data-parsley-required="true">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary" id="btn_search_ok">${msg['goods.main.search.btn.searchBtn']}</button>
+                    <button type="button" class="btn btn-default" id="btn_search_reset">${msg['goods.main.search.btn.resetBtn']}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</header>
+
+<div class="content-wrap ">
+    <div class="wrapper" style="min-height:500px;">
+        <div class="box-tab ">
+            <ul class="nav nav-tabs" id="goods_list_tabs">
+                <li class="active" >
+                    <a class="js-goods-tabs" data-good-name="" data-good-value="" href="#goods_list_tab_content" data-toggle="tab">${msg["order.after.enum.type.all"]}&nbsp;<span class="badge" data-key-name=""></span>
+                    </a>
+                </li>
+                <li class="" >
+                    <a class="js-goods-tabs" data-good-name="applyType" data-good-value="0" href="#goods_list_tab_content" data-toggle="tab">${msg["order.after.enum.type.onlyRefundment"]}&nbsp;<span class="badge" data-key-name=""></span>
+                    </a>
+                </li>
+                <li class="" >
+                    <a class="js-goods-tabs" data-good-name="applyType" data-good-value="1" href="#goods_list_tab_content" data-toggle="tab">${msg["order.after.enum.type.refundmentAndGoods"]}&nbsp;<span class="badge" data-key-name=""></span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="goods_list_tab_content">
+                    <div class="table-responsive no-border" style="min-height: 600px;">
+                        <table class="table table-bordered table-striped mg-t datatable">
+                            <thead>
+                            <tr>
+                                <th>${msg['order.after.main.column.id']}</th>
+                                <th>${msg['order.after.main.column.returnReason']}</th>
+                                <th>${msg['order.after.main.column.applyType']}</th>
+                                <th>${msg['order.after.main.column.storeName']}</th>
+                                <th>${msg['order.after.main.column.applyMan']}</th>
+                                <th>${msg['order.after.main.column.afterSaleState']}</th>
+                                <th>${msg['order.after.main.column.applyTime']}</th>
+                                <th width="10%">${msg['globals.table.column.operation']}</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--处理对话框-->
+<div class="modal fade" id="opeModal" tabindex="-1" role="dialog" aria-labelledby="opeModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 id="opeModalLabel">${msg['order.after.title.afterSaleHandle']}(<span style="color:red"></span>)</h4>
+            </div>
+            <div id="opModelContent">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language="JavaScript">
+    var datatable;
+    var Searcher = {};//datatable搜索对象
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "processing": true,//加载效果
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/store/order/afterSale/data",
+                "type": "post",
+                "dataType": "json",
+                "data": function (d) {
+                    var $search = $("#search_form");
+                    d.id = $("input[name='id']", $search).val().trim();
+                    d.state = $("[name='state']", $search).val();
+                    d.reason = $("[name='reason']", $search).val();
+                    d.applyTime1 = $("input[name='applyTime1']", $search).val();
+                    d.applyTime2 = $("input[name='applyTime2']", $search).val();
+                    if (Searcher.paramName && Searcher.paramValue) {
+                        d[Searcher.paramName] = Searcher.paramValue;
+                    }
+                }
+            },
+            "order": [[6, "desc"]],
+            "columns": [
+                {"data": "id", "bSortable": true},
+                {"data": "returnReason", "bSortable": true},
+                {"data": "applyType", "bSortable": true},
+                {"data": "storeName", "bSortable": true},
+                {"data": "applyMan", "bSortable": true},
+                {"data": "afterSaleStateName", "bSortable": true},
+                {"data": "applyTime", "bSortable": true}
+            ],
+            "columnDefs": [
+                {
+                    "targets":2,
+                    "render":function (data, type, row) {
+                        var str ="";
+                        switch (data) {
+                            case 0: str = "仅退款";break;
+                            case 1: str = "退货退款";break;
+                            case 2: str = "换货";break;
+                        }
+                        return str;
+                    }
+                },
+                {
+                    "targets": 6,
+                    "render": function (data, type, row) {
+                        return moment(parseInt(data * 1000)).format("YYYY-MM-DD HH:mm:ss");
+                    }
+                },
+                {
+                    "render": function (data, type, row) {
+                        var state = row.afterSaleState;
+                        var returnStr = '<div class="btn-group">' +
+                            '<button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"><i class="ti-settings"></i> <span class="ti-angle-down"></span></button>' +
+                            '<ul class="dropdown-menu" role="menu"><li><a href="${base}/store/order/afterSale/detail/' + row.id + '">${msg["globals.button.detail"]}</a></li>';
+                        if(state == 0){
+                            returnStr += '<li><a href="javascript:void(0);" onclick="handle(this,1,'+ row.id +')">${msg["order.after.button.agreeApply"]}</a></li><li><a href="javascript:void(0);" onclick="handle(this,2,'+ row.id +')">${msg["order.after.button.disagreeApply"]}</a></li>';
+                        }
+                        if(state == 8){
+                            returnStr += '<li><a href="javascript:void(0);" onclick="handle(this,3,'+ row.id +')">${msg["order.after.button.checkGoodsPass"]}</a></li><li><a href="javascript:void(0);" onclick="handle(this,4,'+ row.id +')">${msg["order.after.button.checkGoodsNotPass"]}</a></li>';
+                        }
+                        returnStr += '</ul></div>';
+                        return returnStr;
+                    },
+                    "targets": 7
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+    $(function () {
+        // 初始化表格数据
+        initDatatable();
+
+        $("#btn_search_ok").click(function () {
+            datatable.ajax.reload();
+        });
+
+        $("#btn_search_reset").click(function () {
+            $("#search_form input[type='text'],input[type='hidden'],select").val("");
+        });
+
+        $(".js-goods-tabs").off("click").on("click", function(){
+            var $a = $(this);
+            Searcher.paramName = $a.attr("data-good-name")||"";
+            Searcher.paramValue = $a.attr("data-good-value")||"";
+            datatable.ajax.reload();
+        });
+
+//        $("#goods_list_tabs>li.active>.js-goods-tabs").trigger("click");
+
+        /*时间选择控件*/
+        $('.form_datetime').datepicker({
+            minView: 0, //选择日期后，不会再跳转去选择时分秒
+            format: "yyyy-mm-dd", //选择日期后，文本框显示的日期格式
+            language: 'zh-CN', //汉化
+            autoclose: true, //选择日期后自动关闭
+//            todayBtn:  true,
+//            weekStart: 1,
+//            todayHighlight: 1,
+//            startView: 2,
+//            forceParse: 0,
+//            showMeridian: 1
+        });
+
+        // 模态框隐藏时触发：移除当前模态框的数据
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+
+    //操作处理
+    function handle(el,flag, id){
+        var name = $(el).text();
+        $("#opeModal").modal('show');
+        $("#opeModalLabel span").text(name);
+        var url = "${base}/store/order/afterSale/toSellerHandle";
+        $.post(url,{"flag":flag, "afterSaleId":id},function (data) {
+            $("#opModelContent").html(data);
+        });
+    }
+
+
+</script>
+<!--#}#-->

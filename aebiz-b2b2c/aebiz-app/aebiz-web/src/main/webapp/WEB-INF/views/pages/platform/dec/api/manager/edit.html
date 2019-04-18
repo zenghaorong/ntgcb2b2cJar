@@ -1,0 +1,170 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/dec/api" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/dec/api/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="interfaceName" class="col-sm-2 control-label">${msg['dec.api.column.interfaceName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="interfaceName" class="form-control" name="interfaceName" data-parsley-required="true"
+                                       placeholder="${msg['dec.api.column.interfaceName']}" value="${obj.interfaceName}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="groupUuid" class="col-sm-2 control-label">${msg['dec.api.column.groupUuid']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="groupUuid" class="form-control" name="groupUuid" data-parsley-required="true"
+                                       placeholder="${msg['dec.api.column.groupUuid']}" value="${obj.groupUuid}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="col-sm-2 control-label">${msg['dec.api.column.description']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="description" class="form-control" name="description" data-parsley-required="true"
+                                       placeholder="${msg['dec.api.column.description']}" value="${obj.description}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="groupName" class="col-sm-2 control-label">${msg['dec.api.column.groupName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="groupName" class="form-control" name="groupName" data-parsley-required="true"
+                                       placeholder="${msg['dec.api.column.groupName']}" value="${obj.groupName}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                        <label class="control-label col-sm-2">接口参数</label>
+                        <div class="col-sm-6"><button id="trAdd" onclick="javascript:;" title="新增" rel="tooltip" class="btn btn-success btn-sm pull-right"><i class="fa fa-plus"></i> 新增</button></div>
+                        <input type="hidden" name="tNumber" value="${count}" id="tNumber">
+                        <div class="col-sm-6 col-sm-offset-2">
+                            <table class="table">
+                                <thead>
+                                <th width="30%">参数名</th>
+                                <th width="20%">是否必须</th>
+                                <th width="35%">描述</th>
+                                <th width="100px">操作</th>
+                                </thead>
+                                <tbody>
+                                <!--# for(o in list){
+           #-->
+                                    <tr>
+                                        <td><input type="text" id="paramName" name="paramName${oLP.index}" class="form-control" value="${o.paramName}" data-rule-required="true" data-rule-minlength="2" data-rule-maxlength="15"></td>
+                                        <td>
+                                            <select id="whetherMust" name="whetherMust${oLP.index}" class="form-control">
+                                                <option value="1"<!--#if(o.whetherMust=="1"){#-->selected<!--#}#-->>是</option>
+                                                <option value="0"<!--#if(o.whetherMust=="0"){#-->selected<!--#}#-->>否</option>
+                                            </select>
+                                        </td>
+                                        <td><input id="paramDescribe" type="text" name="paramDescribe${oLP.index}" class="form-control" value="${o.paramDescribe}" data-rule-required="true" data-rule-minlength="2" data-rule-maxlength="40"></td>
+                                        <td><a href="javascript:void(0);" class="deletTr">删除</a></td>
+                                    </tr>
+                                <!--#
+                    }#-->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<script language="JavaScript">
+    $(document).ready(function () {
+        jQuery.validator.addMethod("selectrequired", function(value, element) {
+            if(value==""){
+                return false;
+            }else{
+                return true;
+            }
+        }, "该项为必选项");
+
+        $(".cancel").click(function(){
+            window.location.href = "";
+        });
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+    //动态添加tr
+    $("#trAdd").click(function(event){
+        var trNum =$(".table tr").size()-1;
+        trNum++;
+        var newSubTr = '<tr><td><input type="text" id="paramName" name="paramName'+trNum+'" class="form-control" data-rule-required="true"></td>'
+            + '<td><select id="whetherMust" name="whetherMust'+trNum+'" class="form-control"><option value="1">是</option><option value="0">否</option></select></td>'
+            + '<td><input type="text" id="paramDescribe" name="paramDescribe'+trNum+'" class="form-control" data-rule-required="true"/></td>'
+            + '<td><a href="javascript:void(0);" class="deletTr">删除</a></td></tr>';
+        $("tr:last").after(newSubTr);
+        $("input[name='tNumber']").val(trNum);
+        event.preventDefault();
+    });
+    $(document).on("click",".deletTr",function(){
+        var num=$(".table tr").size();
+        var index=$(".table tr").index($(this).parent().parent());
+        if(num>index){
+            $(".table tr").each(function (ind,obj) {
+                if(ind+1>index){
+                    var pa=  $(obj).find("#paramDescribe").attr("name").replace(/[^0-9]/ig,"");
+                    $(obj).find("#paramDescribe").attr("name","paramDescribe"+(pa-1));
+                    $(obj).find("#paramName").attr("name","paramName"+(pa-1));
+                    $(obj).find("#whetherMust").attr("name","whetherMust"+(pa-1));
+                }
+            })
+        }
+        $(this).closest("tr").remove();
+    })
+   /* //删除当前行
+    function deleteTr(nowTr){
+        var num=$(".table tr").size();
+        var index=$(".table tr").index($(nowTr).parent().parent());
+        if(num>index){
+            $(".table tr").each(function (ind,obj) {
+                if(ind+1>index){
+                    var pa=  $(obj).find("#paramDescribe").attr("name").replace(/[^0-9]/ig,"");
+                    $(obj).find("#paramDescribe").attr("name","paramDescribe"+(pa-1));
+                    $(obj).find("#paramName").attr("name","paramName"+(pa-1));
+                    $(obj).find("#whetherMust").attr("name","whetherMust"+(pa-1));
+                }
+            })
+        }
+        $(nowTr).closest("tr").remove();
+    }*/
+</script>
+<!--#}#-->

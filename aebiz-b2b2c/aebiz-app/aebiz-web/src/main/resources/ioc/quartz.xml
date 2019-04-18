@@ -1,0 +1,41 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <!-- quartz线程池 -->
+    <bean id="quartzThreadPool" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <!-- 核心线程数  -->
+        <property name="corePoolSize" value="100"/>
+        <!-- 最大线程数 -->
+        <property name="maxPoolSize" value="200"/>
+        <!-- 队列最大长度 >=mainExecutor.maxSize -->
+        <property name="queueCapacity" value="1000"/>
+        <!-- 线程池维护线程所允许的空闲时间 -->
+        <property name="keepAliveSeconds" value="300"/>
+        <!-- 拒绝任务策略:被拒绝后直接在调用者线程中运行当前被放弃任务 -->
+        <property name="rejectedExecutionHandler">
+            <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy"/>
+        </property>
+    </bean>
+    <!-- 集群配置,请勿修改id值,此致用于判断是否启用定时任务 -->
+    <bean id="clusterScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="taskExecutor" ref="quartzThreadPool"/>
+        <!-- db.xml 事务管理器 -->
+        <property name="transactionManager" ref="transactionManager"/>
+        <!--可选，QuartzScheduler 启动时更新己存在的Job，这样就不用每次修改targetObject后删除qrtz_job_details表对应记录了 -->
+        <property name="overwriteExistingJobs" value="true"/>
+        <!--必须的，QuartzScheduler 延时启动，应用启动完后 QuartzScheduler 再启动 -->
+        <property name="startupDelay" value="30"/>
+        <!-- 设置自动启动 -->
+        <property name="autoStartup" value="true"/>
+        <property name="applicationContextSchedulerContextKey" value="applicationContextKey"/>
+        <property name="configLocation" value="classpath:custom/quartz.properties"/>
+    </bean>
+    <!-- 注入管理器 -->
+    <bean id="quartzManager" class="com.aebiz.app.web.commons.quartz.QuartzManagerImpl">
+        <property name="scheduler" ref="clusterScheduler"/>
+    </bean>
+</beans>

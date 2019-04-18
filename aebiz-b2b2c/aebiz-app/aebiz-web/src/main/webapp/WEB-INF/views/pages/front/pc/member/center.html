@@ -1,0 +1,500 @@
+<!--#
+include("/pages/front/pc/member/inc/header.html"){}
+#-->
+
+<div class="m-bd">
+	<div class="g-center f-push-30-t">
+		<!--#
+			include("/pages/front/pc/member/inc/left.html"){}
+		#-->
+		<script src="${base!}/assets/front/pc/member/uploadifive/jquery.uploadifive.min.js"></script>
+		<script src="${base!}/assets/front/pc/member/scripts/center.js"></script>
+		<link href="${base!}/assets/common/vendor/city-picker/css/picker.css" rel="stylesheet">
+		<script src="${base!}/assets/common/vendor/city-picker/js/data.86.all.js"></script>
+		<script src="${base!}/assets/common/vendor/city-picker/js/picker.86.js"></script>
+		<script src="${base!}/assets/front/pc/member/vendor/layer/layer.js"></script>
+		<div class="ps-main f-fl border">
+			<div class="hd">
+				<ul class="center-tab f-cb">
+					<li class="active" data-label><a href="#">会员资料</a></li>
+					<li  data-label><a href="#" id="integral">我的积分</a></li>
+				</ul>
+			</div>
+			<div class="bd">
+				<form action="" method="post" class="vip-info f-pdg-40-t" id="addForm" data-content style="display: block">
+					<div class="item-row f-cb" >
+						<p style="padding :10px 100px;color: black;font-size: 16px">亲爱的 ${username} ，填写真实的资料，有助于好友找到你哦。</p>
+					</div>
+					<div class="item-row f-cb" id="1">
+						<input type="hidden" name="id" value="${accountInfo.id}" id="infoId">
+						<label for="nickname" class="u-label">昵称：</label>
+						<div class="col-s"><input type="text" name="nickname" id="nickname" value="${accountInfo.nickname}" /></div>
+					</div>
+					<div class="item-row f-cb">
+						<label for="name" class="u-label">真实姓名：</label>
+						<div class="col-s"><input type="text" name="name" id="name" value="${accountInfo.name}" /></div>
+					</div>
+					<div class="item-row f-cb">
+						<label for="imgurl" class="u-label">个人头像：</label>
+						<img src="${accountInfo.imageUrl}" id="img1" style="height: 160px; width: 160px;">
+						<div id="img" style="padding: 5px;">
+						</div>
+						<div class="col-sm-8">
+							<div id="queue"></div>
+							<div class="input-group">
+								<span class="input-group-btn">
+									<input id="file_upload" style="color: #00a0e9" name="file_upload" type="file" multiple="false">
+								</span>
+							</div>
+							<input type="hidden" id="imgurl" name="imgurl" value="${accountInfo.imageUrl}">
+						</div>
+					</div>
+					<div class="item-row f-cb">
+						<label class="u-label">性别：</label>
+						<div class="col-l">
+							<input type="hidden" value="${accountInfo.sex}" id="sex">
+							<label class="radio"><input type="radio" name="sex" class="sex" id="sex1" value="男" />男</label>
+							<label class="radio"><input type="radio" name="sex" class="sex" id="sex2" value="女" />女</label>
+							<label class="radio"><input type="radio" name="sex" class="sex" id="sex3" value="保密" />保密</label>
+						</div>
+					</div>
+					<div  class="item-row f-cb">
+						<label for="years" class="u-label">生日：</label>
+						<div class="col-3">
+							<input type="hidden" value="${accountInfo.b_year}" id="Opyear">
+							<select name="b_year" id="years">
+								<option value="${accountInfo.b_year}"  id="year">年</option>
+							</select>
+						</div><div class="col-3">
+						<input type="hidden" value="${accountInfo.b_month}" id="Opmonth">
+						<select name="b_month" id="months">
+							<option value="${accountInfo.b_month}" id="month">月</option>
+						</select>
+					</div>
+						<div class="col-3">
+							<input type="hidden" value="${accountInfo.b_day}" id="Opday">
+							<select name="b_day" id="days">
+								<option value="${accountInfo.b_day}" id="day">日</option>
+							</select>
+						</div>
+					</div>
+					<div  class="item-row f-cb">
+						<label class="u-label">星座：</label>
+						<div class="col-s"><input type="text" readonly name="astro" id="astro" value="${accountInfo.astro}" /></div>
+					</div>
+					<div class="item-row f-cb">
+						<label  class="u-label">居住地：</label>
+						<div class="col-l">
+							<div style="position: relative" id ="dddd">
+								<input  type="text" data-toggle="city-picker"  id="address" value="">
+								<!--<input type="text" readonly id="totaladdress" class="form-control"  data-toggle="city-picker" data-parsley-required="true" placeholder="请选择地址">-->
+								<input type="hidden" id="province"  name="provinceId" value="${accountInfo.provinceId}">
+								<input type="hidden" id="city"  name="cityId" value="${accountInfo.cityId}">
+								<input type="hidden" id="county"  name="areaId" value="${accountInfo.areaId}">
+							</div>
+						</div>
+					</div>
+
+					<div class="item-row f-cb">
+						<label for="totaladdress" class="u-label">家乡地：</label>
+						<div class="col-l">
+							<div style="position: relative">
+								<input readonly type="text" data-toggle="city-picker"  data-parsley-required="true" id="totaladdress">
+								<!--<input type="text" readonly id="totaladdress" class="form-control"  data-toggle="city-picker" data-parsley-required="true" placeholder="请选择地址">-->
+								<input type="hidden" id="province1"  name="jx_province" value="${accountInfo.jx_province}">
+								<input type="hidden" id="city1"  name="jx_city" value="${accountInfo.jx_city}">
+								<input type="hidden" id="county1"  name="jx_county" value="${accountInfo.jx_county}">
+								<input type="hidden" id="delivery"  name="jx_town" value="">
+							</div>
+						</div>
+					</div>
+					<div>
+						<button id="submit" type="button"  class="r-btn">提 交</button>
+					</div>
+				</form>
+				<div class="integral-list" data-content>
+					<div class="tab-content">
+						<div class="tab-pane fade active in" id="3">
+							<div class="tip">你已获得<span id="span"></span>积分<small>订单发货次日积分处于冻结，已完成/已退款方可使用。</small></div>
+							<table class="list f-push-20-t table table-bordered table-striped mg-t datatable">
+								<thead >
+								<tr>
+									<th>来源/用途</th>
+									<th>积分变化</th>
+									<th>日期</th>
+									<th>备注</th>
+								</tr>
+
+								<!--# for(o in obj){ #-->
+								<input type="hidden" value="${o.newScore}" id="newScore">
+								<input type="hidden" value="${o.oldScore}" id="oldScore">
+								<!--# } #-->
+								<tbody id="usableCoupon">
+
+								</tbody>
+							</table>
+							<div class="f-tar">
+								<div class="u-page-l f-cb">
+									<a class="perv disable" id="prev">上一页</a>
+									<ul class="f-cb" id="pageCoupon">
+
+									</ul>
+									<a class="next disable" id="nextPage">下一页></a>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+<input type="hidden" id="totlePage" value="">
+<!--#
+	include("/pages/front/pc/member/inc/tail.html"){}
+#-->
+<!-- end -->
+<script language="JavaScript">
+    $(document).ready(function () {
+        //设置左侧选择框被选中是变红
+        $("#member_left li a[href|='/member/home/center']").parent("li").addClass("active").siblings("li").removeClass("active");
+
+        var page = 1;
+        var rows = 8;
+        var status = 1;
+        $(document).on("click","#integral",function () {
+            var  page = 1;
+            var  rows = 8;
+            var status = 1;
+            selectCoupon(page,rows,1);
+        });
+        //点击页数对应数字触发
+        $(document).on("click","#pageCoupon li",function(){
+            page = $(this).text();
+            selectCoupon(page, rows, status);
+        });
+        //点击下一页触发
+        $(document).on("click","#nextPage",function(){
+            page = parseInt($("#pageCoupon .active").text());//1
+            var totlePage = $("#totlePage").val();
+            if(page==1){
+                $("#prev").removeClass("disable")
+            }
+            if(page==parseInt(totlePage)-1){
+                $("#nextPage").addClass("disable")
+            }
+            if(page==parseInt(totlePage)){
+                return ;
+            }
+            page++;
+            selectCoupon((page),rows,status);
+        });
+        //点击上一页触发
+        $(document).on("click","#prev",function(){
+            page=parseInt($("#pageCoupon .active").text());
+            if(page==2){
+                $("#prev").addClass("disable")
+            }
+            if(page==1){
+                layer.msg('没有上一页了', {icon: 6});
+                $("#prev").addClass("disable")
+                return ;
+            }
+            selectCoupon((page-1),rows,status);
+        });
+        function selectCoupon(page,rows,status) {
+            $.ajax({
+                type:"POST",
+                url:"/member/home/data?page="+page+"&rows="+rows+"&status="+status,
+                dataType:"JSON",
+                success:function(data){
+                   // alert(JSON.stringify(data))
+                    if(parseInt(data.records)==0){
+                        $("#usableCoupon").html("<div> <p style='padding: 130px 340px;color: darkred'>没有积分</p> </div>");
+                        $("#pageCoupon").parent().parent().hide();
+                    }else {
+                        var pageStr = "";
+                        for(var i=0;i<parseInt(data.totalPage);i++){
+                            if(parseInt(data.page)==(i+1)){
+                                pageStr+="<li class='active' data-label><a>"+(i+1)+"</a></li>";
+                            }else{
+                                pageStr+="<li data-label><a>"+(i+1)+"</a></li>";
+                            }
+                        }
+                        var listStr = "";
+                        for(var i=0;i<parseInt(data.count);i++){
+                            if(data.rowList[i].newscore > data.rowList[i].oldscore) {
+                                listStr += "<tr>" +
+                                    "    <td class=\"type\"><div class=\"pic f-fl\"><img style='width: 100px;height: 100px' src='"+data.rowList[i].imgalbum+"'/></div>" +
+                                    "        <div class=\"info f-fl\"><span><a  href=\"\">"+data.rowList[i].name+"</a></span></div> </td>" +
+                                    "    <td class=\"code\" style='color:green;'>+" + (data.rowList[i].newscore - data.rowList[i].oldscore) + "</td>" +
+                                    "<td class=\"time\">" + moment(data.rowList[i].creatat) + "</td>" +
+                                    "    <td class=\"ps\">" + data.rowList[i].note  + "</td>" +
+                                    "   </tr>"
+                            }else{
+                                listStr += "<tr>" +
+                                    "    <td class=\"type\"><div class=\"pic f-fl\"><img style='width: 100px;height: 100px' src='"+data.rowList[i].imgalbum+"'/></div>" +
+                                    "        <div class=\"info f-fl\"><span><a  href=\"\">"+data.rowList[i].name+"</a></span></div> </td>" +
+                                    "    <td class=\"code\">" + (data.rowList[i].newscore - data.rowList[i].oldscore) + "</td>" +
+                                    "<td class=\"time\">" + moment(data.rowList[i].creatat) + "</td>" +
+                                    "    <td class=\"ps\">" + data.rowList[i].note  + "</td>" +
+                                    "   </tr>"
+                            }
+                        }
+                        $("#span").html(data.scoreAll);
+                        $("#usableCoupon").html(listStr);
+                        $("#usable").html("("+data.records+")");
+                        $("#pageCoupon").html(pageStr);
+                        $("#totlePage").val(data.totalPage);
+                        $("#totle").val(data.records);
+                    }
+                }
+            });
+        }
+
+        $('#file_upload').uploadifive({
+            'auto': true,
+            'multi': false,
+            'width': '70%',
+            'height': '35',
+            'buttonText': '请选择头像',
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024,
+            'formData': {},
+            'queueID': 'queue',
+            'uploadScript': '${base}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    $("#imgurl").val();
+                    // Toast.success(data.msg);
+                    $("#img1").hide();
+                    $("#img").html("<img src='" + data.data + "' style='width:150px;'>");
+                    $("#imgurl").val(data.data);
+                } else {
+                    clearFile();
+                    Toast.error(data.msg);
+                }
+            },
+            'onDrop': function (file, fileDropCount) {
+                clearFile();
+            },
+            'onClearQueue': function (queue) {
+                clearFile();
+            },
+            'onCancel': function () {
+                clearFile();
+            }
+        });
+
+        //在“我的积分”页面显示你已经获得的总积分
+        var newScore= parseInt($("#newScore").val());
+        var score = parseInt($("#newScore").val())-parseInt($("#oldScore").val());
+        $("#score").html(score);
+        if(isNaN(newScore)){
+            $("#span").html("0");
+        }else{
+            //$("#span").html(newScore);
+        }
+
+        //页面初始化时回显地址
+        var p1 = $("#province").val();
+        var c1 = $("#city").val();
+        var c2 = $("#county").val();
+        var p11 = $("#province1").val();
+        var c11 = $("#city1").val();
+        var c21 = $("#county1").val();
+        $("#address").citypicker('reset');
+        $("#address").citypicker('destroy');
+        $("#address").citypicker({
+            province: p1,
+            city: c1,
+            county: c2
+        });
+        $("#totaladdress").citypicker('reset');
+        $("#totaladdress").citypicker('destroy');
+        $("#totaladdress").citypicker({
+            province: p11,
+            city: c11,
+            county: c21
+        });
+        //判断性别
+        var a = $("#sex").val();
+        if(a=='男'){
+            $("#sex1").attr("checked",true);
+        }else if(a=='女'){
+            $("#sex2").attr("checked",true);
+        }else{
+            $("#sex3").attr("checked",true);
+        }
+        //判断年份
+        var a = $("#Opyear").val();
+        if(　a!=""){
+            $("#year").text(a);
+        }
+        $("#years").click(function () {
+            $("#year").text("年");
+        });
+        //判断月份
+        var m = $("#Opmonth").val();
+        if(　m!=""){
+            $("#month").text(m);
+        }
+        $("#months").click(function () {
+            $("#month").text("月");
+            $("#month").val("0")
+        });
+        //判断天
+        var d = $("#Opday").val();
+        if(　d!=""){
+            $("#day").text(d);
+        }
+        $("#days").click(function () {
+            $("#day").text("日");
+            $("#day").val("0")
+        });
+        //获取系统当前年份
+        var date = new Date().getFullYear();
+        //年份下拉框
+        for (var i = 1940; i <= date; i++) {
+            var sopt = "<option value='" + i + "'id='" + i + "'>" + i + "</option>";
+            $("#years").append(sopt);
+        }
+        //月份下拉框
+        for (var j = 1; j <= 12; j++) {
+            var month = "<option value='" + j + "'>" + j + "</option>";
+            $("#months").append(month);
+        }
+        //天数下拉框
+        for (var k = 1; k <= 31; k++) {
+            var day = "<option value='" + k + "'>" + k + "</option>";
+            $("#days").append(day);
+        }
+        //判断星座
+        $("#months,#days").click(function () {
+            var i = parseInt($("#months").val().trim());
+            var j = parseInt($("#days").val().trim());
+            if (!isNaN(i) && !isNaN(j)) {
+                if (i == 0 || j == 0){
+                    $("#astro").val("--------");
+                }else if (i == 1) {
+                    if (j>0 && j < 19) {
+                        $("#astro").val("摩羯座");
+                    } else {
+                        $("#astro").val("水瓶座");
+                    }
+                } else if (i == 2) {
+                    if (j>0 && j < 19) {
+                        $("#astro").val("水瓶座");
+                    } else {
+                        $("#astro").val("双鱼座");
+                    }
+                } else if (i == 3) {
+                    if (j>0 && j < 19) {
+                        $("#astro").val("双鱼座");
+                    } else {
+                        $("#astro").val("白羊座");
+                    }
+                } else if (i == 4) {
+                    if (j>0 && j < 19) {
+                        $("#astro").val("白羊座");
+                    } else {
+                        $("#astro").val("金牛座");
+                    }
+                } else if (i == 5) {
+                    if (j>0 && j < 19) {
+                        $("#astro").val("金牛座");
+                    } else {
+                        $("#astro").val("双子座");
+                    }
+                } else if (i == 6) {
+                    if (j>0 && j < 19) {
+                        $("#astro").val("双子座");
+                    } else {
+                        $("#astro").val("摩羯座");
+                    }
+                } else if (i == 7) {
+                    if (j>0 && j < 19) {
+                        $("#astro").val("巨蟹座");
+                    } else {
+                        $("#astro").val("狮子座");
+                    }
+                } else if (i == 8) {
+                    if (j>0 && j < 19) {
+                        $("#astro").val("狮子座");
+                    } else {
+                        $("#astro").val("处女座");
+                    }
+                } else if (i == 9) {
+                    if (j>0 && j < 19) {
+                        $("#astro").val("处女座");
+                    } else {
+                        $("#astro").val("天秤座");
+                    }
+                } else if (i == 10) {
+                    if (j>0 && j < 19) {
+                        $("#astro").val("天秤座");
+                    } else {
+                        $("#astro").val("天蝎座");
+                    }
+                } else if (i == 11) {
+                    if (j>0 && j < 19) {
+                        $("#astro").val("天蝎座");
+                    } else {
+                        $("#astro").val("射手座");
+                    }
+                } else if (i == 12) {
+                    if (j>0 && j < 19) {
+                        $("#astro").val("射手座");
+                    } else {
+                        $("#astro").val("摩羯座");
+                    }
+                }
+            }
+        });
+    });
+    //保存处理
+    $("#submit").click(function(){
+        //var s = $("#address").val();
+        //var s = $(".select-item").data("code");
+        var ss = " ";
+        $(".select-item").each(function () {
+            var s = $(this).data("code");
+            ss += s + "/";
+        });
+        var arr = new Array(); //定义一数组
+        var arr=ss.split("/"); //字符分割
+        $("#province").val(arr[0]);
+        $("#city").val(arr[1]);
+        $("#county").val(arr[2]);
+
+        $("#province1").val(arr[3]);
+        $("#city1").val(arr[4]);
+        $("#county1").val(arr[5]);
+
+        var mm = $("#month").val();
+        var dd = $("#day").val()
+        if(mm == 0){
+            $("#month").val($("#Opmonth").val());
+        }
+        if(dd == 0){
+            $("#day").val($("#Opday").val());
+        }
+        $.ajax({
+            type:"POST",
+            url:"/member/home/edit/${accountInfo.id}",
+            dataType:"JSON",
+            data:{"nickname":$("#nickname").val(),"name":$("#name").val(),"imageUrl":$("#imgurl").val(),"sex":$(".sex:checked").val(),
+                "b_year":$("#years").val(),"b_month":$("#months").val(),"b_day":$("#days").val(),
+                "astro":$("#astro").val(),"provinceId":$("#province").val().trim(),"cityId":$("#city").val().trim(),
+                "areaId":$("#county").val().trim(),"jx_province":$("#province1").val().trim(),"jx_city":$("#city1").val().trim(),
+                "jx_county":$("#county1").val().trim()
+            },
+            success:function(data){
+                window.location.href="/member/home/center";
+            }
+        });
+    });
+</script>

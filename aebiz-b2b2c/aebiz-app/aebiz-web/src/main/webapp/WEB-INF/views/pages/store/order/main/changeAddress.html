@@ -1,0 +1,103 @@
+<link href="${base!}/assets/common/vendor/city-picker/css/picker.css" rel="stylesheet">
+<link href="${base!}/assets/common/vendor/city-picker/css/main.css" rel="stylesheet">
+<!--<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/self/order/main" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+    <div class="pull-right">
+        <div class="btn-group tool-button">
+            <button class="btn btn-primary navbar-btn" type="button" id="save">
+                ${msg['globals.button.save']}</button>
+        </div>
+    </div>
+</header>-->
+<script src="${base!}/assets/common/vendor/city-picker/js/data.86.all.js" type="text/javascript"></script>
+<script src="${base!}/assets/common/vendor/city-picker/js/picker.86.js" type="text/javascript"></script>
+<div class="modal-body">
+    <form id="changeAddressForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+          action="${base}/store/order/main/changeAddressDo" method="post">
+        <div>
+            <input type="hidden" name="id" value="${obj.id}">
+            <div class="form-group">
+                <label  class="col-sm-2 control-label"><span style="color: red">*</span>收货人</label>
+                <div class="col-sm-8">
+                    <input type="text" id="deliveryName" name="deliveryName" class="form-control"  value="${obj.deliveryName}" data-parsley-required="true" placeholder="${msg['order.main.label.deliveryNamePlaceholder']}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="deliveryMobile" class="col-sm-2 control-label"><span style="color: red">*</span>${msg['order.main.label.deliveryMobile']}</label>
+                <div class="col-sm-8">
+                    <input type="text" id="deliveryMobile" class="form-control" name="deliveryMobile" value="${obj.deliveryMobile}" data-parsley-required="true" placeholder="${msg['order.main.label.deliveryMobilePlaceholder']}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="totalAddress" class="col-sm-2 control-label"><span style="color: red">*</span>${msg['order.main.label.totalAddress']}</label>
+                <div class="col-sm-8">
+                    <div style="position: relative">
+                        <input readonly type="text"   data-parsley-required="true" id="totalAddress">
+                        <!--<input type="text" readonly id="totalAddress" class="form-control"  data-toggle="city-picker" data-parsley-required="true" placeholder="请选择地址">-->
+                        <input type="hidden" id="deliveryProvince"  name="deliveryProvince" value="${@area.getNameByCode(obj.deliveryProvince)}">
+                        <input type="hidden" id="deliveryCity"  name="deliveryCity" value="${@area.getNameByCode(obj.deliveryCity)}">
+                        <input type="hidden" id="deliveryCounty"  name="deliveryCounty" value="${@area.getNameByCode(obj.deliveryCounty)}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-8 col-md-offset-2">
+                    <textarea id="deliveryAddress" name="deliveryAddress" class="form-control"  data-parsley-required="true" rows="3">${obj.deliveryAddress}</textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" style="float: left" data-dismiss="modal" >关闭</button>
+    <button class="btn btn-primary navbar-btn" type="button" id="save" >确认</button>
+</div>
+<style>
+    input{
+        min-width: 20px !important;
+    }
+    .control-label{
+        padding-top: 0px !important;
+    }
+    .city-picker-span{
+        width: 100% !important;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('#changeAddressForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        window.location.reload();
+                    },500)
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+        $("#save").on("click",function () {
+            if ($('#totalAddress').data('citypicker')) {
+                $('#deliveryProvince').val($("span[data-count='province']").attr("data-code"));
+                $('#deliveryCity').val($("span[data-count='city']").attr("data-code"));
+                $('#deliveryCounty').val($("span[data-count='county']").attr("data-code"));
+            }
+            $('#changeAddressForm').submit();
+        })
+        var address ={
+            province: $("#deliveryProvince").val(),
+            city: $("#deliveryCity").val(),
+            county:$("#deliveryCounty").val()
+        }
+         $("#totalAddress").citypicker(address);
+    });
+
+</script>

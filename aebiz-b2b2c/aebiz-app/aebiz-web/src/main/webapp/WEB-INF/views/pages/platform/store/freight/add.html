@@ -1,0 +1,522 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.config.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.all.js"></script>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/store/freight" id="goBack" data-pjax><i
+                class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+    <div class="btn-group tool-button pull-right">
+        <a class="btn btn-primary navbar-btn" href="javascript:;" id="save" data-pjax>${msg['globals.button.save']}</a>
+    </div>
+</header>
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/store/freight/addDo" method="post">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="templateName" class="col-sm-1 control-label">${msg['store.freight.column.templateName']}</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="templateName" class="form-control" name="templateName"
+                                       data-parsley-required="true" data-parsley-maxlength="20"
+                                       placeholder="${msg['store.freight.column.templateName']}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">默认规则</label>
+                        <div class="col-sm-10">
+                            <span class="control-label" style="float: left">计费方式:</span>
+                            <select id="billingType" name="billingType" class="form-control" style="width: 120px;float: left">
+                                <option value="1">按件数</option>
+                                <option value="2">按重量</option>
+                                <option value="3">按体积</option>
+                            </select>
+                            <input style="width: 150px;float: left" data-parsley-type="integer" class="form-control"  type="text" name="defaultUnit" value="1" data-parsley-required="true"><input id="defaultUnit" readonly style="float: left;width: 40px;border-left:0px;border-top:0px;border-right:0px;border-bottom:1px" value="件内,">
+                            <input style="width: 150px;float: left" data-parsley-price="true" class="form-control" type="text" name="defautAffix" data-parsley-required="true" value="10.00"><span class="control-label" style="float: left">元,每增加</span>
+                            <input style="width: 150px;float: left" type="text" name="addUnit" class="form-control" data-parsley-type="integer" data-parsley-required="true" value="1">
+                            <input id="addUnit" readonly style="float: left;width: 80px;border-left:0px;border-top:0px;border-right:0px;border-bottom:1px" value="件,增加运费">
+                            <input style="width: 155px;float: left" type="text" data-parsley-price="true" class="form-control" name="addCost" data-parsley-required="true" value="10.00"> <span class="control-label" style="float: left">元</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">模板规则</label>
+                        <div class="col-sm-10">
+                            <table class="col-lg-12 table table-bordered">
+                                <tr>
+                                    <td colspan="9"><a id="addFreight" class="btn btn-primary navbar-btn"
+                                                       style="height: 30px;margin-top: 0px;float: right">增加规则</a></td>
+                                </tr>
+                                <tr>
+                                    <th>配送地区</th>
+                                    <th>商品分类</th>
+                                    <th>物流公司</th>
+                                    <th>计费方式</th>
+                                    <th>首件</th>
+                                    <th>首费</th>
+                                    <th>续件</th>
+                                    <th>续费</th>
+                                    <th>操作</th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="templateExplain" class="col-sm-1 control-label">模板说明</label>
+                        <div class="col-sm-10">
+                                <textarea id="templateExplain" name="templateExplain"
+                                          style="width: 100%; height: 100px;"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="enabled" class="col-sm-1 control-label">是否启用</label>
+                        <div class="col-sm-10 switcha">
+                            <div class="mr15">
+                                <input type="checkbox" id="enabled" name="enabled" class="js-switch-blue" value="1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <input type="hidden" name="temps"/>
+            </form>
+        </section>
+    </div>
+</div>
+<div id="areaEdit" class="modal fade bs-modal-sm" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12" align="left">
+                        <!--# for (o in areaList!) {#-->
+                        <input type="checkbox" name="areaCode" value="${o.code}"> ${o.name}
+                        <input id="${o.code}" type="hidden" name="areaName" value="${o.name}">
+                        <!--# }#-->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}
+                </button>
+                <button type="button" class="btn btn-primary" id="area_ok">${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="logisticsEdit" class="modal fade bs-modal-sm" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12" align="left">
+                        <!--# for (L in logisticsList!) {#-->
+                        <input type="checkbox" name="logisticsCode" value="${L.code}"> ${L.name}
+                        <input id="${L.code}" type="hidden" name="logisticsName" value="${L.name}">
+                        <!--# }#-->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}
+                </button>
+                <button type="button" class="btn btn-primary" id="logistics_ok">${msg["goods.class.column.enter"]}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialogSelectFrontClass" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeFrontClass" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary"  id="goods_ok" >${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language="JavaScript">
+
+    //初始化前台分类树
+    function initFrontClassTreeView() {
+        var $dialog = $("#dialogSelectFrontClass");
+        $("#jsTreeFrontClass").jstree({
+            plugins: ["wholerow", "json_data", "checkbox", "search"],
+            core: {
+                data: function (node, callback) {
+                    $.get("${base}/platform/store/freight/class/tree", function (ret) {
+                        var classes = [];
+                        if (ret) {
+                            classes = $(ret).map(function () {
+                                return {
+                                    id: this.id,
+                                    text: this.name,
+                                    parent: this.parentId == "" ? "#" : this.parentId,
+                                }
+                            }).get();
+                        }
+                        callback(classes);
+                    }, "json");
+                },
+                multiple: true
+            }
+        }).on("dblclick.jstree", function (node) {
+            var tree = $(this).jstree();
+            var node = tree.get_selected(true);
+            if (node.length && tree.is_leaf(node)) {
+                selectFrontClass();
+            }
+        }).on("select_node.jstree", function (e, data) {
+            //禁止选父节点
+            var tree = $(this).jstree();
+            if (tree.is_parent(data.node)) {
+                tree.open_node(data.node);
+            }
+        });
+
+        $('.js-search-class-input', $dialog).keyup(function () {
+            if(frontClassTo) {
+                clearTimeout(frontClassTo);
+            }
+            frontClassTo = setTimeout(function () {
+                var text = $.trim($('.js-search-class-input', $dialog).val());
+                if (text != "") {
+                    $('#jsTreeFrontClass').jstree(true).search(text);
+                }
+            }, 250);
+        });
+        $(".js-search-class", $dialog).click(function () {
+            var text = $.trim($(".js-search-class-input", $dialog).val());
+            if (text != "") {
+                $('#jsTreeFrontClass').jstree(true).search(text);
+            }
+        });
+    }
+
+
+    function fillArea() {
+        var temps = $("tr.js-tamp-tr").map(function () {
+            var areaCode = $(".js-area", this).val();
+            var goodsId = $(".js-goodsId", this).val();
+            var logisticsCode = $(".js-logistics", this).val();
+            var valuationType = $(".js-valuation", this).val();
+            var firstUnit = $("[name=firstUnit]", this).val();
+            var firstCost = FloatMul($("[name=firstCost]", this).val(), 100);
+            var continueCost = FloatMul($("[name=continueCost]", this).val(), 100);
+            var continueUnit = $("[name=continueUnit]", this).val();
+            return {
+                areaCode: areaCode,
+                goodsId: goodsId,
+                logisticsCode: logisticsCode,
+                valuationType: valuationType,
+                firstUnit: firstUnit,
+                firstCost: firstCost,
+                continueCost: continueCost,
+                continueUnit: continueUnit,
+            };
+        }).get();
+        $("[name=temps]:hidden").val(JSON.stringify(temps));
+    }
+    var needTransfer = ["defautAffix", "addCost"];
+    var ue;
+    $(document).ready(function () {
+        initFrontClassTreeView();
+        myForm.init();
+        setTimeout(function () {
+            ue = new baidu.editor.ui.Editor();
+            ue.render('templateExplain');
+        }, 500);
+        var addFreight = 1;
+        $("#save").click(function () {
+            fillArea();
+            if (isExist()) {
+                Toast.warning("存在重复")
+            }else{
+                $('#addForm').submit();
+            }
+        });
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                for (var i in arr) {
+                    //若提交的表单包含以上的金额,则元转换为分
+                    if (needTransfer.contains(arr[i].name)) {
+                        var val = arr[i].value;
+                        arr[i].value = FloatMul(val, 100);
+                    }
+                }
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    window.location.href="${base!}/platform/store/freight";
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+    $("#addFreight").click(function () {
+        addFreight = Number(addFreight)+1;
+        $(this)
+            .parent()
+            .parent()
+            .parent()
+            .append(
+                '<tr class="js-tamp-tr" id="addFreight' + addFreight + '"><td><input class="js-areaName" style="width: 80px;border-left:0px;border-top:0px;border-right:0px;border-bottom:1px"  type="text" readonly  placeholder="未添加地区"><input class="js-area" type="hidden"  name="areaCode"><a style="color: blue" data-toggle="modal" onclick="areaEdit(this)" href="javascript:void(0)">编辑</a></td><td> <input class="js-goods" type="text" readonly style="width: 80px;border-left:0px;border-top:0px;border-right:0px;border-bottom:1px" name="goodsName" placeholder="未添加商品"><input class="js-goodsId" type="hidden"  name="goodsId"><a data-toggle="modal" onclick="goodsEdit(this)" style="color: blue" href="javascript:void(0)">编辑</a> </td><td><input class="js-logisticsName"   type="text" readonly style="width: 80px;border-left:0px;border-top:0px;border-right:0px;border-bottom:1px" placeholder="未添加物流"><input class="js-logistics" type="hidden"  name="logisticsCode"><a data-toggle="modal" onclick="logisticsEdit(this)" style="color: blue" href="javascript:void(0)">编辑</a></td> <td><select    name="valuationType" class="js-valuation form-control"><option value="1">按件数</option><option value="2">按重量</option><option value="3">按体积</option></select></td><td><input type="text" name="firstUnit" data-parsley-type="integer" class="form-control" style="width:60px" value="" placeholder="首" data-parsley-required="true"/></td> <td><input type="text" name="firstCost" data-parsley-price="true" class="form-control" style="width:60px"  placeholder="首费"  data-parsley-required="true"/></td> <td><input type="text" name="continueUnit" data-parsley-type="integer" class="form-control" style="width:60px"  placeholder="续" data-parsley-required="true"/></td> <td><input type="text" name="continueCost" class="form-control" data-parsley-price="true" style="width:60px" value="" placeholder="续费" data-parsley-required="true"/></td> <td><a class="btn btn-primary navbar-btn" style="height: 30px;margin-top: 0px" onclick="removeFreight(' + addFreight + ')">删除</a></td> </tr>'
+            );
+    })
+    var variableArea;
+    function areaEdit(obj) {
+        variableArea = $(obj);
+        $('#areaEdit').on("show.bs.modal", function () {
+            var areas = variableArea.siblings(".js-area").val() || "";
+            if (areas != "") {
+                $(areas.split(",")).each(function () {
+                    $('#areaEdit [value=' + this + ']:checkbox').prop("checked", true);
+                })
+            }
+        });
+        $('#areaEdit').modal('show');
+    }
+    $("#area_ok").click(function () {
+        var areaObj = "";
+        var cks = $("#areaEdit :checked").map(function () {
+            var id = this.value;
+            areaObj += $("#" + id).val() + ";";
+            return this.value;
+        }).get().join(",");
+        variableArea.siblings(".js-area").val(cks);
+        $(".js-areaName", variableArea.parents("tr:first")).val(areaObj)
+        $('#areaEdit').on("hide.bs.modal", function () {
+            $('#areaEdit :checkbox').prop("checked", false);
+        });
+        $('#areaEdit').modal('hide');
+    })
+    var variableGoods;
+    function goodsEdit(obj) {
+        variableGoods = $(obj);
+        var ids = variableGoods.siblings(".js-goodsId").val().split(",");
+        var tree = $("#jsTreeFrontClass").jstree(true);
+        tree.deselect_all();
+        tree.select_node (ids);
+        $('#dialogSelectFrontClass').modal('show');
+    }
+
+    $("#goods_ok").click(function () {
+        var tree = $.jstree.reference("#jsTreeFrontClass");
+        var nodes = tree.get_bottom_selected(true);
+        var idsStr = $(nodes).map(function () {
+            return this.id;
+        }).get().join(",");
+        var text = $(nodes).map(function () {
+            return tree.get_path(this, "/");
+        }).get().join(",");
+        tree.close_all();
+        variableGoods.siblings(".js-goodsId").val(idsStr);
+        variableGoods.siblings(".js-goods").val(text);
+        $("#dialogSelectFrontClass").modal("hide");
+    })
+
+    var variableLogistics;
+    function logisticsEdit(obj) {
+        variableLogistics = $(obj);
+        $('#logisticsEdit').on("show.bs.modal", function () {
+            var logistics = variableLogistics.siblings(".js-logistics").val() || "";
+            if (logistics != "") {
+                $(logistics.split(",")).each(function () {
+                    $('#logisticsEdit [value=' + this + ']:checkbox').prop("checked", true);
+                })
+            }
+        });
+        $('#logisticsEdit').modal('show');
+    }
+
+    $("#logistics_ok").click(function () {
+        var logisticsObj = "";
+        var cks = $("#logisticsEdit :checked").map(function () {
+            var code = this.value;
+            logisticsObj += $("#" + code).val() + ";";
+            return this.value;
+        }).get().join(",");
+        variableLogistics.siblings(".js-logistics").val(cks);
+        $(".js-logisticsName", variableLogistics.parents("tr:first")).val(logisticsObj)
+        $('#logisticsEdit').on("hide.bs.modal", function () {
+            $('#logisticsEdit :checkbox').prop("checked", false);
+        });
+        $('#logisticsEdit').modal('hide');
+    })
+    function removeFreight(addFreight) {
+        $("#addFreight" + addFreight).detach();
+    }
+    //数组的包含方法
+    Array.prototype.contains = function (needle) {
+        for (i in this) {
+            if (this[i] == needle) return true;
+        }
+        return false;
+    }
+    //浮点数乘法运算
+    function FloatMul(arg1, arg2) {
+        var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+        try {
+            m += s1.split(".")[1].length
+        } catch (e) {
+        }
+        try {
+            m += s2.split(".")[1].length
+        } catch (e) {
+        }
+        return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+    }
+    $("#billingType").change(function(){
+        if($("#billingType").val()=="2"){
+            $("#defaultUnit").val("g内");
+            $("#addUnit").val("g,增加运费");
+        }
+        if($("#billingType").val()=="1"){
+            $("#defaultUnit").val("件内");
+            $("#addUnit").val("件,增加运费");
+        }
+        if($("#billingType").val()=="3"){
+            $("#defaultUnit").val("cm³内");
+            $("#addUnit").val("cm³,增加运费");
+        }
+
+    });
+
+    function isExist() {
+        var flag = false;
+        $("tr.js-tamp-tr").each(function () {
+            var $tr = $(this);
+            var rules = getArr($tr);
+            $("tr.js-tamp-tr").not($tr).each(function () {
+                var $others = getArr($(this));
+                if (duplicate(rules, $others)) {
+                    flag = true;
+                    return false;
+                }
+            });
+            if (flag) {
+                return false;
+            }
+        });
+        return flag;
+    }
+
+    function duplicate(srcs, targets) {
+        var flag = false;
+        $(srcs).each(function () {
+            var src = this;
+            $(targets).each(function () {
+                if (src == this) {
+                    flag = true;
+                    return false;
+                }
+            });
+            if (flag) {
+                return false;
+            }
+        });
+        return flag;
+    }
+
+    function getArr($tr) {
+        var arr = [];
+        var areaCodes = ($("[name='areaCode']", $tr).val()||"all").split(",");
+        var classes = ($("[name='goodsId']", $tr).val()||"all").split(",");
+        var logisticsCodes = ($("[name='logisticsCode']", $tr).val()||"all").split(",");
+        $(areaCodes).each(function () {
+            var areaCode = this;
+            $(classes).each(function () {
+                var clazz = this;
+                $(logisticsCodes).each(function () {
+                    var logisticsCode = this;
+                    arr.push(areaCode+","+clazz+""+logisticsCode);
+                });
+            });
+        });
+        return arr;
+    }
+    function isExist() {
+        var flag = false;
+        $("tr.js-tamp-tr").each(function () {
+            var $tr = $(this);
+            var rules = getArr($tr);
+            $("tr.js-tamp-tr").not($tr).each(function () {
+                var $others = getArr($(this));
+                if (duplicate(rules, $others)) {
+                    flag = true;
+                    return false;
+                }
+            });
+            if (flag) {
+                return false;
+            }
+        });
+        return flag;
+    }
+
+    function duplicate(srcs, targets) {
+        var flag = false;
+        fist:for (var i = 0; i < srcs.length; i++) {
+            for (var j = 0; j < srcs.length; j++) {
+                if (srcs[i] == targets[j]) {
+                    flag = true;
+                    break fist;
+                }
+            }
+        }
+        return flag;
+    }
+
+    function getArr($tr) {
+        var arr = [];
+        var areaCodes = $("[name='areaCode']", $tr).val().split(",");
+        var classes = $("[name='goodsId']", $tr).val().split(",");
+        var logisticsCodes = $("[name='logisticsCode']", $tr).val().split(",");
+        if (areaCodes.length == 0) {
+            areaCodes.push("all")
+        }
+        if (classes.length == 0) {
+            classes.push("all")
+        }
+        if (logisticsCodes.length == 0) {
+            logisticsCodes.push("all")
+        }
+        $(areaCodes).each(function () {
+            var areaCode = this;
+            $(classes).each(function () {
+                var clazz = this;
+                $(logisticsCodes).each(function () {
+                    var logisticsCode = this;
+                    arr.push(areaCode+","+clazz+""+logisticsCode);
+                });
+            });
+        });
+        return arr;
+    }
+
+
+</script>
+<!--#}#-->
+
+

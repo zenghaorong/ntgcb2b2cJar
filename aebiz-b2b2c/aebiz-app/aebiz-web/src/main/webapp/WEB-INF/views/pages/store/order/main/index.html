@@ -1,0 +1,713 @@
+<!--#
+layout("/layouts/store.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a id="add" class="btn btn-primary navbar-btn" href="${base}/store/order/main/add" data-pjax><i class="ti-plus"></i>手工录单</a>
+       <!-- <button class="btn btn-danger navbar-btn" onclick="delCheck()"><i class="ti-close"></i> ${msg['globals.button.delete.more']}</button>-->
+    </div>
+</header>
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <div class="box-tab">
+            <ul class="nav nav-tabs ">
+                <li class="active"><a href="#orderInfo" onclick="orderQuery(1)" data-toggle="tab"> <!--# if(obj.waitDeliveryNum > 0 ) {  #--><span class="badge pull-right" style="background-color: #ff2e1d">${obj.waitDeliveryNum}</span><!--# } #-->待发货&nbsp;</a> </li>
+                <li><a href="#orderInfo" onclick="orderQuery(2)" data-toggle="tab"> <!--# if(obj.waitVerifyNum > 0 ) { #--><span class="badge pull-right" style="background-color: #ff2e1d">${obj.waitVerifyNum}</span><!--# } #-->待审核&nbsp;</a> </li>
+                <li><a href="#orderInfo" onclick="orderQuery(3)" data-toggle="tab"> <!--# if(obj.waitPayNum > 0 ) {  #--><span class="badge pull-right" style="background-color: #ff2e1d">${obj.waitPayNum}</span><!--# } #-->待支付&nbsp;</a> </li>
+                <li><a href="#orderInfo" onclick="orderQuery(4)" data-toggle="tab"> <!--# if(obj.deliveryPayNum > 0 ) {  #--><span class="badge pull-right" style="background-color: #ff2e1d">${obj.deliveryPayNum}</span><!--# } #-->货到付款&nbsp;</a> </li>
+                <li><a href="#orderInfo" onclick="orderQuery(0)"  data-toggle="tab">全部订单</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="orderInfo">
+                    <div class="form-group">
+                        <label class="control-label col-xs-1">订单编号:</label>
+                        <div class="col-xs-2"> <input type="text" name="id"  class="form-control"></div>
+                        <label class="control-label col-xs-1">会员名称:</label>
+                        <div class="col-xs-2"> <input type="text" name="loginname"  class="form-control"></div>
+                        <button type="button" class="btn btn-info"  onclick="search()">查询</button>
+                        <button type="reset" onclick="reset()" class="btn btn-default">清空</button>
+                    </div>
+                    <div id="checkStatus"></div>
+                    <div class="table-responsive no-border"  style="min-height: 500px;">
+                        <table class="table s-table datatable">
+                            <thead>
+                            <tr>
+                                <th width="25%">商品信息</th>
+                                <th width="10%">单价(元)</th>
+                                <th width="6%">数量</th>
+                                <th width="10%">商品总金额</th>
+                                <th width="11%">订单应付金额</th>
+                                <th width="8%">支付方式</th>
+                                <th width="8%">订单来源</th>
+                                <th width="10%">订单状态</th>
+                                <th width="6%">操作</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--通用操作功能模态框-->
+<div class="modal fade" id="dialogOperation" tabindex="-1" role="dialog" aria-labelledby="dialogOperationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 80%;margin-left: 10%;height:70vh;top:5%">
+        <div  class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="dialogOperationModalLabel"></h4>
+            </div>
+            <div id="operationContent">
+
+            </div>
+            <!--<div class="modal-footer">
+                <button type="button" class="btn btn-default" style="float: left" data-dismiss="modal" >关闭</button>
+                <button class="btn btn-primary navbar-btn" type="button" id="save" >确认</button>
+            </div>-->
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!-- 删除订单 弹出模态 开始 -->
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 删除订单 弹出模态 结束 -->
+
+<!-- 关闭订单 弹出模态 开始 -->
+<div id="dialogCloseOrder" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['order.button.closeOrder']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['order.button.closeOrder.notice']}
+                    </div>
+                    <div class="col-xs-10 col-xs-offset-1" style="padding: 15px 0px">
+                        <select id="reason"  class="form-control" >
+                            <option value="">${msg['order.main.select.closeOrderTip']}</option>
+                            <!--# if(has(reasonList)){ #-->
+                            <!--#for(o in reasonList){#-->
+                            <option value="${o.code!}">${o.name!}</option>
+                            <!--#}#-->
+                            <!--# } #-->
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button id="okCloseOrder" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['order.button.closeOrder']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 关闭订单 弹出模态 结束 -->
+
+<!-- 订单审核 弹出模态 开始 -->
+<div id="dialogAudit" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['order.main.modal.dialogAudit.title']}</h4>
+            </div>
+            <div class="modal-body">
+               <div class="form-group">
+                   <input type="hidden" name="orderIds" id="orderIds"/>
+                    <label class="control-label col-xs-2">${msg['order.main.column.auditStatus']}</label>
+                    <label class="radio-inline"><input type="radio" name="checkStatus" value="1" checked>${msg["order.enum.checkstatus.pass"]}</label>
+                    <label class="radio-inline"><input type="radio" name="checkStatus" value="2" >${msg["order.enum.checkstatus.nopass"]}</label>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-2">${msg['order.main.column.remark']}</label>
+                    <textarea class="form-control" name="comment" style="width: 75%;height: 100px;"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button id="btn_ok_audit" type="button" onclick="audit();" class="btn btn-primary" data-loading-text="${msg['order.main.modal.dialogAudit.ok.loading']}">${msg["globals.button.confirm"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 订单审核 弹出模态 结束 -->
+<style>
+    .col-xs-1{
+        height: 34px;
+        line-height: 34px;
+    }
+    .col-xs-2{
+        width: 150px;
+    }
+    a{
+        cursor: pointer;
+    }
+    .order_imgbx{
+        float: left;
+        width: 82px;
+        height: 82px;
+        border: 1px solid #e5e5e5;
+        margin: 0px 8px;
+        overflow: hidden;
+        -webkit-transition: border 0.3s;
+        transition: border 0.3s;
+    }
+    table .s-input{margin: auto;}
+    table,table.s-table tr td,table tr {border: 1px solid #ddd;text-align: center;vertical-align: middle;}
+
+    .order_table_space{
+        height: 10px;
+        border: none !important;
+        padding: 0;
+    }
+
+    .order_button{
+        margin: 5px 0;
+    }
+</style>
+<script language="JavaScript">
+    var datatable;
+    var status=1;//默认查询待发货订单
+    var loginname="";
+    var id = "";
+    var checkStatus = [
+        {
+            id:1,
+            name: "deliveryStatus",
+            val: 0,
+            desc: "待配货"
+        }, {
+            id:2,
+            name: "deliveryStatus",
+            val: 1,
+            desc: "配货中"
+        }, {
+            id:3,
+            name: "payStatus",
+            val: 1,
+            desc: "待确认收款"
+        },{
+            id:4,
+            name: "deliveryStatus",
+            val: 2,
+            desc: "部分发货"
+        },{
+            id:5,
+            name: "deliveryStatus",
+            val: 3,
+            desc: "待收货"
+        },{
+            id:6,
+            name: "getStatus",
+            val: 1,
+            desc: "待评价"
+        }
+    ];
+    var checkedStatus = [];
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": false,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function (settings) {
+                var api = this.api();
+                var rows = api.rows( {page:'current'} ).nodes();
+                var data = api.rows( {page:'current'} ).data();
+                api.column(0, {page:'current'} ).data().each( function ( group, i ) {
+                    var trView = [];
+                    trView.push('<tr class="order_table_space"><td colspan="9" class="order_table_space"></td></tr>' +
+                                '<tr style="background-color: #F5F5F5;margin-top: 5px;"><th  colspan="9"><div style="float: left;font-weight: normal!important;"><input type="checkbox">&nbsp;&nbsp;'+ moment(parseInt((data[i]["orderAt"])*1000)).format("YYYY-MM-DD HH:mm:ss")+'  |  订单编号: '+data[i]["id"]+'  |  买家名称: '+ data[i]["accountUser"]["loginname"] + ' |  手机号码: '+ data[i]["accountUser"]["mobile"] +'</div></th></tr>');
+
+                    var goodsList = data[i]['goodsList'];
+                    if(goodsList != null){
+                        for(var n= 0;n< goodsList.length;n++){
+                            trView.push('<tr>' +
+                                          '<td><div><a target="_blank" href="/front/detail?sku='+ data[i]['goodsList'][n]['sku'] +'" class="order_imgbx"> <img src="'+ data[i]['goodsList'][n]['imgUrl'] +'" alt="..."></a></div><div><a target="_blank" href="/front/detail?sku='+ data[i]['goodsList'][n]['sku'] +'">'+ data[i]['goodsList'][n]['goodsName']+'&nbsp;&nbsp;&nbsp;&nbsp;'+data[i]['goodsList'][n]['name']+'</a></div></td>' +
+                                          '<td>¥' + setPrice(data[i]['goodsList'][n]['salePrice'])  +'</td>' +
+                                          '<td>' + data[i]['goodsList'][n]['buyNum']  +'</td>');
+
+                            if(n == 0){
+                                trView.push('<td  rowspan='+goodsList.length+'>' +'<p style="color: #ff4336">¥'+setPrice(data[i]['goodsPayMoney'])+'</p></td>' +
+                                            '<td  rowspan='+goodsList.length+'>' +'<p style="color: #ff4336">¥'+setPrice(data[i]['payMoney'])+'</p>'+'<p>(含运费：¥'+setPrice(data[i]['freightMoney'])+')'+'</p></td>' +
+                                            '<td  rowspan='+goodsList.length+'>' +'<p>'+payTypeRender(data[i]["payType"])+'</p></td>' +
+                                            '<td  rowspan='+goodsList.length+'>' +'<p>'+orderSrcRender(data[i]["orderSrc"])+'</p></td>' +
+                                            '<td rowspan='+goodsList.length+'>' + orderStatusRender(data[i]["orderStatus"],data[i]["payStatus"],data[i]["deliveryStatus"]) + '</td>' +
+                                            '<td rowspan='+goodsList.length+'>' +buttonRender(data[i]) + '</td>');
+                            }
+                            trView.push('</tr>');
+                        }
+                    }
+                    $(rows).eq( i ).replaceWith(trView.join());
+                });
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/store/order/main/data",
+                "type": "post",
+                "data": function (d) {
+                    if(status != null){
+                        d.status = status;
+                    }
+                    if(id != null && id != ""){
+                        d.id = id.trim();
+                    }
+                    if(loginname != null && loginname != ""){
+                        d.loginname = loginname.trim();
+                    }
+                    if(checkedStatus != null && checkedStatus.length > 0){
+                        d.checkedStatus = JSON.stringify(checkedStatus);
+                    }
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                    {"data": "id", "bSortable": true},
+                    {"data": "accountId","sDefaultContent" : ""},
+                    {"data": "accountUser.loginname","sDefaultContent" : ""},
+                    /*{"data": "storeId", "sDefaultContent" : ""},*/
+                   /* {"data": "storeMain.storeName","sDefaultContent" : "", "bSortable": true},*/
+                    {"data": "payMoney", "sDefaultContent" : "","bSortable": true},
+                    {"data": "payType","sDefaultContent" : "", "bSortable": true},
+                    {"data": "orderSrc","sDefaultContent" : "", "bSortable": true},
+                    {"data": "orderStatus","sDefaultContent" : "", "bSortable": true},
+                    {"data": "payStatus","sDefaultContent" : "", "bSortable": true},
+                    {"data": "deliveryStatus","sDefaultContent" : "","bSortable": true}
+                    /*{"data": "orderAt","sDefaultContent" : "", "bSortable": true}*/
+            ],
+            "columnDefs": [
+                {
+                    "targets": 8
+                }
+            ]
+        });
+        bindStatus(Number(status));
+        /*datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });*/
+
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+
+    //订单查询
+    function orderQuery(val) {
+        bindStatus(val);
+        status = val;
+        datatable.ajax.reload();
+    }
+
+    //订单状态勾选页面加载
+    function bindStatus(val) {
+        switch (val){
+            case 0:
+                $("#checkStatus").html("<div class='form-group'>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='3'> 待确认收款 </label>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='1'> 待配货 </label>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='2'> 配货中</label>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='4'> 部分发货</label>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='5'> 待收货 </label>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='6'> 待评价</label>" +
+                    "</div>");
+                break;
+            case 1:
+                $("#checkStatus").html("<div class='form-group'>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='1'> 待配货 </label> " +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='2'> 配货中</label>" +
+                    "</div>");
+                break;
+            case 2:
+                $("#checkStatus").html("");
+                break;
+            case 3:
+                $("#checkStatus").html("<div class='form-group'>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='3'> 待确认收款 </label>" +
+                    "</div>");
+                break;
+            case 4:
+                $("#checkStatus").html("<div class='form-group'>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='3'> 待确认收款 </label>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='1'> 待配货 </label>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='2'> 配货中</label>" +
+                    "</div>");
+                break;
+        }
+        //$("#checkStatus").find("input[type='checkbox']").prop("checked",false);
+        checkedStatus = [];
+        $("#checkStatus").find("input[type='checkbox']").each(function () {
+            $(this).change(function () {
+                checkedStatus = [];
+                $("#checkStatus").find("input[type='checkbox']:checked").each(function () {
+                    var checkedObj = getCheckStatus($(this).val());
+                    if(checkedObj != null){
+                        checkedStatus.push(checkedObj);
+                    }
+                })
+                datatable.ajax.reload();
+            })
+        })
+    }
+
+    //根据id 获取check的状态
+    function getCheckStatus(id) {
+        for(var i in checkStatus){
+            if(checkStatus[i].id == id){
+                return checkStatus[i];
+            }
+        }
+    }
+
+    //订单查询表单
+    function search() {
+        id = $("input[name='id']").val();
+        loginname = $("input[name='loginname']").val();
+        datatable.ajax.reload();
+    }
+
+    //订单查询条件重置
+    function reset() {
+        id = $("input[name='id']").val("");
+        loginname = $("input[name='loginname']").val("");
+    }
+
+    //订单审核弹出模态框
+    function auditModal(id) {
+        $('#orderIds').val(id);
+        $("#dialogAudit").modal("show");
+    }
+
+    //订单审核弹出模态框（批量操作）
+    function auditBatchModel() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = $(chks).map(function (i, n) {
+                if (n.orderStatus == 0) { // 待审核的订单
+                    return n.id;
+                }
+            }).get();
+            if (ids.length == 0) {
+                Toast.warning("${msg['order.main.tip.norowcanbeoperate']}");
+                return false;
+            }
+            $('#orderIds').val(ids);
+            $("#dialogAudit").modal("show");
+        } else {
+            Toast.warning("${msg['order.main.tip.selectgoodsfirst']}");
+        }
+    }
+
+    //确认审核的保存方法
+    function audit() {
+        var orderIds = $('#orderIds').val();
+        var dialog = $("#dialogAudit");
+        var checkStatus = $("input[name=checkStatus]:checked", dialog).val();
+        var comment = $("textarea[name=comment]", dialog).val();
+        if(checkStatus == 2 && (comment == null || comment == "")){
+            Toast.error("请填写审核不通过的原因");
+            return;
+        }
+        //alert('orderIds:'+orderIds+'--auditStatus:'+checkStatus+"--comment:"+comment);
+
+        $.post("${base!}/order/main/audit", $.param({ids:orderIds.toString(), checkStatus: checkStatus, comment: comment}, true), function (data) {
+            if (data.code == 0) {
+                $("#dialogAudit").modal("hide");
+                datatable.ajax.reload();
+            } else {
+                Toast.error(data.msg);
+            }
+        }, "json");
+    }
+
+    //删除订单（逻辑删除）
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/store/order/main/delOrder/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+
+    //批量删除订单
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#okDel").unbind("click");
+            dialog.find("#okDel").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/store/order/main/delOrder", {ids: ids.toString()}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null,false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("${msg['globals.button.delete.select']}");
+        }
+    }
+
+    //关闭订单
+    function closeOrder(id) {
+        var dialog = $("#dialogCloseOrder");
+        dialog.modal("show");
+        dialog.find("#okCloseOrder").unbind("click");
+        dialog.find("#okCloseOrder").bind("click", function (event) {
+            var btn = $(this);
+            //btn.button("loading");
+            var mark  = $("#reason").val();
+            if(mark == null || mark == ""){
+                Toast.error("请选择订单关闭原因");
+                return;
+            }
+            $.post("${base}/store/order/main/closeOrder/" + id, {mark:mark}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+
+    //支付方式渲染
+    function payTypeRender(data) {
+        var result='';
+        switch (data){
+            case 0:
+                result = "<span>${msg['order.enum.paytype.online']}</span>";
+                break;
+            case 1:
+                result = "<span>${msg['order.enum.paytype.cash']}</span>";
+                break;
+            case 2:
+                result = "<span>${msg['order.enum.paytype.pos']}</span>";
+                break;
+            case 3:
+                result = "<span>${msg['order.enum.paytype.aliqrcode']}</span>";
+                break;
+            case 4:
+                result = "<span>${msg['order.enum.paytype.transfer']}</span>";
+                break;
+            default:
+
+        }
+        return result;
+    }
+    
+    //订单来源渲染
+    function orderSrcRender(data) {
+        var result='';
+        switch (data){
+            case 0:
+                result = "<span>${msg['order.enum.source.pc']}</span>";
+                break;
+            case 1:
+                result = "<span>${msg['order.enum.source.wap']}</span>";
+                break;
+            case 2:
+                result = "<span>${msg['order.enum.source.wechat']}</span>";
+                break;
+            case 3:
+                result = "<span>${msg['order.enum.source.ios']}</span>";
+                break;
+            case 4:
+                result = "<span>${msg['order.enum.source.android']}</span>";
+                break;
+            case 5:
+                result = "<span>${msg['order.enum.source.tv']}</span>";
+                break;
+            case 6:
+                result = "<span>${msg['order.enum.source.hand']}</span>";
+                break;
+            default:
+
+        }
+        return result;
+    }
+
+    //订单状态渲染
+    function orderStatusRender(orderStatus,payStatus,deliveryStatus) {
+        var result = "无状态";
+        switch (orderStatus) {
+            case 0:
+                result = "待审核";
+                break;
+            case 1:
+                //如果不是货到付款的方式,则订单有待支付
+                switch (payStatus){
+                    case 0:
+                        result = "待支付";
+                        break;
+                    case 1:
+                        result = "待确认";
+                        break;
+                    case 2:
+                        result = "部分支付";
+                        break;
+                    case 3:
+                        switch (deliveryStatus){
+                            case 0:
+                                result = "待发货";
+                                break;
+                            case 1:
+                                result = "配货中";
+                                break;
+                            case 2:
+                                result = "部分发货";
+                                break;
+                            case 3:
+                                result = "已发货";
+                                break;
+                        }
+                        break;
+                    default:
+                }
+                break;
+            case 2:
+                result = "无效";
+                break;
+            case 3:
+                result = "取消";
+                break;
+            case 4:
+                result = "关闭";
+                break;
+            case 5:
+                result = "完成";
+                break;
+            default:
+        }
+        return result;
+    }
+
+    //按钮动态加载渲染方法
+    function buttonRender(row) {
+        var buttonList = [];
+        buttonList.push('<div class="order_button"><a class="btn btn-primary btn-xs" href="${base}/store/order/main/detail/' + row.id + '" data-pjax>${msg["globals.button.detail"]}</a></div>');
+        //如果是待审核的订单，则有审核按钮
+        if(row.orderStatus == 0){
+            buttonList.push('<div class="order_button"><a class="btn btn-danger btn-xs" href="javascript:;" onclick="auditModal(\'' + row.id + '\')">${msg["order.button.audit"]}</a></div>');
+        }
+        //订单在支付之前并且是活动订单,可以改价
+        if(row.payStatus < 2 && row.orderStatus == 1){
+            buttonList.push("<div class='order_button'><a class='btn btn-info btn-xs' onclick='operation(\"改价\",\"${base}/store/order/main/changePrice/" + row.id +"\")'>${msg['order.button.changePrice']}</a></div>");
+        }
+        //订单在物品发货之前可以改地址
+        if(row.deliveryStatus == 0 && row.orderStatus == 1){
+            buttonList.push("<div class='order_button'><a class='btn btn-info btn-xs' onclick='operation(\"改地址\",\"${base}/store/order/main/changeAddress/" + row.id +"\")'>${msg['order.button.changeAddress']}</a></div>");
+        }
+        if(row.payStatus < 3 && row.orderStatus == 1 && (row.payType == 0 || row.payType == 4)){
+            buttonList.push("<div class='order_button'><a class='btn btn-info btn-xs'  onclick='operation(\"上传支付凭证\",\"${base}/store/order/main/upload/" + row.id +"\")'>上传支付凭证</a></div>");
+        }
+
+        if(((row.payStatus == 1 || row.payStatus == 2) || (row.payType == 1 || row.payType == 2 || row.payType == 3)) && row.payStatus != 3 && row.orderStatus == 1 ){
+            buttonList.push("<div class='order_button'><a class='btn btn-info btn-xs' onclick='operation(\"确认收款\",\"${base}/store/order/main/receipt/" + row.id +"\")'>确认收款</a></div>");
+        }
+
+        if(row.payStatus <= 1 &&  row.orderStatus == 1){
+            buttonList.push('<div class="order_button"><a class="btn btn-info btn-xs" href="javascript:;" onclick="closeOrder(\'' + row.id + '\')">${msg["order.button.closeOrder"]}</a></div>')
+        }
+
+        if(row.orderStatus == 2 || row.orderStatus == 3 || row.orderStatus == 4 ){
+            buttonList.push('<div class="order_button"><a class="btn btn-info btn-xs" href="javascript:;" onclick="del(\'' + row.id + '\')">${msg["globals.button.delete"]}</a></div>');
+        }
+
+        if(row.orderStatus == 2){
+            buttonList.push('<div class="order_button"><a class="btn btn-info btn-xs" href="${base!}/store/order/main/currentPrice/' + row.id + '" data-pjax>现价恢复</a></div>');
+            buttonList.push('<div class="order_button"><a class="btn btn-info btn-xs" href="${base!}/store/order/main/costPrice/' + row.id + '" data-pjax>原价恢复</a></div>');
+        }
+
+        if((row.payStatus == 3 || (row.payType == 1 || row.payType == 2 || row.payType == 3))  && row.orderStatus == 1 && (row.deliveryStatus == 0 || row.deliveryStatus == 2)){
+            buttonList.push("<div class='order_button' ><a class='btn btn-info btn-xs' onclick='operation(\"创建配货单\",\"${base}/store/order/main/createDelivery/" + row.id +"\")'>创建配货单</a></div>");
+        }
+        return buttonList.join('');
+    }
+
+
+    $(function () {
+        initDatatable();
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+
+    ////通用操作方法
+    function  operation(name,url) {
+        $("#dialogOperation").modal('show');
+        $("#dialogOperationModalLabel").text(name);
+        $.post(url,{},function (data) {
+            $("#operationContent").html(data);
+        })
+    }
+    
+
+
+
+    $(function() {
+        $('#dialogOperation').on('hide.bs.modal',
+            function() {
+                $(this).removeData("bs.modal");
+                //$.pjax({url:"${base!}/store/order/main",  container: '#container'});
+            })
+    });
+
+</script>
+<!--#}#-->
+

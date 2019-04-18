@@ -1,0 +1,432 @@
+<!doctype html>
+<html>
+<head>
+
+    <style type="text/css">
+
+        .mb_0 {
+            margin-bottom: 0;
+        }
+
+        .tab-content .p_nopadding, .p_nopadding {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .p_left {
+            float: left;
+            padding: 0 10px;
+            line-height: 34px;
+        }
+
+        .p_right {
+            float: right;
+        }
+
+        .p_background {
+            background: #f1f1f1;
+            overflow: hidden;
+            padding: 15px 0;
+        }
+
+        .p_btn {
+            display: inline-block;
+            background: #2D2D2D;
+            line-height: 34px;
+            padding: 0 15px;
+            color: #fff;
+        }
+
+        .p_bj_bt {
+            padding-top: 20px;
+        }
+
+        .p_bj_bt b {
+            color: #e51400;
+            font-weight: lighter;
+        }
+
+        .p_bj_bt li.active b {
+            color: #fff;
+        }
+
+        .module-con .p_bj_list {
+            background: #fff;
+            overflow: hidden;
+            margin-bottom: -15px;
+            padding: 0;
+            clear: both;
+        }
+
+        .p_bj_list dl {
+            width: 100%;
+            overflow: hidden;
+            padding: 10px 2%;
+            border-bottom: 1px solid #ddd
+        }
+
+        .p_bj_list dl:hover {
+            background: #fffecf;
+        }
+
+        .p_bj_list dt {
+            width: 50px;
+            height: 50px;
+            float: left;
+            margin-right: 15px;
+        }
+
+        .p_bj_list dt img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .p_bj_list dd {
+            float: left;
+            width: 70%;
+            line-height: 22px;
+            padding-top: 5px;
+        }
+
+        .p_bj_list dd p {
+            height: 22px;
+            overflow: hidden;
+        }
+
+        .p_bj_list dd.operation {
+            float: right;
+            width: 20%;
+        }
+
+        .p_bj_list dd.operation a, .p_bj_list dd.operation span {
+            margin-right: 10px;
+        }
+
+    </style>
+    <script type="text/javascript" src=""></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+
+
+<form class="form-horizontal" id="pictureadform">
+
+    <div class="form-group">
+        <label for="loginname" class="col-sm-3 control-label">注册页面3地址</label>
+        <div class="col-sm-3">
+            <input type="text" name="defineUrl" id="defineUrl" placeholder="" class="form-control">
+        </div>
+    </div>
+
+
+</form>
+
+
+</body>
+
+
+<script type="text/javascript">
+    var pageJson = ${webPageModelJsonStr};
+
+    var componentsParam = {
+        initParamData: function (pageJson) {
+            if (typeof (pageJson) == "string") {
+                pageJson = JSON.parse(pageJson);
+            }
+
+            if (pageJson.needAsyncInit) {
+                $("input[name='needAsyncInit'][value=" + pageJson.needAsyncInit + "]")
+                    .attr("checked", true);
+            }
+            if (pageJson.imgSrc) {
+                $("#imgSrc").val(pageJson.imgSrc);
+            }
+            if (pageJson.defineUrl) {
+                $("#defineUrl").val(pageJson.defineUrl);
+            }
+            if (pageJson.defineTitle) {
+                $("#defineTitle").val(pageJson.defineTitle);
+            }
+
+
+
+        },
+        saveParamData: function () {
+            var needAsyncInit = $("input[name='needAsyncInit']:checked").val();
+            var qrtype = $("input[name='qrtype']:checked").val();
+            var defineUrl = $("#defineUrl").val();
+            if (!defineUrl) {
+                defineUrl = "";
+            }
+            var pageJson = {
+                compId: 'picturead',
+                "needAsyncInit": needAsyncInit,
+                "defineUrl": defineUrl
+
+            };
+            return pageJson;
+        },
+
+        showParamData: function () {
+
+            var paramData = [];
+
+            var srcImage = {
+                type: 'src',
+                target: 'img',
+                value: $("#imgSrc").val()
+            }
+
+            paramData.push(srcImage);
+
+            var srcText = {
+                type: 'text',
+                target: 'txt',
+                value: $("#defineTitle").val()
+            }
+
+            paramData.push(srcText);
+
+
+
+            return paramData;
+        }
+    }
+
+    componentsParam.initParamData(pageJson);
+</script>
+
+
+<script type="text/javascript">
+
+
+    function cancelRecommend(uuid, imgSrc) {
+
+
+        console.log(uuid);
+
+        $("#haveTake").html(" ");
+
+        $("#imgSrc").val("");
+
+        console.log(uuid);
+
+
+        $("#" + uuid).find("a").eq(1).text("选为广告");
+
+
+        $("#" + uuid).find("a").eq(1).attr("href", "javascript:recommend('" + uuid + "','"
+            + imgSrc + "')");
+
+        $("#recommendNum").html("未选");
+
+    }
+
+    function recommend(uuid, imgSrc) {
+
+        $("#imgSrc").val(imgSrc);
+
+        $("#haveTake").html(" ");
+
+        var dlhtml = $("#" + uuid).clone();
+
+        dlhtml.attr("id", uuid + uuid)
+
+        dlhtml.find("a").last().text("取消推荐");
+        dlhtml.find("a").last().attr("href",
+            "javascript:cancelRecommend('" + uuid + "','" + imgSrc + "')")
+
+        $("#haveTake").append(dlhtml);
+
+        $("#recommendNum").html("<font color='red'>已选</font>");
+
+
+        $("#productPage").find("dl").each(function () {
+
+
+            if (uuid == $(this).attr("id")) {
+
+                $(this).find("a").eq(1).text("");
+            }
+            else {
+                $(this).find("a").eq(1).text("选为广告");
+
+            }
+
+        })
+
+    }
+
+    function loadData(totalNum, pageShow) {
+
+
+        layui.use(['laypage', 'layer'], function () {
+            var laypage = layui.laypage, layer = layui.layer;
+            var pages = Math.ceil(totalNum / pageShow);
+            if (pages < 1) {
+                pages = 1;
+            }
+
+            var uri = window.location.href;
+            var reg = new RegExp("(^|&)nowPage=([^&]*)");
+            var r = uri.match(reg);
+            if (!$.isEmptyObject(r)) {
+                var curr = r[2];
+            }
+
+
+            laypage({
+                cont: $("#pagelayui"),
+                pages: pages //总页数
+                ,
+                groups: 5 //连续显示分页数
+                ,
+                curr: curr,
+                jump: function (obj, first) {
+
+                    if (!first) {
+
+                        //点击下一页的时候不需要从新计算totalNum
+                        showSearch2(obj.curr, "5");
+
+                    }
+
+                }
+            });
+        })
+    }
+
+    //列表展示
+    function showSearch(nowPage, pageShow) {
+
+        $("#pageShow").val(pageShow);
+        $("#nowPage").val(nowPage);
+
+        var categoryUuid = $("select[name='categoryUuid']").val();
+
+        var data = {
+            "nowPage": nowPage,
+            "pageShow": pageShow,
+            "categoryUuid": categoryUuid
+        };
+
+        $.ajax({
+            type: "GET",
+            url: ContextPath + "/collectionShopComp/getPageData",
+            data: data,
+            dataType: "json",
+            async: false,
+            success: function (data) {
+
+                var totalNum = data.totalNum;
+
+
+                var pageShow = "5";
+
+                loadData(totalNum, pageShow);
+
+                $("#productPage").html("");
+
+                $.each(data.rows, function (index, colum) {
+
+                    var oneHtml = $("#imageHtml").children().clone();
+
+                    oneHtml.attr("id", colum.imgUuid);
+
+                    oneHtml.find("img").attr("src", colum.imgSrc);
+
+                    oneHtml.find("a").eq(1).text("选为广告");
+                    oneHtml.find("span").text(colum.imgName);
+
+                    oneHtml.find("a").eq(1).attr(
+                        "href",
+                        "javascript:recommend('" + colum.imgUuid + "','"
+                        + colum.imgSrc + "')");
+
+                    $("#productPage").append(oneHtml[0].outerHTML);
+
+                })
+
+            }
+
+        })
+
+    }
+
+    function showSearch2(nowPage, pageShow) {
+
+        $("#pageShow").val(pageShow);
+        $("#nowPage").val(nowPage);
+
+        var categoryUuid = $("select[name='categoryUuid']").val();
+
+        var data = {
+            "nowPage": nowPage,
+            "pageShow": pageShow,
+            "categoryUuid": categoryUuid
+        };
+
+        $.ajax({
+            type: "GET",
+            url: ContextPath + "/collectionShopComp/getPageData",
+            data: data,
+            dataType: "json",
+            async: false,
+            success: function (data) {
+
+                var totalNum = data.totalNum;
+
+                var pageShow = "5";
+                $("#productPage").html("");
+
+                $.each(data.rows, function (index, colum) {
+
+                    var oneHtml = $("#imageHtml").children().clone();
+                    oneHtml.attr("id", colum.imgUuid);
+
+                    oneHtml.attr("id", colum.productUuid);
+
+                    oneHtml.find("img").attr("src", colum.imgSrc);
+                    oneHtml.find("a").eq(1).text("选为广告");
+                    oneHtml.find("span").text(colum.imgName);
+
+                    oneHtml.find("a").eq(1).attr(
+                        "href",
+                        "javascript:recommend('" + colum.imgUuid + "','"
+                        + colum.imgSrc + "')");
+
+                    $("#productPage").append(oneHtml[0].outerHTML);
+
+                })
+
+            }
+
+        })
+
+    }
+
+    function getImgList() {
+        $.ajax({
+            type: "GET",
+            url: ContextPath + "/userDefined/getImgLib",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                console.log(data.list);
+                var html = template('imgCate', data);
+                $('#categoryUuid').html(html);
+            }
+
+        })
+    }
+
+    $(function () {
+
+        showSearch("1", "5");
+        getImgList()
+
+    })
+</script>
+
+
+</html>

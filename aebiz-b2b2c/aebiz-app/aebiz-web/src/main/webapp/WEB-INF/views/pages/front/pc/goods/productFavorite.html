@@ -1,0 +1,16 @@
+<h4>我的收藏</h4>
+<div class="y_lovescroll">
+    <ul class="y_lvlist">
+        <!--# for(var favoriteProduct in favList!){ #-->
+            <li>
+                <div class="y_lovpic">
+                    <a href="${base!}/goods/${favoriteProduct.sku}" target="_blank">
+                        <img src="${favoriteProduct.img}">
+                        <span>${favoriteProduct.productName}</span>
+                    </a>
+                </div>
+                ￥${@money.fenToYuan(favoriteProduct.favoritePrice!)}
+            </li>
+        <!--# } #-->
+    </ul>
+</div>

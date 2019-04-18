@@ -1,0 +1,617 @@
+<!--#
+include("/pages/front/pc/member/inc/header.html"){}
+#-->
+<div class="m-bd">
+    <div class="g-center f-push-30-t">
+        <!--#
+               include("/pages/front/pc/member/inc/left.html"){}
+           #-->
+        <div class="ps-main f-fl">
+            <div class="u-branch g-center">
+                <i class="iconfont icon-wode"></i>个人中心 ><a href="#">订单管理</a> ><span>订单详情</span>
+            </div>
+            <div class="u-orderProcess f-cb">
+                    <!--#if(orderMain.payType ==0 ){#-->
+                        <!--#if(orderMain.payStatus ==0 ){#-->
+                            <div class="pcs-spot active">1</div>
+                            <div class="pcs-line"></div>
+                            <div class="pcs-spot">2</div>
+                            <div class="pcs-line"></div>
+                            <div class="pcs-spot">3</div>
+                            <div class="pcs-line"></div>
+                            <div class="pcs-spot">4</div>
+                            <div class="pcs-line"></div>
+                            <div class="pcs-spot">5</div>
+                            <div class="pcs-line"></div>
+                            <div class="pcs-spot">6</div>
+                            <ul class="f-cb">
+                                <li class="active"><p>拍下商品</p><small>${@date.getDate(orderMain.orderAt)}</small></li>
+                                <li><p>付款</p></li>
+                                <li><p>待发货</p></li>
+                                <li><p>配货中</p><small></small></li>
+                                <li><p>卖家发货</p><small></small></li>
+                                <li><p>确认收货</p></li>
+                            </ul>
+                        <!--# } #-->
+                        <!--# else if(orderMain.payStatus ==1){ #-->
+                            <div class="pcs-spot active">1</div>
+                            <div class="pcs-line  active"></div>
+                            <div class="pcs-spot active">2</div>
+                            <div class="pcs-line"></div>
+                            <div class="pcs-spot">3</div>
+                            <div class="pcs-line"></div>
+                            <div class="pcs-spot">4</div>
+                            <div class="pcs-line"></div>
+                            <div class="pcs-spot">5</div>
+                            <div class="pcs-line"></div>
+                            <div class="pcs-spot">6</div>
+                            <ul class="f-cb">
+                                <li><p>拍下商品</p><small>${@date.getDate(orderMain.orderAt)}</small></li>
+                                <li class="active"><p>付款</p><small>${@date.getDate(orderMain.payAt)}</small></li>
+                                <li><p>待发货</p></li>
+                                <li><p>配货中</p><small></small></li>
+                                <li><p>卖家发货</p><small></small></li>
+                                <li><p>确认收货</p></li>
+                            </ul>
+                        <!--# }#-->
+                        <!--# else{ #-->
+                            <!--#if(orderMain.getStatus ==0 ){#-->
+                                    <!--#if(orderMain.deliveryStatus ==0 ){#-->
+                                        <div class="pcs-spot active">1</div>
+                                        <div class="pcs-line active"></div>
+                                        <div class="pcs-spot active">2</div>
+                                        <div class="pcs-line active"></div>
+                                        <div class="pcs-spot active">3</div>
+                                        <div class="pcs-line"></div>
+                                        <div class="pcs-spot">4</div>
+                                        <div class="pcs-line"></div>
+                                        <div class="pcs-spot">5</div>
+                                        <div class="pcs-line"></div>
+                                        <div class="pcs-spot">6</div>
+                                        <ul class="f-cb">
+                                            <li><p>拍下商品</p><small>${@date.getDate(orderMain.orderAt)}</small></li>
+                                            <li><p>付款</p><small>${@date.getDate(orderMain.payAt)}</small></li>
+                                            <li class="active"><p>待发货</p><small></small></li>
+                                            <li><p>配货中</p><small></small></li>
+                                            <li><p>卖家发货</p><small></small></li>
+                                            <li><p>确认收货</p></li>
+                                        </ul>
+                                    <!--# }#-->
+                                    <!--# else if(orderMain.deliveryStatus ==1){ #-->
+                                    <div class="pcs-spot active">1</div>
+                                    <div class="pcs-line active"></div>
+                                    <div class="pcs-spot active">2</div>
+                                    <div class="pcs-line active"></div>
+                                    <div class="pcs-spot  active">3</div>
+                                    <div class="pcs-line active"></div>
+                                    <div class="pcs-spot active">4</div>
+                                    <div class="pcs-line"></div>
+                                    <div class="pcs-spot">5</div>
+                                    <div class="pcs-line"></div>
+                                    <div class="pcs-spot">6</div>
+                                    <ul class="f-cb">
+                                        <li><p>拍下商品</p><small>${@date.getDate(orderMain.orderAt)}</small></li>
+                                        <li><p>付款</p><small>${@date.getDate(orderMain.payAt)}</small></li>
+                                        <li><p>待发货</p></li>
+                                        <li class="active"><p>配货中</p><small></small></li>
+                                        <li><p>卖家发货</p><small></small></li>
+                                        <li><p>确认收货</p></li>
+                                    </ul>
+                                    <!--# }#-->
+                                    <!--# else if(orderMain.deliveryStatus ==2){ #-->
+                                        <div class="pcs-spot active">1</div>
+                                        <div class="pcs-line active"></div>
+                                        <div class="pcs-spot active">2</div>
+                                        <div class="pcs-line active"></div>
+                                        <div class="pcs-spot active">3</div>
+                                        <div class="pcs-line active"></div>
+                                        <div class="pcs-spot active">4</div>
+                                        <div class="pcs-line"></div>
+                                        <div class="pcs-spot">5</div>
+                                        <div class="pcs-line"></div>
+                                        <div class="pcs-spot">6</div>
+                                        <ul class="f-cb">
+                                            <li><p>拍下商品</p><small>${@date.getDate(orderMain.orderAt)}</small></li>
+                                            <li><p>付款</p><small>${@date.getDate(orderMain.payAt)}</small></li>
+                                            <li><p>待发货</p></li>
+                                            <li><p>配货中</p><small></small></li>
+                                            <li class="active"><p>卖家发货(部分商品已发货)</p><small>${@date.getDate(orderMain.deliveryAt)}</small></li>
+                                            <li><p>确认收货</p></li>
+                                        </ul>
+                                    <!--# }#-->
+                                    <!--# else if(orderMain.deliveryStatus ==3){ #-->
+                                    <div class="pcs-spot active">1</div>
+                                    <div class="pcs-line active"></div>
+                                    <div class="pcs-spot active">2</div>
+                                    <div class="pcs-line active"></div>
+                                    <div class="pcs-spot active">3</div>
+                                    <div class="pcs-line active"></div>
+                                    <div class="pcs-spot active">4</div>
+                                    <div class="pcs-line"></div>
+                                    <div class="pcs-spot">5</div>
+                                    <div class="pcs-line"></div>
+                                    <div class="pcs-spot">6</div>
+                                    <ul class="f-cb">
+                                        <li><p>拍下商品</p><small>${@date.getDate(orderMain.orderAt)}</small></small></li>
+                                        <li><p>付款</p><small>${@date.getDate(orderMain.payAt)}</small></li>
+                                        <li><p>待发货</p></li>
+                                        <li><p>配货中</p><small></small></li>
+                                        <li class="active"><p>卖家发货</p><small>${@date.getDate(orderMain.deliveryAt)}</small></li>
+                                        <li><p>确认收货</p></li>
+                                    </ul>
+                                    <!--# }#-->
+                            <!--# }#-->
+                            <!--# else{ #-->
+                                <div class="pcs-spot active">1</div>
+                                <div class="pcs-line active"></div>
+                                <div class="pcs-spot active">2</div>
+                                <div class="pcs-line active"></div>
+                                <div class="pcs-spot active">3</div>
+                                <div class="pcs-line active"></div>
+                                <div class="pcs-spot active">4</div>
+                                <div class="pcs-line  active"></div>
+                                <div class="pcs-spot  active">5</div>
+                                <div class="pcs-line  active"></div>
+                                <div class="pcs-spot  active">6</div>
+                                <ul class="f-cb">
+                                    <li><p>拍下商品</p><small>${@date.getDate(orderMain.orderAt)}</small></small></li>
+                                    <li><p>付款</p><small>${@date.getDate(orderMain.payAt)}</small></li>
+                                    <li><p>待发货</p></li>
+                                    <li><p>配货中</p><small></small></li>
+                                    <li><p>卖家发货</p><small>${@date.getDate(orderMain.deliveryAt)}</small></li>
+                                    <li  class="active"><p>确认收货</p></li>
+                                </ul>
+                            <!--# } #-->
+                        <!--# } #-->
+                    <!--# } #-->
+                <!--# else{ #-->
+                        <!--#if(orderMain.getStatus ==0 ){#-->
+                            <!--#if(orderMain.deliveryStatus ==0 ){#-->
+                                <div class="pcs-spot active">1</div>
+                                <div class="pcs-line  active"></div>
+                                <div class="pcs-spot active">2</div>
+                                <div class="pcs-line"></div>
+                                <div class="pcs-spot">3</div>
+                                <div class="pcs-line"></div>
+                                <div class="pcs-spot">4</div>
+                                <div class="pcs-line"></div>
+                                <div class="pcs-spot">5</div>
+                                <div class="pcs-line"></div>
+                                <div class="pcs-spot">6</div>
+                                <ul class="f-cb">
+                                    <li class="active"><p>拍下商品</p><small>${@date.getDate(orderMain.orderAt)}</small></li>
+                                    <li class="active"><p>待发货</p></li>
+                                    <li><p>配货中</p><small></small></li>
+                                    <li><p>卖家发货</p><small></small></li>
+                                    <!--#if(isNotEmpty(orderMain.payAt)){#-->
+                                    <li><p>付款</p><small>${@date.getDate(orderMain.payAt)}</small></li>
+                                    <!--# }#-->
+                                    <!--# else{#-->
+                                    <li><p>付款</p><small></small></li>
+                                    <!--# }#-->
+                                    <li><p>确认收货</p></li>
+                                </ul>
+                            <!--# }#-->
+                            <!--# else if(orderMain.deliveryStatus ==1){ #-->
+                                    <div class="pcs-spot active">1</div>
+                                    <div class="pcs-line active"></div>
+                                    <div class="pcs-spot active">2</div>
+                                    <div class="pcs-line active"></div>
+                                    <div class="pcs-spot active">3</div>
+                                    <div class="pcs-line"></div>
+                                    <div class="pcs-spot">4</div>
+                                    <div class="pcs-line"></div>
+                                    <div class="pcs-spot">5</div>
+                                    <div class="pcs-line"></div>
+                                    <div class="pcs-spot">6</div>
+                                    <ul class="f-cb">
+                                        <li  class="active"><p>拍下商品</p><small>${@date.getDate(orderMain.orderAt)}</small></li>
+                                        <li  class="active"><p>待发货</p></li>
+                                        <li class="active"><p>配货中</p><small></small></li>
+                                        <li><p>卖家发货</p><small></small></li>
+                                        <!--#if(isNotEmpty(orderMain.payAt)){#-->
+                                        <li><p>付款</p><small>${@date.getDate(orderMain.payAt)}</small></li>
+                                        <!--# }#-->
+                                        <!--# else{#-->
+                                        <li><p>付款</p><small></small></li>
+                                        <!--# }#-->
+                                        <li><p>确认收货</p></li>
+                                    </ul>
+                            <!--# }#-->
+                            <!--# else if(orderMain.deliveryStatus ==2){ #-->
+                                        <div class="pcs-spot active">1</div>
+                                        <div class="pcs-line active"></div>
+                                        <div class="pcs-spot active">2</div>
+                                        <div class="pcs-line active"></div>
+                                        <div class="pcs-spot active">3</div>
+                                        <div class="pcs-line active"></div>
+                                        <div class="pcs-spot active">4</div>
+                                        <div class="pcs-line"></div>
+                                        <div class="pcs-spot">5</div>
+                                        <div class="pcs-line"></div>
+                                        <div class="pcs-spot">6</div>
+                                        <ul class="f-cb">
+                                            <li class="active"><p>拍下商品</p><small>${@date.getDate(orderMain.orderAt)}</small></li>
+                                            <li class="active"><p>待发货</p></li>
+                                            <li class="active"><p>配货中</p><small></small></li>
+                                            <li class="active"><p>卖家发货</p><small>${@date.getDate(orderMain.deliveryAt)}</small></li>
+                                            <!--#if(isNotEmpty(orderMain.payAt)){#-->
+                                            <li><p>付款</p><small>${@date.getDate(orderMain.payAt)}</small></li>
+                                            <!--#}#-->
+                                            <!--#else{#-->
+                                            <li><p>付款</p><small></small></li>
+                                            <!--#}#-->
+                                            <li><p>确认收货</p></li>
+                                        </ul>
+                            <!--# }#-->
+                            <!--# else if(orderMain.deliveryStatus ==3){ #-->
+                                        <div class="pcs-spot active">1</div>
+                                        <div class="pcs-line active"></div>
+                                        <div class="pcs-spot active">2</div>
+                                        <div class="pcs-line active"></div>
+                                        <div class="pcs-spot active">3</div>
+                                        <div class="pcs-line active"></div>
+                                        <div class="pcs-spot active">4</div>
+                                        <div class="pcs-line"></div>
+                                        <div class="pcs-spot">5</div>
+                                        <div class="pcs-line"></div>
+                                        <div class="pcs-spot">6</div>
+                                        <ul class="f-cb showAt">
+                                            <li  class="active"><p>拍下商品</p><small>${@date.getDate(orderMain.orderAt)}</small></li>
+                                            <li  class="active"><p>待发货</p></li>
+                                            <li  class="active"><p>配货中</p><small></small></li>
+                                            <li  class="active"><p>卖家发货</p><small>${@date.getDate(orderMain.deliveryAt)}</small></li>
+                                            <!--#if(isNotEmpty(orderMain.payAt)){#-->
+                                            <li><p>付款</p><small>${@date.getDate(orderMain.payAt)}</small></li>
+                                            <!--#}#-->
+                                            <!--#else{#-->
+                                            <li><p>付款</p><small></small></li>
+                                            <!--#}#-->
+                                            <li><p>确认收货</p></li>
+                                        </ul>
+                            <!--# }#-->
+                        <!--# } #-->
+                        <!--# else{ #-->
+                            <div class="pcs-spot active">1</div>
+                            <div class="pcs-line active"></div>
+                            <div class="pcs-spot active">2</div>
+                            <div class="pcs-line active"></div>
+                            <div class="pcs-spot active">3</div>
+                            <div class="pcs-line active"></div>
+                            <div class="pcs-spot active">4</div>
+                            <div class="pcs-line active"></div>
+                            <div class="pcs-spot active">5</div>
+                            <div class="pcs-line active"></div>
+                            <div class="pcs-spot active">6</div>
+                            <ul class="f-cb">
+                                <li  class="active"><p>拍下商品</p><small>${@date.getDate(orderMain.orderAt)}</small></li>
+                                <li  class="active"><p>待发货</p></li>
+                                <li  class="active"><p>配货中</p><small></small></li>
+                                <li  class="active"><p>卖家发货</p><small>${@date.getDate(orderMain.deliveryAt)}</small></li>
+                                <!--#if(isNotEmpty(orderMain.payAt)){#-->
+                                <li  class="active"><p>付款</p><small>${@date.getDate(orderMain.payAt)}</small></li>
+                                <!--#}#-->
+                                <!--#else{#-->
+                                <li  class="active"><p>付款</p><small></small></li>
+                                <!--#}#-->
+                                <li class="active"><p>确认收货</p><small>${@date.getDate(orderMain.getAt)}</small></li>
+                            </ul>
+                        <!--# } #-->
+                    <!--# } #-->
+            </div>
+
+            <div class="m-odpc-bd">
+                <h3>订单概况</h3>
+                <div class="bd f-cb">
+                    <div class="left f-fl">
+                        <ul>
+                            <li class="f-cb"><label>订单编号：</label><p>${orderMain.id}</p></li>
+                            <li class="f-cb"><label>下单时间：</label><p>${@date.getDate(orderMain.orderAt)}</p></li>
+                            <li class="f-cb"><label>买家留言：</label><p>${orderMain.note}</p></li>
+                            <li class="f-cb"><label>收货地址：</label>${orderMain.deliveryName}     ${orderMain.deliveryMobile}<p>${@shopAreaService.getNameByCode(orderMain.deliveryProvince)}${@shopAreaService.getNameByCode(orderMain.deliveryCity)}${@shopAreaService.getNameByCode(orderMain.deliveryCounty)}${orderMain.deliveryAddress}</p></li>
+                        </ul>
+                        <div class="name">卖家名称：${storeMain.storeName}</div>
+                        <div class="city">
+                            城市：${storeMain.storeProvince} ${storeMain.storeCity} ${storeMain.storeCounty} ${storeMain.storeAddress}
+                            <div class="tel f-fr">电话：${storeMain.storeTel}</div>
+                        </div>
+                    </div>
+
+                    <div class="right f-fl">
+                        <input hidden="hidden" value="${closeAt}" id="closeAt">
+                        <div class="info">
+                            <!--#if(orderMain.payType ==0 ){#-->
+                            <!--#if(orderMain.payStatus ==0 ){#-->
+                                <!--#if(closeAt==0 ){#-->
+                                <div class="mark f-push-50-t f-fs4">订单关闭</div>
+                                还剩<mark>0</mark>天<mark>0</mark>时<mark>0</mark>分<mark>0</mark>秒支付
+                                <div class="f-push-10-t">超时订单将自动关闭</div>
+                                <!--# } #-->
+                                <!--#else{#-->
+                                <div class="mark f-push-50-t f-fs4">待支付</div>
+                                还剩<mark class="day">0</mark>天<mark class="hour">0</mark>时<mark class="min">0</mark>分<mark class="second">0</mark>秒支付
+                                <div class="f-push-10-t">超时订单将自动关闭</div>
+                                <div class=" f-push-50-t"><a href="/member/order/count/${orderMain.id}" class="r-btn f-push-10-t">去支付</a></div>
+                                <!--# } #-->
+                            <!--# } #-->
+                            <!--#else{#-->
+                                <!--#if(orderMain.getStatus ==0 ){#-->
+                                    <!--#if(orderMain.deliveryStatus ==0 ){#-->
+                                    <div class="mark f-push-50-t f-fs4">待发货</div>
+                                    <div class=" f-push-50-t"><a class="r-btn f-push-10-t">提醒发货</a></div>
+                                    <!--# }#-->
+                                    <!--#if(orderMain.deliveryStatus ==1 ){#-->
+                                    <div class="mark f-push-50-t f-fs4">配货中</div>
+                                    <!--# }#-->
+                                    <!--#else if(orderMain.deliveryStatus ==2 || orderMain.deliveryStatus ==3 ){#-->
+                                    <div class="mark f-push-50-t f-fs4">已发货</div>
+                                    <div class="f-push-5-t">
+                                        物流：${orderMain.expressName} 运单号：${orderMain.expressNo}
+                                        <div class="u-logistics f-ib">
+                                            <mark>查看物流<i class="iconfont icon-zhankai"></i></mark>
+                                            <div class="logistics-wrap f-dn">
+                                                <div class="hd">普通快递</div>
+                                                <div class="bd">
+                                                    <iframe name="kuaidi100" id="kuaidi100" style="margin-left: 0px;" src="${orderMain.expressInfo!}" width="550" height="380" marginwidth="0" marginheight="0"
+                                                            hspace="0" vspace="0" frameborder="0" scrolling="no">
+
+                                                    </iframe>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class=" f-push-50-t"><a class="r-btn f-push-10-t receipt" data="${orderMain.id}">确认收货</a></div>
+                                    <!--# }#-->
+                                <!--# }#-->
+                                <!--#else if(orderMain.getStatus ==1){#-->
+                                    <div class="mark f-push-50-t f-fs4">已收货</div>
+                                    <div class="f-push-5-t">
+                                        物流：${orderMain.expressName} 运单号：${orderMain.expressNo}
+                                        <div class="u-logistics f-ib">
+                                            <mark>查看物流<i class="iconfont icon-zhankai"></i></mark>
+                                            <div class="logistics-wrap f-dn">
+                                                <div class="hd">普通快递</div>
+                                                <div class="bd">
+                                                    <iframe name="kuaidi100" id="kuaidi100" style="margin-left: 0px;" src="${orderMain.expressInfo!}" width="550" height="380" marginwidth="0" marginheight="0"
+                                                            hspace="0" vspace="0" frameborder="0" scrolling="no">
+
+                                                    </iframe>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <!--# }#-->
+                            <!--# } #-->
+                            <!--# } #-->
+                            <!--#else{#-->
+                                <!--#if(orderMain.getStatus ==0 ){#-->
+                                    <!--#if(orderMain.deliveryStatus ==0 ){#-->
+                                    <div class="mark f-push-50-t f-fs4">待发货</div>
+                                    <div class=" f-push-50-t"><a class="r-btn f-push-10-t">提醒发货</a></div>
+                                    <!--# }#-->
+                                    <!--#if(orderMain.deliveryStatus ==1 ){#-->
+                                    <div class="mark f-push-50-t f-fs4">配货中</div>
+                                    <!--# }#-->
+                                    <!--#else if(orderMain.deliveryStatus ==2 || orderMain.deliveryStatus ==3 ){#-->
+                                    <div class="mark f-push-50-t f-fs4">已发货</div>
+                                    <div class="f-push-5-t">
+                                        物流：${orderMain.expressName} 运单号：${orderMain.expressNo}
+                                        <div class="u-logistics f-ib">
+                                            <mark>查看物流<i class="iconfont icon-zhankai"></i></mark>
+                                            <div class="logistics-wrap f-dn">
+                                                <div class="hd">普通快递</div>
+                                                <div class="bd">
+                                                    <iframe name="kuaidi100" id="kuaidi100" style="margin-left: 0px;" src="${orderMain.expressInfo!}" width="550" height="380" marginwidth="0" marginheight="0"
+                                                            hspace="0" vspace="0" frameborder="0" scrolling="no">
+
+                                                    </iframe>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class=" f-push-50-t"><a class="r-btn f-push-10-t receipt" data="${orderMain.id}">确认收货</a></div>
+                                    <!--# }#-->
+                                    <!--#else if(orderMain.deliveryStatus ==4){#-->
+                                        <div class="mark f-push-50-t f-fs4">申请退货中</div>
+                                    <!--# }#-->
+                                    <!--#else if(orderMain.deliveryStatus ==5){#-->
+                                     <div class="mark f-push-50-t f-fs4">部分商品已退货</div>
+                                    <!--# }#-->
+                                    <!--#else if(orderMain.deliveryStatus ==6){#-->
+                                    <div class="mark f-push-50-t f-fs4">已退货</div>
+                                    <!--# }#-->
+                            <!--# }#-->
+                            <!--#else if(orderMain.getStatus ==1){#-->
+                            <div class="mark f-push-50-t f-fs4">已收货</div>
+                            <div class="f-push-5-t">
+                                物流：${orderMain.expressName} 运单号：${orderMain.expressNo}
+                                <div class="u-logistics f-ib">
+                                    <mark>查看物流<i class="iconfont icon-zhankai"></i></mark>
+                                    <div class="logistics-wrap f-dn">
+                                        <div class="hd">普通快递</div>
+                                        <div class="bd">
+                                            <iframe name="kuaidi100" id="kuaidi100" style="margin-left: 0px;" src="${orderMain.expressInfo!}" width="550" height="380" marginwidth="0" marginheight="0"
+                                                    hspace="0" vspace="0" frameborder="0" scrolling="no">
+
+                                            </iframe>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--# }#-->
+                        <!--# }#-->
+
+                        </div>
+                    </div>
+
+                </div>
+                <!--# if(isNotEmpty(ListProduct)){ #-->
+                <h3>订单信息</h3>
+                <table class="m-orderInfo">
+                    <tr>
+                        <th width="410">订单信息</th><th width="120">单价（元）</th><th width="120">购买数量</th><th width="110">商品优惠金额</th>
+                    </tr>
+                    <!--# var x=0;for(var productLi in ListProduct){ x=x+1;#-->
+                    <tr>
+                        <td>
+                            <div class="f-cb mess">
+                                <img class="f-fl goDetail" src="${productLi.imgUrl!}" alt="" data="${productLi.sku!}" width="80" height="80" />
+                                <div class="info f-fl">
+                                    <p class="name goDetail" data="${productLi.sku!}">${productLi.goodsName}</p>
+                                    <!--# var specList =  @org.nutz.json.Json.fromJson(productLi.spec!);  #-->
+                                    <!--#if(isNotEmpty(specList!))  {for(var spec in specList!)
+                                    { #-->规格：${spec.spec_value_name!}&nbsp;&nbsp;<!--##--><!--# }} #--><!--##-->
+                                </div>
+                            </div>
+                        </td>
+                        <td>￥${@money.fenToYuan(productLi.salePrice!)}</td>
+                        <td>1</td>
+                        <td>￥${@money.fenToYuan(productLi.freeMoney!)}</td>
+                        <!--<td><span class="mark">
+                            &lt;!&ndash;#if(orderMain.payType ==0 ){#&ndash;&gt;
+                                &lt;!&ndash;#if(orderMain.payStatus ==0 ){#&ndash;&gt;待支付 &lt;!&ndash;# } #&ndash;&gt;
+                                &lt;!&ndash;# else if(orderMain.payStatus ==1){ #&ndash;&gt;待卖家确认收款&lt;!&ndash;# }#&ndash;&gt;
+                                &lt;!&ndash;# else{ #&ndash;&gt;
+
+                                &lt;!&ndash;#if(orderMain.getStatus ==0 ){#&ndash;&gt;
+                                &lt;!&ndash;#if(orderMain.deliveryStatus ==0 ){#&ndash;&gt;待发货 &lt;!&ndash;# }#&ndash;&gt;
+                                &lt;!&ndash;# else if(orderMain.deliveryStatus ==1){ #&ndash;&gt;配货中&lt;!&ndash;# }#&ndash;&gt;
+                                &lt;!&ndash;# else if(orderMain.deliveryStatus ==2){ #&ndash;&gt;部分货已发出&lt;!&ndash;# }#&ndash;&gt;
+                                &lt;!&ndash;# else if(orderMain.deliveryStatus ==3){ #&ndash;&gt;已发货&lt;!&ndash;# }#&ndash;&gt;
+                                &lt;!&ndash;# } #&ndash;&gt;
+                                &lt;!&ndash;# else{ #&ndash;&gt;
+                                        已收货
+                                &lt;!&ndash;# } #&ndash;&gt;
+                                &lt;!&ndash;# } #&ndash;&gt;
+                            &lt;!&ndash;# } #&ndash;&gt;
+                            &lt;!&ndash;# else{ #&ndash;&gt;
+                                &lt;!&ndash;#if(orderMain.getStatus ==0 ){#&ndash;&gt;
+                                    &lt;!&ndash;#if(orderMain.deliveryStatus ==0 ){#&ndash;&gt;待发货 &lt;!&ndash;# }#&ndash;&gt;
+                                    &lt;!&ndash;# else if(orderMain.deliveryStatus ==1){ #&ndash;&gt;配货中&lt;!&ndash;# }#&ndash;&gt;
+                                    &lt;!&ndash;# else if(orderMain.deliveryStatus ==2){ #&ndash;&gt;部分货已发出&lt;!&ndash;# }#&ndash;&gt;
+                                    &lt;!&ndash;# else if(orderMain.deliveryStatus ==3){ #&ndash;&gt;已发货&lt;!&ndash;# }#&ndash;&gt;
+                                &lt;!&ndash;# } #&ndash;&gt;
+                                &lt;!&ndash;# else{ #&ndash;&gt;
+                                    已收货
+                                &lt;!&ndash;# } #&ndash;&gt;
+                            &lt;!&ndash;# } #&ndash;&gt;
+                        </span></td>-->
+                    </tr>
+                    <!--# } #-->
+                </table>
+                <div class="f-tar payment">
+                    订单总优惠（元）: <span class="mark">￥${@money.fenToYuan(orderMain.freeMoney)}</span>
+                </div>
+                <div class="f-tar payment">
+                    运费（元）: <span class="mark">￥${@money.fenToYuan(orderMain.freightMoney)}</span>
+                </div>
+                <div class="f-tar payment">
+                    应付总额（元）: <span class="mark">￥${@money.fenToYuan(orderMain.payMoney)}</span>
+                </div>
+                <!--# } #-->
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+<!--确认收货-->
+<div id="ly-receipt" class="m-layer-pop"><div class="info"><i class="iconfont icon-jinggao orange" style="font-size: 30px;"></i>&nbsp;确认收货?</div></div>
+<!--猜你喜欢-->
+<!--#
+	include("/pages/front/pc/member/inc/foot.html"){}
+#-->
+<!--#
+	include("/pages/front/pc/member/inc/tail.html"){}
+#-->
+<script src="${base!}/assets/front/pc/member/vendor/page/page.js"></script>
+<script src="${base!}/assets/front/pc/member/scripts/guessFavorite.js"></script>
+<script src="${base!}/assets/front/pc/member/scripts/orderAfter.js"></script>
+<script>
+    //倒计时
+    function timer(intDiff) {
+        if(intDiff<=0){
+            window.clearInterval(f);
+            $('.day').parent(".info").html('<div class="mark f-push-50-t f-fs4">订单关闭</div>'+
+            '还剩<mark>0</mark>天<mark>0</mark>时<mark>0</mark>分<mark>0</mark>秒支付'+
+            '<div class="f-push-10-t">超时订单将自动关闭</div>');
+        }else {
+            var f=window.setInterval(function () {
+                var day = 0,
+                    hour = 0,
+                    minute = 0,
+                    second = 0; //时间默认值
+                if (intDiff > 0) {
+                    day = Math.floor(intDiff / (60 * 60 * 24));
+                    hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+                    minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+                    second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+                }
+                if (minute <= 9) minute = '0' + minute;
+                if (second <= 9) second = '0' + second;
+                $('.day').html(day);
+                $('.hour').html( hour);
+                $('.min').html(minute);
+                $('.second').html(second);
+                intDiff--;
+            }, 1000);
+        }
+    }
+    $(function () {
+        var intDiff=$("#closeAt").val();
+        timer(intDiff);
+    });
+    $(document).on("click",".goDetail",function(){
+           var sku=$(this).attr("data");
+           goProductDetail(sku);
+    });
+    //确认收货
+    $(document).on("click",".receipt",function(){
+        var orderId = $(this).attr("data");
+        layer.open({
+            type: 1,
+            content: $('#ly-receipt'),
+            offset: '200px',
+            area: '560px',
+            title: ['提示', 'font-size:18px;color:#ba9963;font-weight:600'],
+            btn: ['确认收到', '暂时没有'],
+            yes: function(index, layero){
+                $.post("/member/order/takeDelivery",{"orderId":orderId},function (result) {
+                    layer.close(index);
+                    if(result.code == 0){
+                        debugger;
+                        var data=result.data;
+                        $(".receipt").parent().prev().prev().html("已收货");
+                        $(".receipt").hide();
+                        $('.u-orderProcess').find("div").each(function(index,obj){
+                            if(!$(obj).hasClass("active")){
+                                $(obj).addClass("active");
+                            }
+                            if($(obj).html()=="5"){
+                                $(obj)
+                            }
+                        })
+                        if(data.type=="1"){
+                            $(".showAt").find("li").each(function(index,obj){
+                                if(index ==5 || index==6){
+                                    $(obj).html(new Date(parseInt(data.at)).toLocaleString());
+                                }
+                            })
+                        }
+                    }
+                })
+            },
+            btn2:function (index, layero) {
+                layer.close(index);
+            },
+            shadeClose: true,
+            btnAlign: 'c',
+            scrollbar: false,
+        });
+
+    })
+</script>
+</body>
+
+</html>

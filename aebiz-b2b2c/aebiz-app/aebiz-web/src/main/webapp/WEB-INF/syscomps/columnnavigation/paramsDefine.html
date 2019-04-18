@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+	<form class="form-horizontal">
+		<div class="form-group">
+			<label for="loginname" class="col-sm-3 control-label">是否异步加载</label>
+			<div class="col-sm-3">
+			<label class="radio-inline">
+				<input type="radio" name="needAsyncInit" value="true" placeholder="" checked="checked"> 是
+					</label>
+					<label class="radio-inline">
+					 <input type="radio" name="needAsyncInit" value="false" placeholder="">否
+					</label>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="loginname" class="col-sm-3 control-label">栏目分类</label>
+			<div class="col-sm-3">
+				<select id="categoryUuid" name="categoryUuid" class="form-control p_nopadding mr_10">
+				<!--# for(cid in list){
+          			#-->
+				<option value="${cid.categoryUuid}">${cid.categoryName}</option>
+				<!--#
+                }#-->
+				</select>
+			</div>
+		</div>
+	</form>
+</body>
+<script type="text/javascript">
+	var pageJson = ${webPageModelJsonStr};
+	var componentsParam = {
+		initParamData : function(pageJson) {
+			if (typeof (pageJson) == "string") {
+				pageJson = JSON.parse(pageJson);
+			}
+			if (pageJson.needAsyncInit) {
+				$("input[name='needAsyncInit'][value=" + pageJson.needAsyncInit + "]")
+				.attr("checked", true);		
+				}
+			if (pageJson.categoryUuid) {				
+				 $("#categoryUuid").find("option[value='"+pageJson.categoryUuid+"']").attr("selected",true);
+			}
+		},
+		saveParamData : function() {
+			var needAsyncInit = $("input[name='needAsyncInit']:checked").val();
+			var categoryUuid = $("#categoryUuid option:selected").val();
+
+			var pageJson = {
+				compId : 'columnavigation',
+				"needAsyncInit" : needAsyncInit,
+				"categoryUuid" : categoryUuid,
+			};
+			return pageJson;
+		}
+	}
+	componentsParam.initParamData(pageJson);
+</script>
+</html>

@@ -1,0 +1,309 @@
+<!--#
+layout("/layouts/store.html"){
+#-->
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button" style="padding-top: 8px;">
+            <form class="form-inline js-search-form" >
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <input type="text" class="form-control" name="name" placeholder="${msg['sales.rule.goods.column.name']}" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <div class="input-group date js-start-time" style="width: 135px">
+                        <input type="text" class="form-control input-sm" name="p_startAt" placeholder="起始时间" readonly>
+                        <span class="input-group-addon"><i class="ti-calendar"></i></span>
+                    </div>
+                    <span>至</span>
+                    <div class="input-group date js-end-time" style="width: 135px">
+                        <input type="text" class="form-control input-sm" name="p_endAt" placeholder="结束时间" readonly>
+                        <span class="input-group-addon" ><i class="ti-calendar"></i></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <select class="form-control" name="tmp_enabled">
+                        <option value="">是否启用</option>
+                        <option value="true">禁用</option>
+                        <option value="false">启用</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <select class="form-control" name="p_checkStatus">
+                        <option value="">请选择审核状态</option>
+                        <!--#for(status in salesCheckStatusEnumValues!){#-->
+                        <option value="${status.key}">${status.value}</option>
+                        <!--#}#-->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary js-search-ok" >${msg['globals.button.search']}</button>
+                    <button type="button" class="btn btn-default js-search-reset" >${msg['globals.button.reset']}</button>
+                </div>
+            </form>
+        </div>
+        <div class="btn-group tool-button pull-right">
+            <a id="add" class="btn btn-primary navbar-btn" href="${base}/store/sales/rule/order/add" data-pjax><i class="ti-plus"></i> ${msg['globals.button.add']}</a>
+            <button class="btn btn-danger navbar-btn" onclick="delCheck()"><i class="ti-close"></i> ${msg['globals.button.delete.more']}</button>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border"  style="min-height: 500px;">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                    <tr>
+                        <th>${msg['sales.rule.order.column.name']}</th>
+                        <th>${msg['sales.rule.order.column.sartAt']}</th>
+                        <th>${msg['sales.rule.order.column.endAt']}</th>
+                        <th>${msg['sales.rule.order.column.limit_other']}</th>
+                        <th>${msg['sales.rule.order.column.limit_priority']}</th>
+                        <th>${msg['sales.rule.order.column.enabled']}</th>
+                        <th>${msg['sales.rule.order.column.checkStatus']}</th>
+                        <th>${msg['globals.table.column.operation']}</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/store/sales/rule/order/data",
+                "type": "post",
+                "data": function (d) {
+                    var $search_form = $(".js-search-form");
+                    d.name = $("input[name='name']", $search_form).val()||"";
+                    d.p_startAt = $("input[name='p_startAt']", $search_form).val()||"";
+                    if (d.p_endAt) {
+                        d.p_endAt += ' 00:00:00';
+                    }
+                    d.p_endAt = $("input[name='p_endAt']", $search_form).val()||"";
+                    if (d.p_endAt) {
+                        d.p_endAt += ' 23:59:59';
+                    }
+                    d.p_enabled = $("select[name='tmp_enabled']", $search_form).val()||"";
+                    d.p_checkStatus = $("select[name='p_checkStatus']", $search_form).val()||"";
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                    {"data": "name", "bSortable": true},
+                    {"data": "sartAt", "bSortable": true},
+                    {"data": "endAt", "bSortable": true},
+                    {"data": "limit_other", "bSortable": true},
+                    {"data": "limit_priority", "bSortable": true},
+                    {"data": "disabled", "bSortable": true},
+                    {"data": "checkStatus", "bSortable": true},
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return moment(parseInt(data*1000)).format("YYYY-MM-DD HH:mm:ss");
+                        }
+                        return '';
+                    },
+                    "targets": 1
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return moment(parseInt(data*1000)).format("YYYY-MM-DD HH:mm:ss");
+                        }
+                        return '';
+                    },
+                    "targets": 2
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return '<i id="limit_other_' + row.id + '" class="fa fa-circle text-success ml5"></i>';
+                        } else {
+                            return '<i id="limit_other_' + row.id + '" class="fa fa-circle text-danger ml5"></i>';
+                        }
+                    },
+                    "targets": 3
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return '<i id="disabled_' + row.id + '" class="fa fa-circle text-danger ml5"></i>';
+                        } else {
+                            return '<i id="disabled_' + row.id + '" class="fa fa-circle text-success ml5"></i>';
+                        }
+                    },
+                    "targets": 5
+                },
+                {//0 未提交  1 待审核  2 审核通过  3 未通过
+                    "render": function (data, type, row) {
+                        var str = "";
+                        switch (data) {
+                            case 0: str = "未提交";break;
+                            case 1: str = "待审核";break;
+                            case 2: str = "审核通过";break;
+                            case 3: str = "未通过";break;
+                        }
+                        return str;
+                    },
+                    "targets": 6
+                },
+                {
+                    "render": function (data, type, row) {
+                        var returnHtml = '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                            ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                            '<li><a href="${base}/store/sales/rule/order/detail/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">${msg["globals.button.detail"]}</a></li>';
+
+                        //未提交 未通过 可以编辑、删除
+                        if(row.checkStatus=="0" || row.checkStatus=="3"){
+                            returnHtml += '<li><a href="${base}/store/sales/rule/order/edit/' + row.id + '" data-pjax>${msg["globals.button.update"]}</a></li>' +
+                                '<li class="divider"></li>' +
+                                '<li><a href="javascript:;" onclick="del(\'' + row.id + '\')">${msg["globals.button.delete"]}</a></li>';
+                        }
+                        returnHtml += '</ul></div>';
+                        return returnHtml;
+                    },
+                    "targets": 7
+                }
+            ]
+        });
+
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+
+        $('.js-start-time').datepicker({
+            language: "${lang!'zh-CN'}",
+            format:'yyyy-mm-dd',
+            autoclose: true
+        }).on("changeDate", function (e) {
+            $("[name='startAt']").val(e.date);
+            $('.js-end-time').datepicker('setStartDate', e.date);
+        });
+
+        $('.js-end-time').datepicker({
+            language: "${lang!'zh-CN'}",
+            format:'yyyy-mm-dd',
+            autoclose: true
+        }).on("changeDate", function (e) {
+            $("[name='endAt']").val(e.date);
+            $('.js-start-time').datepicker('setEndDate', e.date);
+        });
+
+        $(".js-search-ok").click(function () {
+            $('.datatable').DataTable().ajax.reload();
+        });
+
+        $(".js-search-reset").click(function () {
+            $('.js-start-time').datepicker('setEndDate', null);
+            $('.js-end-time').datepicker('setStartDate', null);
+            $(".js-search-form").resetForm();
+            $('.datatable').DataTable().ajax.reload();
+        });
+    }
+
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/store/sales/rule/order/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#okDel").unbind("click");
+            dialog.find("#okDel").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/store/sales/rule/order/delete", $.param({ids: ids}, true), function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null,false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("${msg['globals.button.delete.select']}");
+        }
+    }
+
+    $(function () {
+        initDatatable();
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+</script>
+<!--#}#-->

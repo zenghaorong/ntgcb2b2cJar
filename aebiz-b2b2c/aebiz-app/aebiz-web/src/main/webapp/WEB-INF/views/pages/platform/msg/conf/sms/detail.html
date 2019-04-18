@@ -1,0 +1,76 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">Msg_conf_sms</a>
+                        <small>${obj.id}</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                            <tr>
+                                <td>${msg['msg.conf.sms.column.name']}</td><td>${obj.name}</td>
+                            </tr>
+                            <tr>
+                                <td>${msg['msg.conf.sms.column.url']}</td><td>${obj.url}</td>
+                            </tr>
+                            <tr>
+                                <td>${msg['msg.conf.sms.column.appkey']}</td><td>${obj.appkey}</td>
+                            </tr>
+                            <tr>
+                                <td>${msg['msg.conf.sms.column.secret']}</td><td>${obj.secret}</td>
+                            </tr>
+                            <tr>
+                                <td>${msg['msg.conf.sms.column.signname']}</td><td>${obj.signname}</td>
+                            </tr>
+                            <tr>
+                                <td>${msg['msg.conf.sms.column.disabled']}</td>
+                                <td>
+                                    <!--# if(obj.disabled==false){#-->
+                                    <i class="fa fa-circle text-danger ml5"></i>
+                                    <!--# }else{#-->
+                                    <i class="fa fa-circle text-success ml5"></i>
+                                    <!--# }#-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>${msg['msg.conf.sms.column.hasTpl']}</td>
+                                <td>
+                                    <!--# if(obj.hasTpl==false){#-->
+                                    <i class="fa fa-circle text-danger ml5"></i>
+                                    <!--# }else{#-->
+                                    <i class="fa fa-circle text-success ml5"></i>
+                                    <!--# }#-->
+                                </td>
+                            </tr>
+                            <tr <!--#if(!obj.hasTpl){#-->style="display: none"<!--#}#-->>
+                                <td colspan="2">
+                                    <table id="tab" width="100%" border="0" cellspacing="0" cellpadding="0" >
+                                        <thead>
+                                            <tr align="center">
+                                                <td>${msg['msg.conf.sms.tpl.column.tplId']}</td>
+                                                <td width="2"></td>
+                                                <td>${msg['msg.conf.sms.tpl.column.tplName']}</td>
+                                            </tr>
+                                        </thead>
+                                        <TBODY>                  　
+                                        <!--#for(o in obj.smsTpls){#-->
+                                        <tr align="center"><td height="45">${o.tplId!}<td width="2"></td><td>${o.tplName!}</td></tr>
+                                        <!--#}#-->
+                                        </TBODY>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

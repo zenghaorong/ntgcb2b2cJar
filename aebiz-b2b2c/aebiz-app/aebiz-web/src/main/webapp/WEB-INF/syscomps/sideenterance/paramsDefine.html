@@ -1,0 +1,262 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+
+<form class="form-horizontal">
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">是否异步加载</label>
+		<div class="col-sm-3">
+			<input type="radio" id="yesAsync"  name="needAsyncInit" value="true">是
+			<input type="radio" id="noAsync"  name="needAsyncInit" value="false">否
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">登录是否显示</label>
+		<div class="col-sm-3">
+			<input type="radio" id="yesLogin" name="loginIsShow" checked="checked" value="1"/>是
+			<input type="radio" id="noLogin"  name="loginIsShow" value="0"/>否
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">忘记密码</label>
+		<div class="col-sm-3">
+			<input type="text" id="a_forgetPwdName" name="a_forgetPwdName" class="form-control" value="忘记密码"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">忘记密码URL</label>
+		<div class="col-sm-3">
+			<input type="text" id="a_forgetPwdUrl"  name="a_forgetPwdUrl" class="form-control" value="/customerfindpwd/toFindPwdStep1" />
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">免费注册</label>
+		<div class="col-sm-3">
+			<input type="text" id="a_regName" name="a_regName" class="form-control" value="免费注册"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">免费注册URL</label>
+		<div class="col-sm-3">
+			<input type="text" id="a_regUrl" name="a_regUrl" class="form-control" value="/customerregist/toRegister"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">会员中心Url</label>
+		<div class="col-sm-3">
+			<input type="text" id="customerIndexUrl" name="customerIndexUrl" class="form-control"  value="/customer/toIndex"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">购物车是否显示</label>
+		<div class="col-sm-3">
+			<input type="radio" id="yesCart" name="cartIsShow" checked="checked" value="1"/>是
+            <input type="radio" id="noCart" name="cartIsShow" value="0"/>否
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">收藏是否显示</label>
+		<div class="col-sm-3">
+			<input type="radio" id="yesCollection"  name="collectionIsShow" value="1"/>是
+            <input type="radio" id="noCollection"  name="collectionIsShow" value="0"/>否
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">问卷调查是否显示</label>
+		<div class="col-sm-3">
+			<input type="radio" id="yesQuesNaire" name="quesNaireIsShow" value="1"/>是
+ 			<input type="radio" id="noQuesNaire" name="quesNaireIsShow" value="0"/>否
+		</div>
+	</div>
+
+	<div class="form-group" id="quesNaireUrl_div">
+		<label  class="col-sm-3 control-label">问卷调查地址</label>
+		<div class="col-sm-3">
+			<input type="text" id="quesNaireUrl" name="quesNaireUrl"  class="form-control" value="/questionnairesurvey/toQuestionnaireSurvey"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">在线咨询是否显示</label>
+		<div class="col-sm-3">
+			<input type="radio" id="yesOnline" name="onlineIsShow" value="1"/>是
+        	<input type="radio" id="noOnline" name="onlineIsShow" value="0"/>否
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">QQ咨询是否显示</label>
+		<div class="col-sm-3">
+			<input type="radio" id="yesQq" name="qqIsShow" value="1"/>是
+			<input type="radio" id="noQq" name="qqIsShow" value="0"/>否
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">购物车交互主题</label>
+		<div class="col-sm-3">
+			<input type="text" id="cartTopic" name="cartTopic"  class="form-control" value=""/>
+		</div>
+	</div>
+</form>
+
+
+<script type="text/javascript">
+//获取属性配置JSON
+var pageJson = ${webPageModelJsonStr};
+
+//构建属性配置
+var componentsParam = {
+		initParamData:function(paramJson){ //初始化渲染属性配置
+			if(typeof(paramJson) == "string"){
+				paramJson = JSON.parse(paramJson);
+			}
+		    if(paramJson.needAsyncInit == "true"){
+		    	$("#yesAsync").attr("checked","checked");
+		    }else{
+		    	$("#noAsync").attr("checked","checked");
+		    }
+		    
+		    if(paramJson.loginIsShow == "0"){
+		    	$("#noLogin").attr("checked","checked");
+		    }else{
+		    	$("#yesLogin").attr("checked","checked");
+		    }
+		    if(paramJson.cartIsShow == "0"){
+		    	$("#noCart").attr("checked","checked");
+		    }else{
+		    	$("#yesCart").attr("checked","checked");
+		    }
+		    if(paramJson.collectionIsShow == "0"){
+		    	$("#noCollection").attr("checked","checked");
+		    }else{
+		    	$("#yesCollection").attr("checked","checked");
+		    }
+		    if(paramJson.quesNaireIsShow == "0"){
+		    	$("#noQuesNaire").attr("checked","checked");
+		    	$("#quesNaireUrl_div").hide();
+		    }else{
+		    	$("#yesQuesNaire").attr("checked","checked");
+		    	if(paramJson.quesNaireUrl != null && paramJson.quesNaireUrl != ""){
+		    		$("#quesNaireUrl").val(paramJson.quesNaireUrl);
+		    	}
+		    }
+		    if(paramJson.onlineIsShow == "0"){
+		    	$("#noOnline").attr("checked","checked");
+		    }else{
+		    	$("#yesOnline").attr("checked","checked");
+		    }
+		    if(paramJson.qqIsShow == "0"){
+		    	$("#noQq").attr("checked","checked");
+		    }else{
+		    	$("#yesQq").attr("checked","checked");
+		    }
+
+		    if(paramJson.a_forgetPwdName != null && paramJson.a_forgetPwdName != ""){
+		    	$("#a_forgetPwdName").val(paramJson.a_forgetPwdName);
+		    }
+		    if(paramJson.a_forgetPwdUrl != null && paramJson.a_forgetPwdUrl != ""){
+		    	$("#a_forgetPwdUrl").val(paramJson.a_forgetPwdUrl);
+		    }
+		    if(paramJson.a_regName != null && paramJson.a_regName != ""){
+		    	$("#a_regName").val(paramJson.a_regName);
+		    }
+		    if(paramJson.a_regUrl != null && paramJson.a_regUrl != ""){
+		    	$("#a_regUrl").val(paramJson.a_regUrl);
+		    }
+		    if(paramJson.customerIndexUrl != null && paramJson.customerIndexUrl != ""){
+		    	$("#customerIndexUrl").val(paramJson.customerIndexUrl);
+		    }
+		    if(paramJson.cartTopic != null && paramJson.cartTopic != ""){
+		    	$("#cartTopic").val(paramJson.cartTopic);
+		    }
+		},
+		saveParamData:function(){ //返回属性配置JSON
+			var needAsyncInit = $("input[name='needAsyncInit']:checked").val();
+		    if(needAsyncInit == null){
+		    	alert("请选择是否首屏加载！");
+		    	return false;
+		    }
+		    var loginIsShow = $("input[name='loginIsShow']:checked").val(); 
+			var cartIsShow = $("input[name='cartIsShow']:checked").val();
+			var collectionIsShow = $("input[name='collectionIsShow']:checked").val();
+			var quesNaireIsShow = $("input[name='quesNaireIsShow']:checked").val();
+			var quesNaireUrl = $("#quesNaireUrl").val();
+			if(quesNaireIsShow == "1"){
+				if(quesNaireUrl == null || quesNaireUrl == ""){
+					alert("请输入调查问卷地址");
+					return false;
+				}
+			}
+			var onlineIsShow = $("input[name='onlineIsShow']:checked").val();
+			var qqIsShow = $("input[name='qqIsShow']:checked").val();
+			var a_forgetPwdName = $("#a_forgetPwdName").val();
+			var a_forgetPwdUrl = $("#a_forgetPwdUrl").val();
+			var a_regName = $("#a_regName").val();
+			var a_regUrl = $("#a_regUrl").val();
+			var customerIndexUrl = $("#customerIndexUrl").val();
+			var cartTopic = $("#cartTopic").val();
+	        var paramJson = {
+	        		needAsyncInit:needAsyncInit,
+	        		loginIsShow : loginIsShow,
+	        		cartIsShow : cartIsShow,
+	        		collectionIsShow : collectionIsShow,
+	        		quesNaireIsShow : quesNaireIsShow,
+	        		quesNaireUrl : quesNaireUrl,
+	        		onlineIsShow : onlineIsShow,
+	        		qqIsShow : qqIsShow,
+	        		a_forgetPwdName:a_forgetPwdName,
+	        		a_forgetPwdUrl:a_forgetPwdUrl,
+	        		a_regName:a_regName,
+	        		a_regUrl:a_regUrl,
+	        		customerIndexUrl:customerIndexUrl,
+	        		cartTopic:cartTopic
+	        };
+	        var err = this.validateData(paramJson);
+            if(!err.success){
+                return err;
+            }
+	        return paramJson;
+		},
+        validateData:function(paramJson){
+            var err={
+                success:true,
+                msg:""
+            }
+            var msg=[];
+            msg = decoration.base.validateSpecial(msg,paramJson.a_forgetPwdName,"忘记密码包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.a_regName,"免费注册包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.quesNaireUrl,"调查问卷地址包含特殊字符，请重新输入！<br>");
+            if(msg.length>0){
+                err.success = false;
+                err.msg=msg.join("");
+            }
+            return err;
+        }
+}
+
+
+$("input[name='quesNaireIsShow']").click(function(){
+	if($("input[name='quesNaireIsShow']:checked").val() == 1){
+		$("#quesNaireUrl_div").show();
+	}else{
+		$("#quesNaireUrl_div").hide();
+	}
+});
+
+componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+</script>
+</body>
+</html>

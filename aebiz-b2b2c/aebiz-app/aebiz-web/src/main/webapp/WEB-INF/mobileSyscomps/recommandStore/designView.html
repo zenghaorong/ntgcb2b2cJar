@@ -1,0 +1,14 @@
+<!--components indexStore-->
+<div class="m-index-store m-components" id="$_recommandStore_compId">
+    <div class="title p">推荐店铺<a href="javascript:;" class="mui-fr read-more">查看更多 <img src="${contextPath}/static/mobileTempAssets/defaultTemplate/images/index/arrow_right.png" alt="" class="u-ico-ar"></a></div>
+    <div class="recommendstore store-list" id="owl-slider">
+    </div>
+</div>
+
+<script id="m-indexStore" type="text/html">
+    {{each stores as store i}}
+    <a class="item" onclic k="instore('59c1486b83dc42e38eda7aeff037f94b')">
+        <img src="{{store.logo}}"><div class="info"><p class="name">{{store.storeName}}</p><p class="name-2">{{store.companyIntroduction}}</p>
+    </div></a>
+    {{/each}}
+</script>

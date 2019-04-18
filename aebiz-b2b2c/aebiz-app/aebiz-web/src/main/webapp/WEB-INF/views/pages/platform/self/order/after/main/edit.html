@@ -1,0 +1,196 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/order/after/main" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/order/after/main/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="orderId" class="col-sm-2 control-label">${msg['order.after.main.column.orderId']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="orderId" class="form-control" name="orderId" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.orderId']}" value="${obj.orderId}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="applyTime" class="col-sm-2 control-label">${msg['order.after.main.column.applyTime']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="applyTime" class="form-control" name="applyTime" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.applyTime']}" value="${obj.applyTime}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="applyType" class="col-sm-2 control-label">${msg['order.after.main.column.applyType']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="applyType" class="form-control" name="applyType" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.applyType']}" value="${obj.applyType}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="applyMan" class="col-sm-2 control-label">${msg['order.after.main.column.applyMan']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="applyMan" class="form-control" name="applyMan" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.applyMan']}" value="${obj.applyMan}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="applyManId" class="col-sm-2 control-label">${msg['order.after.main.column.applyManId']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="applyManId" class="form-control" name="applyManId" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.applyManId']}" value="${obj.applyManId}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="applyManAddress" class="col-sm-2 control-label">${msg['order.after.main.column.applyManAddress']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="applyManAddress" class="form-control" name="applyManAddress" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.applyManAddress']}" value="${obj.applyManAddress}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="applyManMobile" class="col-sm-2 control-label">${msg['order.after.main.column.applyManMobile']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="applyManMobile" class="form-control" name="applyManMobile" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.applyManMobile']}" value="${obj.applyManMobile}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="storeUuid" class="col-sm-2 control-label">${msg['order.after.main.column.storeUuid']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="storeUuid" class="form-control" name="storeUuid" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.storeUuid']}" value="${obj.storeUuid}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="storeName" class="col-sm-2 control-label">${msg['order.after.main.column.storeName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="storeName" class="form-control" name="storeName" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.storeName']}" value="${obj.storeName}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="returnMoney" class="col-sm-2 control-label">${msg['order.after.main.column.returnMoney']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="returnMoney" class="form-control" name="returnMoney" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.returnMoney']}" value="${obj.returnMoney}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="returnReason" class="col-sm-2 control-label">${msg['order.after.main.column.returnReason']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="returnReason" class="form-control" name="returnReason" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.returnReason']}" value="${obj.returnReason}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="evidence1" class="col-sm-2 control-label">${msg['order.after.main.column.evidence1']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="evidence1" class="form-control" name="evidence1" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.evidence1']}" value="${obj.evidence1}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="evidence2" class="col-sm-2 control-label">${msg['order.after.main.column.evidence2']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="evidence2" class="form-control" name="evidence2" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.evidence2']}" value="${obj.evidence2}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="evidence3" class="col-sm-2 control-label">${msg['order.after.main.column.evidence3']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="evidence3" class="form-control" name="evidence3" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.evidence3']}" value="${obj.evidence3}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="aftersaleState" class="col-sm-2 control-label">${msg['order.after.main.column.aftersaleState']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="aftersaleState" class="form-control" name="aftersaleState" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.aftersaleState']}" value="${obj.aftersaleState}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="returnMoneyStyle" class="col-sm-2 control-label">${msg['order.after.main.column.returnMoneyStyle']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="returnMoneyStyle" class="form-control" name="returnMoneyStyle" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.returnMoneyStyle']}" value="${obj.returnMoneyStyle}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="receiveGoods" class="col-sm-2 control-label">${msg['order.after.main.column.receiveGoods']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="receiveGoods" class="form-control" name="receiveGoods" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.receiveGoods']}" value="${obj.receiveGoods}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sendGoods" class="col-sm-2 control-label">${msg['order.after.main.column.sendGoods']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="sendGoods" class="form-control" name="sendGoods" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.sendGoods']}" value="${obj.sendGoods}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cancelReason" class="col-sm-2 control-label">${msg['order.after.main.column.cancelReason']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="cancelReason" class="form-control" name="cancelReason" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.cancelReason']}" value="${obj.cancelReason}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="packWell" class="col-sm-2 control-label">${msg['order.after.main.column.packWell']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="packWell" class="form-control" name="packWell" data-parsley-required="true"
+                                       placeholder="${msg['order.after.main.column.packWell']}" value="${obj.packWell}" >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<script language="JavaScript">
+    $(document).ready(function () {
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<!--#}#-->

@@ -1,0 +1,595 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+	<style type="text/css">
+
+
+		.p_bj_list dl {
+			width: 100%;
+			overflow: hidden;
+			padding: 10px 2%;
+			border-bottom: 1px solid #ddd;
+		}
+		.p_bj_list dt {
+			width: 50px;
+			height: 50px;
+			float: left;
+			margin-right: 15px;
+		}
+		.p_bj_list dt img {
+			width: 50px;
+			height: 50px;
+		}
+		.p_bj_list dd {
+			float: left;
+			width: 70%;
+			line-height: 22px;
+			padding-top: 5px;
+		}
+		.p_bj_list dd p {
+			height: 22px;
+			overflow: hidden;
+		}
+		.p_bj_list dd.operation {
+			float: right;
+			width: 20%;
+		}
+		.p_bj_list dd.operation a, .p_bj_list dd.operation span {
+			margin-right: 10px;
+		}
+
+
+		.operation .j_recomend {
+			display:block;
+		}
+		.operation .j_h-recomend ,.operation .j_cancel-recomend {
+			display:none;
+		}
+		.j_active .j_recomend {
+			display:none;
+		}
+		.j_active .j_h-recomend ,.j_active .j_cancel-recomend {
+			display:block;
+		}
+
+		.j_selected-count{
+			margin-left: 5px
+		}
+
+		.producttab-config-wrap .nav-tabs>li {
+			float: left;
+			margin-bottom: -2px;
+		}
+	</style>
+</head>
+<body>
+
+<div  class="producttab-config-wrap" >
+	<div class="form-group" id="needAsyncInit">
+		<label class="radio-inline">
+			是否异步加载：
+		</label>
+		<label class="radio-inline">
+			<input type="radio" name="needAsyncInit" id="needAsyncInit-yes"  value="true" checked> 是
+		</label>
+		<label class="radio-inline">
+			<input type="radio" name="needAsyncInit"  id="needAsyncInit-no" value="false"> 否
+		</label>
+	</div>
+	<div id="showStyle" class="form-group">
+		<label class="radio-inline">
+			展示方式：
+		</label>
+		<label class="radio-inline">
+			<input type="radio" name="showStyle" id="normal-show"  value="1"> 常规展示
+		</label>
+		<label class="radio-inline">
+			<input type="radio" name="showStyle"  id="swtich-show" value="2"> 轮播展示
+		</label>
+	</div>
+	<div class="form-horizontal">
+		<div class="form-group  ">
+			<label class="control-label col-sm-2 ">商品详情页URL</label>
+			<div class="col-sm-10">
+				<input type="text"  placeholder="请输入商品详情页URL" autocomplete="off" class="form-control " id="config-productdetail-url"
+					   value="/sysback/decoratepages/run?pageUuid=ac43767471f04ece9ca915b6e230d1e8">
+			</div>
+		</div>
+	</div>
+	<div class="form-horizontal">
+		<div class="form-group  ">
+			<label class="control-label col-sm-2 ">收藏夹路径</label>
+			<div class="col-sm-10">
+				<input type="text"  placeholder="请输入商品详情页URL" autocomplete="off" class="form-control " id="collect-product"
+					   value="/usercenter/productfavorite/toPage">
+			</div>
+		</div>
+	</div>
+	<div class="form-horizontal">
+		<div class="form-group  ">
+			<label class="control-label col-sm-2 ">登陆组件topic</label>
+			<div class="col-sm-10">
+				<input type="text"  placeholder="请输入商品详情页URL" autocomplete="off" class="form-control " id="producttab-login-topic"
+					   value="login">
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-input-inline">
+			<input type="text" name="tabname" lay-verify="required" placeholder="请输入标签名" autocomplete="off" class="layui-input" id="producttab-config-tabname">
+		</div>
+		<button class="layui-btn" id="producttab-config-addtab" data-type="tabAdd"><i class="layui-icon"></i> 添加标签</button>
+		<button class="layui-btn" id="producttab-config-deltab" data-type="tabDelete">删除当前标签</button>
+	</div>
+
+	<div class="layui-tab" lay-filter="producttab">
+		<ul class="layui-tab-title j_tab-list">
+			<!--  <li class="layui-this">网站设置</li> -->
+		</ul>
+		<div class="layui-tab-content">
+			<!--  <div class="layui-tab-item layui-show">内容1</div> -->
+		</div>
+	</div>
+</div>
+
+<!--  下面为页面模板   -->
+<div id="j_tmp-tab-content-wrap" style="display:none">
+	<input class="j_producttab-data" type="hidden">
+	<div class="form-inline">
+		<div class="form-group col-sm-3">
+			<select name="categoryUuid" class="form-control p_nopadding mr_10 j_category">
+				<option value="">所有分类</option>
+
+				<!--# for(cid in prodList){
+  #-->
+				<option value="${cid.categoryUuid}">${cid.categoryName}</option>
+				<!--#
+                }#-->
+			</select>
+		</div>
+		<div class="form-group col-sm-3">
+			<input type="text" name="productName1"  class="form-control j_searchKey" placeholder="关键字">
+		</div>
+		<div class="form-group col-sm-4">
+			<div class="input-group ">
+				<input type="text" name="startPrice1" class="form-control j_startPrice" placeholder="价格区间">
+				<div class="input-group-addon">-</div>
+				<input type="text" name="endPrice1" class="form-control j_endPrice" placeholder="价格区间" >
+			</div>
+		</div>
+		<div class="form-group">
+			<button type="button" onclick="searchProduct(this,1,5,true)" class="btn btn-primary"><i class="fa fa-search">搜索</i></button>
+		</div>
+	</div>
+	<div class="col-sm-12 p_bj_bt" style="margin-top:10px">
+		<ul class="nav nav-tabs nav-tabs-zx">
+			<li class="active"><a href="#p_list" data-toggle="tab" class="j_product-list">商品列表</a></li>
+			<li><a href="#p_selected" data-toggle="tab" class="j_selected" >已选择<span class="j_selected-count badge">0</span></a></li>
+		</ul>
+	</div>
+	<div class="tab-content p_bj_list">
+		<div class="tab-pane active j_product-list-content">
+			<div class="j_producttab-list-item">
+				<!-- 内容是下面 j_tmp-product 的模板内容 -->
+			</div>
+			<div class="j_page"></div>
+		</div>
+		<div class="tab-pane j_selected-content">
+			<!-- 已选择列表 -->
+		</div>
+	</div>
+</div>
+
+<div id = "j_tmp-product" style="display:none">
+	<dl >
+		<dt><a href="#"><img src="${product.productImage.smallImageUrl!}" class="j_product-img" ></a></dt>
+		<dd>
+			<p><a href="#" class="j_product-name">${product.productMain.productName!}</a></p>
+			￥<span class="j_product-price">${product.productPrice.shopPrice!}</span>
+		</dd>
+		<dd id="sp_recommend${num!}_${product.productPrice.productUuid!}" class="operation ">
+			<span class="j_h-recomend">已选择</span>
+			<a class="j_cancel-recomend"   data-productUuid="" href="javascript:;">取消选择</a>
+			<a class="j_recomend"  data-productUuid="" href="javascript:;">选择</a>
+		</dd>
+	</dl>
+</div>
+
+<!-- 已选择的模板 -->
+<div id = "j_tmp-selected-product" style="display:none">
+	<dl >
+		<dt><a href="#"><img src="" class="j_product-img" ></a></dt>
+		<dd>
+			<p><a href="#" class="j_product-name"></a></p>
+			￥<span class="j_product-price"></span>
+		</dd>
+		<dd  class="operation ">
+			<span class="j_h-recomend">已选择</span>
+			<a class="j_cancel-recomend"   data-productUuid="" href="javascript:;">取消选择</a>
+		</dd>
+	</dl>
+</div>
+
+
+</body>
+
+<script type="text/javascript">
+    layui.use(['form'], function(){
+        var form = layui.form()  ,layer = layui.layer;
+    });
+    var tabCounts = 0;
+    // ====================标签页工具方法 =========================//
+    var  active = {
+        tabAdd: function(option,callback){
+            layui.use('element', function(){
+                var $ = layui.jquery ,element = layui.element();
+                //新增一个Tab项
+                ret = tabCounts++;
+                var contentObj = genTabContent(ret,option);
+                element.tabAdd('producttab', {
+                    title: option.tabName,
+                    content: contentObj.prop("outerHTML")
+                });
+                if(callback)callback(ret);
+
+            });
+        },
+        tabDelete: function(index){
+            layui.use('element', function(){
+                var $ = layui.jquery ,element = layui.element();
+                //删除指定Tab项（注意序号是从0开始计算）
+                element.tabDelete('producttab', index);
+            });
+        },
+        tabChange: function(index){
+            //切换到指定Tab项（注意序号是从0开始计算）
+            layui.use('element', function(){
+                var $ = layui.jquery ,element = layui.element();
+                element.tabChange('producttab',index);
+            });
+        }
+    };
+    // ====================标签页工具方法 =========================//
+
+    //初始化 页面事件
+    var	initEvents = function(){
+        //增加标签页
+        $('#producttab-config-addtab').on('click', function(){
+            var tabName = $("#producttab-config-tabname").val();
+            if($.trim(tabName)==""){
+                $("#producttab-config-tabname").attr("placeholder","请输入标签名称").focus();
+                return;
+            }
+            var option = {
+                tabName : tabName,
+                productUuids:[]
+            }
+            active.tabAdd(option,function(index){
+                searchProduct($("#producttab-tab-"+index)[0],1,5,true);
+            });
+        });
+
+        //删除标签页
+        $('#producttab-config-deltab').on('click', function(){
+            var index = $(".j_tab-list").find("li.layui-this").index();
+            if(index == -1) return;
+            active.tabDelete(index);
+        });
+
+        //将一个商品uuid加入到tab页下的数组
+        var addProductUuid = function(tabDataObj,productUuid){
+            var tabDataStr = tabDataObj.val();
+            var tabData = JSON.parse(tabDataStr);
+            if($.inArray(productUuid,tabData.productUuids)==-1){
+                tabData.productUuids.push(productUuid);
+            }
+            tabDataObj.val(JSON.stringify(tabData));
+
+            return tabData.productUuids.length;
+        }
+
+        //选择事件
+        $(".producttab-config-wrap").on("click",".j_recomend",function(e){
+            $(e.target).parent().addClass("j_active");
+            var productUuid = $(e.target).attr("data-productUuid");
+            var tabDataObj =  $(e.target).parents(".j_producttab-content-wrap").find("input.j_producttab-data");
+            //将已推荐的 商品写入隐藏域，暂时存储
+            var selectCount =  addProductUuid(tabDataObj,productUuid);
+            $(e.target).parents(".j_producttab-content-wrap").find(".j_selected-count").html(selectCount);
+        });
+
+        //点击 商品列表页面的 取消选择
+        $(".producttab-config-wrap").on("click",".j_product-list-content .j_cancel-recomend",function(e){
+            $(e.target).parent().removeClass("j_active");
+            var productUuid = $(e.target).attr("data-productUuid");
+            var tabDataObj =  $(e.target).parents(".j_producttab-content-wrap").find("input.j_producttab-data");
+            var tabDataStr = tabDataObj.val();
+            var tabData = JSON.parse(tabDataStr);//tab 数据
+            var productUuidArr = tabData.productUuids;
+
+            productUuidArr.splice($.inArray(productUuid,productUuidArr),1);
+            tabDataObj.val(JSON.stringify(tabData));
+            //设置已选择个数
+            $(e.target).parents(".j_producttab-content-wrap").find(".j_selected-count").html(productUuidArr.length);
+        });
+
+        //点击 已选择 页签 事件
+        $(".producttab-config-wrap").on("click",".j_selected",function(e){
+            var tabDataObj =  $(e.target).parents(".j_producttab-content-wrap").find("input.j_producttab-data");
+            var tabDataStr = tabDataObj.val();
+            var tabData = JSON.parse(tabDataStr);//tab 数据
+            var productUuidArr = tabData.productUuids;
+            var $that = $(e.target);
+            $.ajax({
+                url:ContextPath+"/producttab/getProducts",
+                type:"POST",
+                data:{productUuids:productUuidArr.join(",")},
+                dataType : "json",
+                success:function(data){
+                    var renderDiv = $that.parents(".j_producttab-content-wrap").find(".j_selected-content");
+                    //渲染数据
+                    renderSelected(data,renderDiv);
+                }
+            });
+        });
+
+
+        //已选择页签的取消选择
+        $(".producttab-config-wrap").on("click",".j_selected-content .j_cancel-recomend",function(e){
+            var tabDataObj =  $(e.target).parents(".j_producttab-content-wrap").find("input.j_producttab-data");
+            var productUuid = $(e.target).attr("data-productUuid");
+            var tabDataStr = tabDataObj.val();
+            var tabData = JSON.parse(tabDataStr);//tab 数据
+            var productUuidArr = tabData.productUuids;
+            //将ID移除
+            productUuidArr.splice($.inArray(productUuid,productUuidArr),1);
+            //将移除后的商品数值重新写入隐藏域
+            tabDataObj.val(JSON.stringify(tabData));
+            //修改已选择个数
+            $(e.target).parents(".j_producttab-content-wrap").find(".j_selected-count").html(productUuidArr.length);
+            //移除本商品
+            $(e.target).parents(".j_select-item").remove();
+
+        });
+
+        //点击商品列表页面，刷新数据
+        $(".producttab-config-wrap").on("click",".j_product-list",function(e){
+            searchProduct($(e.target),1,5,true);//重新分页
+        });
+
+    }
+
+    initEvents();
+
+
+    //渲染已选择页签
+    function renderSelected(data,renderDiv){
+        renderDiv.empty();
+        var productTmp = $("#j_tmp-selected-product");
+        if(data&& data.length > 0){
+            for(var i =0 ;i <data.length;i++){
+                var obj = data[i];
+                var newProduct = productTmp.clone().removeAttr("id").addClass("j_select-item");
+                newProduct.find(".j_product-img").attr("src",obj.pic);
+                newProduct.find(".j_product-name").html(obj.productName);
+                newProduct.find(".j_product-price").html(obj.price);
+                newProduct.find(".j_product-img").attr("src",obj.pic);
+                newProduct.find(".j_cancel-recomend").attr("data-productUuid",obj.uuid);
+                newProduct.find(".operation").addClass("j_active");
+                newProduct.css("display","block");
+                renderDiv.append(newProduct);
+            }
+        }else{
+            renderDiv.append("<p style='text-align:center;padding-top:10px'>您还未选择</p>");
+        }
+    }
+
+    //搜索商品，首次搜索初始化分页 (initPage:是否需要初始化分页)
+    function searchProduct(obj,nowPage,pageShow,initPage){
+        var rootProductListWrap = $(obj).parents(".j_producttab-content-wrap");
+        var renderDiv = rootProductListWrap.find(".j_producttab-list-item");
+        var pagingDiv = rootProductListWrap.find(".j_page");
+        var searchkey  = rootProductListWrap.find(".j_searchKey").val();
+        var startPrice  = rootProductListWrap.find(".j_startPrice").val();
+        var endPrice  = rootProductListWrap.find(".j_endPrice").val();
+        var category =  rootProductListWrap.find(".j_category").val();
+        var data = {
+            "nowPage" : nowPage,
+            "pageShow" : pageShow,
+            "categoryUuid" : category,
+            "searchKey" : searchkey,
+            "startPrice" : startPrice,
+            "endPrice" : endPrice,
+            "param_inProductUuids" : ""
+        };
+
+        $.ajax({
+            type : "GET",
+            url : ContextPath+"/slideproducts/getPageData",
+            data : data,
+            dataType : "json",
+            success : function(data) {
+                data=eval("("+data+")");
+                //渲染数据
+                renderProductList(data,renderDiv);
+                if(initPage){
+                    //渲染分页插件
+                    renderProductPaging(data.totalPage,pagingDiv);
+                }
+            }
+
+        })
+    }
+
+
+    function renderProductList(data,renderDiv){
+        var productTmp = $("#j_tmp-product");
+        //获取该tab已选择的商品数组
+        var tabDataStr = renderDiv.parents(".j_producttab-content-wrap").find("input.j_producttab-data").val();
+        var tabData  = JSON.parse(tabDataStr);
+        var productUuids = tabData.productUuids;
+
+        //先清空需要渲染的div
+        renderDiv.html("");
+        if(data&& data.list && data.list.length > 0 ){
+            //渲染数据
+            $.each(data.list,function(index,obj){
+                var newProduct = productTmp.clone().removeAttr("id");
+                newProduct.find(".j_product-img").attr("src",obj.imgsrc);
+                newProduct.find(".j_product-name").html(obj.name);
+                newProduct.find(".j_product-price").html(obj.price);
+                newProduct.find(".j_product-img").attr("src",obj.imgsrc);
+                newProduct.find(".j_recomend").attr("data-productUuid",obj.uuid);
+                newProduct.find(".j_cancel-recomend").attr("data-productUuid",obj.uuid);
+
+                //分页数据包含  以选择的商品，则包含的该商品 添加j_active,j_active 将显示 取消选择
+                if($.inArray(obj.uuid,productUuids) != -1){
+                    newProduct.find(".operation").addClass("j_active");
+                }
+
+                newProduct.css("display","block");
+                renderDiv.append(newProduct);
+            });
+
+        }else{
+            renderDiv.append("<p style='text-align:center;padding-top:10px'>没有符合条件的数据</p>");
+        }
+
+    }
+
+    //渲染分页组件
+    function renderProductPaging(totaPage,pageEle){
+        layui.use(['laypage', 'layer'], function(){
+            var laypage = layui.laypage  ,layer = layui.layer;
+            laypage({
+                cont: pageEle,
+                pages: totaPage,
+                jump: function(obj, first){
+                    if(!first){
+                        searchProduct(pageEle,obj.curr,5,false);
+                    }
+                }
+            });
+        });
+    }
+
+    //生成标签页内容,标签页内容不包括 商品列表，商品列表采用ajax再次渲染
+    function genTabContent(index,option){
+        var tmp = $("#j_tmp-tab-content-wrap");
+        var newTabContent = tmp.clone();
+        newTabContent.addClass("j_producttab-content-wrap").removeAttr("id");
+        //将tab信息写入隐藏域
+        newTabContent.find("input.j_producttab-data").attr("id","producttab-tab-"+index).val(JSON.stringify(option));
+        //商品列表和已选择两个页签 锚对应
+        var productListId = "p_list-"+index;//商品列表ID
+        var productSelectedId = "p_selected-"+index;//已选择ID
+        newTabContent.find(".j_product-list").attr("href","#"+productListId);
+        newTabContent.find(".j_product-list-content").attr("id",productListId);
+
+        newTabContent.find(".j_selected").attr("href","#"+productSelectedId);
+        newTabContent.find(".j_selected-content").attr("id",productSelectedId)
+        newTabContent.find(".j_selected-count").html(option.productUuids.length);
+        newTabContent.css("display","block");
+        return newTabContent;
+    }
+
+</script>
+<script type="text/javascript">
+    //================================ 页面初始化 以及关闭页面事件=============================//
+    //获取所有标签页 以及标签页内所选择的商品
+    function getTabsData(){
+        return  $(".producttab-config-wrap").find("input.j_producttab-data").map(function(index,obj){
+            return JSON.parse($(this).val());
+        }).get();
+    }
+    //初始化配置
+    function initConfig(config){
+        //删除默认的标签
+        active.tabDelete(0);
+        if(config.tabsJson && config.tabsJson!=""){
+            var tabData = JSON.parse(config.tabsJson);
+            //初始化配置，将已经配置的商品渲染到页面
+            $.each(tabData,function(index,obj){
+                var tabName = obj.tabName;
+                var productUuids = obj.productUuids;
+                var option = {
+                    tabName : tabName,
+                    productUuids:productUuids
+                }
+                //添加默认的标签页
+                var  index = active.tabAdd(option,function(index){
+                    //添加完标签后，渲染每个标签的商品列表
+                    searchProduct($("#producttab-tab-"+index)[0],1,5,true);
+                });
+            });
+            active.tabChange(0);
+        }
+
+    }
+    var pageJson = ${webPageModelJsonStr};
+
+    //构建属性配置
+    var componentsParam = {
+        initParamData:function(config){ //初始化渲染属性配置
+            if(typeof(config) == "string"){
+                config = JSON.parse(config);
+            }
+
+            if(config){
+                if(config.needAsyncInit){
+                    $("#needAsyncInit-yes").prop("checked",true);
+                }else{
+                    $("#needAsyncInit-no").prop("checked",true);
+                }
+                if(config.showStyle=="1"){
+                    $("#normal-show").prop("checked",true);
+                }else{
+                    $("#swtich-show").prop("checked",true);
+                }
+
+                if(config.collectUrl && config.collectUrl != ""){
+                    $("#collect-product").val(config.collectUrl);
+                }
+
+                $("#config-productdetail-url").val(config.productDetailUrl);
+                $("#producttab-login-topic").val(config.loginTopic);
+                initConfig(config);
+            }
+        },
+        saveParamData:function(){ //返回属性配置JSON
+            var config = {};
+            config.needAsyncInit = $("#needAsyncInit input[name='needAsyncInit']:checked").val()=="true"?true:false;
+            config.tabsJson = JSON.stringify(getTabsData());
+            config.showStyle = $("#showStyle input[name='showStyle']:checked").val();
+            config.productDetailUrl = $("#config-productdetail-url").val();
+            config.loginTopic = $("#producttab-login-topic").val();
+            config.collectUrl = $("#collect-product").val();
+            var err = this.validateData(config);
+            if(!err.success){
+                return err;
+            }
+            return config;
+        },
+        validateData:function(config){
+            var err={
+                success:true,
+                msg:""
+            }
+            var msg=[];
+            msg = decoration.base.validateSpecial(msg,config.loginTopic,"登陆时发布主题包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,config.productDetailUrl,"商品详情URL包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,config.collectUrl,"收藏夹URL包含特殊字符，请重新输入！<br>");
+            if(msg.length>0){
+                err.success = false;
+                err.msg = msg.join("");
+            }
+            return err;
+        }
+    }
+    componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+    //================================ 页面初始化 以及关闭页面事件=============================//
+</script>
+</html>

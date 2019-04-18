@@ -1,0 +1,55 @@
+<!--#
+include("/pages/front/pc/inc/header.html"){}
+#-->
+
+<body>
+<!-- body -->
+<div class="m-hd">
+	<!--#
+include("/pages/front/pc/inc/navbar.html"){}
+#-->
+
+	<div class="m-navbar">
+		<div class="m-center">
+			<div class="logo">
+				<a href="/"><img src="/assets/front/pc/images/logo-g.png"/></a>
+				<span>提交订单</span>
+			</div>
+		</div>
+	</div>
+	
+</div>
+<div class="m-bd m-count">
+	<div class="m-center">
+		<!--# if(status == "success"){ #-->
+		<div class="count-info count-status">
+			<div class="hd green"><i class="iconfont icon-check"></i>支付成功！我们尽快为您处理</div><br />
+			<p class="p1">订单号：${orderId}    <!--  预计今日（7月16日）送达--></p>
+			<p class="p2">查看订单状态 <a href="/">继续逛逛</a></p>
+			<p class="tip f-fs1">重要提示：平台及销售商不会以订单异常、系统升级为由，要求您点击任何链接进行退款</p>
+		</div>
+		<!--# }else{ #-->
+		<div class="count-info count-status">
+			<div class="hd mark"><i class="iconfont icon-shibai"></i>对不起，系统异常，请稍后再试</div><br />
+			<p class="p2">你可以去  <a href="/">茗流汇首页</a>  先逛逛</p>
+			<p class="tip f-fs1">重要提示：平台及销售商不会以订单异常、系统升级为由，要求您点击任何链接进行退款</p>
+		</div>
+		<!--# } #-->
+	</div>
+</div> 
+
+	<!--猜你喜欢-->
+   <!--#
+        include("/pages/front/pc/member/inc/foot.html"){}
+    #-->
+	<!--end-->
+
+<!--#
+	include("/pages/front/pc/member/inc/tail.html"){}
+#-->
+
+<!-- end -->
+
+</body>
+
+</html>

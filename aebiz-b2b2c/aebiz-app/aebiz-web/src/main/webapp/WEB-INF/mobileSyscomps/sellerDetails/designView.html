@@ -1,0 +1,30 @@
+<div id="$_sellerDetails_compId" class="m-components details-block sellerInfo">
+
+</div>
+<script id="m-index-sellerinfo" type="text/html">
+        <div id="Shop-id">
+            <table>
+                <tbody><tr>
+                    <td>
+                        <a href=""><img data-bd-imgshare-binded="1" src="{{productDetailInfo.logUrl}}"></a>
+                    </td>
+                    <td>
+                        <p>
+                            <span class="storeName">{{productDetailInfo.storeName}}</span>
+                            <br>
+                            <span id="favoriteCount" class="storeFavoriteCount">收藏{{productDetailInfo.storeFavoriteCount}}</span><span id="praise"></span>
+                        </p>
+                    </td>
+                    <td class="td3">
+                        <input type="submit" id="shoucangStore" value="收藏店铺">
+                    </td>
+                </tr>
+                </tbody></table>
+        </div>
+        <p class="goShop">
+            <button id="productCount">全部商品(<font>{{productDetailInfo.productCount}}</font>)</button>
+            <button id="intoStore" onclick="enterStore();">
+                <img src="/static/images/mobileIcons/5.png" data-bd-imgshare-binded="1">进入店铺
+            </button>
+        </p>
+</script>

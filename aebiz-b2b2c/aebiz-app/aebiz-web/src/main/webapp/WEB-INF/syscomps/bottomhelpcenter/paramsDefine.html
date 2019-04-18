@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<form class="form-horizontal">
+    <div class="form-group">
+		<label  class="col-sm-3 control-label">是否异步加载</label>
+		<div class="col-sm-3">
+			<input type="radio" id="yesAsync"  name="needAsyncInit" value="true">是
+			<input type="radio" id="noAsync"  name="needAsyncInit" value="false">否
+		</div>
+	</div>
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">栏目的id</label>
+		<div class="col-sm-3">
+			<!--<input type="text" id="channelId" name="channelId" class="form-control" value=""/>-->
+			<select id="channelId" name="channelId" class="form-control" value="">
+				<option value="">请选择栏目</option>
+				<!--# for(o in channels){
+        #-->
+				<option value="${o.id}">${o.name}</option>
+				<!--#
+}#-->
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">文章详情页面URL</label>
+		<div class="col-sm-3">
+			<input type="text" id="contentUrl" name="contentUrl" class="form-control" value=""/>
+		</div>
+	</div>
+
+</form>
+<script type="text/javascript">
+//获取属性配置JSON
+var pageJson = ${webPageModelJsonStr};
+
+//构建属性配置
+var componentsParam = {
+		initParamData:function(paramJson){ //初始化渲染属性配置
+			if(typeof(paramJson) == "string"){
+				paramJson = JSON.parse(paramJson);
+			}
+		    if(paramJson.needAsyncInit == "true"){
+		    	$("#yesAsync").attr("checked","checked");
+		    }else{
+		    	$("#noAsync").attr("checked","checked");
+		    }
+
+		    if(paramJson.channelId != null && paramJson.channelId !=""){
+		    	$("#channelId").val(paramJson.channelId);
+		    }
+
+            if(paramJson.contentUrl != null && paramJson.contentUrl !=""){
+                $("#contentUrl").val(paramJson.contentUrl);
+            }
+		},
+		saveParamData:function(){ //返回属性配置JSON
+			var err = {
+				success:false,
+				msg:''
+			};
+
+			var needAsyncInit = $("input[name='needAsyncInit']:checked").val();
+		    if(needAsyncInit == null){
+		    	err.msg = "请选择是否异步加载！"
+		    	return err;
+		    }
+
+		    var contentUrl = $("#contentUrl").val();
+		    var channelId=$("#channelId").val();
+		    if(contentUrl == null || contentUrl == ""){
+		    	err.msg = "请输入文章详情页面Url"
+		    	return err;
+		    }
+
+		    if(contentUrl.indexOf("/") != 0){
+		    	err.msg = "文章详情页面Url必须以/开头"
+		    	return err;
+		    }
+			var paramJson = {needAsyncInit:needAsyncInit,contentUrl:contentUrl,channelId:channelId};
+			
+			var err = this.validateData(paramJson);
+	        if(!err.success){
+	            return err;
+	        }
+	        return paramJson;
+		},
+		validateData:function(paramJson){
+            var err={
+                success:true,
+                msg:""
+            }
+            var msg=[];
+            msg = decoration.base.validateSpecial(msg,paramJson.contentUrl,"文章详情页面URL包含特殊字符，请重新输入！<br>");
+            if(msg.length>0){
+                err.success = false;
+                err.msg=msg.join("");
+            }
+            return err;
+        }
+}
+componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+</script>
+</body>
+</html>

@@ -1,0 +1,791 @@
+<!--#
+include("/pages/front/pc/inc/header.html"){}
+#-->
+<!-- body -->
+
+<div class="m-hd">
+	<!--#
+    include("/pages/front/pc/inc/navbar.html"){}
+    #-->
+<div class="m-navbar">
+	<div class="m-center">
+		<div class="logo">
+			<a href="#"><img src="/assets/front/pc/images/logo-g.png"/></a>
+		</div>
+		<div class="mn-search f-fl">
+			<div class="search">
+				<input type="text" placeholder="热搜榜： 大红袍    铁观音   金骏眉" />
+				<a href="" class="btn-search"><i class="iconfont icon-seach"></i>去发现</a>
+			</div>
+		</div>
+		<div class="mn-cart f-fr">
+			<a href="${base!}/goods/cart" class="cart"><i class="iconfont icon-gouwuche"></i>购物车 ></a><sup>${cartNum!0}</sup>
+			<div class="mn-cart-list">
+				<ul>
+					<!--# if(isNotEmpty(cartList)){ #-->
+						<!--# for(var cartInfo in cartList){ #-->
+							<li class="f-cb">
+								<i class="iconfont icon-check checked"></i>
+								<a href="#" class="pic"><img src="/assets/front/pc/images/cnxh2.png"/></a>
+								<div class="inner">
+									<a href="#" class="tit">${cartInfo.goodsMain.name!} ${cartInfo.goodsProduct.name!}</a>
+									<div class="price">
+										<span class="mark">¥${@money.fenToYuan(cartInfo.price!)}</span> × ${cartInfo.num}
+										<i class="iconfont icon-shanchu"></i>
+									</div>
+								</div>
+							</li>
+						<!--# } #-->
+					<!--# } #-->
+				</ul>
+				<div class="fd">
+					总计 <span class="mark">￥<!--# if(isNotEmpty(totalMoney)){ #-->${@money.fenToYuan(totalMoney!)} <!--# }else{ #--> 0.00<!--# } #--></span>
+					<a href="../cart/cart.html" class="btn">去结算</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+	
+	<div class="m-Nav">
+	<div class="m-center">
+		<div class="u-nav-menus f-fl">
+			<div class="unm-hd"><i class="iconfont icon-wap"></i>所有分类</div>
+			<div class="unm-bd">
+				<dl>
+					<dt><i class="iconfont icon-tea"></i><a href="#">各地名优茶  ></a></dt>
+					<dd>
+						<div class="tit">热门</div>
+						<div class="subnav">
+							<a href="#">金骏眉</a><a href="#">大红袍</a><a href="#">铁观音</a><a href="#">正山小种</a><a href="#">黄山毛峰</a><a href="#">漳平水仙</a>
+						</div>
+						<div class="category-sub">
+							<ol>
+								<a href="#"><img src="/assets/front/pc/images/collect2.png"/>金骏眉</a>
+								<a href="#"><img src="/assets/front/pc/images/collect2.png"/>大红袍</a>
+								<a href="#"><img src="/assets/front/pc/images/collect2.png"/>铁观音</a>
+								<a href="#"><img src="/assets/front/pc/images/collect2.png"/>正山小种</a>
+								<a href="#"><img src="/assets/front/pc/images/collect2.png"/>黄山毛峰</a>
+								<a href="#"><img src="/assets/front/pc/images/collect2.png"/>漳平水仙漳平水仙漳平水仙</a>
+							</ol>
+						</div>
+					</dd>
+					<dd>
+						<div class="tit">名茶</div>
+						<div class="subnav">
+							<a href="#">红茶</a><a href="#">绿茶</a><a href="#">乌龙茶</a><a href="#">白茶</a><a href="#">普洱</a><a href="#">花茶</a>
+						</div>
+						<div class="category-sub">
+							<ol>
+								<a href="#"><img src="/assets/front/pc/images/index-sl2.png"/>红茶</a>
+								<a href="#"><img src="/assets/front/pc/images/index-sl2.png"/>绿茶</a>
+								<a href="#"><img src="/assets/front/pc/images/index-sl2.png"/>乌龙茶</a>
+								<a href="#"><img src="/assets/front/pc/images/index-sl2.png"/>白茶</a>
+								<a href="#"><img src="/assets/front/pc/images/index-sl2.png"/>普洱</a>
+								<a href="#"><img src="/assets/front/pc/images/index-sl2.png"/>花茶</a>
+							</ol>
+						</div>
+					</dd>
+				</dl>
+				<dl>
+					<dt><i class="iconfont icon-chaye"></i><a href="#">热销茶具  ></a></dt>
+					<dd>
+						<div class="tit">热门</div>
+						<div class="subnav">
+							<a href="#">紫砂壶</a><a href="#">紫砂套装</a><a href="#">功夫茶具</a>
+						</div>
+						<div class="category-sub">
+							<ol>
+								<a href="#"><img src="/assets/front/pc/images/index-cj3.png"/>紫砂壶</a>
+								<a href="#"><img src="/assets/front/pc/images/index-cj3.png"/>紫砂套装</a>
+								<a href="#"><img src="/assets/front/pc/images/index-cj3.png"/>功夫茶具</a>
+							</ol>
+						</div>
+					</dd>
+				</dl>
+				
+			</div>
+		</div>
+		<div class="Nav f-fl">
+			<ul class="f-cb">
+				<li><a href="#">首页</a></li>
+				<li><a href="#">今日抢购</a></li>
+				<li><a href="#">每日上新</a></li>
+				<li><a href="#">金骏眉</a></li>
+				<li><a href="#">大红袍</a></li>
+				<li><a href="#">铁观音</a></li>
+				<li><a href="#">茶具</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+</div>
+<div class="m-bd">
+	<div class="m-detail-notice">为了方便您购买，请提前登录         <a href="../index/login.html">立即登录</a></div>
+	<div class="u-meun-chain m-center"><a href="">首页</a>/${obj.storeGoodsClassList[0].name}<a href=""></a>/${obj.name} <span id="defaultProductName"> ${defaultProduct.name!}</span></div>
+	<div class="m-detailMeta m-center">
+		<div class="simple">
+			<div class="box f-cb">
+				<div class="tb-booth tb-pic tb-s310">
+					<a href="${obj.imageList[0].imgAlbum!}"><img src="${obj.imageList[0].imgAlbum!}" alt="美女" rel="${obj.imageList[0].imgAlbum!}" class="jqzoom" /></a>
+				</div>
+				<ul class="tb-thumb" id="thumblist">
+					<!--# var i=0; for(var o in obj.imageList){ #-->
+						<!--# if(i==0){  #-->
+							<li class="tb-selected"><div class="tb-pic tb-s40"><a><img src="${o.imgAlbum}" mid="${o.imgAlbum}" big="${o.imgAlbum}"></a></div></li>
+						<!--# }else{ #-->
+							<li class="tb-selected"><div class="tb-pic tb-s40"><a><img src="${o.imgAlbum}" mid="${o.imgAlbum}" big="${o.imgAlbum}"></a></div></li>
+						<!--# } #-->
+
+					<!--# i++; } #-->
+				</ul>
+			</div>
+		</div>
+	
+		<div class="m-detail-inner">
+			<h3>${obj.name} <span id="productName"> ${defaultProduct.name!}</span></h3>
+			<p class="small">${obj.title!}</p>
+			<div class="info">
+				<div><label>活动价</label><b id="salePrice"><!--# if(isNotEmpty(defaultProduct)){ #-->￥${@money.fenToYuan(defaultProduct.salePrice!)}</b><del id="marketPrice">￥${@money.fenToYuan(defaultProduct.marketPrice!)}</del><!--# } #--></div>
+				<!--<div><label>促&nbsp;&nbsp;&nbsp;销</label><span class="mark">毕业季</span>毕业季   8款特价组合折上折，先领全场优惠券</div>-->
+				<div><label>服&nbsp;&nbsp;&nbsp;务</label>不支持无忧退货</div>
+				<div class="pj"><span id="feedbackNum">${feedBackNum!0}</span><br />用户评价</div>
+			</div>
+			<!--# var specList =  @org.nutz.json.Json.fromJson(obj.spec);  #-->
+			<!--# for(var spec in specList){ #-->
+			<div class="item f-cb">
+				<label>${spec[0].spec_name}</label>
+				<div  id="marks"+${spec[0].spec_id} class="marks">
+					<!--# for(var val in spec){ #-->
+						<!--# if(@com.aebiz.app.goods.commons.utils.GoodsUtil.isDefaultSpec(@org.nutz.json.Json.fromJson(defaultProduct.spec!),val)){ #-->
+							<span  class="active" lang="${val.spec_value_id}" data-labelt>${val.spec_value_name}</span>
+						<!--# }else{ #-->
+							<span  data-labelt lang="${val.spec_value_id}" >${val.spec_value_name}</span>
+						<!--# } #-->
+					<!--# } #-->
+				</div>
+			</div>
+			<!--# } #-->
+			<div class="item f-cb">
+				<label>数量</label>
+				<div class="m-input-num f-fl">
+					<div class="u-input-num">
+						<a class="prev">-</a>
+						<input type="text" placeholder="1" name="buyNum" id="" value="1" onkeyup="value=(parseInt((value=value.replace(/\D/g,''))==''||parseInt((value=value.replace(/\D/g,''))==0)?'1':value,10))" onafterpaste="value=(parseInt((value=value.replace(/\D/g,''))==''||parseInt((value=value.replace(/\D/g,''))==0)?'1':value,10))" />
+						<a class="next">+</a>
+					</div>
+				</div>
+			</div>
+			<div class="item">
+				<a href="javascript:void(0)" class="btn buy">立即购买</a>
+				<a href="javascript:void(0)" class="btn addcart"><i class="iconfont icon-gouwuche"></i>加入购物车</a>
+				<span class="collect"><!--# if(isCollected) { #--> <i class="iconfont icon-active"></i> <!--# }else{ #--> <i class="iconfont icon-shoucang"></i> <!--# } #--><br />收藏</span>
+			</div>
+			
+		</div>
+	</div>
+	
+	<!--<div class="m-center f-push-10-t">
+		<div class="slideTxtBox add-group">
+			<div class="hd">
+		
+				&lt;!&ndash; 下面是前/后按钮代码，如果不需要删除即可 &ndash;&gt;
+				<span class="arrow"><a class="next"></a><a class="prev"></a></span>
+		
+				<ul><li>搭配套装一</li><li>搭配套装二</li><li>搭配套装三</li></ul>
+			</div>
+			<div class="bd">
+				<ul class="f-cb">
+					<div class="item-r">
+						<p>套餐价：<b>￥199.00</b></p>
+						<p>价格：<del>451.00</del></p>
+						<p><a class="btn buy">立即购买</a></p>
+						<p><a class="btn addcart"><i class="iconfont icon-gouwuche"></i>加入购物车</a></p>
+					</div>
+					<li>
+						<div class="item">
+							<a class="pic" href="#"><img src="/assets/front/pc/images/detail1.png"/></a>
+							<div class="title">
+								<p><a href="#">旅行茶具 快客杯</a></p><span class="mark">￥98.00</span>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<a class="pic" href="#"><img src="/assets/front/pc/images/detail2.png"/></a>
+							<div class="title">
+								<p><a href="#">旅行茶具 快客杯</a></p><span class="mark">￥98.00</span>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<ul class="f-cb">
+					<div class="item-r">
+						<p>套餐价：<b>￥199.00</b></p>
+						<p>价格：<del>451.00</del></p>
+						<p><a class="btn buy">立即购买</a></p>
+						<p><a class="btn addcart"><i class="iconfont icon-gouwuche"></i>加入购物车</a></p>
+					</div>
+					<li>
+						<div class="item">
+							<a class="pic" href="#"><img src="/assets/front/pc/images/detail1.png"/></a>
+							<div class="title">
+								<p><a href="#">旅行茶具 快客杯</a></p><span class="mark">￥98.00</span>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<a class="pic" href="#"><img src="/assets/front/pc/images/detail1.png"/></a>
+							<div class="title">
+								<p><a href="#">旅行茶具 快客杯</a></p><span class="mark">￥98.00</span>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<ul class="f-cb">
+					<div class="item-r">
+						<p>套餐价：<b>￥199.00</b></p>
+						<p>价格：<del>451.00</del></p>
+						<p><a class="btn buy">立即购买</a></p>
+						<p><a class="btn addcart"><i class="iconfont icon-gouwuche"></i>加入购物车</a></p>
+					</div>
+					<li>
+						<div class="item">
+							<a class="pic" href="#"><img src="/assets/front/pc/images/detail2.png"/></a>
+							<div class="title">
+								<p><a href="#">旅行茶具 快客杯</a></p><span class="mark">￥98.00</span>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<a class="pic" href="#"><img src="/assets/front/pc/images/detail2.png"/></a>
+							<div class="title">
+								<p><a href="#">旅行茶具 快客杯</a></p><span class="mark">￥98.00</span>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>-->
+	
+	<div class="m-center f-push-20-t">
+		<div class="detail-leftbar f-fl">
+			<div class="shop-inner">
+				<a class="pic" href="#"><img src="/assets/front/pc/images/d-shoplogo.png"/></a>
+				<div class="name">艺福堂茗茶旗舰店</div>
+				<a href="#" class="btn">进店看看</a>
+			</div>
+			<!--热销排行榜-->
+			<div class="hd">热销排行榜</div>
+			<div class="bd">
+				<a href="#"><img src="/assets/front/pc/images/detail3.png"/></a>
+				<div class="title">
+					<a href="#"><p>【传统优品560B】铁观音180g*4罐</p><span class="mark">￥560.00</span></a>
+				</div>
+			</div>
+			<div class="bd">
+				<a href="#"><img src="/assets/front/pc/images/detail3.png"/></a>
+				<div class="title">
+					<a href="#"><p>【传统优品560B】铁观音180g*4罐</p><span class="mark">￥560.00</span></a>
+				</div>
+			</div>
+			<div class="bd">
+				<a href="#"><img src="/assets/front/pc/images/detail3.png"/></a>
+				<div class="title">
+					<a href="#"><p>【传统优品560B】铁观音180g*4罐</p><span class="mark">￥560.00</span></a>
+				</div>
+			</div>
+			<!--看了又看-->
+			<div class="hd">看了又看</div>
+			<div class="bd">
+				<a href="#"><img src="/assets/front/pc/images/detail3.png"/></a>
+				<div class="title">
+					<a href="#"><p>【传统优品560B】铁观音180g*4罐</p><span class="mark">￥560.00</span></a>
+				</div>
+			</div>
+			<div class="bd">
+				<a href="#"><img src="/assets/front/pc/images/detail3.png"/></a>
+				<div class="title">
+					<a href="#"><p>【传统优品560B】铁观音180g*4罐</p><span class="mark">￥560.00</span></a>
+				</div>
+			</div>
+			<div class="bd">
+				<a href="#"><img src="/assets/front/pc/images/detail3.png"/></a>
+				<div class="title">
+					<a href="#"><p>【传统优品560B】铁观音180g*4罐</p><span class="mark">￥560.00</span></a>
+				</div>
+			</div>
+		</div>
+	
+		<div class="detail-main f-fl">
+			<div class="slideTxtBox detail-evaluate">
+				<div class="hd">
+			
+					<!-- 下面是前/后按钮代码，如果不需要删除即可 -->
+					<span class="arrow"><a class="next"></a><a class="prev"></a></span>
+			
+					<ul><li>详情</li><li>评价<span>（${feedbackNum!"0"}）</span></li></ul>
+				</div>
+				<div class="bd">
+					<div class="info-list">
+						<!--# var propList = @org.nutz.json.Json.fromJson(obj.prop); #-->
+						<ul class=" f-cb">
+							<!--# for(var prop in  propList){ #-->
+								<li><label>${prop.name}</label>${prop.text}</li>
+							<!--# } #-->
+							<!--<li><label>品名</label>安溪铁观音</li>
+							<li><label>类型</label>清香型</li>
+							<li><label>产地</label>福建省泉州市安溪县</li>
+							<li><label>净含量</label>160克（8克*20袋）</li>
+							<li><label>等级</label>特级</li>
+							<li><label>保质期</label>18个月</li>-->
+						</ul>
+						<div class="col-2 f-cb">
+
+							<!--<label>温馨提醒</label>
+							<div class="text">
+								<p>1、出售的食品，除明确质量问题外均不接受退换货</p>
+		                        <p>2、请避免与其他味重产品一同存放，以防串味</p>
+		                        <p>3、拆封后请冷藏密封保存，延缓氧化，确保品质</p>
+							</div>-->
+						</div>
+						${obj.pcNote}
+						<!--<img src="/assets/front/pc/images/datail-log.jpg"/>-->
+					</div>
+					<div class="evaluate">
+						<div class="m-comment-list">
+							<div class="radioStatus">
+								<label lang=1 class="active" data-label><i></i>全部(${countAll!"0"})</label>
+								<label lang=0 data-label><i></i>有图(${countHasImage!"0"})</label>
+							</div>
+							<div class="feedbackTable">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div> 
+
+<div class="m-fd">
+	<div class="m-login-info">
+		<div class="g-center">
+			<ul class="f-cb">
+				<li class="col">
+					<dl>
+						<dt>客服电话</dt>
+						<dd>
+							<p class="tel">400-0000-000</p>
+							<p class="time">9:00-22:00</p>
+						</dd>
+					</dl>
+				</li>
+				<li class="col">
+					<dl>
+						<dt>关于我们</dt>
+						<dd>
+							<p class="inner">原产地直供1000家合作社联盟10万亩茶园直供从源头全程严格把控商品生产环节，力求帮消费者甄选到优质的商品。</p>
+						</dd>
+					</dl>
+				</li>
+				<li class="col last-col">
+					<dl>
+						<dd><img src="/assets/front/pc/images/code.png"/></dd>
+						<small>下载领1000元礼包</small>
+					</dl>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="login-fd">
+		<div class="g-center">
+			<img src="/assets/front/pc/images/login-footer.png"/>
+			<div class="login-href-fd">
+				<div><a href="">关于我们</a> | <a href="">帮助中心</a> | <a href="">售后服务</a> | <a href="">配送与验收</a> | <a href="">商务合作</a> | <a href="">企业采购</a> | <a href="">友情链接</a></div>
+				<p>全网数商公司版权所有 © 1997-2017   食品经营许可证：JY13301080111719
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end -->
+<div class="u-fixedfloor">
+	<ul>
+		<li><a href="#" data-fix="1" class="J_floorjump">1F<br />自饮</a></li>
+		<li><a href="#" data-fix="2" class="J_floorjump">2F<br />送礼</a></li>
+		<li><a href="#" data-fix="3" class="J_floorjump">3F<br />茶具</a></li>
+	</ul>
+	<div class="back"><a href="#">顶部</a></div>
+</div>
+<div class="u-fixedtool">
+	<ul>
+		<li><a href="#" class="iconfont icon-wode1"></a></li>
+		<li><a href="#" class="iconfont icon-cart2"></a><sup class="cart">${cartNum!"0"}</sup></li>
+		<li><a href="#" class="iconfont icon-care"></a></li>
+		<li><a href="#" class="iconfont icon-xiaoxi"></a></li>
+	</ul>
+</div>
+<script type="text/javascript">
+    var goods = ${obj};//获取商品对象
+    var defaultProduct = ${defaultProduct!}; //获取默认货品
+
+	var storeId = ${obj.storeId!};//获取当前店铺的
+
+	var goodsId = ${goodsId!};
+
+	var  sku_current = "${defaultProduct.sku!}";
+
+	//当前选中规格的对象[spec_id,spec_value_id]
+	var activeSpec = [];
+	var productList =[];
+
+	var buzz = ${buzz};//货品人气
+
+    $.ajaxSetup({
+        async: false
+    });
+	
+	$(document).ready(function () {
+		$(".collect").hover(function () {
+            var that = this;
+            layer.tips(buzz+' 人气', that); //在元素的事件回调体中，follow直接赋予this即可
+        })
+
+        $(".next").click(function(){
+            var t=$(this).parent().find('input[type=text]');
+            t.val(parseInt(t.val())+1)
+        })
+        $(".prev").click(function(){
+            var t=$(this).parent().find('input[type=text]');
+            t.val(parseInt(t.val())-1)
+            if(parseInt(t.val())<=0){
+                t.val(1);
+            }
+        })
+		//加载评论
+        loadFeedBack(1);
+        $('.radioStatus').find("label").click(function () {
+            var isHas =  $(this).attr("lang");
+            loadFeedBack(isHas);
+        })
+
+        $(".addcart").on("click",function () {
+            var buyNum = Number($("input[name='buyNum']").val());
+            addCart(buyNum);
+        })
+
+    })
+	
+	//初始化货品信息
+	function initProductSpec() {
+        var productListTemp = goods.productList;//获取到货品集合对象
+        for(var i=0;i<productListTemp.length;i++){
+            if(productListTemp[i].spec != null && productListTemp[i].spec != ""){
+                var productSpec_json = JSON.parse(productListTemp[i].spec);
+                var sku_key="";
+                for(var j=0;j<productSpec_json.length;j++){
+                    sku_key += (productSpec_json[j].spec_value_id+";");
+                }
+                var obj = {
+                    "sku_key": sku_key,
+                    "salePrice": productListTemp[i].salePrice
+                }
+                productList.push(obj);
+			}
+        }
+        loadSpec();
+    }
+    initProductSpec();
+
+	//改货品信息
+	function changeProduct(product) {
+	    if(product != null){
+	        $("#defaultProductName").text(product.name);
+            $("#productName").text(product.name);
+            $("#salePrice").text("￥"+setPrice(product.salePrice));
+            $("#marketPrice").text("￥"+setPrice(product.marketPrice));
+            //修改评价数量
+			$.post("${base!}/goods/feedbackNumBySku",{"sku":product.sku},function (data) {
+				$("#feedbackNum").text(data);
+            })
+            sku_current = product.sku;
+		}
+    }
+	
+	//获取当时选中规格的货品对象
+	function getProduct() {
+		var productList = goods.productList;//获取到货品集合对象
+		if(productList != null){
+		    for(var i=0;i<productList.length;i++){
+                var flag = true;
+		        if(productList[i].spec != null){
+		            var spec_obj  = JSON.parse(productList[i].spec);
+		            for(var m= 0;m<spec_obj.length;m++){
+						var spec_data = spec_obj[m].spec_value_id;
+						if($.inArray(spec_data,activeSpec) == -1){
+                            flag = false;
+                            break;
+						}
+					}
+				}
+				if(flag){
+		            return goods.productList[i];
+				}
+			}
+		}
+		return null;
+    }
+
+    //规格选择事件
+    $(".marks span").on("click",function () {
+        if ($(this).hasClass('disable')) {
+            return;//被锁定了
+        }
+        var $temp = null;
+        var flag =false;
+        if ($(this).hasClass('active')) {
+            $(this).removeClass('active');
+        } else {
+            $(this).siblings().removeClass('active');
+            $temp = $(this);
+            flag = true;
+            $(this).addClass('active');
+        }
+        activeSpec = [];
+        $(".marks span.active").each(function () {
+            var langV = $(this).attr("lang");
+            activeSpec.push(langV);
+        })
+        var selectedProduct = getProduct();//获取选中的货品
+        //改货品名和价格
+        changeProduct(selectedProduct);
+        loadSpec();
+        if(flag){
+            $temp.addClass('active');
+		}
+	});
+
+	//加载规格
+    function loadSpec() {
+        var select_ids = _getSelAttrId();
+
+        //已经选择了的规格
+        var $_sel_goods_attr = $('.marks span.active').parents('.marks');
+        // step 1
+        var all_ids = filterAttrs(select_ids);
+
+        //比较选择的规格个数是否和键值个数是否一样
+        if ($('.marks span.active').length == all_ids.length) {
+            //根据键值查询数据对应信息,并赋值
+            $.each(productList, function (idx, obj) {
+                var sel_sku_key = all_ids.join(';');
+                if (obj['sku_key'] == sel_sku_key) {
+                }
+            });
+        } else {
+            //$('#sku_id').val('');
+        }
+
+        //获取未选择的
+        var $other_notsel_attr = $('.marks').not($_sel_goods_attr);
+
+        //设置为选择属性中的不可选节点
+        $other_notsel_attr.each(function () {
+            set_block($(this), all_ids);
+
+        });
+
+        //step 2
+        //设置已选节点的同级节点是否可选
+        $_sel_goods_attr.each(function () {
+            update_2($(this));
+        });
+    }
+
+	//更新每个规格选中状态
+    function update_2($goods_attr) {
+        // 若该属性值 $li 是未选中状态的话，设置同级的其他属性是否可选
+        var select_ids = _getSelAttrId();
+        var $li = $goods_attr.find('span.active');
+
+        var select_ids2 = del_array_val(select_ids, $li.attr('lang'));
+
+        var all_ids = filterAttrs(select_ids2);
+
+        set_block($goods_attr, all_ids);
+    }
+
+    //设置是否选中
+    function set_block($goods_attr, all_ids) {
+        //根据 $goods_attr下的所有节点是否在可选节点中（all_ids） 来设置可选状态
+        $goods_attr.find('span').each(function (k2, li2) {
+            if ($.inArray($(li2).attr('lang'), all_ids) == -1) {
+                $(li2).addClass('disable');
+            } else {
+                $(li2).removeClass('disable');
+            }
+        });
+
+    }
+    function del_array_val(arr, val) {
+        //去除 数组 arr中的 val ，返回一个新数组
+        var a = [];
+        for (k in arr) {
+            if (arr[k] != val) {
+                a.push(arr[k]);
+            }
+        }
+        return a;
+    }
+
+    //已选择的节点数组
+    function _getSelAttrId() {
+        var list = [];
+        $('.marks span.active').each(function () {
+            list.push($(this).attr('lang'));
+        });
+        return list;
+    }
+
+    //获取所有包含指定节点的路线
+    function filterProduct(ids) {
+        var result = [];
+        $(productList).each(function (k, v) {
+           var  _attr = ';' + v['sku_key'];
+           var  _all_ids_in = true;
+            for (var k=0;k<ids.length;k++) {
+                if (_attr.indexOf(';' + ids[k] + ';') == -1) {
+                    _all_ids_in = false;
+                    break;
+                }
+            }
+            if (_all_ids_in) {
+                result.push(v);
+            }
+
+        });
+        return result;
+    }
+
+    //获取 经过已选节点 所有线路上的全部节点
+    // 根据已经选择得属性值，得到余下还能选择的属性值
+    function filterAttrs(ids) {
+        var products = filterProduct(ids);
+        var result = [];
+        $(products).each(function (k, v) {
+            result = result.concat(v['sku_key'].split(';'));
+
+        });
+        return result;
+    }
+
+	//收藏事件
+    $(".collect").on("click",function () {
+		if($(this).find("i").hasClass("icon-active")){
+			return;//已经收藏了
+		}else{
+            $(this).find("i").removeClass("icon-shoucang");
+            $(this).find("i").addClass("icon-active");
+            collectProduct();
+		}
+    })
+
+	//收藏店铺
+	function collectStore() {
+        if(storeId == null || storeId == ""){
+            layer.msg("店铺不存在");
+		}
+		$.post("${base!}/goods/storeCollect",{"storeId": storeId},function (data) {
+			if(data.code != 0 ){
+                layer.msg(data.msg);
+			}
+        })
+    }
+    
+    //收藏货品
+	function collectProduct() {
+		$.post("${base!}/goods/productCollect",{"sku":sku_current},function (data) {
+            if(data.code != 0 ){
+                layer.msg(data.msg);
+            }
+        })
+    }
+
+
+
+
+    $(".buy").on("click",function () {
+        var buyNum = Number($("input[name='buyNum']").val());
+        var cartList = [];
+        var cart ={};
+        cart.sku = sku_current;
+        cartList.push(cart);
+        window.location.href ="${base!}/goods/placeOrder?"+$.param({cartInfo:JSON.stringify(cartList),num:buyNum}, true);
+    })
+    
+    
+    //加入购物车
+	function addCart(buyNum) {
+        $.ajaxSetup({
+			async: false
+		})
+        if(storeId == null || storeId == ""){
+            layer.msg("店铺不存在");
+        }
+        var info = null;
+        $.post("${base!}/goods/addCart",{"sku":sku_current,"buyNum":buyNum},function (result) {
+            if(result.code == 0){
+                info =  result.data;
+			}else{
+                layer.msg(result.msg);
+			}
+        })
+        var pic=$(".tb-booth.tb-pic.tb-s310").html();
+        var _height = $(window).height()/2;
+        var offset = $('a.iconfont.icon-cart2').offset(), flyer = $(pic);
+        flyer.fly({
+            start: {
+                left: event.screenX-600,
+                top: event.screenY-200
+            },
+            end: {
+                left: offset.left,
+                top: _height+30,
+                width: 20,
+                height: 20
+            },
+            autoPlay: false, //是否直接运动,默认true
+            speed: 1.1, //越大越快，默认1.2
+            vertex_Rtop: 100, //运动轨迹最高点top值，默认20
+            onEnd: function(){
+                setTimeout(function () {//结束回调
+                    fly.destroy();
+                    if(info){
+                        var oldCartNum = Number($("sup.cart").text());
+                        $("sup.cart").text(oldCartNum+1);
+                        $(".mn-cart.f-fr").find("sup").text(oldCartNum+1);
+					}
+                },500)
+			}
+        });
+        var fly = flyer.data('fly');
+        fly.play();
+    }
+
+    //加载评论页面
+	function loadFeedBack(isHas) {
+		$.post("${base!}/goods/feedbackInfo",{"goodsId":goodsId,"isHas":isHas},function (result) {
+			$(".feedbackTable").html(result);
+        });
+    }
+</script>
+<script src="/assets/front/pc/vendor/layer/layer.js"></script>
+<script src="/assets/front/pc/vendor/fly/fly.js"></script>
+<script src="${base!}/assets/front/pc/scripts/detail.js"></script>
+</body>
+
+</html>

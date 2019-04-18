@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>黏土工程</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="${base!}/assets/front/h5/css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="${base!}/assets/front/h5/css/icons-extra.css" />
+		<link rel="stylesheet" href="${base!}/assets/front/h5/css/hryc.css" />
+		<!--App自定义的css-->
+		<!--<link rel="stylesheet" type="text/css" href="../css/app.css"/>-->
+	</head>
+	<body style="background: white;">
+		
+		
+		<header class="mui-bar mui-bar-nav top-color">
+		    <!--<div class="mui-title mui-input-row " >-->
+                <!--<input type="search" class="mui-input-clear" style="background: white;" placeholder="请输入品牌和名称">-->
+		    <!--</div>-->
+			<h1 class="mui-title" style="color: white;">黏土创意</h1>
+		</header>
+	<div id="vue">
+		<!--底部导航栏-->
+		<nav class="mui-bar mui-bar-tab" style="background: white;">
+			<a class="mui-tab-item mui-active" href="#tabbar">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a class="mui-tab-item" onclick="window.location.href='${base!}/open/h5/cart/shoppingCart.html'">
+				<span class="mui-icon mui-icon-extra mui-icon-extra-cart"></span>
+				<span class="mui-tab-label">购物车</span>
+			</a>
+			<a class="mui-tab-item" onclick="window.location.href='${base!}/open/h5/coupon/receiveCoupon.html'">
+				<span class="mui-icon mui-icon-extra mui-icon-extra-gift"></span>
+				<span class="mui-tab-label">领劵中心</span>
+			</a>
+			<a class="mui-tab-item" onclick="window.location.href='${base!}/open/h5/niantu/userCenter.html'">
+				<span class="mui-icon mui-icon-person"></span>
+				<span class="mui-tab-label">个人中心</span>
+			</a>
+		</nav>
+		
+		<div id="slider" class="mui-slider" >
+			<div class="mui-slider-group mui-slider-loop" style="margin-top: 40px;">
+				<!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+				<div class="mui-slider-item mui-slider-item-duplicate">
+					<a href="#">
+						<img :src="banner" style="height: 200px;">
+					</a>
+				</div>
+
+				<!-- 第二张 -->
+				<div class="mui-slider-item" v-for="item in bannerList" :key="item.id">
+					<a href="#">
+						<img :src="item.imgurl" style="height: 200px;">
+					</a>
+				</div>
+		
+				<!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+				<div class="mui-slider-item mui-slider-item-duplicate">
+					<a href="#">
+						<img :src="banner" style="height: 200px;">
+					</a>
+				</div>
+			</div>
+			<div class="mui-slider-indicator">
+				<div class="mui-indicator mui-active"></div>
+				<div class="mui-indicator"></div>
+				<div class="mui-indicator"></div>
+			
+			</div>
+		</div>
+		
+		<div class="mui-content" style="padding-top: 0px;background: white;">
+		        <ul class="mui-table-view mui-grid-view mui-grid-9" style="background: white;">
+		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" style="padding: 0;">
+		            	<a href="${base!}/open/h5/product/list.html">
+		                    <img src="${base!}/assets/front/h5/img/tu1.png" width="80px;"/>
+		                    <div class="mui-media-body">在线商城</div>
+		                </a>
+		            </li>
+		           <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" style="padding: 0;">
+		            	<a href="${base!}/open/h5/cms/video.html">
+		                    <img src="${base!}/assets/front/h5/img/tu2.png" width="80px;"/>
+		                    <div class="mui-media-body">视频专区</div>
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" style="padding: 0;">
+		            	<a href="${base!}/open/h5/product/list.html">
+		                    <img src="${base!}/assets/front/h5/img/tu3.png" width="80px;"/>
+		                    <div class="mui-media-body">宝妈专区</div>
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" style="padding: 0;">
+		            	<a href="${base!}/open/h5/niantu/tutorial.html">
+		                    <img src="${base!}/assets/front/h5/img/tu4.png" width="80px;"/>
+		                    <div class="mui-media-body">黏土教程</div>
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" style="padding: 0;">
+		            	<a href="${base!}/open/h5/niantu/creativeArt.html">
+		                    <img src="${base!}/assets/front/h5/img/tu5.png" width="80px;"/>
+		                    <div class="mui-media-body">创意美术</div>
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" style="padding: 0;">
+		            	<a href="${base!}/open/h5/niantu/talentShow.html">
+		                    <img src="${base!}/assets/front/h5/img/tu6.png" width="80px;"/>
+		                    <div class="mui-media-body">达人秀场</div>
+		                </a>
+		            </li>
+		            
+		        </ul> 
+		</div>
+	</div>
+		
+		<script type="text/javascript" src="${base!}/assets/front/h5/js/mui.js" ></script>
+		<script type="text/javascript" src="${base!}/assets/front/h5/js/vue.js" ></script>
+		<script type="text/javascript" src="${base!}/assets/front/h5/js/jquery-2.0.0.min.js" ></script>
+		<script type="application/javascript">
+			mui.init({
+				swipeBack:true //启用右滑关闭功能
+			});
+
+
+            var vue = new Vue({
+                el: '#vue',
+                data: {
+                    bannerList: [],
+                    banner:''
+                },
+                created:function () {   //实例初始化创建完成执行
+
+                    this.getBanner()     //调用自身方法
+
+                },
+                methods:{              //定义封装方法
+                    //获取列表
+                    getBanner:function () {
+                        var self = this;
+                        $.ajax({
+                            type:"POST",
+                            url:"${base!}/open/h5/niantu/getAdv.html",
+                            dataType:"JSON",
+							data:{
+
+							},
+                            success:function(data){
+                                if (data.code == 0) {
+                                   var d = data.data;
+                                    self.bannerList = d;
+                                    self.banner = d[0];
+                                    var slider = mui("#slider");
+                                    slider.slider({
+                                        interval: 5000
+                                    });
+                                } else {
+
+                                }
+                            }
+                        });
+
+                    }
+                },
+                watch:{     //监听器
+                    // carModel:function () {
+                    //     this.getProvince();
+                    // }
+                }
+
+            })
+
+
+		</script>
+	</body>
+</html>

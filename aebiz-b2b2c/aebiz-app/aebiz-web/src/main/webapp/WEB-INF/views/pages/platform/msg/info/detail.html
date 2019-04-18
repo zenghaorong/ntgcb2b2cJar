@@ -1,0 +1,50 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">Msg_info</a>
+                        <small>${obj.id}</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>${msg['msg.info.column.name']}</td><td>${obj.name}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['msg.info.column.nameCode']}</td><td>${obj.nameCode}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['msg.info.column.supportMSG']}</td><td>${obj.supportMSG}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['msg.info.column.disabledMSG']}</td><td>${obj.disabledMSG}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['msg.info.column.supportSMS']}</td><td>${obj.supportSMS}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['msg.info.column.disabledSMS']}</td><td>${obj.disabledSMS}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['msg.info.column.supportEmail']}</td><td>${obj.supportEmail}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['msg.info.column.disabledEmail']}</td><td>${obj.disabledEmail}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['msg.info.column.location']}</td><td>${obj.location}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

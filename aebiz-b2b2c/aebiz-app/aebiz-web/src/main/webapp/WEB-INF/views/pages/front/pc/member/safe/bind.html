@@ -1,0 +1,120 @@
+<!--#
+include("/pages/front/pc/member/inc/header.html"){}
+#-->
+<div class="m-bd">
+	<div class="g-center f-push-30-t">
+		<!--#
+			include("/pages/front/pc/member/inc/left.html"){}
+		#-->
+
+		<script src="/assets/front/pc/member/scripts/safe.js"></script>
+		<link href="http://at.alicdn.com/t/font_paidwj9uheyiudi.css" rel="stylesheet">
+		<div class="ps-main m-Account-safe f-fl">
+			<div class="u-meun-chain g-center"><i class="iconfont icon-wode"></i><a href="">个人中心</a>><span>账号安全</span></div>
+
+			<div class="mas-tit">
+				账号安全<small>Account security</small>
+			</div>
+
+			<div class="mas-hd f-cb">
+				<img class="f-fl" src="/assets/front/pc/member/images/icon-safe.png"/>
+				<div class="info f-fl">
+					<!--# if(obj.safeStrength < 50){ #-->
+					<div class="u-lineSpeed red">
+						<div class="line"><span class="speed" style="width: ${obj.safeStrength}%;"></span></div>
+					</div>
+					<!--# }else  #-->
+					<!--# if(obj.safeStrength < 80){ #-->
+					<div class="u-lineSpeed orange">
+						<div class="line"><span class="speed" style="width: ${obj.safeStrength}%;"></span></div>
+					</div>
+					<!--# } #-->
+					<!--# if(obj.safeStrength >= 80){ #-->
+					<div class="u-lineSpeed green">
+						<div class="line"><span class="speed" style="width: ${obj.safeStrength}%;"></span></div>
+					</div>
+					<!--# } #-->
+					<p>建议您启动全部安全设置，以保障账户及资金安全。</p>
+				</div>
+				<div class="f-fr getTime">上次登录时间：${obj.lastLoginTime}</div>
+			</div>
+
+			<div class="mas-bd">
+				<table>
+					<tr class="f-cb">
+						<!--# if(obj.passwordStrength==0){ #-->
+						<td><i class="iconfont icon-jinggao  f-fl"></i></td>
+						<!--# } #-->
+						<!--# if(obj.passwordStrength==1){ #-->
+						<td><i class="iconfont icon-jinggao  f-fl"></i></td>
+						<!--# } #-->
+						<!--# if(obj.passwordStrength==2){ #-->
+						<td><i class="iconfont icon-pay-chenggong  f-fl"></i></td>
+						<!--# } #-->
+						<td><div class="way f-fl">登录密码</div></td>
+						<td><p class="text f-fl">安全性高的密码可以使用账号更安全。建议您定期更换密码，且设置一个包含数字和字母，并长度超过6位以上的密码。
+                                <!--# if(obj.passwordStrength == 0){ #-->
+                                <div class="u-lineSpeed red">
+                                    <div class="line"><span class="speed" style="width: 33%;"></span></div>
+                                </div>
+                                <!--# } #-->
+                                <!--# if(obj.passwordStrength == 1){ #-->
+                                <div class="u-lineSpeed orange">
+                                    <div class="line"><span class="speed" style="width: 66%;"></span></div>
+                                </div>
+                                <!--# } #-->
+                                <!--# if(obj.passwordStrength == 2){ #-->
+                                <div class="u-lineSpeed green">
+                                    <div class="line"><span class="speed" style="width: 100%;"></span></div>
+                                </div>
+                                <!--# } #-->
+                            </p>
+                        </td>
+						<td><a class="btn modify" href="/member/security/midifyPassword"></a></td>
+					</tr>
+					<tr class="f-cb">
+						<td><i class="iconfont icon-pay-chenggong  f-fl"></i></td>
+						<td><div class="way f-fl">手机绑定</div></td>
+						<td><p class="text f-fl">验证后，可用于找回密码、接受订单提醒，接受账户余额变动提醒。</p></td>
+						<td><a class="btn modify" href="/member/security/securityBindMobile"></a></td>
+					</tr>
+					<tr class="f-cb">
+						<!--# if(obj.hasEmail){ #-->
+						<td><i class="iconfont icon-pay-chenggong  f-fl"></i></td>
+						<!--# } #-->
+						<!--# if(!obj.hasEmail){ #-->
+						<td><i class="iconfont icon-jinggao  f-fl"></i></td>
+						<!--# } #-->
+						<td><div class="way f-fl">邮箱绑定</div></td>
+						<td><p class="text f-fl">验证后，可用于找回密码、接受订单提醒，接受账户余额变动提醒。</p></td>
+						<!--# if(!obj.hasEmail){ #-->
+						<td><a class="btn" href="/member/security/BindEmail"></a></td>
+						<!--# } #-->
+						<!--# if(obj.hasEmail){ #-->
+						<td><a class="btn modify" href="/member/security/securityBindEmail"></a></td>
+						<!--# } #-->
+					</tr>
+					<tr class="f-cb">
+						<td><i class="iconfont icon-${obj.hasPayPassword?'pay-chenggong':'jinggao'}  f-fl"></i></td>
+						<td><div class="way f-fl">支付密码</div></td>
+						<td><p class="text f-fl">启用支付密码后，在使用账户资产时，需通过支付密码进行身份认证。</p></td>
+						<td><a class="btn" href="/member/security/midifyPayPasswordEnable"></a></td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="mas-tip">
+				<div class="tit">安全服务提示</div>
+				<p>1.确认您登录的是茗流荟网址http://www.mingliuhui.com，注意防范进入钓鱼网站，不要轻信各种即时通讯工具发送的商品或支付链接，谨防网购诈骗。</p>
+				<p>2.建议您安装杀毒软件，并定期更新操作系统等软件补丁，确保账户及交易安全。</p>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end -->
+<!--#
+	include("/pages/front/pc/member/inc/foot.html"){}
+#-->
+<!--#
+	include("/pages/front/pc/member/inc/tail.html"){}
+#-->

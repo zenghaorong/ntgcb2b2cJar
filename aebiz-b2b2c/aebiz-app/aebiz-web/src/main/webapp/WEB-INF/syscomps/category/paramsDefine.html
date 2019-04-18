@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<form class="form-horizontal" role="form">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">是否异步加载：</label>
+
+        <div id="needAsyncInit" class="col-sm-10">
+            <label class="radio-inline">
+                <input type="radio" name="needAsyncInit" id="needAsyncInit_t" value="true"> 是
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="needAsyncInit" id="needAsyncInit_f" value="false"> 否
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">分类展示类型:</label>
+
+        <div id="showType" class="col-sm-10">
+            <label class="radio-inline">
+                <input type="radio" name="showType" value="0"> 固定
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="showType" value="1"> 下拉
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">分类显示级数:</label>
+
+        <div id="showLevel" class="col-sm-10">
+            <label class="radio-inline">
+                <input type="radio" name="showLevel" value="0">一级
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="showLevel" value="1"> 二级
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">是否显示图标:</label>
+
+        <div id="isShowImage" class="col-sm-10">
+            <label class="radio-inline">
+                <input type="radio" name="isShowImage" value="0">是
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="isShowImage" value="1"> 否
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="firstLevelNum" class="col-sm-2 control-label" placeholder="请填写数字">第一级显示数量:</label>
+
+        <div class="col-sm-10">
+            <input type="number" class="form-control" id="firstLevelNum">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="secondLevelNum" class="col-sm-2 control-label" placeholder="请填写数字"> 第二级显示数量:</label>
+
+        <div class="col-sm-10">
+            <input type="number" class="form-control" id="secondLevelNum">
+        </div>
+    </div>
+</form>
+<script>
+    //获取属性配置JSON
+    var pageJson = ${webPageModelJsonStr};
+
+    //构建属性配置
+    var componentsParam = {
+        initParamData: function (paramJson) { //初始化渲染属性配置
+            if (typeof(paramJson) == "string") {
+                paramJson = JSON.parse(paramJson);
+            }
+            $("#needAsyncInit input[value=" + paramJson.needAsyncInit + "]").prop("checked", true);
+            $("#showType input[value=" + paramJson.showType + "]").prop("checked", true);
+            $("#showLevel input[value=" + paramJson.showLevel + "]").prop("checked", true);
+            $("#isShowImage input[value=" + paramJson.isShowImage + "]").prop("checked", true);
+            $("#firstLevelNum").val(paramJson.firstLevelNum);
+            $("#secondLevelNum").val(paramJson.secondLevelNum);
+        },
+        saveParamData: function () { //返回属性配置JSON
+            var needAsyncInit = $("#needAsyncInit input:checked").val();
+            var showType = $("#showType input:checked").val();
+            var showLevel = $("#showLevel input:checked").val();
+            var isShowImage = $("#isShowImage input:checked").val();
+            var firstLevelNum = $("#firstLevelNum").val();
+            var secondLevelNum = $("#secondLevelNum").val();
+            var paramJson = {
+                compId: 'category',
+                "needAsyncInit": needAsyncInit,
+                "showType": showType,
+                "showLevel": showLevel,
+                "isShowImage": isShowImage,
+                "firstLevelNum": firstLevelNum,
+                "secondLevelNum": secondLevelNum
+            };
+            return paramJson;
+        }
+    }
+
+    componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+
+</script>
+</body>
+</html>

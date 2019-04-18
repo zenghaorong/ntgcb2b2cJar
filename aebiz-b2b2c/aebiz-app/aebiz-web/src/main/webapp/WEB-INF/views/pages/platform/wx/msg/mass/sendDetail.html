@@ -1,0 +1,57 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">${msg['wx.mass.column.massdetails']}</a>
+                    </div>
+                </header>
+                <div class="row mb10" style="text-align: center;padding-top: 10px;">
+                    <table width="90%" style="padding: 10px;">
+                        <tr style="height: 30px;">
+                            <td width="20%" align="right">${msg['wx.mass.column.namemass']}：</td>
+                            <td width="80%" align="left">
+                                ${obj.name!}
+                            </td>
+                        </tr>
+                        <tr style="height: 30px;">
+                            <td width="20%" align="right">${msg['wx.mass.column.masstype']}：</td>
+                            <td width="80%" align="left">
+                                ${obj.type=='text'?msg['wx.mass.column.textmessage']:msg['wx.mass.column.bythemessage']}
+                            </td>
+                        </tr>
+                        <tr style="height: 30px;">
+                            <td width="20%" align="right">${msg['wx.mass.column.massrange']}：</td>
+                            <td width="80%" align="left">
+                                ${obj.scope=='all'?msg['wx.mass.column.allmembers']:msg['wx.mass.column.memberslist']}
+                            </td>
+                        </tr>
+                        <tr style="height: 30px;">
+                            <td width="20%" align="right">${msg['wx.mass.column.masscontent']}：</td>
+                            <td width="80%" align="left">
+                                <!--# if(obj.type=='text'){#-->
+                                ${obj.content!}
+                                <!--# }else{#-->
+                                <!--# for(o in news){#-->
+                                ${o.title!}<br>
+                                <!--# }#-->
+                                <!--# }#-->
+                            </td>
+                        </tr>
+                        <tr style="height: 30px;">
+                            <td width="20%" align="right">${msg['wx.mass.column.massresults']}：</td>
+                            <td width="80%" align="left">
+                               <!--# if(!isEmpty(send.errMsg)){#--> ${send.errMsg!}<!--# }#--> <span style="color: red">${send.status==1?msg['wx.mass.column.successful']:msg['wx.mass.column.failure']}</span><br>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">${msg['wx.mass.column.close']}</button>
+</div>

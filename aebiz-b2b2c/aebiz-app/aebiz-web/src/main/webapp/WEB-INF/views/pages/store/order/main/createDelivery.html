@@ -1,0 +1,178 @@
+<style>
+    table .s-input{margin: auto;}
+    table,table.s-table tr td,table tr th{border: 1px solid #ddd;text-align: center;vertical-align: middle;}
+</style>
+<div class="modal-body" style="height:70vh;overflow-y: auto">
+    <form id="createDeliveryForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+          action="${base}/store/order/delivery/saveOrderDelivery" method="post">
+        <div class="panel-body">
+            <input type="hidden" name="id" value="${obj.id}" >
+            <div style="padding: 5px 0px" >
+                <!--#  var index= 1;  for(var order in orderList){ #-->
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">订单号: ${order.id}   下单时间：<!--#if(!isEmpty(obj.orderAt)){#-->${@date.getDate(order.orderAt)} <!--#}#--></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table s-table">
+                                <caption>
+                                </caption>
+                                <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" class="hy-check all-checked" name="check_all" id="check_all" />
+                                    </th>
+                                    <th>商品名称</th>
+                                    <th>商城单价</th>
+                                    <th>订单数量（个）</th>
+                                    <th>发货数量（个）</th>
+                                    <th>未发货数量（个）</th>
+                                    <th>发货时间</th>
+                                    <th>小计</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!--#for(o in order.goodsList ){  var noSendNum = o.buyNum - o.sendNum; #-->
+                                <tr style="border-bottom: 1px solid #dfe6ec;">
+                                    <td>
+                                        <!--#if(noSendNum > 0){ #-->
+                                        <input type="checkbox" class="hy-check check-cell" name="check" value="${o.id}" />
+                                        <!--# }#-->
+                                    </td>
+                                    <td>${o.goodsName} ${o.name}</td>
+                                    <td>￥${@money.fenToYuan(o.buyPrice)}</td>
+                                    <td>${o.buyNum} </td>
+                                    <td>
+                                        <!--#if(noSendNum > 0){ #-->
+                                        <input type="text" class="form-control s-input" style="width:60px;"
+                                               name="count" value="${noSendNum}" data-parsley-type="integer" data-parsley-required="true"/>
+                                        <!--# }else{ #-->
+                                        <input  type="text" class="form-control s-input"  disabled style="width:60px;"
+                                                name="count" value="0" data-parsley-type="integer" data-parsley-required="true"/>
+                                        <span style="color: #ff2e1d" >已全部发货</span>
+                                        <!--# }#-->
+
+                                    </td>
+                                    <td>${noSendNum}</td>
+                                    <td><!--# if(o.deliveryTime == 0){ #-->当日发货<!--# }else{ #-->隔日发货<!--# } #--></td>
+                                    <td>￥${@money.fenToYuan(o.totalMoney)}</td>
+                                </tr>
+                                <!--#}#-->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!--# index++; } #-->
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" style="float: left" data-dismiss="modal" >关闭</button>
+    <button class="btn btn-primary navbar-btn" type="button" data-toggle="modal"  data-target="#dialogCreate" >创建配货单</button>
+</div>
+<!--确认创建配货单 【确认】-->
+<div class="modal fade" id="dialogCreate" tabindex="-1" role="dialog" aria-labelledby="dialogCreateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="deliveryClose()"  aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="dialogCreateModalLabel">创建确认</h4>
+            </div>
+            <div class="modal-body">
+                <span>您确认要创建配货单吗？</span><br>
+                <textarea class="form-control" name="remark" rows="3" placeholder="请填写发货备注"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="receipt">确认</button>
+                <button type="button" class="btn btn-default" style="float: left" onclick="deliveryClose()" >关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<script>
+    var orderGoodList = [];
+    $(document).ready(function () {
+        $('#createDeliveryForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                var orderGoodStr = JSON.stringify(orderGoodList);
+                var orderGoods = {
+                    name: "orderGoods",
+                    required: false,
+                    value: orderGoodStr
+                }
+                arr.push(orderGoods);
+                var remarkInfo = $("textarea[name='remark']").text();
+                if(remarkInfo != ""){
+                   var remark = {
+                       name: "remark",
+                       required: false,
+                       value: remarkInfo
+                   }
+                   arr.push(remark);
+                }
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        window.location.reload();
+                    },500)
+                } else {
+                    Toast.error(data.msg);
+                }
+                //创建成功后，把选中的货品置空
+                orderGoodList = [];
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+
+    //全选、全不选
+    $(document).on("click",".all-checked",function(){
+        if($(this).is(":checked")){
+            $(this).parents("table").find("tbody .check-cell").prop("checked","checked");
+            checkOrderStock();
+        }else{
+            $(this).parents("table").find("tbody .check-cell").removeAttr("checked");
+        }
+    });
+
+    //点击各订单下的订单明细时触发
+    $(document).on("click",".check-cell",function(){
+        if($(this).is(":checked")){
+            $(this).prop("checked","checked");
+            checkOrderStock();
+        }else{
+            $(this).removeAttr("checked");
+        }
+    });
+
+    $("#receipt").on("click",function () {
+        $("input[name='check']:checked").each(function () {
+            var orderGood = {
+                id : $(this).val(),
+                sendNum: $(this).parents("tr").find("input[type='text']").val()
+            }
+            orderGoodList.push(orderGood);
+        })
+        if(orderGoodList.length <= 0){
+            Toast.error("请勾选要发货的货品");
+            return;
+        }
+        $("#createDeliveryForm").submit();
+    })
+
+    function deliveryClose() {
+        $("#dialogCreate").modal("hide");
+    }
+
+    function checkOrderStock() {
+        
+    }
+</script>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="cacheManager_ehcache" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ioc/ehcache.xml"/>
+    </bean>
+
+    <bean id="cacheManager_redis" class="com.aebiz.baseframework.cache.impl.redis.RedisCacheManager">
+        <property name="mode" value="kv"/>
+        <property name="debug" value="false"/>
+    </bean>
+
+    <!-- 一级缓存速度快,二级缓存支持集群部署 -->
+    <bean id="shiroCacheManager" class="com.aebiz.baseframework.cache.impl.lcache.LCacheManager" init-method="init"
+          destroy-method="destroy">
+        <property name="jedisAgent" ref="jedisAgent"/>
+        <property name="level1" ref="cacheManager_ehcache"/>
+        <property name="level2" ref="cacheManager_redis"/>
+    </bean>
+
+    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <property name="name" value="sid"/>
+        <property name="maxAge" value="946080000"/>
+        <property name="httpOnly" value="true"/>
+    </bean>
+
+    <bean id="rememberMeManager"
+          class="com.aebiz.baseframework.shiro.remember.LightCookieRememberMeManager">
+        <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('LafjwUgsDlNmnet47IJQWg==')}"/>
+    </bean>
+
+    <!-- use R.UU32() -->
+    <bean id="sessionIdGenerator" class="com.aebiz.baseframework.shiro.UU32SessionIdGenerator"/>
+
+    <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+        <property name="sessionIdGenerator" ref="sessionIdGenerator"/>
+    </bean>
+
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="sessionDAO" ref="sessionDAO"/>
+        <property name="sessionValidationSchedulerEnabled" value="false"/>
+        <property name="sessionIdCookie" ref="sessionIdCookie"/>
+        <property name="sessionIdCookieEnabled" value="true"/>
+        <property name="globalSessionTimeout" value="3600000"/>
+    </bean>
+
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="cacheManager" ref="shiroCacheManager"/>
+        <property name="sessionManager" ref="sessionManager"/>
+        <property name="rememberMeManager" ref="rememberMeManager"/>
+        <property name="authenticator" ref="authenticator"/>
+        <property name="realms">
+            <set>
+                <ref bean="platform_realm"/>
+                <ref bean="store_realm"/>
+                <ref bean="member_realm"/>
+            </set>
+        </property>
+    </bean>
+
+    <!-- 解决多个realm时自定义异常不能抛出的问题-->
+    <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+        <property name="authenticationStrategy" ref="anySuccessfulStrategy"/>
+        <property name="realms">
+            <set>
+                <ref bean="platform_realm"/>
+                <ref bean="store_realm"/>
+                <ref bean="member_realm"/>
+            </set>
+        </property>
+    </bean>
+    <bean id="anySuccessfulStrategy" class="com.aebiz.app.web.commons.shiro.authc.pam.AnySuccessfulStrategy"/>
+
+    <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!-- AOP式方法级权限检查  -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor">
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+    <!-- 安全认证过滤器 -->
+    <bean id="shiroFilter" class="com.aebiz.baseframework.shiro.filter.AebizShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="filters">
+            <map>
+                <entry key="platform_authc" value-ref="platform_authc"/>
+                <entry key="store_authc" value-ref="store_authc"/>
+                <entry key="member_authc" value-ref="member_authc"/>
+            </map>
+        </property>
+        <property name="filterChainDefinitions">
+            <value>
+                /platform/doLogin = anon
+                /store/doLogin = anon
+                /member/doLogin = anon
+                /member/login/logout = anon
+                /assets/** = anon
+                /druid/* = anon
+                /** = anon
+                /platform/** = platform_authc
+                /store/** = store_authc
+                /member/** = member_authc
+            </value>
+        </property>
+    </bean>
+
+    <bean id="sha256Matcher" class="org.apache.shiro.authc.credential.Sha256CredentialsMatcher">
+        <property name="storedCredentialsHexEncoded" value="false"/>
+        <property name="hashIterations" value="1024"/>
+        <property name="hashSalted" value="true"/>
+    </bean>
+
+    <bean id="platform_realm" class="com.aebiz.app.web.commons.shiro.realm.PlatformAuthorizingRealm">
+        <property name="credentialsMatcher" ref="sha256Matcher"/>
+    </bean>
+    <bean id="platform_authc" class="com.aebiz.app.web.commons.shiro.filter.PlatformAuthenticationFilter"/>
+
+    <bean id="store_realm" class="com.aebiz.app.web.commons.shiro.realm.StoreAuthorizingRealm">
+        <property name="credentialsMatcher" ref="sha256Matcher"/>
+    </bean>
+    <bean id="store_authc" class="com.aebiz.app.web.commons.shiro.filter.StoreAuthenticationFilter"/>
+
+    <bean id="member_realm" class="com.aebiz.app.web.commons.shiro.realm.MemberAuthorizingRealm">
+        <property name="credentialsMatcher" ref="sha256Matcher"/>
+    </bean>
+    <bean id="member_authc" class="com.aebiz.app.web.commons.shiro.filter.MemberAuthenticationFilter"/>
+
+</beans>

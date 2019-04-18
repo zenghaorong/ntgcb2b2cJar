@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+	<div>
+		  <div class="checkbox">
+			  	<label>
+			     	 <input type="checkbox"  name="needAsyncInit" id="needAsyncInit">异步加载
+			    </label>
+		  </div>
+		  <div class="checkbox">
+			    <label>
+			     	 <input type="checkbox"  name="showAttribute" id="showAttribute">展示规格与包装
+			    </label>
+		  </div>
+		   <div class="form-group">
+			    <div class="input-group">
+			      <div class="input-group-addon">评价分页条数</div>
+			       <select class="form-control" id="pageShow">
+					      <option value="5">5</option>
+					      <option value="8" selected>8</option>
+					      <option value="10">10</option>
+					      <option value="15">15</option>
+					      <option value="20">20</option>
+				    </select>
+			    </div>
+		  </div>
+	</div>
+</body>
+<script type="text/javascript">
+	//获取属性配置JSON
+	var pageJson = ${webPageModelJsonStr};
+	
+	//构建属性配置
+	var componentsParam = {
+			initParamData:function(config){ //初始化渲染属性配置
+				if(typeof(config) == "string"){
+					config = JSON.parse(config);
+				}
+			
+				if(config){
+					$("#needAsyncInit").prop("checked",config.needAsyncInit);
+					$("#showAttribute").prop("checked",config.showAttribute);
+					if(config.pageShow){
+						$("#pageShow").val(config.pageShow);
+					}
+					
+				} 
+			},
+			saveParamData:function(){ //返回属性配置JSON
+				var config = {};
+				config.needAsyncInit = $("#needAsyncInit").prop("checked");
+				config.showAttribute = $("#showAttribute").prop("checked");
+				config.productUuid= "6e04d3560c8049dda7ee2a9bf8d6e61d";
+				config.pageShow = $("#pageShow").val();
+				return config;
+			}
+	}
+
+	componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+
+</script>
+</html>

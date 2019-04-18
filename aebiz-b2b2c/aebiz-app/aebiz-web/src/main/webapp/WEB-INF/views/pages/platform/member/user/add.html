@@ -1,0 +1,210 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<Style>
+    span.red{
+        color:red;
+    }
+</Style>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/member/user" id="goBack" data-pjax><i
+                class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/member/user/addDo" method="post">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="type" class="col-sm-2 control-label">${msg['member.type.memberType']}</label>
+                            <div class="col-sm-8">
+                                <select id="type" class="form-control" name="typeId" onchange="reloadLevelSelect(this)">
+                                    <!--#for(typeObj in typeList){#-->
+                                    <option value="${typeObj.id!}">${typeObj.name!}</option>
+                                    <!--#}#-->
+                                </select>
+                            </div>
+                        </div> <!--类型-->
+                        <div class="form-group">
+                            <label for="level" class="col-sm-2 control-label">${msg['member.level.memberLevel']}</label>
+                            <div class="col-sm-8">
+                                <select id="level" class="form-control" name="levelId"
+                                        data-parsley-required="true">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div> <!--等级-->
+                        <div class="form-group">
+                            <label for="nickname"
+                                   class="col-sm-2 control-label">${msg['account.info.column.nickname']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="nickname" class="form-control" name="nickname"
+                                      placeholder="${msg['account.info.column.nickname']}">
+                            </div>
+                        </div> <!--昵称-->
+                        <div class="form-group">
+                            <label for="email"
+                                   class="col-sm-2 control-label">${msg['account.user.column.email']}</label>
+                            <div class="col-sm-8">
+                                <input type="email" id="email" class="form-control" name="email"
+                                       placeholder="${msg['account.user.column.email']}"
+                                       onchange="checkUnique(this,2)">
+                            </div>
+                        </div> <!--邮箱-->
+                        <div class="form-group">
+                            <label for="userName"
+                                   class="col-sm-2 control-label"><span class="red">*</span>${msg['account.user.column.userName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="userName" class="form-control" name="loginname" data-parsley-length="[4, 20]"
+                                       data-parsley-required="true" placeholder="${msg['account.user.column.userName']}"
+                                       onchange="checkUnique(this,0)">
+                            </div>
+                        </div> <!--用户名-->
+                        <div class="form-group">
+                            <label for="mobile"
+                                   class="col-sm-2 control-label"><span class="red">*</span>${msg['account.user.column.mobile']}</label>
+                            <div class="col-sm-8">
+                                <input type="tel" id="mobile" class="form-control" name="mobile"
+                                       data-parsley-required="true" data-parsley-length="[11,11]"
+                                       data-parsley-phone
+                                       onchange="checkUnique(this,1)"
+                                       placeholder="${msg['account.user.column.mobile']}">
+                            </div>
+                        </div> <!--手机号-->
+                        <div class="form-group">
+                            <label for="password"
+                                   class="col-sm-2 control-label"><span class="red">*</span>${msg['account.user.column.password']}</label>
+
+                            <div class="col-sm-8">
+                                <input type="password" id="password" class="form-control" name="password"
+                                       data-parsley-required="true"
+                                       placeholder="${msg['account.user.column.password']}" data-parsley-minlength="6"
+                                       data-parsley-maxlength="20">
+                            </div>
+                        </div> <!--密码-->
+                        <div class="form-group">
+                            <label for="password2" class="col-sm-2 control-label"><span class="red">*</span>${msg['account.user.column.password2']}</label>
+
+                            <div class="col-sm-8">
+                                <input type="password" id="password2" class="form-control" name="password2"
+                                       data-parsley-required="true" data-parsley-minlength="6"
+                                       data-parsley-maxlength="20"
+                                       placeholder="${msg['account.user.column.password2']}"
+                                       data-parsley-equalto="#password"
+                                       data-parsley-equalto-message="两次密码输入不一致">
+                            </div>
+                        </div> <!--确认密码-->
+                        <div class="form-group">
+                            <label for="disabled" class="col-sm-2 control-label">${msg['member.user.state']}</label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" id="disabled" name="disabled"
+                                       class="js-switch-blue" checked>
+                            </div>
+                        </div> <!--会员状态：绿色表示启动，红色表示禁用-->
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley"
+                                    data-loading-text="${msg['globals.button.submit.tip']}">
+                                ${msg['globals.button.submit']}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+<script language="JavaScript">
+    $(document).ready(function () {
+        myForm.init();
+        reloadLevelSelect($("#type"));//根据类型初始化等级
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                    // reloadLevelSelect($("#type"));//根据类型初始化等级
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+
+    /**
+     * 当会员类型改变时，查找该类型对应的等级列表并填充到等级选择框中
+     * @param elem 当前元素
+     */
+    function reloadLevelSelect(elem) {
+        var typeId = $(elem).val();
+        if (!typeId){
+            return;
+        }
+
+        $.post("${base}/platform/member/level/getLevelListByTypeId", {typeId: typeId}, function (result) {
+            $("#level").html("");
+            if (result.code == 0) {
+                var levelList = result.data;
+                if (!levelList || levelList.length < 1) {
+                    var options = elem.options;
+                    var index = elem.selectedIndex;
+                    var val = options[index].text;
+                    Toast.info("暂无" + val + "的等级信息");
+                    $("#level").append('<option value="">无</option>');
+                    return;
+                }
+                for (var i = 0; i < levelList.length; i++) {
+                    var levelObj = levelList[i];
+                    $("#level").append('<option value="' + levelObj.id + '">' + levelObj.name + '</option>');
+                }
+            } else {
+                Toast.error(result.msg);
+            }
+        }, "json");
+    }
+
+    /**
+     * 检查手机、邮箱，用户名等在数据库中是否存在，这些字段存库的时候都需有唯一性约束
+     * @param elem 当前元素
+     */
+    function checkUnique(elem, index) {
+        var types = ["loginname", "mobile", "email"];
+        var fn = types[index];
+        var fv = $(elem).val();
+        if (!fv) {
+            return;
+        }
+        var tip = $(elem).parents(".form-group").find("label").text().trim();
+        $.post("${base}/platform/member/user/check", {fieldName: fn, fieldValue: fv}, function (result) {
+            if (result.code == 0) {
+                var isOk = result.data;
+                if (isOk) {
+                    Toast.warning(tip + "已存在！请重新输入", "警告");
+                    $(elem).focus();//获取焦点
+                }
+            } else {
+                Toast.error(result.msg);
+            }
+        }, "json");
+    }
+</script>
+<!--#}#-->
+
+

@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+	<form class="form-horizontal">
+		<div class="form-group">
+			<label for="loginname" class="col-sm-3 control-label">是否显示</label>
+			<div class="col-sm-3">
+				是<input type="radio" name="showtype" value="true"
+					placeholder="" checked="checked">
+				否<input
+					type="radio" name="showtype" value="false" placeholder="">
+
+			</div>
+		</div>
+	</form>
+	</div>
+</body>
+<script type="text/javascript">
+	//获取属性配置JSON
+	var pageJson = ${webPageModelJsonStr};
+
+	//构建属性配置
+	var componentsParam = {
+		initParamData : function(pageJson) { //初始化渲染属性配置
+			if (typeof (pageJson) == "string") {
+				pageJson = JSON.parse(pageJson);
+			}
+
+			if (pageJson.showtype) {				
+				
+				$("input[name='showtype'][value=" + pageJson.showtype + "]")
+				.attr("checked", true);	
+			}
+		},
+		saveParamData : function() { //返回属性配置JSON
+			var showtype = $("input[name='showtype']:checked").val();
+
+			var pageJson = {
+				"compId" : 'floor',
+				"showtype" : showtype
+
+			};
+			return pageJson;
+		}
+	}
+
+	componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+</script>
+</html>

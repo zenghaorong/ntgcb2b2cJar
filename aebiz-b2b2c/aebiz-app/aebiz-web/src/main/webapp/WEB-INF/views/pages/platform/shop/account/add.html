@@ -1,0 +1,162 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/shop/config/account" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/shop/config/account/addDo" method="post">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="type" class="col-sm-2 control-label">${msg['shop.account.column.type']}</label>
+                            <div class="col-sm-8">
+                           <!-- <input type="text" id="type" class="form-control" name="type" data-parsley-required="true" placeholder="${msg['shop.account.column.type']}">-->
+                                <select id="type" class="form-control" name="type"
+                                        data-parsley-required="true">
+                                    <option value="0">${msg['shop.enum.account.in']}</option>
+                                    <option value="1">${msg['shop.enum.account.out']}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bankAccount" class="col-sm-2 control-label">${msg['shop.account.column.bankAccount']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="bankAccount" class="form-control" name="bankAccount" data-parsley-required="true" placeholder="${msg['shop.account.column.bankAccount']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bankName" class="col-sm-2 control-label">${msg['shop.account.column.bankName']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="bankName" class="form-control" name="bankName" data-parsley-required="true" placeholder="${msg['shop.account.column.bankName']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="accountName" class="col-sm-2 control-label">${msg['shop.account.column.accountName']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="accountName" class="form-control" name="accountName" data-parsley-required="true" placeholder="${msg['shop.account.column.accountName']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="note" class="col-sm-2 control-label">${msg['shop.account.column.note']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="note" class="form-control" name="note" data-parsley-required="false" placeholder="${msg['shop.account.column.note']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="imgurl" class="col-sm-2 control-label">${msg['shop.account.column.imgurl']}</label>
+
+                            <div class="col-sm-8">
+                                <div id="queue"></div>
+                                <div class="input-group">
+                                      <span class="input-group-btn">
+                                      <input id="file_upload" name="file_upload" type="file" multiple="false">
+                                      </span>
+                                </div>
+                                <div id="img" style="padding: 5px;">
+                                </div>
+                                <input type="hidden" id="imgurl" name="imgurl" value="" >
+                            </div>
+                        </div>
+                       <!-- <div class="form-group">
+                            <label for="disabled" class="col-sm-2 control-label">${msg['shop.account.column.disabled']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="disabled" class="form-control" name="disabled" data-parsley-required="true" placeholder="${msg['shop.account.column.disabled']}">
+                            </div>
+                        </div>-->
+                        <!--<div class="form-group">
+                            <label for="location" class="col-sm-2 control-label">${msg['shop.account.column.location']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="location" class="form-control" name="location" data-parsley-required="true" placeholder="${msg['shop.account.column.location']}">
+                            </div>
+                        </div>-->
+                        <div class="form-group">
+                            <label for="disabled" class="col-sm-2 control-label">${msg['shop.account.column.disabled']}</label>
+                            <div class="col-sm-8 switcha">
+                                <div class="mr15">
+                                    <input type="checkbox" id="disabled" name="disabled" class="js-switch-blue" >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+<script language="JavaScript">
+    function clearFile() {
+        $("#img").html("");
+        $("#imgurl").val("");
+    }
+    $(document).ready(function () {
+        myForm.init();
+        $('#file_upload').uploadifive({
+            'auto': true,
+            'multi': false,
+            'width': '100%',
+            'height': '35',
+            'buttonText': '请选择图片',
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024,
+            'queueSizeLimit': 1,
+            'formData': {},
+            'queueID': 'queue',
+            'uploadScript': '${base}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    $("#img").html("<img src='" + data.data + "' style='width:150px;'>");
+                    $("#imgurl").val(data.data);
+                } else {
+                    clearFile();
+                    Toast.error(data.msg);
+                }
+            },
+            'onDrop': function (file, fileDropCount) {
+                clearFile();
+            },
+            'onClearQueue': function (queue) {
+                clearFile();
+            },
+            'onCancel': function () {
+                clearFile();
+            }
+        });
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    form.resetForm();
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<!--#}#-->
+
+

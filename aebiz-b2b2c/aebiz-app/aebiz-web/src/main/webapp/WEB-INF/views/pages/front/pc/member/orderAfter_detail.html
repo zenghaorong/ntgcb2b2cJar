@@ -1,0 +1,575 @@
+<!--#
+include("/pages/front/pc/member/inc/header.html"){}
+#-->
+
+<style>
+    .div-img-album{
+        list-style-type: none;
+        margin: 2px;
+        height: 118px;
+        float: left;
+    }
+    .divImg{
+        float: left;
+        margin: 2px;
+        padding: 2px;
+        height:108px;
+        width:100px;
+        border: 1px solid #dcdcdc;
+        cursor: pointer;
+    }
+    .divImgD{
+        float: left;
+        margin: 2px;
+        padding: 2px;
+        height:108px;
+        width:100px;
+        border: 1px solid #dcdcdc;
+        cursor: pointer;
+    }
+</style>
+<div class="m-bd">
+    <div class="u-branch g-center f-push-30-t">
+        <i class="iconfont icon-jingxuananlifangzi"></i>当前位置：<a href="">B2B2C商城 ></a><a href="">个人中心 ></a><a
+            href="/member/orderAfter">售后管理 ></a>申请售后
+    </div>
+    <div class="f-tac service-status">
+        <!--#var state = orderAfterMain.afterSaleState; var applyType = orderAfterMain.applyType;
+          select{ case applyType==0&&state==0:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter3-1.png"/>
+        <!--#;break; case applyType==0&&state==2:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter3-0.png"/>
+        <!--#;break; case applyType==0&&state==3:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter3-2-2.png"/>
+        <!--#;break; case applyType==0&&state==5:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter3-0.png"/>
+        <!--#;break; case applyType==0&&state==6:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter3-2-1.png"/>
+        <!--#;break; case applyType==0&&state==7:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter3-2-2.png"/>
+        <!--#;break; case applyType==0&&state==10:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter3-3.png"/>
+        <!--#;break; case applyType==0&&state==11:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter3-0.png"/>
+        <!--#;break; case applyType==0&&state==12:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter3-0.png"/>
+        <!--#;break; case applyType==1&&state==0:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter4-1.png"/>
+        <!--#;break; case applyType==1&&state==2:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter4-0.png"/>
+        <!--#;break; case applyType==1&&state==3:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter4-3-2.png"/>
+        <!--#;break; case applyType==1&&state==4:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter4-2.png"/>
+        <!--#;break; case applyType==1&&state==5:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter4-0.png"/>
+        <!--#;break; case applyType==1&&state==6:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter4-3-1.png"/>
+        <!--#;break; case applyType==1&&state==7:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter4.png"/>
+        <!--#;break; case applyType==1&&state==8:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter4-2-1.png"/>
+        <!--#;break; case applyType==1&&state==9:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter4-0.png"/>
+        <!--#;break; case applyType==1&&state==10:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter4-4.png"/>
+        <!--#;break; case applyType==1&&state==11:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter4-0.png"/>
+        <!--#;break; case applyType==1&&state==12:#-->
+            <img src="${base!}/assets/front/pc/member/images/orderAfter4-0.png"/>
+        <!--#;}#-->
+
+    </div>
+    <div class="g-center f-push-20-t">
+        <div class="serviceLeftbar f-fl">
+            <div class="list_hd">申请售后商品<a href="" class="f-fr">售后政策></a></div>
+            <div class="good f-cb">
+                <a class="pic" href=""><img src="${orderAfterDetail.orderGoods.imgUrl}"/></a>
+                <a class="info" href="">${orderAfterDetail.orderGoods.goodsName} ${orderAfterDetail.orderGoods.name}</a>
+            </div>
+            <div class="inner">
+                <p><span>订单编号：</span> ${orderAfterMain.orderId}</p>
+                <p><span>申请时间：</span> <!--#if(!isEmpty(orderAfterMain.applyTime)){#-->
+                    ${@date.getDate(orderAfterMain.applyTime)} <!--#}#--></p>
+                <p><span>购买价：</span>
+                    ¥${@money.fenToYuan(orderAfterDetail.orderGoods.buyPrice)} ×${orderAfterDetail.orderGoods.buyNum}(数量 )
+                </p>
+                <p><span>运&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;费：</span>
+                    ¥${@money.fenToYuan(orderAfterMain.orderMain.freightMoney)}</p>
+                <p><span>优&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;惠：</span>
+                    -¥${@money.fenToYuan(orderAfterDetail.orderGoods.freeMoney)}</p>
+                <p><span>实付金额：</span> ¥${@money.fenToYuan(orderAfterDetail.orderGoods.payMoney)}</p>
+                <p><span>申请数量：</span> ${orderAfterDetail.afterSaleNum}</p>
+                <p><span>申请原因：</span> ${orderAfterMain.returnReason}</p>
+            </div>
+        </div>
+        <br/>
+        <div class="m-service-main border">
+            <!--#select(orderAfterMain.afterSaleState){
+                   case 0 :#-->
+                    <!--等待卖家处理-->
+                    <div class="backgood">
+                        <div class="notice">
+                            <h3><i class="iconfont icon-shijian"></i>售后申请提交成功，请耐心等待客服审核</h3>
+                            <div class="info">
+                                <!--<p>剩余<span class="mark">14天23时</span>，茗流荟逾期未处理售后申请将自动通过</p>-->
+                            </div>
+                            <hr class="dotted" />
+                            <div class="info">
+                                <p>您还可以：<a class="green cancelOrderAfterApply">撤销售后申请</a></p>
+                            </div>
+                        </div>
+                    </div>
+            <!--#;case 2:#-->
+                    <!--不同意-->
+                    <div class="backgood">
+                        <div class="notice">
+                            <h3><i class="iconfont icon-cuo"></i>卖家（${orderAfterMain.storeName}）未同意您的申请，请联系客服协商</h3>
+                            <div class="info">
+                                <p></p>
+                            </div>
+                            <hr class="dotted" style=" " />
+                        </div>
+                    </div>
+            <!--#; case 3:#-->
+                    <!--// 待财务审核-->
+                    <div class="backgood">
+                        <div class="notice">
+                            <h3><i class="iconfont icon-shijian"></i>售后申请正在提交财务审核退款，请耐心等待审核</h3>
+                            <div class="info">
+                                <!--<p>剩余<span class="mark">14天23时</span>，茗流荟逾期未处理售后申请将自动通过</p>-->
+                            </div>
+                            <hr class="dotted" />
+                            <div class="info">
+
+                            </div>
+                        </div>
+                    </div>
+            <!--#; case 4 :#-->
+                    <!--等待买家寄回-->
+                    <div class="backgood">
+                        <div class="notice">
+                            <h3><i class="iconfont icon-wode"></i>卖家（${orderAfterMain.storeName}）已经同意了申请，请退货给商家</h3>
+                            <div class="info">
+                                <!-- <p><label>退货地址：</label>
+                                     <span class="inner">周涛，13812976496，江苏省苏州市常熟市尚湖镇颜巷工业区明珠路6号</span>
+                                 </p>-->
+
+                                <p><label>退款说明：</label><span class="inner">请将退货商品包装好，且商品不影响二次销售；请勿发平邮或到付件，商品寄出后，需及时在每笔退款上操作“填写物流信息”，以免退款超时关闭</span>
+                                </p>
+                            </div>
+                            <hr class="dotted"/>
+                        </div>
+
+                        <div class="notice">
+                            <div class="info">
+                                <!--<p>剩余<span class="mark">6天8时21分5秒</span>，逾期未填写退货物流信息，退货将自动关闭。</p>-->
+                            </div>
+                            <h3><i class="iconfont icon-shuxie"></i>填写退货物流信息</h3>
+                            <div data-toggle="modal"  data-target="setLogistics" class="button">
+                                <a class="r-btn setLogistics">填写物流信息</a>
+                            </div>
+                            <hr class="dotted"/>
+                            <div class="info">
+                                <p>您还可以：<a class="right cancelOrderAfterApply">撤销退款申请</a></p>
+                            </div>
+                        </div>
+                    </div>
+            <!--#; case 5: #-->
+                    <!--财务审核不通过-->
+                    <div class="backgood">
+                        <div class="notice">
+                            <h3><i class="iconfont icon-cuo"></i>卖家（${orderAfterMain.storeName}）退款金额审核未通过，请联系客服协商</h3>
+                            <div class="info">
+                                <p></p>
+                            </div>
+                            <hr class="dotted" style=" " />
+                        </div>
+                    </div>
+            <!--#; case 6: #-->
+                    <!--待买家填写账号-->
+                    <div class="backgood">
+                        <div class="notice">
+                            <h3><i class="iconfont icon-wode"></i>卖家（${orderAfterMain.storeName}）已通过审核，请填写退款账号</h3>
+                            <div class="info">
+                                <p><label>退款说明：</label><span class="inner">由于您的退款方式是线下转账，所以请您填下退款账号</span>
+                                </p>
+                            </div>
+                            <hr class="dotted"/>
+                        </div>
+
+                        <div class="notice">
+                            <div class="info">
+                                <!--<p>剩余<span class="mark">6天8时21分5秒</span>，逾期未填写退货物流信息，退货将自动关闭。</p>-->
+                            </div>
+                            <h3><i class="iconfont icon-shuxie"></i>填写退款账号信息</h3>
+                            <div data-toggle="modal"  data-target="setBackAccount" class="button">
+                                <a class="r-btn setBackAccount">填写账号信息</a>
+                            </div>
+                            <hr class="dotted"/>
+                            <div class="info">
+
+                            </div>
+                        </div>
+                    </div>
+            <!--#; case 7: #-->
+                    <!--财务确认(待退款)-->
+                    <div class="backgood">
+                        <div class="notice">
+                            <h3><i class="iconfont icon-shijian"></i>售后申请已通过财务审核，请耐心等待退款</h3>
+                            <div class="info">
+                                <!--<p>剩余<span class="mark">14天23时</span>，茗流荟逾期未处理售后申请将自动通过</p>-->
+                            </div>
+                            <hr class="dotted" />
+                            <div class="info">
+                            </div>
+                        </div>
+                    </div>
+            <!--#; case 8: #-->
+                    <!--买家已发货-->
+                    <div class="backgood">
+                        <div class="notice">
+                            <h3><i class="iconfont icon-shijian"></i>等待卖家收货并验货，请耐心等待审核</h3>
+                            <div class="info">
+                                <!--<p>剩余<span class="mark">14天23时</span>，茗流荟逾期未处理售后申请将自动通过</p>-->
+                                <p>物流公司：${orderAfterReturns.logisticsCompany!}</p>
+                                <p>物流单号：${orderAfterReturns.logisticsSheetId!}</p>
+                                <p></p>
+                            </div>
+                            <hr class="dotted" />
+                            <div class="info">
+                            </div>
+                        </div>
+                    </div>
+            <!--#; case 9: #-->
+                    <!--卖家收到货不同意，验货不通过-->
+                    <div class="backgood">
+                        <div class="notice">
+                            <h3><i class="iconfont icon-cuo"></i>卖家（${orderAfterMain.storeName}）验货不通过，请联系客服协商</h3>
+                            <div class="info">
+                                <p></p>
+                            </div>
+                            <hr class="dotted" style=" " />
+                        </div>
+                    </div>
+            <!--#; case 10: #-->
+                    <!--售后成功(已退款)-->
+                    <div class="backgood">
+                        <div class="notice">
+                            <h3 class="mark"><i class="iconfont icon-money"></i>退款成功</h3>
+                            <div class="info">
+                                <p>退款成功时间：${@date.getDate(orderAfterRefundment.refundTime)}</p>
+                            </div>
+                            <hr class="dotted" style=" " />
+                            <div class="info">
+                                <p>退款总金额：<span class="mark">¥${@money.fenToYuan(orderAfterRefundment.refundMoney)}</span>&nbsp;&nbsp;&nbsp;退款到${orderAfterRefundment.refundMoneyWay}: ${orderAfterRefundment.refundMoneyAccount}</p>
+                            </div>
+                        </div>
+                    </div>
+            <!--#; case 11: #-->
+                    <!--售后关闭-->
+                    <div class="backgood">
+                        <div class="notice">
+                            <h3><i class="iconfont icon-cuo"></i>售后已关闭</h3>
+                            <div class="info">
+                            </div>
+                            <hr class="dotted" style=" " />
+                        </div>
+                    </div>
+            <!--#; case 12: #-->
+                    <!--售后已取消-->
+                    <div class="backgood">
+                        <div class="notice">
+                            <h3><i class="iconfont icon-cuo"></i>您已撤销售后申请</h3>
+                            <div class="info">
+                                <p>撤销时间：${@date.getDate(orderAfterMain.opAt)}</p>
+                            </div>
+                            <hr class="dotted" style=" " />
+                        </div>
+                    </div>
+            <!--#;}#-->
+
+        </div>
+    </div>
+</div>
+<!--填写物流弹层-->
+<div id="setLogistics" class="m-layer-pop">
+    <div class="m-setLogistics bd">
+        <form action="" method="post">
+            <div class="item f-cb">
+                <label class="u-label"><span>*</span>物流公司</label>
+                <input type="text" name="logisticsCompany" id="logisticsCompany" value="" style="width: 190px;" />
+            </div>
+            <div class="item f-cb">
+                <label class="u-label"><span>*</span>物流单号</label>
+                <input type="text" name="logisticsSheetId" id="logisticsSheetId" value="" style="width: 190px;" />
+            </div>
+            <div class="item f-cb">
+                <label class="u-label">发货说明</label>
+                <textarea name="note" id="note" cols="30" rows="10" style="width: 500px; height: 60px;"></textarea>
+            </div>
+            <li class="item f-cb">
+                <label class="u-label"><span></span>上传凭证</label>
+                <div id="queue"></div>
+                <label class="u-file-btn f-fl" >
+                    <input type="file" name="file_upload" id="file_upload" multiple="true" /></label>
+                <span class="text" style="top: 7px; position: relative; margin-left: 10px">最多上传3张，每大小不超过5M;支持GIF,JPG,PNG,BMP格式</span>
+                <div id="div_img" class="div-img" style="margin-left: 120px;margin-top: 20px;"></div>
+            </li>
+        </form>
+    </div>
+</div>
+<!-- 填写物流弹层 end -->
+
+<!--填写退款账号弹层-->
+<div id="setBackAccount" class="m-layer-pop">
+    <div class="m-setLogistics bd">
+        <form action="" method="post">
+            <div class="item f-cb">
+                <label class="u-label"><span>*</span>开户行：</label>
+                <input type="text" name="bankName" id="bankName" value="" style="width: 190px;" />
+            </div>
+            <div class="item f-cb">
+                <label class="u-label"><span>*</span>银行卡号：</label>
+                <input type="text" name="bankCard" id="bankCard" value="" style="width: 190px;" />
+            </div>
+            <div class="item f-cb">
+                <label class="u-label">真实姓名：</label>
+                <input type="text" name="name" id="name" value="" style="width: 190px;" />
+            </div>
+        </form>
+    </div>
+</div>
+<!--填写退款账号弹层 end -->
+
+<!--取消售后弹层-->
+<div id="cancelOrderAfterApply" class="m-layer-pop">
+    <div class="m-setLogistics bd">
+        <div style="text-align: center; font-size: 20px">
+            确定取消售后申请吗？
+        </div>
+    </div>
+</div>
+<!--取消售后弹层 end -->
+
+<!--#include("/pages/front/pc/member/inc/tail.html"){}#-->
+<!-- end -->
+
+<script language="JavaScript">
+    $(document).ready(function () {
+        // 文件上传
+        $('#file_upload').uploadifive(initAlbumOptions());
+    });
+
+    /**
+     * 初始化相册
+     */
+    function initAlbumOptions() {
+        var queueId = "queue";
+        var fileuploadId = "file_upload";
+        var imgDivIdPrefix = "div_album";
+        var albumContainer = document.getElementById("div_img");
+        var sort = Sortable.create(albumContainer);
+        var imgIndex = $(albumContainer).children().size();
+        return {
+            'auto': true,
+            'multi': true,
+            'width': '100%',
+            'height': '35',
+            'buttonText': "<i class='iconfont icon-camera'></i>上传图片",
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024*5,
+            'queueSizeLimit': 3,
+            'removeCompleted':true,
+            'removeTimeout':0,
+            'formData': {},
+            'queueID': queueId,
+            'uploadScript': '${base!}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    layer.msg(data.msg,{offset:'40%', time: '1000'})
+                    var c = "divImg";
+                    imgIndex++;
+                    var imgDivId = imgDivIdPrefix + imgIndex;
+                    $(albumContainer).append("<div id='"+imgDivId+"' class='"+c+"' style='width:100px;'>" +
+                        "<img class='uploadImg' src='" + data.data+ "' style='width:94px;height: 102px;margin-bottom: 1px;margin-right: 10px;'><br>" +
+                        "<i style='float: right;padding-top: 4px;' class='fa fa-close' onclick=\"delAlbumImg('"+imgDivId+"')\"></i>" +
+                        "</div>");
+                    sort.destroy();
+                    sort = Sortable.create(albumContainer);
+                    $("#"+queueId).empty();
+                } else {
+                    layer.msg(data.msg,{offset:'40%', time: '1000'})
+                }
+            },
+            'onSelect' : function(queue) {
+                if($(albumContainer).children().length >= 3){
+                    layer.msg("${msg['order.after.title.uploadImgWarning']}",{offset:'40%', time: '1000'});
+                    $("#" + fileuploadId).uploadifive('cancel', $('.uploadifive-queue-item').first().data('file'));
+                }
+            }
+        };
+    }
+
+    function delAlbumImg(id){
+        $("#"+id).remove();
+    }
+
+    //填写物流弹层
+    $(document).on("click",".setLogistics",function(){
+        layer.open({
+            type: 1,
+            content: $('#setLogistics'),
+            offset: '100px',
+            area: '700px',
+            title: ['填写物流信息', 'font-size:18px;color:#ba9963;font-weight:600'],
+            btn: ['提交退货物流信息'],
+            shadeClose: true,
+            btnAlign: 'c',
+            scrollbar: false,
+            yes:function () {
+                setLogistics();
+            }
+        });
+    })
+
+    function setLogistics() {
+        var afterSaleId = "${orderAfterDetail.afterSaleId}";
+        var logisticsCompany = $("#logisticsCompany").val().trim();
+        var logisticsSheetId = $("#logisticsSheetId").val().trim();
+        var note = $("#note").val().trim();
+        var _evidence = "";
+        $("#div_img .uploadImg").each(function () {
+            var src = $(this).attr('src');
+            _evidence += src + ",";
+        })
+        if(logisticsCompany == ""){
+            layer.msg('请填写物流公司！',{
+                offset:'40%',
+                time: '1000'
+            })
+        }else if(logisticsSheetId == ""){
+            layer.msg('请填写物流单号！',{
+                offset:'40%',
+                time: '1000'
+            })
+        }else{
+            $.ajax({
+                type: "POST",
+                url: "${base!}/member/orderAfter/addRefundLogisticsDo",
+                data:{"afterSaleId":afterSaleId,
+                    "logisticsCompany":logisticsCompany,
+                    "logisticsSheetId":logisticsSheetId,
+                    "note":note,
+                    voucher:_evidence},
+                dataType: "JSON",
+                success: function (data) {
+                    if(data.code == 0){
+                        layer.msg('物流信息填写成功！',{
+                            offset:'40%',
+                            time: '1000'
+                        },function () {
+                            window.location.reload();
+                        })
+                    }else{
+                        layer.msg(data.msg,{offset:'40%', time:'1000'});
+                    }
+                }
+            });
+        }
+    }
+
+    //填写退款账号弹层
+    $(document).on("click",".setBackAccount",function(){
+        layer.open({
+            type: 1,
+            content: $('#setBackAccount'),
+            offset: '200px',
+            area: '500px',
+            title: ['填写退款账号', 'font-size:18px;color:#ba9963;font-weight:400'],
+            btn: ['提交退款账号信息'],
+            shadeClose: true,
+            btnAlign: 'c',
+            scrollbar: false,
+            yes:function () {
+                setBackAccount();
+            }
+        });
+    })
+
+    function setBackAccount() {
+        var afterSaleId = "${orderAfterDetail.afterSaleId}";
+        var bankName = $("#bankName").val().trim();
+        var bankCard = $("#bankCard").val().trim();
+        var name = $("#name").val().trim();
+        if(bankName == ""){
+            layer.msg("请填写开户行！",{offset:'40%', time:'1000'});
+        }else if(bankCard == ""){
+            layer.msg("请填写卡号！",{offset:'40%', time:'1000'});
+        }else if(name == ""){
+            layer.msg("请填写真是姓名！",{offset:'40%', time:'1000'});
+        }else{
+            $.ajax({
+                type: "POST",
+                url: "${base!}/member/orderAfter/addBankCardDo",
+                data:{"afterSaleId":afterSaleId,
+                    "bankName":bankName,
+                    "bankCard":bankCard,
+                    "name":name
+                    },
+                dataType: "JSON",
+                success: function (data) {
+                    if(data.code == 0){
+                        layer.msg("退款账号填写成功！",{offset:'40%', time:'1000'},function () {
+                            window.location.reload();
+                        });
+                    }else{
+                        layer.msg(data.msg,{offset:'40%', time:'1000'});
+                    }
+                }
+            });
+        }
+    }
+
+     //取消售后弹层
+    $(document).on("click",".cancelOrderAfterApply",function(){
+        layer.open({
+            type: 1,
+            content: $('#cancelOrderAfterApply'),
+            offset: '200px',
+            area: '500px',
+            title: ['取消售后申请', 'font-size:18px;color:#ba9963;font-weight:400'],
+            btn: ['确认', '取消'],
+            shadeClose: true,
+            btnAlign: 'c',
+            scrollbar: false,
+            yes:function () {
+                cancelOrderAfterApply();
+            }
+        });
+    })
+
+    function cancelOrderAfterApply() {
+        var afterSaleId = "${orderAfterDetail.afterSaleId}";
+        if(afterSaleId != ""){
+            $.ajax({
+                type: "POST",
+                url: "${base!}/member/orderAfter/cancelOrderAfter",
+                data:{"afterSaleId":afterSaleId},
+                dataType: "JSON",
+                success: function (data) {
+                    if(data.code == 0){
+                        layer.msg("取消售后成功！",{offset:'40%', time:'1000'},function () {
+                            window.location.reload();
+                        });
+                    }else{
+                        layer.msg(data.msg,{offset:'40%', time:'1000'});
+                    }
+                }
+            });
+        }
+    }
+
+
+</script>

@@ -1,0 +1,297 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<style>
+    .col-xs-1{
+        height: 34px;
+        line-height: 34px;
+        text-align: right;
+    }
+</style>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <!--<a id="add" class="btn btn-primary navbar-btn" href="${base}/platform/store/apply/class/add" data-pjax><i class="ti-plus"></i> ${msg['globals.button.add']}</a>-->
+    </div>
+</header>
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <div class="box-tab">
+            <ul class="nav nav-tabs ">
+                <li class="active"><a href="#levelInfo" onclick="typeQuery(0)" data-toggle="tab"> <!--# if(waitVerifyNum > 0 ) {  #--><span class="badge pull-right" style="background-color: #ff2e1d">${waitVerifyNum}</span><!--# } #-->待审核&nbsp;</a> </li>
+                <li><a href="#levelInfo" onclick="typeQuery(1)" data-toggle="tab"> <!--# if(verifyOkNum > 0 ) { #--><span class="badge pull-right" style="background-color: #ff2e1d">${verifyOkNum}</span><!--# } #-->审核通过&nbsp;</a> </li>
+                <li><a href="#levelInfo" onclick="typeQuery(2)" data-toggle="tab"> <!--# if(verifyNoNum > 0 ) {  #--><span class="badge pull-right" style="background-color: #ff2e1d">${verifyNoNum}</span><!--# } #-->审核不通过&nbsp;</a> </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="levelInfo">
+                    <div class="form-group">
+                        <label class="control-label col-xs-1">店铺名称:</label>
+                        <div class="col-xs-2"> <input type="text" name="storeName" class="form-control"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-1 control-label">申请时间:</label>
+                        <div class="col-xs-6 form-inline">
+                            <div class="input-group date js-start-time">
+                                <input class="form-control" size="16" type="text" id="startAt" name="startAt" value="" placeholder="起始时间" readonly>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                            </div>
+                            <span>至</span>
+                            <div class="input-group date js-end-time">
+                                <input class="form-control" size="16" type="text" id="endAt" name="endAt" value="" placeholder="结束时间" readonly>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                       <button type="button" class="btn btn-info"  onclick="search()">查询</button>
+                        <button type="reset" onclick="reset()" class="btn btn-default">清空</button>
+                    </div>
+
+                    <div class="table-responsive no-border" style="min-height: 500px;">
+                        <table class="table table-bordered table-striped mg-t datatable">
+                            <thead>
+                            <tr>
+                                <th>${msg['store.main.column.storeName']}</th>
+                                <th>${msg['store.apply.class.column.applyNote']}</th>
+                                <th>${msg['store.apply.class.column.applyAt']}</th>
+                                <th>${msg['store.apply.class.column.status']}</th>
+                                <th>${msg['store.apply.class.column.checkNote']}</th>
+                                <th>${msg['globals.table.column.operation']}</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    var datatable;
+    var status=0;//默认查询待审核类型申请
+    var storeName="";
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/store/apply/class/data",
+                "type": "post",
+                "data": function (d) {
+                    if(status != null){
+                        d.status = status;
+                    }
+                    storeName = $("input[name='storeName']").val();
+                    if(storeName != null && storeName != ""){
+                        d.storeName = storeName;
+                    }
+                    var startAt = $("[name='startAt']").val();
+                    if(startAt != null && startAt != "" ){
+                        d.startAt = startAt;
+                    }
+                    var endAt = $("[name='endAt']").val();
+                    if(endAt != null && endAt != "" ){
+                        d.endAt = endAt;
+                    }
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                    {"data": "storename", "bSortable": true},
+                    {"data": "applynote", "bSortable": true},
+                    {"data": "applyat", "bSortable": true},
+                    {"data": "status", "bSortable": true},
+                    {"data": "checknote", "bSortable": true},
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        if (row.status == 0) {
+                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                                '<li><a href="${base}/platform/store/apply/class/detail/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">${msg["globals.button.detail"]}</a></li>' +
+                                '<li><a href="${base}/platform/store/apply/class/edit/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">审核</a></li>' +
+                                '</ul></div>';
+                        }else {
+                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                                '<li><a href="${base}/platform/store/apply/class/detail/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">${msg["globals.button.detail"]}</a></li>' +
+                                '</ul></div>';
+                        }
+                    },
+                    "targets": 5
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return moment(parseInt(data * 1000)).format("YYYY-MM-DD HH:mm:ss");
+                        }
+                        return '';
+                    },
+                    "targets": 2
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data == 0)
+                            return "待审核";
+                        else if (data == 1)
+                            return "审核通过";
+                        else if (data == 2)
+                            return "审核不通过";
+                        else
+                            return '';
+                    },
+                    "targets": 3
+                }
+            ]
+        });
+
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/store/apply/class/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#okDel").unbind("click");
+            dialog.find("#okDel").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/platform/store/apply/class/delete", {ids: ids.toString()}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null,false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("${msg['globals.button.delete.select']}");
+        }
+    }
+
+    //等级审核查询
+    function typeQuery(val) {
+        status = val;
+        datatable.ajax.reload();
+    }
+
+    //等级按钮查询
+    function search() {
+        datatable.ajax.reload();
+    }
+
+    //等级查询条件重置
+    function reset() {
+        $("input[name='storeName']").val("");
+        $("input[name='startAt']").val("");
+        $("input[name='endAt']").val("");
+    }
+
+    function datePluginInit() {
+        $('.js-start-time').datetimepicker({
+            language: "${lang!'zh-CN'}",
+            format: 'yyyy-mm-dd hh:mm',
+            pickerPosition: 'bottom-left',
+            autoclose: true,
+            endDate : new Date("${@date.getDate()}")
+        }).on("changeDate", function (e) {
+            $("[name='startAt']").val(e.date);
+            $('.js-end-time').datetimepicker('setStartDate', e.date);
+        });
+
+        $('.js-end-time').datetimepicker({
+            language: "${lang!'zh-CN'}",
+            format: 'yyyy-mm-dd hh:mm',
+            pickerPosition: 'bottom-left',
+            autoclose: true,
+            endDate : new Date("${@date.getDate()}")
+        }).on("changeDate", function (e) {
+            $("[name='endAt']").val(e.date);
+            $('.js-start-time').datetimepicker('setEndDate', e.date);
+        });
+    }
+
+    $(function () {
+        initDatatable();
+        datePluginInit();
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+</script>
+<!--#}#-->

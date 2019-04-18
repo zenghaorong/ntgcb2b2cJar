@@ -1,0 +1,258 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<section class="content-wrap bg-white">
+    <header class="header bg-white navbar shadow">
+        <div class="btn-group tool-button">
+            <a id="add" class="btn btn-primary navbar-btn" href="${base}/platform/member/user/add" data-pjax><i
+                    class="ti-plus"></i> ${msg['member.user.add']}</a>
+        </div>
+        <div class="btn">
+            <select id="type" class="form-control" onchange="reloadLevelSelect(this)">
+                <option value="">请选择会员类型</option>
+                <!--#for(memberType in typeList){#-->
+                <option value="${memberType.id!}">${memberType.name!}</option>
+                <!--#}#-->
+            </select>
+        </div>
+        <div class="btn">
+            <select id="level" class="form-control" onchange="datatable.ajax.reload();" style="display: none">
+                <option value="">请选择会员等级</option>
+            </select>
+        </div>
+        <button class="btn btn-info navbar-btn" type="button" id="emptyBtn" style="display: none;">${msg['globals.button.reset']}</button>
+        <div class="pull-right">
+            <div class="btn">
+                <form class="form-inline">
+                    <div class="row">
+                        <div class="input-group">
+                            <input class="form-control" id="query" type="text"
+                                   placeholder="${msg['member.user.query.tip']}">
+                            <span class="input-group-addon btn-primary" id="searchBtn">
+                                <span class="ti-search"></span>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border" style="min-height: 800px;">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>${msg['account.user.column.userName']}</th><!--用户名-->
+                    <th>${msg['account.info.column.nickname']}</th><!--昵称-->
+                    <th>${msg['member.type.memberType']}</th><!--类型-->
+                    <th>${msg['member.level.memberLevel']}</th><!--等级-->
+                    <th>${msg['member.account.column.score']}</th><!--积分-->
+                    <th>${msg['member.account.column.money']}(￥)</th><!--余额-->
+                    <th>${msg['account.user.column.mobile']}</th><!--手机号-->
+                    <th>${msg['account.user.column.email']}</th><!--邮箱-->
+                    <th>${msg['member.user.state']}</th><!--会员状态-->
+                    <th width="10%">${msg['globals.table.column.operation']}</th><!--操作-->
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div id="dialogPaasword" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">重置密码</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">知道了</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogCoupon" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<style>
+   /* .dropdown-menu{
+        width: 100px !important;
+    }
+    .dropdown-menu li{
+        width: 100px !important;
+    }*/
+</style>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/member/user/data",
+                "type": "post",
+                "data": function (d) {
+                    d.typeId = $("#type").val();
+                    d.levelId = $("#level").val();
+                    d.queryStr = $("#query").val();
+                }
+            },
+            "order": [[0, "asc"]],
+            "columns": [
+                {"data": "accountid","visible": false, "bSortable": true},
+                {"data": "username", "sortable": true},
+                {"data": "nickname", "bSortable": true},
+                {"data": "type", "bSortable": true},
+                {"data": "level", "bSortable": true},
+                {"data": "score", "bSortable": true},
+                {"data": "money", "bSortable": true},
+                {"data": "mobile", "bSortable": true},
+                {"data": "email", "bSortable": true},
+                {"data": "state", "bSortable": true}
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        if (!row && !row.money) {
+                            return 0;
+                        } else{
+                            return row.money/100;
+                        }
+                    },
+                    "targets": 6
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (!data) {
+                            return '<i class="fa fa-circle text-success ml5"></i>';
+                        } else {
+                            return '<i class="fa fa-circle text-danger ml5"></i>';
+                        }
+                    },
+                    "targets": 9
+                },
+                {
+                    "render": function (data, type, row) {
+                        return '<div class="btn-group">' +
+                            '<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"><i class="ti-settings"></i> <span class="ti-angle-down"></span></button>' +
+                            '<ul class="dropdown-menu" role="menu">' +
+                            '<li><a href="${base}/platform/member/user/detail/' + row.id + '">${msg["globals.button.detail"]}</a></li>' +
+                            '<li><a href="${base}/platform/member/user/edit/' + row.id + '" data-pjax>${msg["globals.button.update"]}</a></li>' +
+                            '<li><a href="javascript:;" onclick="resetPwd(\'' + row.id + '\')" >密码重置</a></li>' +
+                            '<li class="divider"></li>' +
+                            '<li><a href="${base}/platform/member/account/money/add/' + row.accountid + '" data-toggle="modal" data-target="#dialogDetail">${msg["member.account.money"]}</a></li>' +
+                            '<li><a href="${base}/platform/member/account/score/add/' + row.accountid + '" data-toggle="modal" data-target="#dialogDetail">${msg["member.account.score"]}</a></li>' +
+                            '<li class="divider"></li>' +
+                            '<li><a href="${base}/platform/member/account/'+row.accountid+'/coupon" data-toggle="modal" data-target="#dialogCoupon">赠送优惠券</a></li>' +
+                            '<li class="divider"></li>' +
+                            '<li><a href="${base}/platform/member/account/money/detail/' + row.accountid + '" data-toggle="modal" data-target="#dialogDetail">${msg["member.account.money.log"]}</a></li>' +
+                            '<li><a href="${base}/platform/member/account/score/detail/' + row.accountid + '" data-toggle="modal" data-target="#dialogDetail">${msg["member.account.score.log"]}</a></li>' +
+                            '</ul></div>';
+                    },
+                    "targets": 10
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            $("#emptyBtn").show();
+            datatable.ajax.reload();
+        });
+        $("#emptyBtn").on('click', function () {
+            $("#type").val("");
+            $("#level").val("");
+            $("#query").val("");
+            datatable.ajax.reload();
+        });
+    }
+
+    $(function () {
+        initDatatable();
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+
+    function resetPwd(id) {
+        $.post("${base}/platform/member/user/resetPwd/" + id, {}, function (data) {
+            var dialog = $("#dialogPaasword");
+            if (data.code == 0) {
+                dialog.find(".col-xs-12").html("密码重置成功，请复制新密码：" + data.data);
+                dialog.modal("show");
+            } else {
+                dialog.find(".col-xs-12").html(data.msg);
+                dialog.modal("show");
+            }
+        }, "json");
+    }
+
+    /**
+     * 当会员类型改变时，查找该类型对应的等级列表并填充到等级选择框中,同时刷新列表
+     * @param elem 当前元素
+     */
+    function reloadLevelSelect(elem) {
+        var typeId = $(elem).val();
+        if (!typeId){
+            return;
+        }
+
+        $.post("${base}/platform/member/level/getLevelListByTypeId", {typeId: typeId}, function (result) {
+            //重新初始化
+            $("#level").html("").append('<option value="">请选择会员等级</option>');
+
+            if (result.code == 0) {
+                var levelList = result.data;
+                if (!levelList || levelList.length < 1) {
+                    var options = elem.options;
+                    var index = elem.selectedIndex;
+                    var val = options[index].text;
+                    Toast.info("暂无" + val + "的等级信息");
+                    return;
+                }
+
+                for (var i = 0; i < levelList.length; i++) {
+                    var levelObj = levelList[i];
+                    $("#level").append('<option value="' + levelObj.id + '">' + levelObj.name + '</option>');
+                }
+            } else {
+                Toast.error(result.msg);
+            }
+        }, "json");
+        $("#level").show();
+        $("#emptyBtn").show();
+        datatable.ajax.reload();
+    }
+</script>
+<!--#}#-->

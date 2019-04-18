@@ -1,0 +1,205 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<link rel="stylesheet" href="${base!}/assets/platform/styles/dec.css">
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/dec/component" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <input type="hidden" id="whetherRegister" value="${whetherRegister}">
+            <form role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/dec/component/register" method="post" id="registerForm" enctype="multipart/form-data">
+                <input type="hidden" name="compUuid" value="${m.id}">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="box">
+                            <div class="box-content nopadding leadbox">
+                                <div class="upload_con">
+                                    <h3>&diams;&nbsp;${m.compName}</h3>
+                                    <div class="form-inline">
+                                        <div class="form-group" >
+                                            <label class="control-label" style="width:150px;">${msg['dec.component.resource.column.runningHtmlPage']}</label>
+                                            <div class="form-control" style="padding:0; border:none;">
+                                                <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                    <div class="input-group">
+                                                        <div class="form-control" data-trigger="fileinput " style="width:300px">
+                                                            <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                                            <span class="fileinput-filename" style="height: 20px;"></span>
+                                                        </div>
+                                                        <span class="input-group-addon btn btn-default btn-file">
+														<span class="fileinput-new">${msg['dec.component.resource.column.selectFile']}</span>
+														<span class="fileinput-exists">Change</span>
+														<input type="file" name="myHtmlFile" id="myHtmlFile" data-parsley-required="true" >
+													</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-inline">
+                                        <div class="form-group  mt10">
+                                            <label class="control-label" style="width:150px;">${msg['dec.component.resource.column.parameterJspPage']}</label>
+                                            <div class="form-control" style="padding:0; border:none;">
+                                                <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                    <div class="input-group">
+                                                        <div class="form-control" data-trigger="fileinput " style="width:300px">
+                                                            <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                                            <span class="fileinput-filename" style="height: 20px;"></span>
+                                                        </div>
+                                                        <span class="input-group-addon btn btn-default btn-file">
+														<span class="fileinput-new">${msg['dec.component.resource.column.selectFile']}</span>
+														<span class="fileinput-exists">Change</span>
+														<input type="file" name="myJspFile" id="myJspFile" data-parsley-required="true" >
+													</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-inline">
+                                        <div class="form-group mt10">
+                                            <label class="control-label" style="width:150px;">${msg['dec.component.resource.column.referenceJs']}</label>
+                                            <div class="form-control" style="padding:0; border:none;">
+                                                <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                    <div class="input-group">
+                                                        <div class="form-control" data-trigger="fileinput " style="width:300px">
+                                                            <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                                            <span class="fileinput-filename" style="height: 20px;"></span>
+                                                        </div>
+                                                        <span class="input-group-addon btn btn-default btn-file">
+														<span class="fileinput-new">${msg['dec.component.resource.column.selectFile']}</span>
+														<span class="fileinput-exists">Change</span>
+														<input type="file" name="myJsFile" id="myJsFile" data-parsley-required="true" >
+													</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-actions" style="text-align:center; padding-bottom:40px;">
+                                        <button type="button" onclick="javascript:submitRegisterDataForm()" class="btn btn-primary btn-large a_size_1" id="register1" >${msg['dec.component.resource.column.register']}</button>
+                                        <button type="button" class="btn btn-primary btn-large a_size_1" id="register2" style="display:none">${msg['dec.component.resource.column.importIn']}</button>
+                                        <button type="button" class="btn cancel btn-large a_size_1">${msg['globals.button.back']}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+<!--#if(Result=='success'){#-->
+<script>
+    $(document).ready(function () {
+        alert("注册成功");
+    })
+</script>
+<!--#}#-->
+<!--#if(Result=='error'){#-->
+<script>
+    alert("注册失败");
+</script>
+<!--#}#-->
+
+<script language="JavaScript">
+    $(document).ready(function() {
+        $(".cancel").click(function(){
+            window.location.href="${base!}/platform/dec/component";
+        });
+    });
+
+    $("#myHtmlFile").change(function () {
+        $(this).parent("span").siblings(".form-control").children(".fileinput-filename").text($(this).val());
+    });
+    $("#myJspFile").change(function () {
+        $(this).parent("span").siblings(".form-control").children(".fileinput-filename").text($(this).val());
+    });
+    $("#myJsFile").change(function () {
+        $(this).parent("span").siblings(".form-control").children(".fileinput-filename").text($(this).val());
+    });
+
+    function checkFileType(ctrl, ctrlname,fileNameType) {
+        var fileName =ctrl.value;
+        if(fileName!=null && fileName!=""){
+            if(fileName.lastIndexOf(".") != -1){
+                var fileType=fileName.substring(fileName.lastIndexOf(".")+1,fileName.length);
+                fileType = fileType.toLowerCase();
+                var flag = 0;
+                for(var i=0;i<fileNameType.length;i++){
+                    if(fileType == fileNameType[i]){
+                        flag = 1;
+                    }
+                }
+                if(flag == 0){
+                    bootbox.alert(ctrlname);
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function submitRegisterDataForm(){
+        var whetherRegister = document.getElementById('whetherRegister').value;
+        var myHtmlFile = document.getElementsByName('myHtmlFile')[0].value;
+        var myJspFile = document.getElementsByName('myJspFile')[0].value;
+        var myJsFile = document.getElementsByName('myJsFile')[0].value;
+
+        if(whetherRegister == "true"){
+            if (myHtmlFile=="" && myJspFile=="" && myJsFile=="") {
+                bootbox.alert("请至少上传一种数据文件。");
+                document.getElementsByName('myHtmlFile')[0].focus();
+                return;
+            }
+        }else{
+            if(document.getElementsByName('myHtmlFile')[0].value==""){
+                Toast.warning("请选择要上传的html数据文件。");
+                document.getElementsByName('myHtmlFile')[0].focus();
+                return;
+            }
+            if(document.getElementsByName('myJspFile')[0].value==""){
+                Toast.warning("请选择要上传的jsp或html数据文件。");
+                document.getElementsByName('myJspFile')[0].focus();
+                return;
+            }
+            if(document.getElementsByName('myJsFile')[0].value==""){
+                Toast.warning("请选择要上传的js数据文件。");
+                document.getElementsByName('myJsFile')[0].focus();
+                return;
+            }
+        }
+
+        if(document.getElementsByName('myHtmlFile')[0].value != ""){
+            if(!checkFileType(document.getElementsByName('myHtmlFile')[0], "html数据文件格式必须为:'html'",['html'])) {
+                return;
+            }
+        }
+
+        if(document.getElementsByName('myJspFile')[0].value != ""){
+            if(!checkFileType(document.getElementsByName('myJspFile')[0], "jsp数据文件格式必须为:'jsp'或'html'",['jsp','html'])) {
+                return;
+            }
+        }
+
+        if(document.getElementsByName('myJsFile')[0].value != ""){
+            if(!checkFileType(document.getElementsByName('myJsFile')[0], "js数据文件格式必须为:'js'",['js'])) {
+                return;
+            }
+        }
+        $("#register1").hide();
+        $("#register2").show();
+        $("#registerForm").submit();
+    }
+</script>
+<!--#}#-->
+
+

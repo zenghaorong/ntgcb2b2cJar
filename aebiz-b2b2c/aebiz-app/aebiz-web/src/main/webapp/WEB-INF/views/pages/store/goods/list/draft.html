@@ -1,0 +1,496 @@
+<!--#
+layout("/layouts/store.html"){
+#-->
+<style>
+    .tool-search-line{
+        padding-top: 8px;
+    }
+    .goods-search-class {
+        width: 30%;min-width: 160px;
+    }
+    #classId{
+        cursor: pointer;
+    }
+</style>
+<script src="${base!}/assets/platform/vendor/jquery.qrcode.min.js"></script>
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button tool-search-line">
+            <form class="form-inline" id="search_form">
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <input type="hidden" name="classId" value="">
+                    <input id="classId" type="text" class="form-control" placeholder="${msg['goods.main.tip.selectplease']}${msg['goods.main.column.classId']}" readonly value="" data-toggle="modal" data-target="#dialogSelectClass"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <select class="form-control" name="typeId" placeholder="${msg['goods.main.column.typeId']}">
+                        <option value="">${msg['goods.main.column.typeId']}</option>
+                        <!--#for (var type in typeList) {#-->
+                        <option value="${type.id}">${type.name}</option>
+                        <!--#}#-->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <select class="form-control" name="brandId" placeholder="${msg['goods.main.column.brandId']}">
+                        <option value="">${msg['goods.main.column.brandId']}</option>
+                        <!--#for (var brand in brandList) {#-->
+                        <option value="${brand.id}">${brand.name}</option>
+                        <!--#}#-->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <select class="form-control" name="tagId" placeholder="${msg['goods.main.column.tags']}">
+                        <option value="">${msg['goods.main.column.tags']}</option>
+                        <!--#for (var tag in tagList) {#-->
+                        <option value="${tag.id}">${tag.name}</option>
+                        <!--#}#-->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <input type="text" class="form-control" name="name" placeholder="${msg['goods.main.column.name']}">
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary" id="btn_search_ok">${msg['goods.main.search.btn.searchBtn']}</button>
+                    <button type="button" class="btn btn-default" id="btn_search_reset">${msg['goods.main.search.btn.resetBtn']}</button>
+                </div>
+            </form>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border" style="min-height: 500px;">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                <tr>
+                    <th>${msg["goods.main.column.name"]}</th>
+                    <th>${msg["goods.main.column.tags"]}</th>
+                    <th>${msg["goods.main.column.typeId"]}</th>
+                    <th>${msg["goods.main.column.classId"]}</th>
+                    <th>${msg["goods.main.column.brandId"]}</th>
+                    <th>${msg["goods.main.column.hasSpec"]}</th>
+                    <th>${msg["globals.table.column.operation"]}</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div class="cd-panel from-right" id="div_filter">
+    <header class="cd-panel-header">
+        <h4>${msg['goods.main.search.advancedscreening']}</h4>
+        <a href="javascript:;" class="cd-panel-close">×</a>
+    </header>
+    <div class="cd-panel-container">
+        <div class="cd-panel-content shadow">
+            <div class="form-group">
+                <label >${msg["goods.main.column.hasSpec"]}</label>
+                <select name="tmp_hasSpec" id="hasSpec" class="form-control" style="width: 120px;">
+                    <option value="">${msg["goods.main.select.hasSpec.option.all"]}</option>
+                    <option value="1">${msg["goods.main.select.hasSpec.option.true"]}</option>
+                    <option value="0">${msg["goods.main.select.hasSpec.option.false"]}</option>
+                </select>
+            </div>
+
+            <button id="searchBtn" type="button" class="btn btn-default">${msg["goods.main.search.btn.searchBtn"]}</button>
+            <button id="resetBtn" type="button" class="btn btn-default">${msg["goods.main.search.btn.resetBtn"]}</button>
+        </div>
+    </div>
+</div>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogQrcode" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg["goods.main.modal.dialogQrcode.title"]}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12" style="text-align: center">
+                        <div id="qrName"></div>
+                    </div>
+                    <div class="col-xs-12" style="text-align: center">
+                        <div id="qrCode"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["goods.main.btn.close"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogSelectClass" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <div class="modal-title input-group goods-search-class">
+                    <input type="text" class="form-control input-sm js-search-class-input" placeholder="${msg['goods.main.column.classId']}" />
+                    <span class="input-group-btn "><button class="btn btn-default input-sm js-search-class" type="button"><span class="ti-search"></span></button></span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeClass" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary" onclick="selectClass()">${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+                $(".location").editable();
+            },
+            "ajax": {
+                "url": "${base!}/store/goods/list/data",
+                "type": "post",
+                "cache": false,
+                "data": function (d) {
+                    var $search = $("#search_form");
+                    d.name = $("input[name='name']", $search).val();
+                    d.classId = $("input[name='classId']", $search).val();
+                    d.typeId = $("[name='typeId']", $search).val();
+                    d.brandId = $("[name='brandId']", $search).val();
+                    d.tagId = $("[name='tagId']", $search).val();
+                    var $filter = $("#div_filter");
+                    d.tmp_hasSpec = $("select[name='tmp_hasSpec']", $filter).val()||"";
+                    d.delFlag = false;
+                    d.status = 1;//草稿
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "name", "bSortable": true},
+                {"data": "id", "bSortable": false},
+                {"data": "typeId", "bSortable": false},
+                {"data": "classId", "bSortable": false},
+                {"data": "brandId", "bSortable": false},
+                {"data": "hasSpec", "bSortable": true},
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        var tags = row.tagList;
+                        if(tags && tags.length>0){
+                            var str = "";
+                            for(var i=0; i<tags.length; i++){
+                                str+="<span style='color: #4e6a80;padding-right: 2px;'>"+tags[i].name+"</span>";
+                            }
+                            return str;
+                        }
+                        return  '';
+                    },
+                    "targets": 1
+                },
+                {
+                    "render": function (data, type, row) {
+                        if(row.goodsType){
+                            return  row.goodsType.name;
+                        }
+                        return  '${msg["goods.main.select.typeId.option.default"]}';
+                    },
+                    "targets": 2
+                },
+                {
+                    "render": function (data, type, row) {
+                        if(row.goodsClass){
+                            return  row.goodsClass.name;
+                        }
+                        return  '';
+                    },
+                    "targets": 3
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return row.goodsBrand.name;
+                        } else {
+                            return '';
+                        }
+                    },
+                    "targets": 4
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return '<i id="hasSpec_' + row.id + '" class="fa fa-circle text-success ml5"></i>';
+                        } else {
+                            return '<i id="hasSpec_' + row.id + '" class="fa fa-circle text-danger ml5"></i>';
+                        }
+                    },
+                    "targets": 5
+                },
+                {
+                    "render": function (data, type, row) {
+                        var str = '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">';
+                        str += '<i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">';
+                        str += '<li><a href="${base}/store/goods/list/draft/detail/' + row.id + '" data-pjax>${msg["globals.button.detail"]}</a></li>';
+                        str += '<li><a href="${base!}/store/goods/list/draft/edit/' + row.id + '" data-pjax>${msg["globals.button.edit"]}</a></li>';
+                        str += '<li class="divider"></li>';
+                        str += '<li><a href="javascript:;" onclick="del(\'' + row.id + '\')">${msg["globals.button.delete"]}</a></li>'
+                        str += '<li class="divider"></li>';
+                        str += '<li><a href="javascript:;" onclick="qrcode(\'' + row.id + '\',\''+row.name+'\')" data-pjax>${msg["goods.main.btn.qrcode"]}</a></li>';
+                        str += '</ul></div>';
+                        return str;
+                    },
+                    "targets": 6
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+
+        $("#searchBtn").click(function () {
+            datatable.ajax.reload();
+        });
+
+        $("#resetBtn").click(function () {
+            $("#div_filter").find("input[type='text'],input[type='hidden'],select").val("");
+        });
+    }
+
+    function detail(id) {
+        window.open("http://www.baidu.com");
+    }
+
+    function qrcode(id, name){
+        $("#qrName").html(name);
+        $("#qrCode").empty();
+        $("#qrCode").qrcode({width: 120,height: 120,text: "http://${app_domain}${base!}/store/goods/list/"+id});
+        $("#dialogQrcode").modal("show");
+    }
+
+    function initTreeView() {
+        $("#jsTreeClass").jstree({
+            plugins: ["wholerow", "json_data", "search"],
+            core: {
+                data: function (node, callback) {
+                    $.get("${base}/store/goods/list/class/tree", function (ret) {
+                        var classes = [];
+                        if (ret) {
+                            for (var i in ret) {
+                                classes.push({
+                                    id: ret[i].id,
+                                    text: ret[i].name,
+                                    parent: ret[i].parentId == "" ? "#" : ret[i].parentId,
+                                    hasChildren: ret[i].hasChildren
+                                });
+                            }
+                        }
+                        callback(classes);
+                    }, "json");
+                },
+                multiple: false
+            }
+        }).on("dblclick.jstree", function (node) {
+            selectClass();
+        }).on("select_node.jstree", function (e, data) {
+            var tree = $(this).jstree();
+            if (tree.is_parent(data.node)) {
+                tree.deselect_node(data.node);
+                if (data.node.state.opened) {
+                    tree.close_node(data.node);
+                } else {
+                    tree.open_node(data.node);
+                }
+            }
+        });
+
+        var to = false;
+        $('.js-search-class-input').keyup(function () {
+            if(to) {
+                clearTimeout(to);
+            }
+            to = setTimeout(function () {
+                var text = $.trim($('.js-search-class-input').val());
+                if (text != "") {
+                    $('#jsTreeClass').jstree(true).search(text);
+                }
+            }, 250);
+        });
+        $(".js-search-class").click(function () {
+            var text = $.trim($(".js-search-class-input").val());
+            if (text != "") {
+                $('#jsTreeClass').jstree(true).search(text);
+            }
+        });
+
+        $("#dialogSelectClass").on("hidden.bs.modal", function () {
+            $(".js-search-class-input", this).val("");
+            var tree = $('#jsTreeClass').jstree(true);
+            if (tree) {
+                tree.clear_search();
+            }
+        });
+    }
+
+    //选择商品分类
+    function selectClass() {
+        var tree = $.jstree.reference("#jsTreeClass");
+        var nodes = tree.get_selected(true);
+        if (nodes.length == 0) return false;
+        var id = nodes[0].id;
+        $("#classId").val(nodes[0].text);
+        $("#search_form input[name='classId']").val(id);
+        $("#dialogSelectClass").modal("hide");
+    }
+
+    function getBrand(id){
+        $.get("${base!}/store/goods/list/type/" + id + "/brands", function (ret) {
+            if(ret.code == 0){
+                var options = '';
+                options += '<option value=""></option>';
+                $.each(ret.data,function(i, brand){
+                    options += '<option value="' + brand.brandId + '">' + brand.brand.name + '</option>';
+                });
+                $("#brandId").html(options);
+            }
+        }, "json");
+    }
+
+    function refreshStatistic() {
+        $.post("${base!}/store/goods/list/statistic", {}, function (ret) {
+            if (ret.code == 0) {
+                $("#goods_list_tabs .js-goods-tabs .badge").each(function () {
+                    $(this).text(ret.data[$(this).attr("data-key-name")]||"0");
+                });
+            } else {
+                Toast.error(ret.msg);
+            }
+        }, "json");
+    }
+
+    function showBatchOperation(tab) {
+        $("#li_up,#li_down,#li_audit,#li_breakrule").hide();
+        if (tab == "tmp_sale1") {
+            $("#li_down").show();
+        } else if (tab == "tmp_sale0") {
+            $("#li_up").show();
+        } else if (tab == "checkStatus3") {
+            $("#li_up").show();
+        }
+    }
+
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.get("${base}/store/goods/list/delete/" + id, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#okDel").unbind("click");
+            dialog.find("#okDel").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/store/goods/list/delete", $.param({ids: ids}, true), function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null,false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("${msg['globals.button.delete.select']}");
+        }
+    }
+
+    $(function () {
+
+        initDatatable();
+        initTreeView();
+        showBatchOperation("");
+        //刷新商品列表统计信息
+        refreshStatistic();
+
+        $("#btn_search_ok").click(function () {
+            datatable.ajax.reload();
+        });
+
+        $("#btn_search_reset").click(function () {
+            $("#search_form input[type='text'],input[type='hidden'],select").val("");
+        });
+
+        $(".js-goods-tabs").off("click").on("click", function(){
+            var $a = $(this);
+            Searcher.paramName = $a.attr("data-good-name")||"";
+            Searcher.paramValue = $a.attr("data-good-value")||"";
+            showBatchOperation(Searcher.paramName+Searcher.paramValue);
+            datatable.ajax.reload();
+        });
+        $("#goods_list_tabs>li.active>.js-goods-tabs").trigger("click");
+
+    });
+</script>
+
+<!--#}#-->

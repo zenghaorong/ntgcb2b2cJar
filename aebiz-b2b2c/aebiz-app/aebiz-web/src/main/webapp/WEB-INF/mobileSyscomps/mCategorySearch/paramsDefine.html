@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+    <script type="text/javascript" src=""></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+
+
+<form class="form-horizontal" id="pictureadform">
+
+    <div class="form-group">
+        <label for="defineUrl" class="col-sm-3 control-label">搜索跳转地址</label>
+        <div class="col-sm-3">
+            <input type="text" name="defineUrl" id="defineUrl" placeholder="" class="form-control">
+        </div>
+    </div>
+
+</form>
+
+
+</body>
+
+
+<script type="text/javascript">
+    //获取属性配置JSON
+    var pageJson = ${webPageModelJsonStr};
+
+    //构建属性配置
+    var componentsParam = {
+        initParamData:function(paramJson){ //初始化渲染属性配置
+            $("#defineUrl").val(paramJson.defineUrl);
+        },
+        saveParamData:function(){ //返回属性配置JSON
+            var defineUrl=	 $("#defineUrl").val();
+            var paramJson = {"compId":'123',"defineUrl":defineUrl};
+            return paramJson;
+        }
+    }
+    componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+</script>
+
+
+</html>

@@ -1,0 +1,254 @@
+<!--#
+include("/pages/front/pc/inc/header.html"){}
+#-->
+
+<!-- body -->
+<div class="m-hd">
+	
+	<div class="site-nav">
+	<div class="m-center">
+		<div class="f-fl site-nav-R">
+			<span class="name">你好，Admin</span>|<a href="#">退出</a>
+		</div>
+		<div class="f-fr site-nav-R">
+			<a href="#">我的订单</a>|<a href="#">个人中心</a>|<a href="#">商家中心</a>|<a href="#">商家入驻</a>|<a href="#">帮助中心</a>
+		</div>
+	</div>
+</div>
+<div class="m-navbar">
+	<div class="m-center">
+		<div class="logo">
+			<a href="#"><img src="/assets/front/pc/images/logo-g.png"/></a>
+		</div>
+	</div>
+</div>
+	
+</div>
+<div class="m-bd m-address">
+	<div class="m-center">
+		<div class="receipt-info">
+			<div class="list_hd">
+				收货信息
+			</div>
+			<div class="bd">
+				<!--<div>
+					<i class="iconfont icon-address"></i><a href="#" class="modify">修改</a>
+				</div>-->
+				<div class="info">
+					<!--# if(isNotEmpty(memberAddress)){ #-->
+					<input type="hidden" name="memberAddressId" value="${memberAddress.id}">
+					<p><label>收&nbsp;&nbsp;货&nbsp;人：</label><span class="fullname">${memberAddress.fullName!}</span></p>
+					<p><label>联系方式：</label><span class="mobile"><!--# if(isNotEmpty(memberAddress.mobile)){ #--> ${memberAddress.mobile} <!--# }else{ #--> ${memberAddress.phone} <!--# } #--></span> </p>
+					<p><label>收货地址：</label><span class="addressDetail">${@area.getNameByCode(memberAddress.province)} ${@area.getNameByCode(memberAddress.city)} ${@area.getNameByCode(memberAddress.county)} ${memberAddress.address!}</span></p>
+					<!--# } #-->
+				</div>
+				<div class="active-btn">
+					<a href="#" class="btn mark">切换地址</a><br />
+					<a href="#" class="add-btn">新建地址</a>
+				</div>
+			</div>
+
+			<div class="bd m-add-address f-cb f-dn">
+				<div class="maa-L f-fl">
+					<form action="${base!}/member/address/addAddressDo" method="post">
+						<div class="item"><label>所在地区：</label><select name="">
+							<option value="">请选择</option>
+							<option value="">安徽</option>
+							<option value="">河南</option>
+						</select>
+							<select name="">
+								<option value="">请选择</option>
+								<option value="">合肥</option>
+								<option value="">芜湖</option>
+							</select>
+							<select name="">
+								<option value="">请选择</option>
+								<option value="">蜀山</option>
+								<option value="">包河</option>
+							</select>
+						</div>
+						<div class="item">
+							<label>详细地址：</label><textarea name="" rows="" cols=""></textarea>
+						</div>
+						<div class="item">
+							<label>收货人：</label><input class="receipt" type="text" name="" id="" value="" /><label>手机号码：</label><input class="tel" type="text" name="" id="" value="" />
+						</div>
+					</form>
+				</div>
+				<div class="maa-R f-fr">
+					<p><input type="checkbox" name="" id="" value="" />设为默认</p>
+					<p><a href="#" class="confirm">确认</a><a href="#" class="cancel">取消</a></p>
+				</div>
+			</div>
+		</div>
+		<div class="table-info">
+			<table>
+				<tr>
+					<th class="th1">商品信息</th>
+					<th>单价</th>
+					<th>数量</th>
+					<th>小计</th>
+					<th>实付</th>
+				</tr>
+				<!--# var totalPrice = 0; for (entry in cartList) {
+				  for (m in entry.value) {
+				 var cart_tr_price = m.price * m.num; totalPrice = totalPrice + cart_tr_price;
+				 #-->
+				<tr>
+					<td class="td1">
+						<a href="#" class="pic"><img src="/assets/front/pc/images/cart1.png"/></a>
+						<div class="inner">
+							<h3><a href="">${m.goodsMain.name!} ${m.goodsProduct.name!}</a></h3>
+							<small>400g(100g*4袋)</small>
+						</div>
+					</td>
+					<td>¥${@money.fenToYuan(m.price)}</td>
+					<td>${m.num}</td>
+					<td>¥${@money.fenToYuan(cart_tr_price)}</td>
+					<td>¥${@money.fenToYuan(cart_tr_price)}</td>
+				</tr>
+				<!--# }} #-->
+			</table>
+			<div class="goodinfo-fd f-cb">
+				<div class="pay-type">
+					<label class="radio-inline"><input type="radio" name="payType" value="0" checked>在线支付</label>
+					<label class="radio-inline"><input type="radio" name="payType" value="1" >货到付款</label>
+				</div>
+				<!--<div class="invoice">
+					<input type="checkbox" />我要开发票
+				</div>-->
+				<div class="count">
+					<div class="item">商品合计：<label>￥${@money.fenToYuan(totalPrice)}</label></div>
+					<div class="item">运费：<label> ￥${@money.fenToYuan(freightMoney)}</label><!--<span class="freight">再购买56元免邮</span>--></div>
+					<!--# var payMoney = totalPrice + freightMoney;  #-->
+					<div class="item">应付总额：<label>￥${@money.fenToYuan(payMoney)}</label></div>
+					<div class="item"><a href="javascript:void(0)" id="createOrder" class="button">提交订单</a></div>
+					<div class="item">${accountUser.loginname}   ${strutil.subStringTo(accountUser.mobile,0,3)}****${strutil.subStringTo(accountUser.mobile,7,11)}</div>
+					<!--<div class="item">北京北京市东城区国际丽晶城</div>-->
+				</div>
+			</div>
+		</div>
+		<!--<div class="f-tar agreement">
+			<input type="checkbox" />本人同意并接受 《茗流荟服务协议》
+		</div>-->
+	</div>
+	
+</div> 
+
+<div class="m-fd">
+	<div class="m-login-info">
+		<div class="g-center">
+			<ul class="f-cb">
+				<li class="col">
+					<dl>
+						<dt>客服电话</dt>
+						<dd>
+							<p class="tel">400-0000-000</p>
+							<p class="time">9:00-22:00</p>
+						</dd>
+					</dl>
+				</li>
+				<li class="col">
+					<dl>
+						<dt>关于我们</dt>
+						<dd>
+							<p class="inner">原产地直供1000家合作社联盟10万亩茶园直供从源头全程严格把控商品生产环节，力求帮消费者甄选到优质的商品。</p>
+						</dd>
+					</dl>
+				</li>
+				<li class="col last-col">
+					<dl>
+						<dd><img src="/assets/front/pc/images/code.png"/></dd>
+						<small>下载领1000元礼包</small>
+					</dl>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="login-fd">
+		<div class="g-center">
+			<img src="/assets/front/pc/images/login-footer.png"/>
+			<div class="login-href-fd">
+				<div><a href="">关于我们</a> | <a href="">帮助中心</a> | <a href="">售后服务</a> | <a href="">配送与验收</a> | <a href="">商务合作</a> | <a href="">企业采购</a> | <a href="">友情链接</a></div>
+				<p>全网数商公司版权所有 © 1997-2017   食品经营许可证：JY13301080111719
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="m-check-add m-layer-pop" id="check-add">
+	<!--# if(has(addressList)){ #-->
+		<!--# for(var address in addressList ){ #-->
+			<!--# if(address.defaultValue){ #-->
+				<dl class="f-cb active" data-label>
+					<input type="hidden" name="addressId" value="${address.id}">
+					<dt>收货人:</dt><dd class="name">${address.fullName!}</dd>
+					<dt>联系方式：</dt><dd class="mobile">${strutil.subStringTo(address.mobile,0,3)}****${strutil.subStringTo(address.mobile,7,11)}</dd>
+					<dt>收货地址：</dt><dd class="detailAddress">${address.province!}${address.city!}${address.county!} ${address.address!}</dd>
+				</dl>
+			<!--# }else{ #-->
+				<dl class="f-cb" data-label>
+					<input type="hidden" name="addressId" value="${address.id}">
+					<dt>收货人:</dt><dd class="name">${address.fullName!}</dd>
+					<dt>联系方式：</dt><dd class="mobile" >${strutil.subStringTo(address.mobile,0,3)}****${strutil.subStringTo(address.mobile,7,11)}</dd>
+					<dt>收货地址：</dt><dd class="detailAddress">${address.province!}${address.city!}${address.county!} ${address.address!}</dd>
+				</dl>
+			<!--# } #-->
+		<!--# } #-->
+	<!--# }else{ #-->
+		<span>地址为空</span>
+	<!--# } #-->
+</div>
+<!-- end -->
+<script src="/assets/front/pc/vendor/layer/layer.js"></script>
+<script src="/assets/front/pc/scripts/address.js"></script>
+<script>
+
+	var memberAddressId = "";//初始化当前地址Id
+
+	var cartList = ${cartList};
+
+	$(document).ready(function () {
+		$("#createOrder").click(function () {
+		    if($("input[name='memberAddressId']").length == 0){
+		        layer.msg("请选择地址,再下单");
+		        return;
+			}
+            memberAddressId = $("input[name='memberAddressId']").val();
+            var cartIdList ="";
+		    for(var i=0;i<cartList.length;i++){
+                cartIdList += (cartList[i].id + ",");
+			}
+			var payType = $("input[name='payType']:checked").val();
+			createOrder(memberAddressId,cartIdList,payType);
+        })
+    })
+	
+	
+	//计算运费
+	function amountFreight() {
+		$.post("${base!}/platform/store/freight")
+    }
+	
+	
+	//创建订单
+	function createOrder(memberAddressId,cartIdList,payType) {
+		$.post("${base!}/goods/createOrder",{"memberAddressId":memberAddressId,"cartIdList":cartIdList,"payType":payType},function (data) {
+			if(data.code != 0){
+                layer.msg(data.msg);
+                return;
+			}
+			var orderGroupId = data.data;
+		    if(payType == 1){
+			    window.location.href = "${base!}/goods/orderSuccess/"+orderGroupId;
+			}else if(payType == 0){
+                window.location.href = "${base!}/goods/count/"+orderGroupId;
+			}
+        })
+    }
+	
+</script>
+
+</body>
+
+</html>

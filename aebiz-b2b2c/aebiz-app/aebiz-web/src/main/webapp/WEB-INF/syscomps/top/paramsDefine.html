@@ -1,0 +1,397 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<form class="form-horizontal">
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">是否异步加载</label>
+		<div class="col-sm-3">
+			<input type="radio" id="yesAsync"  name="needAsyncInit" value="true">是
+			<input type="radio" id="noAsync"  name="needAsyncInit" value="false">否
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">登录</label>
+		<div class="col-sm-3">
+			<input type="text" id="lbl_loginName" name="lbl_loginName" class="form-control" value="请登录"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">登录URL</label>
+		<div class="col-sm-3">
+			<input type="text" id="txt_loginUrl" name="txt_loginUrl" class="form-control" value="/customer/toLogin"  />
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">注册</label>
+		<div class="col-sm-3">
+			<input type="text" id="lbl_regName"  name ="lbl_RegName" class="form-control"  value="注册"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">注册URL</label>
+		<div class="col-sm-3">
+			<input type="text" id="txt_regUrl" name="txt_regUrl" class="form-control" value="/customerregist/toRegister"  />
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">会员中心URL</label>
+		<div class="col-sm-3">
+			<input type="text" id="txt_customerIndexUrl" name="txt_customerIndexUrl" class="form-control" value="/customer/toIndex"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">退出</label>
+		<div class="col-sm-3">
+			<input type="text" id="lbl_logoutName" name="lbl_logoutName" class="form-control"  value="退出"/> 
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">退出成功跳转路径</label>
+		<div class="col-sm-3">
+			<input type="text" id="txt_logoutUrl" name="txt_logoutUrl"  class="form-control" value="/customer/toLogin"  />
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">我的订单</label>
+		<div class="col-sm-3">
+			<input type="text" id="lbl_myorderName" name="lbl_myorderName"  class="form-control" value="我的订单"/> 
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">我的订单URL</label>
+		<div class="col-sm-3">
+			<input type="text" id="txt_myorderUrl" name="txt_myorderUrl"  class="form-control"  value="/usercenter/order/list/1/1/10?init=true"  />
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">商城首页</label>
+		<div class="col-sm-3">
+			<input type="text" id="lbl_indexName" name="lbl_indexName" class="form-control" value="商城首页"/> 
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">商城首页URL</label>
+		<div class="col-sm-3">
+			<input type="text" id="txt_indexUrl" name="txt_indexUrl"  class="form-control" value="/"    /> 
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">收藏的商品</label>
+		<div class="col-sm-3">
+			<input type="text" id="lbl_favProductName" name="lbl_favProductName" class="form-control" value="收藏的商品"/> 
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">收藏的商品URL</label>
+		<div class="col-sm-3">
+			<input type="text" id="txt_favProductUrl" name=txt_favProductUrl class="form-control"  value="/usercenter/productfavorite/toPage"   />
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">收藏的店铺</label>
+		<div class="col-sm-3">
+			 <input type="text" id="lbl_favStoreName" name="lbl_favStoreName"  class="form-control" value="收藏的店铺"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">收藏的店铺URL</label>
+		<div class="col-sm-3">
+			 <input type="text" id="txt_favStoreUrl" name="txt_favStoreUrl" class="form-control"  value="/usercenter/storefavorite/toPage"   />
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">商家中心</label>
+		<div class="col-sm-3">
+			 <input type="text" id="lbl_storeName" name="lbl_storeName" class="form-control" value="商家中心"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">商家中心URL</label>
+		<div class="col-sm-3">
+			 <input type="text" id="txt_storeUrl" name="txt_storeUrl" class="form-control"  value="/store/toLogin"   />
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">商家入驻</label>
+		<div class="col-sm-3">
+			 <input type="text" id="lbl_toApplyName" name="lbl_toApplyName"  class="form-control" value="商家入驻"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">商家入驻URL</label>
+		<div class="col-sm-3">
+			<input type="text" id="txt_toApplyUrl" name="txt_toApplyUrl" class="form-control"  value="/frontshow/storeresidentapply/toApply"    />
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">帮助中心</label>
+		<div class="col-sm-3">
+			 <input type="text" id="lbl_helpCenterName" name="lbl_helpCenterName" class="form-control"  value="帮助中心"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">帮助中心URL</label>
+		<div class="col-sm-3">
+			<input type="text" id="txt_helpCenterUrl" name="txt_helpCenterUrl"  class="form-control"  value="/frontshow/content/toSellerHelpCenter"   />
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">订阅登录成功主题</label>
+		<div class="col-sm-3">
+			<input type="text" id="subTopic" name="subTopic"  class="form-control"  value=""   />
+		</div>
+	</div>
+	
+</form>
+
+
+<script type="text/javascript">
+//获取属性配置JSON
+var pageJson = ${webPageModelJsonStr};
+
+//构建属性配置
+var componentsParam = {
+		initParamData:function(paramJson){ //初始化渲染属性配置
+			if(typeof(paramJson) == "string"){
+				paramJson = JSON.parse(paramJson);
+			}
+		    if(paramJson.needAsyncInit == "true"){
+		    	$("#yesAsync").attr("checked","checked");
+		    }else{
+		    	$("#noAsync").attr("checked","checked");
+		    }
+		    if(paramJson.lbl_loginName != null && paramJson.lbl_loginName != ""){
+		    	$("#lbl_loginName").val(paramJson.lbl_loginName);
+		    }
+		    if(paramJson.txt_loginUrl != null && paramJson.txt_loginUrl != ""){
+			  $("#txt_loginUrl").val(paramJson.txt_loginUrl);
+		    }
+		    if(paramJson.lbl_regName != null && paramJson.lbl_regName != ""){
+			  $("#lbl_regName").val(paramJson.lbl_regName);
+		    }
+		    if(paramJson.txt_regUrl != null && paramJson.txt_regUrl != ""){
+			  $("#txt_regUrl").val(paramJson.txt_regUrl);
+		    }
+		    if(paramJson.lbl_logoutName != null && paramJson.lbl_logoutName != ""){
+			  $("#lbl_logoutName").val(paramJson.lbl_logoutName);
+		    }
+		    if(paramJson.txt_logoutUrl != null && paramJson.txt_logoutUrl != ""){
+			  $("#txt_logoutUrl").val(paramJson.txt_logoutUrl);
+		    }
+		    if(paramJson.lbl_myorderName != null && paramJson.lbl_myorderName != ""){
+			  $("#lbl_myorderName").val(paramJson.lbl_myorderName);
+		    }
+			if(paramJson.txt_myorderUrl != null && paramJson.txt_myorderUrl != ""){
+			  $("#txt_myorderUrl").val(paramJson.txt_myorderUrl);
+			}
+			if(paramJson.lbl_indexName != null && paramJson.lbl_indexName != ""){
+			  $("#lbl_indexName").val(paramJson.lbl_indexName);
+			}
+			if(paramJson.txt_indexUrl != null && paramJson.txt_indexUrl != ""){
+				$("#txt_indexUrl").val(paramJson.txt_indexUrl);
+			}
+			
+			if(paramJson.lbl_favProductName != null && paramJson.lbl_favProductName != ""){
+				$("#lbl_favProductName").val(paramJson.lbl_favProductName);
+			}
+			if(paramJson.txt_favProductUrl != null && paramJson.txt_favProductUrl != ""){
+				$("#txt_favProductUrl").val(paramJson.txt_favProductUrl);
+			}
+			if(paramJson.lbl_favStoreName != null && paramJson.lbl_favStoreName != ""){
+				$("#lbl_favStoreName").val(paramJson.lbl_favStoreName);
+			}
+			if(paramJson.txt_favStoreUrl != null && paramJson.txt_favStoreUrl != ""){
+				$("#txt_favStoreUrl").val(paramJson.txt_favStoreUrl);
+			} 
+			if(paramJson.lbl_storeName != null && paramJson.lbl_storeName != ""){
+				$("#lbl_storeName").val(paramJson.lbl_storeName);
+			}
+			if(paramJson.txt_storeUrl != null && paramJson.txt_storeUrl != ""){
+				$("#txt_storeUrl").val(paramJson.txt_storeUrl);
+			}
+			if(paramJson.lbl_toApplyName != null && paramJson.lbl_toApplyName != ""){
+				$("#lbl_toApplyName").val(paramJson.lbl_toApplyName);
+			}
+			if(paramJson.txt_toApplyUrl != null && paramJson.txt_toApplyUrl != ""){
+				$("#txt_toApplyUrl").val(paramJson.txt_toApplyUrl);
+			}
+			if(paramJson.lbl_helpCenterName != null && paramJson.lbl_helpCenterName != ""){
+				$("#lbl_helpCenterName").val(paramJson.lbl_helpCenterName);
+			}
+			if(paramJson.txt_helpCenterUrl != null && paramJson.txt_helpCenterUrl != ""){
+				$("#txt_helpCenterUrl").val(paramJson.txt_helpCenterUrl);
+			}
+			if(paramJson.txt_customerIndexUrl != null && paramJson.txt_customerIndexUrl != ""){
+			  $("#txt_customerIndexUrl").val(paramJson.txt_customerIndexUrl);
+			}
+			if(paramJson.subTopic != null && paramJson.subTopic != ""){
+			  $("#subTopic").val(paramJson.subTopic);
+			}
+		},
+		saveParamData:function(){ //返回属性配置JSON
+			var needAsyncInit = $("input[name='needAsyncInit']:checked").val();
+		    if(needAsyncInit == null){
+		    	alert("请选择是否异步加载！");
+		    	return false;
+		    }
+		    
+	        var lbl_loginName = $("#lbl_loginName").val();
+	        var txt_loginUrl = $("#txt_loginUrl").val();
+	        var lbl_regName = $("#lbl_regName").val();
+	        var txt_regUrl = $("#txt_regUrl").val();
+	        var txt_customerIndexUrl = $("#txt_customerIndexUrl").val();
+	        var lbl_logoutName = $("#lbl_logoutName").val();
+	        var txt_logoutUrl = $("#txt_logoutUrl").val();
+	        var lbl_myorderName = $("#lbl_myorderName").val();
+	        var txt_myorderUrl = $("#txt_myorderUrl").val();
+	        var lbl_indexName = $("#lbl_indexName").val();
+	        var txt_indexUrl = $("#txt_indexUrl").val();
+	        var lbl_favProductName = $("#lbl_favProductName").val();
+	        var txt_favProductUrl = $("#txt_favProductUrl").val();
+	        var lbl_favStoreName = $("#lbl_favStoreName").val();
+	        var txt_favStoreUrl = $("#txt_favStoreUrl").val();
+	        var lbl_storeName = $("#lbl_storeName").val();
+	        var txt_storeUrl = $("#txt_storeUrl").val();
+	        var lbl_toApplyName = $("#lbl_toApplyName").val();
+	        var txt_toApplyUrl = $("#txt_toApplyUrl").val();
+	        var lbl_helpCenterName = $("#lbl_helpCenterName").val();
+	        var txt_helpCenterUrl = $("#txt_helpCenterUrl").val();
+	        var subTopic = $("#subTopic").val();
+	        
+	        var paramJson = {
+	        	  needAsyncInit:needAsyncInit,
+	      		  lbl_loginName : lbl_loginName,
+	      		  txt_loginUrl : txt_loginUrl,
+	      		  lbl_regName : lbl_regName,
+	      		  txt_regUrl : txt_regUrl,
+	      		  txt_customerIndexUrl : txt_customerIndexUrl,
+	      		  lbl_logoutName : lbl_logoutName,
+	      		  txt_logoutUrl : txt_logoutUrl,
+	      		  lbl_myorderName : lbl_myorderName,
+	      		  txt_myorderUrl : txt_myorderUrl,
+	      		  lbl_indexName : lbl_indexName,
+	      		  txt_indexUrl : txt_indexUrl,
+	      		  lbl_favProductName : lbl_favProductName,
+	      		  txt_favProductUrl : txt_favProductUrl,
+	      		  lbl_favStoreName : lbl_favStoreName,
+	      		  txt_favStoreUrl : txt_favStoreUrl,
+	      		  lbl_storeName : lbl_storeName,
+	      		  txt_storeUrl : txt_storeUrl,
+	      		  lbl_toApplyName : lbl_toApplyName,
+	      		  txt_toApplyUrl : txt_toApplyUrl,
+	      		  lbl_helpCenterName : lbl_helpCenterName,
+	      		  txt_helpCenterUrl : txt_helpCenterUrl,
+	      		  subTopic:subTopic
+	        };
+	        var err = this.validateData(paramJson);
+            if(!err.success){
+                return err;
+            }
+	        return paramJson;
+		},
+		showParamData:function(){
+			var paramData = [];
+			var lbl_loginName = {type:'html',target:'a_login',value:$("#lbl_loginName").val()};
+			var txt_loginUrl = {type:'href',target:'a_login',value:$("#txt_loginUrl").val()};
+    		var lbl_regName = {type:'html',target:'a_register',value:$("#lbl_regName").val()};
+    		var txt_regUrl = {type:'href',target:'a_register',value:$("#txt_regUrl").val()};
+    		var txt_customerIndexUrl = {type:'href',target:'a_nickname',value:$("#txt_customerIndexUrl").val()};
+    		var lbl_logoutName = {type:'html',target:'a_logout',value:$("#lbl_logoutName").val()};
+    		var txt_logoutUrl = {type:'href',target:'a_logout',value:$("#txt_logoutUrl").val()};
+    		var lbl_myorderName = {type:'html',target:'a_myorder',value:$("#lbl_myorderName").val()};
+    		var txt_myorderUrl = {type:'href',target:'a_myorder',value:$("#txt_myorderUrl").val()};
+    		
+    		var lbl_indexName = {type:'html',target:'a_index',value:$("#lbl_indexName").val()};
+    		var txt_indexUrl = {type:'href',target:'a_index',value:$("#txt_indexUrl").val()};
+    		
+    		var lbl_favProductName = {type:'html',target:'a_favproduct',value:$("#lbl_favProductName").val()};
+    		var txt_favProductUrl = {type:'href',target:'a_favproduct',value:$("#txt_favProductUrl").val()};
+    		
+    		var lbl_favStoreName = {type:'html',target:'a_favstore',value:$("#lbl_favStoreName").val()};
+    		var txt_favStoreUrl = {type:'href',target:'a_favstore',value:$("#txt_favStoreUrl").val()};
+    		var lbl_storeName = {type:'html',target:'a_store',value:$("#lbl_storeName").val()};
+    		var txt_storeUrl = {type:'href',target:'a_store',value:$("#txt_storeUrl").val()};
+    		var lbl_toApplyName = {type:'html',target:'a_toapply',value:$("#lbl_toApplyName").val()};
+    		var txt_toApplyUrl = {type:'href',target:'a_toapply',value:$("#txt_toApplyUrl").val()};
+    		var lbl_helpCenterName = {type:'html',target:'a_helpcenter',value:$("#lbl_helpCenterName").val()};
+    		var txt_helpCenterUrl = {type:'href',target:'a_helpcenter',value:$("#txt_helpCenterUrl").val()};
+
+    		paramData.push(lbl_loginName);
+			paramData.push(txt_loginUrl);
+			paramData.push(lbl_regName);
+			paramData.push(txt_regUrl);
+			paramData.push(txt_customerIndexUrl);
+			paramData.push(lbl_logoutName);
+			paramData.push(txt_logoutUrl);
+			paramData.push(lbl_myorderName);
+			paramData.push(txt_myorderUrl);
+			paramData.push(lbl_indexName);
+			paramData.push(txt_indexUrl);
+			paramData.push(lbl_favProductName);
+			paramData.push(txt_favProductUrl);
+			paramData.push(lbl_favStoreName);
+			paramData.push(txt_favStoreUrl);
+			paramData.push(lbl_storeName);
+			paramData.push(txt_storeUrl);
+			paramData.push(lbl_toApplyName);
+			paramData.push(txt_toApplyUrl);
+			paramData.push(lbl_helpCenterName);
+			paramData.push(txt_helpCenterUrl);
+
+			return paramData;
+		},
+        validateData:function(paramJson){
+            var err={
+                success:true,
+                msg:""
+            }
+            var msg=[];
+            msg = decoration.base.validateSpecial(msg,paramJson.lbl_loginName,"请登录包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.lbl_regName,"注册包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.lbl_logoutName,"退出包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.lbl_myorderName,"我的订单包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.lbl_indexName,"商城首页包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.lbl_favProductName,"收藏的商品包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.lbl_favStoreName,"收藏的店铺包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.lbl_storeName,"商家中心包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.lbl_toApplyName,"商家入驻包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.lbl_helpCenterName,"帮助中心包含特殊字符，请重新输入！<br>");
+            if(msg.length>0){
+                err.success = false;
+                err.msg=msg.join("");
+            }
+            return err;
+        }
+}
+
+componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+
+</script>
+
+</body>
+</html>

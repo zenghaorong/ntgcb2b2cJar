@@ -1,0 +1,129 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/msg/send" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/msg/send/addDo" method="post">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="type" class="col-sm-2 control-label">${msg['msg.send.column.type']}</label>
+                            <div class="col-sm-8">
+                                    <select name="type"  id="type"  class="form-control required" >
+                                        <!--#if(!isEmpty(msgTypeList)){#-->
+                                        <option value="">${msg['globals.select.select']}</option>
+                                                <!--#for(msgType in msgTypeList){#-->
+                                                      <option value="${msgType.code}">${msgType.name}</option>
+                                                <!--#}#-->
+                                        <!--#}#-->
+                                    </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sendTo" class="col-sm-2 control-label">${msg['msg.send.column.sendTo']}</label>
+                            <div class="col-sm-8">
+                                    <select name="sendTo"  id="sendTo"  class="form-control required" >
+                                            <option value="">${msg['globals.select.select']}</option>
+                                            <option value="PLATFORM">${msg['msg.send.to.platform']}</option>
+                                            <option value="STORE">${msg['msg.send.to.store']}</option>
+                                            <option value="MEMBER">${msg['msg.send.to.member']}</option>
+                                            <option value="PERSONAL">${msg['msg.send.to.personal']}</option>
+                                    </select>
+                            </div>
+                        </div>
+                        <!--
+                        <div class="form-group">
+                            <label for="sendAt" class="col-sm-2 control-label">${msg['msg.send.column.sendAt']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="sendAt" class="form-control" name="sendAt" data-parsley-required="true" placeholder="${msg['msg.send.column.sendAt']}">
+                            </div>
+                        </div>-->
+                        <div class="form-group">
+                            <label for="sendAt" class="col-sm-2 control-label">${msg['msg.send.column.sendAt']}</label>
+                            <div class="col-sm-8 input-group date form_datetime "
+                                 style="padding-left: 16px; padding-right: 16px;"
+                                 data-date="1979-09-16T05:25:07Z"
+                                 data-date-format="dd MM yyyy - HH:ii p" data-link-field="at">
+                                <input type="text" size="16" readonly class="form-control"
+                                       value="${@date.getDateTime()}" data-parsley-required="true">
+                                <span class="input-group-addon"><span
+                                        class="glyphicon glyphicon-remove"></span></span> <span
+                                    class="input-group-addon"><span
+                                    class="glyphicon glyphicon-th"></span></span>
+                            </div>
+                            <input type="hidden" id="sendAt" name="sendAt" value="${@date.getDateTime()}" />
+                        </div>
+                        <div class="form-group">
+                            <label for="sendType" class="col-sm-2 control-label">${msg['msg.send.column.sendType']}</label>
+                            <div class="col-sm-8">
+                                <!--<input type="text" id="sendType" class="form-control" name="sendType" data-parsley-required="true" placeholder="${msg['msg.send.column.sendType']}">-->
+                                <select name="sendType"  id="sendType"  class="form-control required" >
+                                    <option value="">${msg['globals.select.select']}</option>
+                                    <option value="MSG">${msg['msg.info.type.msg']}</option>
+                                    <option value="SMS">${msg['msg.info.type.sms']}</option>
+                                    <option value="EAMIL">${msg['msg.info.type.email']}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.config.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.all.js"></script>
+<script language="JavaScript">
+    $(document).ready(function () {
+
+        //myForm.init();
+        $('.form_datetime').datetimepicker({
+            format:'yyyy-mm-dd hh:ii:ss',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1
+        });
+
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    form.resetForm();
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<!--#}#-->
+
+

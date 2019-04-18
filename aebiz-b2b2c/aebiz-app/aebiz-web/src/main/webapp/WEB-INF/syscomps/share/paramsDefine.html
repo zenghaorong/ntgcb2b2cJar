@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	</head>
+	<body>
+		<form  class="form-horizontal" role="form">
+			<div class="form-group">
+				<label for="loginname" class="col-sm-3 control-label">是否异步加载</label>
+				<div class="col-sm-3">
+					<label class="radio-inline">
+					   <input type="radio" name="needAsyncInit" value="true" placeholder="" checked="checked">是
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="needAsyncInit" value="false" placeholder="">否
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">标签名称</label>
+				<div class="col-sm-3">
+					<input type="text" name="lableName" id="lableName" class="form-control">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="loginname" class="col-sm-3 control-label">图标大小</label>
+				<div class="col-sm-3">
+				<label class="radio-inline">
+					<input type="radio" checked="checked" name="imgSize" placeholder="" value="16">小
+					</label>
+					<label class="radio-inline">
+					<input type="radio" name="imgSize" placeholder="" value="24">中
+					</label>
+					<label class="radio-inline">
+					<input type="radio" name="imgSize" placeholder="" value="32">大
+					</label>
+				</div>
+			</div>
+		</form>
+	</body>
+<script type="text/javascript">
+	//获取属性配置JSON
+	var pageJson = ${webPageModelJsonStr};
+	//构建属性配置
+	var componentsParam = {
+		initParamData : function(pageJson) { //初始化渲染属性配置
+			if (typeof (pageJson) == "string") {
+				pageJson = JSON.parse(pageJson);
+			}
+			if (pageJson.needAsyncInit) {				
+				$("input[name='needAsyncInit'][value=" + pageJson.needAsyncInit + "]")
+				.attr("checked", true);
+			}
+			if (pageJson.lableName) {
+				$("#lableName").val(pageJson.lableName);
+			}
+			if (pageJson.imgSize) {
+
+				$("input[name='imgSize'][value=" + pageJson.imgSize + "]")
+						.attr("checked", true);
+			}
+		},
+		saveParamData : function() { //返回属性配置JSON
+			var needAsyncInit = $("input[name='needAsyncInit']:checked").val();
+			var imgSize = $("input[name='imgSize']:checked ").val();
+
+			var pageJson = {
+				compId : 'share',
+				"lableName" : $("#lableName").val(),
+				"imgSize" : imgSize,
+				"needAsyncInit" : needAsyncInit
+
+			};
+			
+			return pageJson;
+		},
+		showParamData:function(){
+			console.log($("#lableName").val())
+			var paramData = [];
+			var labelName = {
+				type:'text',
+				target:'share_name',
+				value:$("#lableName").val()
+			}
+			paramData.push(labelName);
+			return paramData;
+		}
+	}
+	componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+</script>
+</html>

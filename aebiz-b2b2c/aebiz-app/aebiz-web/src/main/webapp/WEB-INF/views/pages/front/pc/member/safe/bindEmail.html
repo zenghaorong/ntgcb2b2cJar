@@ -1,0 +1,204 @@
+<!--#
+include("/pages/front/pc/member/inc/header.html"){}
+#-->
+<style>
+	.import{
+		border-color: red !important;
+	}
+	.importBorder{
+		border-color: #ccc !important;
+	}
+</style>
+<div class="m-bd">
+	<div class="g-center f-push-30-t">
+		<!--#
+			include("/pages/front/pc/member/inc/left.html"){}
+		#-->
+		<script src="/assets/front/pc/member/scripts/safe.js"></script>
+		<link href="http://at.alicdn.com/t/font_paidwj9uheyiudi.css" rel="stylesheet">
+		<div class="ps-main m-Account-safe f-fl">
+			<div class="u-meun-chain g-center"><i class="iconfont icon-wode"></i><a href="">个人中心</a>><a href="">账号安全</a>><span>绑定邮箱</span></div>
+
+			<div class="mas-tit">
+				绑定邮箱<small>Bind mailbox</small>
+			</div>
+			<div class="m-modify-form f-cb">
+				<form id="form1" action="${base!}/member/security/userBindEmail" method="post">
+					<ul>
+						<li>
+							<label>绑定邮箱</label><input type="text" id="email" name="email" value=""><span id="checkEmailInfo" style="margin-left: 10px;"></span>
+						</li>
+						<li>
+							<label>邮箱验证码</label>
+							<input type="text" id="emailCode" name="emailCode" style="width: 150px;" />
+							<a id="getEmailCaptcha" class="getCode btn f-push-20-l" >获取邮箱验证码</a>
+							<span class="tip f-push-20-l" id="sendMsg">${error!}</span>
+						</li>
+						<li>
+							<label></label><a id="step" class="btn bgRed f-push-20-r">下一步</a>
+						</li>
+					</ul>
+				</form>
+			</div>
+		</div>
+
+	</div>
+</div>
+<!-- end -->
+<div class="g-center">
+	<div class="picScroll-left f-push-20-t">
+		<div class="list_hd">
+			猜你喜欢
+			<a class="next iconfont icon-next"></a>
+			<a class="prev iconfont icon-prev"></a>
+		</div>
+		<div class="bd">
+			<ul class="picList">
+				<li>
+					<div class="pic"><a href="" target="_blank"><img src="/assets/front/pc/member/images/ps-lb.png"></a></div>
+					<div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+				</li>
+				<li>
+					<div class="pic"><a href="" target="_blank"><img src="/assets/front/pc/member/images/ps-lb.png"></a></div>
+					<div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+				</li>
+				<li>
+					<div class="pic"><a href="" target="_blank"><img src="/assets/front/pc/member/images/ps-lb.png"></a></div>
+					<div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+				</li>
+				<li>
+					<div class="pic"><a href="" target="_blank"><img src="/assets/front/pc/member/images/ps-lb.png"></a></div>
+					<div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+				</li>
+				<li>
+					<div class="pic"><a href="" target="_blank"><img src="/assets/front/pc/member/images/ps-lb.png"></a></div>
+					<div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+				</li>
+				<li>
+					<div class="pic"><a href="" target="_blank"><img src="/assets/front/pc/member/images/ps-lb.png"></a></div>
+					<div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+				</li>
+				<li>
+					<div class="pic"><a href="" target="_blank"><img src="/assets/front/pc/member/images/ps-lb.png"></a></div>
+					<div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<!--#
+	include("/pages/front/pc/member/inc/tail.html"){}
+#-->
+
+<script>
+    $().ready(function () {
+        $("#emailCode").blur(function () {
+            var len1 = $(this).val().length;
+            if (parseInt(len1) == 0) {
+                $("#emailCode").css("border-color","red");
+            }else{
+                $("#emailCode").css("border-color","#eaeaea");
+            }
+        });
+        $("#emailCode").focus(function () {
+            $("#emailCode").css("border-color","#eaeaea");
+        });
+        //获取手机验证码
+        $("#getEmailCaptcha").click(function () {
+            if($(this).css("cursor")=="no-drop"){
+                return;
+            }else{
+                $("#email").blur();
+            }
+            if($("#getEmailCaptcha").css("cursor")=="no-drop"|$("#email").css("border-color")=="rgb(255, 0, 0)"){
+                return;
+            }else {
+                $(this).attr('disabled',"true");
+                $(this).css("cursor","no-drop");
+                var i=59;
+                function show(){
+                    $("#getEmailCaptcha").html(" "+(i--)+"秒后再次获取");
+                }
+                var iCount = setInterval(show,1000);// 注意函数名没有引号和括弧！
+                //setInterval(count,1000);
+                setTimeout(function () {
+                    $("#getEmailCaptcha").removeAttr("disabled");
+                    clearInterval(iCount);
+                    $("#getEmailCaptcha").html("获取邮箱验证码");
+                    $("#sendMsg").html("");
+                    $("#getEmailCaptcha").css("cursor","pointer");
+                }, 60000);
+
+                $.ajax({
+                    type:"POST",
+                    url:"/member/security/getEmailCaptcha",
+					data:{"email":$("#email").val()},
+                    dataType:"JSON",
+                    async:false,
+                    success:function(data){
+                        if(data.code==1){
+                            $("#sendMsg").html("发送失败！");
+                        }else{
+                            $("#sendMsg").html("邮箱验证码已发送成功，请注意查收！");
+                        }
+                    }
+                });
+            }
+
+        });
+
+        $("#step").click(function () {
+            $("#emailCode").blur();
+            $("#email").blur();
+            var i=0;
+            if($("#emailCode").css("border-color")=="rgb(255, 0, 0)"){
+                i++;
+            }
+            if($("#email").css("border-color")=="rgb(255, 0, 0)"){
+                i++;
+            }
+            if(i==0){
+                $("#form1").submit();
+            }
+        });
+
+        $("#email").focus(function () {
+            $(this).removeClass("import");//边框颜色
+            $(this).addClass("importBorder");
+            $("#checkEmailInfo").html("请输入邮箱").css("color","#969696");
+        });
+
+        $("#email").blur(function () {
+            $(this).removeClass("importBorder");
+            var email = $(this).val();
+            if(email.length==0) {
+                $("#checkEmailInfo").html("请输入正确的邮箱");
+                $("#email").addClass("import");
+            }else{
+                var re = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/
+                if(re.test(email)){
+                    $.ajax({
+                        type:"POST",
+                        url:"/member/security/checkEmail",
+                        data:{"email":$("#email").val()},
+                        dataType:"JSON",
+                        success:function(data){
+                            if(data.code==1){
+                                $("#checkEmailInfo").html("该邮箱已存在！").css("color","red");
+                                $("#email").addClass("import");
+                            }else{
+                                $("#email").css("border-color","#1AEC35");
+                                $("#checkEmailInfo").html("");
+                            }
+                        }
+                    });
+                }else{
+                    $("#checkEmailInfo").html("格式有误").css("color","red");
+                    $("#email").addClass("import");
+                }
+
+            }
+        });
+    });
+
+</script>

@@ -1,0 +1,157 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<link href="${base!}/assets/common/vendor/city-picker/css/main.css" rel="stylesheet">
+<link href="${base!}/assets/common/vendor/city-picker/css/picker.css" rel="stylesheet">
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base!}/platform/self/order/delivery" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+    <div class="pull-right">
+        <div class="btn-group tool-button">
+            <button class="btn btn-primary navbar-btn" type="button" data-toggle="modal" data-target="#dialogPrint" >打印</button>
+        </div>
+    </div>
+</header>
+<div class="content-wrap bg-white">
+    <div class="wrapper" style="vertical-align:middle;min-height:500px;top:50px">
+        <input type="hidden" name="id" value="${obj.id}">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">收货地址详细信息</h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="col-md-6" style="padding: 5px 0px">
+                        收件人:   <span>${obj.deliveryName}</span>
+                    </div>
+                    <div class="col-md-6" style="padding: 5px 0px">
+                        手机号码:   <span>${obj.deliveryMobile}</span>
+                    </div>
+                    <div class="col-md-6" style="padding: 5px 0px">
+                        收货地址:   <span>${obj.deliveryProvince} ${obj.deliveryCity} ${obj.deliveryCounty} ${obj.deliveryAddress}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">发货地址详细信息</h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="col-md-12" style="padding: 5px 0px">
+                        请选择发货地址信息 :
+                        <select class="form-control">
+                            <option value="">--请选择--</option>
+                            <option value="0">全品易购</option>
+                            <option value="1">我的店</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4" style="padding: 5px 0px">
+                        发货地:  <input class="form-control" name=""  value="合肥市" />
+                    </div>
+                    <div class="col-md-4" style="padding: 5px 0px">
+                        邮编:    <input class="form-control" name=""  value="230000" />
+                    </div>
+                    <div class="col-md-6" style="padding: 5px 0px">
+                        发货人姓名:    <input class="form-control" name=""  value="全品易购" />
+                    </div>
+                    <div class="col-md-6" style="padding: 5px 0px">
+                        <label class="control-label col-sm-2">性别</label>
+                        <label class="radio-inline"><input type="radio" name="checkStatus" value="1" checked>男</label>
+                        <label class="radio-inline"><input type="radio" name="checkStatus" value="2" >女</label>
+                    </div>
+                    <div class="col-md-6" style="padding: 5px 0px">
+                        手机:    <input class="form-control" name=""  value="18955510000" />
+                    </div>
+                    <div class="col-md-6" style="padding: 5px 0px">
+                        电话:    <input class="form-control" name=""  value="055162881998" />
+                    </div>
+                    <div class="col-md-6" style="padding: 5px 0px">
+                        <div class="form-group">
+                            <label for="totalAddress" class="col-sm-2 control-label"><span style="color: red">*</span>发货地址</label>
+                            <div class="col-sm-8">
+                                <div style="position: relative">
+                                    <input readonly type="text" data-toggle="city-picker"  data-parsley-required="true" id="totalAddress">
+                                    <!--<input type="text" readonly id="totalAddress" class="form-control"  data-toggle="city-picker" data-parsley-required="true" placeholder="请选择地址">-->
+                                    <input type="hidden" id="deliveryProvince"  name="deliveryProvince" value="">
+                                    <input type="hidden" id="deliveryCity"  name="deliveryCity" value="">
+                                    <input type="hidden" id="deliveryCounty"  name="deliveryCounty" value="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="padding: 5px 0px">
+                        发货详细地址:
+                        <textarea id="deliveryAddress" name="deliveryAddress" class="form-control"  rows="3">南一环顶峰国际公寓B座2203</textarea>
+                    </div>
+                    <div class="col-md-6" style="padding: 5px 0px">
+                        业务类型:    <input class="form-control" name=""  disabled value="标准快递" />
+                    </div>
+                    <div class="col-md-6" style="padding: 5px 0px">
+                        <label >付款方式 : </label>
+                        <select class="form-control">
+                            <option value="">--请选择--</option>
+                            <option value="0">寄付</option>
+                            <option value="1">到付</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--确认打印配货单 【确认】-->
+<div class="modal fade" id="dialogPrint" tabindex="-1" role="dialog" aria-labelledby="dialogPrintModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="dialogPrintModalLabel">打印确认</h4>
+            </div>
+            <div class="modal-body">
+                <span>您确认要打印配货单吗？</span><br>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="print"  data-dismiss="modal">确认</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<style>
+    table .s-input{margin: auto;}
+    table,table.s-table tr td,table tr th{border: 1px solid #ddd;text-align: center;vertical-align: middle;}
+
+    .form-control{
+        display: inline-block;
+        width: 30%;
+    }
+</style>
+<script>
+
+    $(document).ready(function () {
+        $("#totalAddress").citypicker();
+    })
+
+    $("#dialogPrint").on("click",function () {
+        var id = $("input[name='id']").val();
+        if(id != null && id != ""){
+            $.post("${base!}/platform/self/order/delivery/confirmPrintDelivery",{"id":id},function (data) {
+                if(data.code == 0){
+                    Toast.success(data.msg)
+                    setTimeout(function () {
+                        $.pjax({ url: '${base!}/platform/self/order/delivery', container: '#container' })
+                    },1000);
+                }else{
+                    Toast.error(data.msg);
+                }
+            })
+        }
+    })
+</script>
+<!--#}#-->

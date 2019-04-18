@@ -1,0 +1,109 @@
+	<div id="$_productmain" class="m-productinfo m-components" >
+		<div class="m-comsloading" id="$_productmain_comsloading"></div>
+			<!-- 左侧图片预览 -->
+			<div class="j_preview">
+				<div  id="$_productmain_bigImgWrap" class="j_bigImgWrap">
+					<img src="/assets/platform/vendor/frontpage/decorate/test_product.jpg" width="100%" height="100%"  data-big="" id="$_productmain_mid">
+				</div>
+
+				<div class="j_img-list" id="$_productmain_imgSlider" stype="position: relative;margin-bottom: 18px;overflow: hidden;float: left;width: 400px">
+					<a href="javascript:;" class="j_img-prev j_scrollbutton " ></a>
+					<a href="javascript:;" class="j_img-next j_scrollbutton" ></a>
+					<div class="j_img-items" id="$_productmain_img-items">
+						<ul >
+							<li><img  width='52' height='52'/></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- 右侧商品基本信息 -->
+			<div class="productrt_content">
+				<div class="product_name">
+					<h2> <label id="$_productmain_selfStore">自营</label>
+						<span id="$_productmain_productName"></span>
+					</h2>
+					<h3 class="f_color2" id="$_productmain_note"></h3>
+				</div>
+				<div class="product_ms">
+						<ul class = "y_prolist y_prodbsms">
+				 			 <li id="$_productmain_marketPrice">
+								 <span class="dt y_dis">商城价：</span>
+								 <span class="y_pdprice y_pdprice_ie">¥
+					 			 	<b id="$_productmain_shopPrice">11111</b>
+					 			 </span>
+								 &nbsp;&nbsp;
+				 			 	<span class="dt y_dis">市场价：</span>
+				 			 	<span  class="y_pdprice y_marketprice y_pdprice_ie">¥
+				 			 		<b id="$_productmain_marketPriceValue">22222</b>
+				 			 	</span>
+				 			 </li>
+							<li id="$_productmain_promotionTmp">
+								<span class="dt y_dis">促销</span>
+								<div class="dd  j_tmp_promotion">
+									<p class="promotionName"><span>满200减1</span></p>
+								</div>
+							</li>
+				 			 <li id="$_productmain_productAppCount" style="background-color: white !important;">
+								<span class="dt">商品评价</span>
+								<div class="dd">
+									<span class="y_star"><b id="$_productmain_appraise" style="width:0"></b></span>
+									<a class="f_color1 to_primise" href="javascript:;">( 共有<span id="$_productmain_appCount"></span>条评价 )</a>
+								</div>
+							</li>
+				 		</ul>
+				 		<form action="/goods/placeOrder" id="$_productmain_pForm" method="post">
+					 		<input type="hidden" name="skus" id="$_productmain_skuNo" value="" />
+							<input type="hidden" name="specSize" id="$_productmain_specSize" value="" />
+							<input type="hidden" name="specUuid0" id="$_productmain_specUuid0" value="" />
+							<input type="hidden" name="specUuid1" id="$_productmain_specUuid1" value="" />
+							<input type="hidden" name="specUuid2" id="$_productmain_specUuid2" value="" />
+							<input type="hidden" name="productUuid" id="$_productmain_productUuid" value="" />
+							<input type="hidden" name="productType" id="$_productmain_productType" value="" />
+							<input type="hidden" name="initSelectSpecUuids" id="$_productmain_initSelectSpecUuids" value="" />
+							<input type="hidden" name="iscart" id="$_productmain_iscart" value="1">
+
+					 		<ul class="y_prolist y_cosdata" id="$_productmain_productAttributes">
+								<li  class="j_data_chooseAttribute  j_normalAttr  y_textdata " >
+									<span class="j_attributeName   dt" >尺寸</span>
+									<div class="j_attributesValues   dd">
+										<span class="j_valuespan   y_item ">
+											<a   class="j_event_attributeValue">50寸</a>
+											<s></s>
+										</span>
+									</div>
+								</li>
+								<li  class="j_data_chooseAttribute  j_colorAttr  y_textdata " >
+									<span class="j_attributeName   dt" >颜色</span>
+									<div class="j_attributesValues   dd">
+										<span class="j_valuespan   y_item ">
+											<a  class="j_event_attributeValue">
+												<img src="${data.bigImageUrl}" class="j_color_img">
+												<i class="j_attr_color">蓝色</i>
+											</a>
+											<s></s>
+										</span>
+									</div>
+								</li>
+							</ul>
+
+							<ul class="y_prolist">
+								<li class="y_buyleng">
+									<span class="dt">购买数量</span>
+									<div class="dd">
+										<span class="y_saleleng">
+											<a href="javascript:;" id="$_productmain_reduce">-</a>
+											<input type="text" name="num" id="$_productmain_number" value="1" autocomplete="off" >
+											<a href="javascript:;" id="$_productmain_add">+</a>
+										</span>
+										<label id="$_productmain_stockNode">(库存<span id="$_productmain_stock">222</span>件)</label>
+									</div>
+								</li>
+							</ul>
+						</form>
+						<div class="y_gobuybtn" >
+				    		<a id="$_productmain_fastBuy"  class="btn btn-lg btn-custom" href="javascript:;">立即购买</a>
+							<a id="$_productmain_addtocar" class="btn btn-lg btn-custom2"   href="javascript:;">加入购物车</a>
+						</div>
+				</div>
+			</div>
+	</div>

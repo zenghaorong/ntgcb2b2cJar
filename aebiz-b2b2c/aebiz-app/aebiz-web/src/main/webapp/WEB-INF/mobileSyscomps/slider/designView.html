@@ -1,0 +1,17 @@
+<!--轮播-->
+<div class="mui-slider m-banner m-components" id="$_slider_compId">
+    <img src="${contextPath}/static/mobileTempAssets/defaultTemplate/images/defaultImgs/mslider.png" />
+</div>
+
+<script type="text/html" id="index-banner-list">
+    <div class="swiper-container">
+        <div class="swiper-wrapper ">
+            {{each banner as value}}
+            <div class="swiper-slide"><a href="{{value.linkUrl}}"><img src="{{value.imageUrl}}" /></a></div>
+            {{/each}}
+        </div>
+
+        <div class="swiper-pagination"></div>
+    </div>
+
+</script>

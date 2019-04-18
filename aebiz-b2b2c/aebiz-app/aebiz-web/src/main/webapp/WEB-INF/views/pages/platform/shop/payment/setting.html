@@ -1,0 +1,113 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">${model.name}</a>
+                        <small id="getCode">${model.code}</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody id="weiPayInfo">
+                        <tr>
+                            <td>(微信ID)wxid</td>
+                            <td>
+                                <select type="text" id="appid">
+                                    <!--# for(o in obj){
+                #-->
+                                   <option>${o.appid}</option>
+                                    <!--#
+                    }#-->
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>(商户ID)mch_id</td><td><input type="text" id="mchid" class="form-control" data-parsley-required="true"></td>
+                        </tr>
+                        <tr>
+                            <td>(商户交易key)key</td><td><input type="text" id="key" class="form-control" data-parsley-required="true"></td>
+                        </tr>
+                        <tr>
+                            <td>AppSecret</td><td><input type="text" id="appsecret" class="form-control" data-parsley-required="true"></td>
+                        </tr>
+                        </tbody>
+                        <tbody id="alipayInfo">
+                        <tr>
+                            <td>(合作者身份)parterId</td><td><input type="text" id="parentId" class="form-control" data-parsley-required="true"></td>
+                        </tr>
+                        <tr>
+                            <td>(安全校验码)key</td><td><input type="text" id="alikey" class="form-control" data-parsley-required="true"></td>
+                        </tr>
+                        <tr>
+                            <td>(支付宝账号)account</td><td><input type="text" id="alipayaccount" class="form-control" data-parsley-required="true"></td>
+                        </tr>
+                        </tbody>
+                        <tbody id="epayInfo">
+                        <tr>
+                            <td>(公钥索引)keyIndex</td><td><input type="text" id="keyindex" class="form-control" data-parsley-required="true"></td>
+                        </tr>
+                        <tr>
+                            <td>(AES秘钥加密串)encryKey</td><td><input type="text" id="encrykey" class="form-control" data-parsley-required="true"></td>
+                        </tr>
+                        <tr>
+                            <td>(请求报文加密串)encryStr</td><td><input type="text" id="encrystr" class="form-control" data-parsley-required="true"></td>
+                        </tr>
+                        <tr>
+                            <td>(接口请求业务编码)platform</td><td><input type="text" id="platform" class="form-control" data-parsley-required="true"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<form action="${base}/platform/shop/payment/setDo" role="form" class="form-horizontal parsley-form" data-parsley-validate id="addForm"  method="post">
+    <input type="text" hidden="hidden" id="payInfo" name="payInfo">
+    <input type="text" hidden="hidden" id="paymentId" name="paymentId" value=${model.id}>
+</form>
+<div class="modal-footer">
+    <button type="button" id="save" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.submit']}</button>
+</div>
+<script>
+    //保存配置新增
+    $("#save").on("click",function(){
+        var wxpay = {};
+        if($("#alipayInfo").is(":visible")){
+            wxpay.parter = $("#parentId").val();
+            wxpay.key =  $("#alikey").val();
+            wxpay.account=$("#alipayaccount").val();
+        }else if($("#weiPayInfo").is(":visible")){
+            wxpay.AppId = $("#appid").val();
+            wxpay.Mchid =  $("#mchid").val();
+            wxpay.key=$("#key").val();
+            wxpay.AppSecret = $("#appsecret").val();
+        }else if($("#epayInfo").is(":visible")){
+            wxpay.keyIndex = $("#keyindex").val();
+            wxpay.encryKey =  $("#encrykey").val();
+            wxpay.encryStr=$("#encrystr").val();
+            wxpay.platform = $("#platform").val();
+        }
+        $("#payInfo").val(JSON.stringify(wxpay));
+        $('#addForm').ajaxSubmit(function(){
+            location.reload(true);
+        });
+        return false;
+    })
+   $(function(){
+       //判断code值
+        var code=$("#getCode").text().trim();
+        if(code=="alipay"){
+            $("#weiPayInfo").hide();
+            $("#epayInfo").hide();
+        }else if(code=="wxpay"){
+            $("#alipayInfo").hide();
+            $("#epayInfo").hide();
+        }else if(code=="bestpay"){
+            $("#weiPayInfo").hide();
+            $("#alipayInfo").hide();
+        }
+    })
+</script>

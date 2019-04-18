@@ -1,0 +1,50 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">Order_after_log</a>
+                        <small>${obj.id}</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>${msg['order.after.log.column.afterSaleId']}</td><td>${obj.afterSaleId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.after.log.column.description']}</td><td>${obj.description}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.after.log.column.evidence1']}</td><td>${obj.evidence1}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.after.log.column.evidence2']}</td><td>${obj.evidence2}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.after.log.column.evidence3']}</td><td>${obj.evidence3}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.after.log.column.handleTime']}</td><td>${obj.handleTime}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.after.log.column.handleMan']}</td><td>${obj.handleMan}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.after.log.column.handleType']}</td><td>${obj.handleType}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.after.log.column.afterSaleState']}</td><td>${obj.afterSaleState}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

@@ -1,0 +1,249 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<style>
+    .goods_ul .item {
+    position: relative;
+    display: block;
+    float: left;
+    width: 23%;
+    height: 320px;
+    margin-right: 1%;
+    margin-left: 1%;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 1px 1px 5px rgba(0,0,0,.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+    background-color: white;
+    transition: box-shadow .2s ease,translate 1s ease;
+}
+ .tab-content{
+     padding-bottom:100px;
+ }
+ .goods_ul .item{
+     position:relative;
+     display: block;
+     float: left;
+     width:23%;
+     height: 320px;
+     margin-right: 1%;
+     margin-left:1%;
+     padding: 20px;
+     box-sizing: border-box;
+     box-shadow: 1px 1px 5px rgba(0,0,0,.1);
+     margin-bottom: 20px;
+     overflow: hidden;
+     background-color: white;
+     transition:box-shadow .2s ease,translate 1s ease;
+ }
+ .goods_ul .item:hover{
+     box-shadow: 2px 2px 20px rgba(0,0,0,.15)
+ }
+ .goods_ul .item:hover .tempio{
+     transform: translate(0,0px);
+ }
+ .goods_ul .item .thumbilas{
+     height:260px;
+     display:block;
+ }
+ .goods_ul .item .thumbilas img{
+     display:block;
+     margin:0 auto;
+     width:100%;
+     max-height:100%;
+ }
+ .goods_ul .item .tempInfo{
+     height:40px;
+     margin:16px 0 6px 0;
+     overflow:hidden;
+ }
+ .goods_ul .tempio{
+     position:absolute;
+     bottom:0px;
+     left:0px;
+     width:100%;
+     background:#fff;
+     padding:0 20px 20px 20px;
+     transform: translate(0,60px);
+     transition:transform .2s ease;
+     z-index: 101;
+ }
+ .goods_ul .tempAdd{
+     position: absolute;
+     width: 100%;
+     height: 100%;
+     background: #fff;
+     left: 0;
+     bottom: 0;
+     z-index: 100;
+     text-align: center;
+ }
+ .goods_ul .tempAdd img{
+     width:100px;
+     height:100px;
+     margin:100px 0 16px 0;
+ }
+
+ .goods_ul .tempMask{
+     display:none;
+     position: absolute;
+     width: 100%;
+     height: 100%;
+     background: rgba(0,0,0,.5);
+     left: 0;
+     bottom: 0;
+     z-index: 100;
+     line-height: 280px;
+     text-align: center;
+ }
+ .goods_ul .tempMask img{
+     width:80px;
+     height:80px;
+ }
+ .btn.btn-info{
+     color:#fff;
+ }
+</style>
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button">
+            <a id="index" class="btn btn-primary navbar-btn" href="${base}/platform/dec/templates/style/${versionType}" data-pjax>${msg['dec.templates.manager.button.templateSkin']}</a>
+        </div>
+    </header>
+    <div class="row">
+        <div class="col-sm-12 tab-content y_imgbox">
+            <div class="box">
+                <div class="tab-pane">
+                    <div class="goods_ul">
+                        <!--# for(o in templateList){
+        #-->
+                        <div class="col-sm-3 item">
+                            <a class="thumbilas" href="${base}/platform/dec/templates/pages/pagesIndex/${o.id}" title="${o.templateZhName}"  data-pjax>
+                                <img src="${o.templateImage }" />
+                            </a>
+                            <div class="tempio">
+                                <div class="tempInfo">
+                                    <a href="">${o.templateZhName}</a>
+                                </div>
+                                <div class="tempOp">
+                                    <a href="javascript:void(0)" onclick="enable(this,'${o.id}')" title="启用" class="btn btn-success">启用</a>
+                                    <a class="btn btn-info" href="${base}/platform/dec/templates/manager/edit/${o.id}">编辑</a>
+                                    <a class="btn btn-info" onclick="del(this,'${o.id}')" href="javascript:void(0)">删除</a>
+                                    <a class="btn btn-primary" href="${base}/platform/dec/templates/manager/setting/${o.id}" data-toggle="modal" data-target="#dialogDetail">套用</a></li>
+                                </div>
+                            </div>
+                            <a href="${base}/platform/dec/templates/pages/pagesIndex/${o.id}"  data-pjax>
+                                <div class="tempMask" <!--#if(o.disabled==true){#-->style="display:block"<!--#}#-->>
+                                    <img alt="" src="/assets/front/pc/member/images/temp_select.png">
+                                </div>
+                            </a>
+                    </div>
+                        <!--#
+        }#-->
+                    <div class="col-sm-3 item">
+                        <div class="tempAdd">
+                            <a href="${base}/platform/dec/templates/manager/add?versionType=${versionType}"><img alt="" src="/assets/front/pc/member/images/temp_add.png"></a>
+                            <h4>新建模版</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogEnable" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">启用</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        是否确认启用该模板
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okEnable" type="button" class="btn btn-primary" data-loading-text="启用中">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script>
+    function enable(target,id) {
+        var dialog = $("#dialogEnable");
+        dialog.modal("show");
+        dialog.find("#okEnable").unbind("click");
+        dialog.find("#okEnable").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/dec/templates/manager/enable/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    $('.item').find('.tempMask').hide();
+                    $(target).parents('.item').find('.tempMask').show();
+                    Toast.success(data.msg);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+
+    }
+    function del(target,id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/dec/templates/manager/delete/" + id, {}, function (data) {
+                console.log(data);
+                if (data.code == 0) {
+                    $(target).parents('.item').hide();
+                    Toast.success(data.msg);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+
+
+</script>
+<!--#}#-->

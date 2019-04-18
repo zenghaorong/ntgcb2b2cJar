@@ -1,0 +1,179 @@
+<div class="m-collect-list">
+    <div class="hd">
+        <input class="all-check" type="checkbox" name="" id="checkboxAll" value="" />全选<a id="delect01" style="padding-left: 40px">取消收藏</a>
+    </div>
+    <input type="hidden" value="${obj.totalPage}" id="totalPage">
+    <input type="hidden" value="${obj.page}" id ="page">
+    <input type="hidden" value="${obj.records}" id ="records">
+    <input type="hidden" value="${obj.record}" id ="record">
+    <div id="usableCoupon">
+
+    </div>
+    <!--#  for(var o in obj.rowList){ #-->
+    <ul class="collect-list f-cb" >
+        <li>
+            <div class="checkbox f-fl">
+                <label for="" data-check><input class="checkbox1 f-fl" type="checkbox" name="" id="" value="${o.id}" /></label>
+            </div>
+            <div class="pic f-fl"><a href=""><img src="${o.imgalbum}"/></a></div>
+            <div class="info f-fl">
+                <h3><a href="">${o.goodsname}</a></h3>
+                <p class="time">收藏时间：<!--#if(!isEmpty(o.favoritetime)){#-->${@date.getDate(o.favoritetime)} <!--#}#--></p>
+            </div>
+            <div class="money f-fl">
+                <p class="mark">¥${@money.fenToYuan(o.favoriteprice)}</p>
+                <p>比收藏时上升<span>¥${@money.fenToYuan(o.saleprice - o.favoriteprice)}</span>元</p>
+            </div>
+            <input type="hidden" value="${o.id}">
+            <a class="iconfont icon-delete f-fl icon-delete0"></a>
+        </li>
+    </ul>
+    <!--# } #-->
+    <div class="f-tar">
+        <div class="u-page-l f-cb">
+            <a class="perv disable" id="prev">上一页</a>
+            <ul class="f-cb" id="pageCoupon">
+
+            </ul>
+            <a class="next disable" id="nextPage">下一页></a>
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    $("#delect01").click(function () {
+        var id = "";
+        $(".checkbox1").each(function () {
+            if(this.checked){
+                var aa = $(this).val();
+                id += aa + ",";
+            }
+        });
+       if(id.length == 0){
+           $("#delect01").removeClass("cancel");
+           $("#delect01").addClass("qx-delete");
+       }else{
+           $("#delect01").removeClass("qx-delete");
+           $("#delect01").addClass("cancel");
+       }
+    });
+    var pageStr = "";
+    for(var i=0;i<parseInt($("#totalPage").val());i++){
+        if(parseInt($("#page").val())==(i+1)){
+            pageStr+="<li class='active' data-label><a>"+(i+1)+"</a></li>";
+        }else{
+            pageStr+="<li data-label><a>"+(i+1)+"</a></li>";
+        }
+    }
+    $("#pageCoupon").html(pageStr);
+    //上一页
+    $("#prev").click(function () {
+            page=parseInt($("#pageCoupon .active").text());
+            if(page==2){
+                $("#prev").addClass("disable")
+            }
+            if(page==1){
+                layer.msg('没有上一页了', {icon: 6});
+                $("#prev").addClass("disable")
+                return ;
+            }
+            count = 1;
+            count1 = 1;
+            page = page-1;
+            selectCoupon(page,rows,status);
+    });
+    //下一页
+    $("#nextPage").click(function () {
+            page = parseInt($("#pageCoupon .active").text());//1
+            var totalPage = $("#totalPage").val();
+            if(page==1){
+                $("#prev").removeClass("disable")
+            }
+            if(page==parseInt(totalPage)-1){
+                $("#nextPage").addClass("disable")
+            }
+            if(page==parseInt(totalPage)){
+                layer.msg('没有下一页了', {icon: 6});
+                return ;
+            }
+            count = 1;
+            count1 = 1;
+            page++;
+            selectCoupon((page),rows,status);
+    });
+    //点击页数
+    $(document).on("click","#pageCoupon li",function(){
+            page = $(this).text();
+            count = 1;
+            count1 = 1;
+            selectCoupon(page, rows, status);
+    });
+    function selectCoupon(page,rows,status) {
+        var param={
+            "pageNo": page,
+            "status": status,
+            "rows":rows
+        }
+        $.post("/member/collection/data",param,function (data) {
+            //alert(data);
+            $("#content").html(data);
+        });
+    }
+    //商品单个删除
+    $(document).on("click",".icon-delete0",function () {
+        var id = $(this).prev().val();
+        //alert(status);
+        $(".layui-layer-btn0").click(function () {
+            $.post("/member/collection/update",{"id":id,"status":status},function (data) {
+                var pageAll = $("#totalPage").val();
+                var totleAll = $("#records").val();
+                if((totleAll == rows*(page-1)+1) && pageAll == page){
+                    page--;
+                }
+                if(page == 0){
+                    page++;
+                }
+                selectCoupon(page,rows,status);
+            });
+        });
+    });
+    //商品批量删除
+    $(document).on("click",".checkbox1,#checkboxAll",function () {
+        $(document).on("click",".layui-layer-btn0",function () {
+            var id = " ";
+            var count2 = 0;
+            $(".checkbox1").each(function () {
+                if(this.checked){
+                    count2++;
+                    var aa = $(this).val();
+                    id += aa + ",";
+                }
+            });
+            id = id.substring(0,id.length-1);
+            $.post("/member/collection/updateAll",{"id":id,"status":status},function (data) {
+                var pageAll = $("#totalPage").val();
+                var totleAll = $("#records").val();
+                if((count2+rows*(page-1) == totleAll) && pageAll == page){
+                    page--;
+                }
+                if(page == 0){
+                    page++;
+                }
+               // alert(page);
+                selectCoupon(page,rows,status);
+            });
+        });
+    });
+    if($("#records").val() == 0 && $("#record").val() == 1){
+        $("#usableCoupon").html("<div class='coupon-blank'><img src='${base!}/assets/front/pc/member/images/empty01.png'/> <p class='info'></p> </div>");
+        $("#pageCoupon").parent().parent().hide();
+    }
+    if($("#record").val() == 0){
+        setTimeout(function () {
+            layer.msg('没有相关商品', {icon: 6});
+        }, 1000);
+        selectCoupon(page,rows,status);
+    }
+</script>
+
+
+

@@ -1,0 +1,157 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button" style="padding-top: 8px;">
+            <form class="form-inline js-search-form" >
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <input type="text" class="form-control" name="name" placeholder="${msg['store.level.column.name']}" />
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary js-search-ok" >${msg['globals.button.search']}</button>
+                    <button type="button" class="btn btn-default js-search-reset" >${msg['globals.button.reset']}</button>
+                </div>
+            </form>
+        </div>
+        <div class="btn-group tool-button pull-right">
+            <a id="add" class="btn btn-primary navbar-btn" href="${base}/platform/store/config/level/add" data-pjax><i class="ti-plus"></i> ${msg['globals.button.add']}</a>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border"  style="min-height: 500px;">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                    <tr>
+                        <th>${msg['store.level.column.name']}</th>
+                        <th>${msg['store.level.column.goodsLimit']}</th>
+                        <th>${msg['store.level.column.level']}</th>
+                        <th>${msg['store.level.column.price']}</th>
+                        <th>${msg['store.level.column.rate']}</th>
+                        <th>${msg['globals.table.column.operation']}</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/store/config/level/data",
+                "type": "post",
+                "data": function (d) {
+                    var $search_form = $(".js-search-form");
+                    d.name = $("input[name='name']", $search_form).val()||"";
+                }
+            },
+            "order": [[2, "desc"]],
+            "columns": [
+                    {"data": "name", "bSortable": true},
+                    {"data": "goodsLimit", "bSortable": true},
+                    {"data": "level", "bSortable": true},
+                    {"data": "price", "bSortable": true},
+                    {"data": "rate", "bSortable": true}
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                                '<li><a href="${base}/platform/store/config/level/edit/' + row.id + '" data-pjax>${msg["globals.button.update"]}</a></li>' +
+                                '<li class="divider"></li>' +
+                                '<li><a href="javascript:;" onclick="del(\'' + row.id + '\')">${msg["globals.button.delete"]}</a></li>' +
+                                '</ul></div>';
+                    },
+                    "targets": 5
+                }
+            ]
+        });
+
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+
+        $(".js-search-ok").click(function () {
+            $('.datatable').DataTable().ajax.reload();
+        });
+
+        $(".js-search-reset").click(function () {
+            $(".js-search-form").resetForm();
+            $('.datatable').DataTable().ajax.reload();
+        });
+    }
+
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/store/config/level/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+
+    $(function () {
+        initDatatable();
+    });
+</script>
+<!--#}#-->

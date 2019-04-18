@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>领劵中心</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!--标准mui.css-->
+    <link rel="stylesheet" href="${base!}/assets/front/h5/css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="${base!}/assets/front/h5/css/icons-extra.css" />
+    <link rel="stylesheet" href="${base!}/assets/front/h5/css/hryc.css" />
+    <!--App自定义的css-->
+    <!--<link rel="stylesheet" type="text/css" href="../css/app.css"/>-->
+    <style>
+        .mui-table-view .mui-media-object {
+            line-height: 42px;
+            max-width: 145px;
+            height: 100px;
+        }
+        .jiage-text{
+            font-size: 18px;
+            color: red;
+            margin-right:10px ;
+        }
+        [v-cloak]{
+            display: none !important;
+        }
+        .lijilq{
+            width: 34%;
+            background: green;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 25px;
+            /* margin-left: 70%; */
+            margin-top: 15px;
+            /* position: absolute; */
+            /* bottom: 20px; */
+            /* left: 250px; */
+            float: left;
+        }
+        .left-con{
+            white-space: normal;
+            color: white;
+            width: 66%;
+            float: left;
+        }
+    </style>
+</head>
+<body style="background: white;">
+
+
+<header class="mui-bar mui-bar-nav top-color">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+    <h1 class="mui-title" style="color: white;">领劵中心</h1>
+</header>
+
+<!--底部导航栏-->
+<nav class="mui-bar mui-bar-tab" style="background: white;">
+    <a class="mui-tab-item" onclick="window.location.href='${base!}/open/h5/niantu/index.html'">
+        <span class="mui-icon mui-icon-home"></span>
+        <span class="mui-tab-label">首页</span>
+    </a>
+    <a class="mui-tab-item" onclick="window.location.href='${base!}/open/h5/cart/shoppingCart.html'">
+        <span class="mui-icon mui-icon-extra mui-icon-extra-cart"></span>
+        <span class="mui-tab-label">购物车</span>
+    </a>
+    <a class="mui-tab-item mui-active" href="#tabbar">
+        <span class="mui-icon mui-icon-extra mui-icon-extra-gift"></span>
+        <span class="mui-tab-label">领劵中心</span>
+    </a>
+    <a class="mui-tab-item" onclick="window.location.href='${base!}/open/h5/niantu/userCenter.html'">
+        <span class="mui-icon mui-icon-person"></span>
+        <span class="mui-tab-label">个人中心</span>
+    </a>
+</nav>
+<div class="mui-content" style="background: white;" id="vue" v-cloak>
+    <ul class="mui-table-view" style="padding: 10px;">
+        <li class="mui-table-view-cell mui-media" v-for="item in couponList" :key="item.id"
+            style="background-color:#f0ad4e;margin-top: 10px; height: 90px;border-radius:12px;">
+            <!--<a :href="'${base!}/open/h5/cms/videoBuyPage.html?id='+item.id">-->
+                <div class="mui-media-body left-con">
+                    {{item.name}}
+                    <br><br>
+                    <span v-if="item.type==1">满减劵</span>
+                    <span v-if="item.type==2">免运费劵</span>
+                    <span v-if="item.type==3">折扣劵</span>
+                </div>
+                <div class="lijilq" v-on:click="receive(item.id)">
+                   立即领取
+                </div>
+            <!--</a>-->
+        </li>
+    </ul>
+</div>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/mui.js" ></script>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/vue.js" ></script>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/jquery-2.0.0.min.js" ></script>
+<script type="text/javascript" src="${base!}/assets/decorate/pc/decoratecommon/js/layer/mobile/layer.js" ></script>
+<script type="application/javascript">
+    mui.init({
+        swipeBack:true //启用右滑关闭功能
+    });
+
+    var vue = new Vue({
+        el: '#vue',
+        data: {
+            couponList: [],
+        },
+        created:function () {   //实例初始化创建完成执行
+
+            this.getCouponList()     //调用自身方法
+
+        },
+        methods:{              //定义封装方法
+            //获取列表
+            getCouponList:function () {
+                var self = this;
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/coupon/couponList.html",
+                    dataType:"JSON",
+                    data:{
+
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            var d = data.data;
+                            self.couponList = d;
+                        } else {
+
+                        }
+                    }
+                });
+
+            },
+            receive:function (couponId) {
+                var self = this;
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/coupon/receive.html",
+                    dataType:"JSON",
+                    data:{
+                        couponId:couponId
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            //信息框
+                            layer.open({
+                                content: '领取成功'
+                                ,btn: '我知道了'
+                            });
+                        } else {
+                            //信息框
+                            layer.open({
+                                content: data.msg
+                                ,skin: 'msg'
+                                ,time: 2 //2秒后自动关闭
+                            });
+                        }
+                    }
+                });
+            }
+        },
+        watch:{     //监听器
+            // carModel:function () {
+            //     this.getProvince();
+            // }
+        }
+
+    })
+
+</script>
+</body>
+</html>

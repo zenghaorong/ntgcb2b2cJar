@@ -1,0 +1,93 @@
+<div class="m-components" style=" padding-top:20px;" id="$_mpdList_compId">
+    <img src="${contextPath}/static/mobileTempAssets/defaultTemplate/images/defaultImgs/mPdlist.png" alt="" class="defaultPng">
+    <div class="m-pdlist-wrap" style="display:none">
+        <header class="mui-bar mui-bar-nav m-topbar">
+            <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="margin-top: -5px"></a>
+            <form id="find">
+                <div class="topbar-input">
+                <span class="u-ico-search">
+                  <img src="${contextPath}/static/mobileTempAssets/defaultTemplate/images/index/search.png">
+                </span>
+                    <input type="search" class="mui-input-clear  searchproductall" placeholder="输入您要搜索的内容">
+                </div>
+            </form>
+        </header>
+        <div class="mui-content" id="screening" style=" padding-top:88px;">
+            <ul class="screenways screenways-2">
+                <li><span class="activ">综合</span></li>
+                <li><span class="activ">销量</span></li>
+                <li><span class="activ">价格<i></i></span></li>
+                <li><span class="shaixuan">筛选<i class="last"></i></span></li>
+            </ul>
+
+            <input type="hidden" value="0" id="sortType">
+            <input type="hidden" value="综合" id="screentype">
+            <div id="condition">
+                <div class="action">
+                    <ul class="porperity_name" style="display: none;">
+                        <!--
+                        <li class=""><span>尺码1<i></i></span></li>
+                        <li><span>版型<i></i></span></li>
+                        <li><span>领型<i></i></span></li>
+                        <li><span>裙类<i></i></span></li>
+                        <li><span>颜色<i></i></span></li>
+                        -->
+                    </ul>
+                </div>
+            </div>
+            <div id="object" class="porperity_value">
+                <!--
+                  <ul class="">
+                    <li>尺码185/100</li><li>165/84</li><li>尺码185/100</li><li>165/84</li><li>尺码185/100</li><li>165/84</li><li>尺码185/100</li><li>165/84</li>
+                    <div class="clear"></div>
+                  </ul>
+                  <ul>
+                    <li>polo</li><li>职业型</li><li>原宿</li><li>英伦</li><li>欧美</li><li>小清新</li><li>商务</li>
+                    <div class="clear"></div>
+                  </ul>
+                  <ul>
+                    <li>领型185/100</li><li>165/84</li><li>领型185/100</li><li>165/84</li><li>领型185/100</li><li>165/84</li><li>领型185/100</li><li>165/84</li>
+                    <div class="clear"></div>
+                  </ul>
+                  <ul>
+                    <li>短裙</li><li>包臀裙</li><li>长裙</li><li>连衣裙</li><li>雪纺裙</li><li>碎花裙</li><li>公主裙</li><li>棉麻裙</li>
+                    <div class="clear"></div>
+                  </ul>
+                  <ul>
+                    <li>酒红色</li><li>绿色</li><li>蓝色</li><li>黑色</li><li>咖啡色</li><li>白色</li><li>藏青色</li><li>粉色</li>
+                    <div class="clear"></div>
+                  </ul>
+                   -->
+            </div>
+            <input type="hidden" id="selectPorperityValue" value="">
+            <div class="m-product-list" style=" padding-top:20px;">
+                <ul id="indexss" >
+                    <div class="mui-clear"></div>
+                </ul>
+            </div>
+            <div class="mui-content" id="shaixuan">
+                <ul class="screenchio">
+                    <li class="catePrices">
+                        <!--
+                  <p>价格区间</p>
+                  <table><tr><td>10-20</td><td>20-40</td><td>40-50</td></tr></table>
+                   -->
+                    </li>
+                    <li class="pingpai">
+                        <!--    <p class="p">品牌分类:</p>
+                  <p class="tab"><span class="sub action">白底文艺</span><span class="sub">欧妮娜</span><span class="sub">伊莎美资</span><span class="sub">韩空管</span></p>  -->
+                    </li>
+                    <li class="productCategory">
+                        <!-- <p class="p">商品分类</p>
+                  <P class="tab"><span class="sub action">家用电器</span><span class="sub">数码产品</span><span class="sub">安娜卡琳娜</span><span class="sub">rose</span></P> -->
+                    </li>
+                </ul>
+                <form>
+                    <input type="button" value="确认" class="sureSelect">
+                </form>
+            </div>
+        </div>
+        <input type="hidden" id="searchNowPage" value="1">
+        <input type="hidden" id="searchTotalPage" value="">
+    </div>
+</div>

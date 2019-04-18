@@ -1,0 +1,180 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/msg/conf/sms" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/msg/conf/sms/addDo" method="post">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">${msg['msg.conf.sms.column.name']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="name" class="form-control" name="name" data-parsley-required="true" placeholder="${msg['msg.conf.sms.column.name']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="url" class="col-sm-2 control-label">${msg['msg.conf.sms.column.url']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="url" class="form-control" name="url" data-parsley-required="true" placeholder="${msg['msg.conf.sms.column.url']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="appkey" class="col-sm-2 control-label">${msg['msg.conf.sms.column.appkey']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="appkey" class="form-control" name="appkey" data-parsley-required="true" placeholder="${msg['msg.conf.sms.column.appkey']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="secret" class="col-sm-2 control-label">${msg['msg.conf.sms.column.secret']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="secret" class="form-control" name="secret" data-parsley-required="true" placeholder="${msg['msg.conf.sms.column.secret']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signname" class="col-sm-2 control-label">${msg['msg.conf.sms.column.signname']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="signname" class="form-control" name="signname" data-parsley-required="true" placeholder="${msg['msg.conf.sms.column.signname']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="disabled" class="col-sm-2 control-label">${msg['msg.conf.sms.column.disabled']}</label>
+                            <div class="col-sm-8 switcha">
+                                <div class="mr15">
+                                    <input type="checkbox" id="disabled" name="disabled" class="js-switch-blue" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="hasTpl" class="col-sm-2 control-label">${msg['msg.conf.sms.column.hasTpl']}</label>
+                            <div class="col-sm-8 switcha">
+                                <div class="mr15">
+                                    <input type="checkbox" id="hasTpl" name="hasTpl" class="js-switch-blue" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group tpl-add" style="display: none">
+                            <label for="btnAdd" class="col-sm-2 control-label"></label>
+                            <div class="col-sm-8">
+                                <button id="btnAdd" type="button" class="btn btn-default"><i class="fa fa-plus mr5"></i>${msg['msg.conf.sms.addTplBtn']}</button>
+                            </div>
+                        </div>
+                        <div class="form-group tpl-add" style="display: none">
+                            <label for="tab" class="col-sm-2 control-label"></label>
+                            <div class="col-sm-8">
+                                <table id="tab" width="600" border="0" cellspacing="0" cellpadding="0" >
+                                    <thead>
+                                        <tr align="center">
+                                            <td>${msg['msg.conf.sms.tpl.column.tplId']}</td>
+                                            <td width="2"></td>
+                                            <td>${msg['msg.conf.sms.tpl.column.tplName']}</td>
+                                            <td>${msg['msg.conf.sms.tpl.column.operation']}</td>
+                                        </tr>
+                                    </thead>
+                                    <TBODY>                  　
+                                    　
+                                    </TBODY>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        myForm.init();
+        binEvent();
+
+        $('#hasTpl').change(function () {
+            if (this.checked) {
+                $(".tpl-add").show();
+            } else {
+                $(".tpl-add").hide();
+            }
+        });
+
+        $("#btnAdd").on("click",function(){
+            $("#tab tbody>tr input[name$='].tplId']").each(function (i) {
+                this.name = "smsTpls["+i+"].tplId";
+            })
+            $("#tab tbody>tr input[name$='].tplName']").each(function (i) {
+                this.name = "smsTpls["+i+"].tplName";
+            })
+            var i = $("#tab tbody>tr").size();
+            $("#tab tbody").append('<tr align="center"><td height="45">' +
+                '<input type="text" name="smsTpls['+i+'].tplId" class="form-control" data-parsley-required="true"></td>' +
+                '<td width="2"></td><td><input type="text" name="smsTpls['+i+'].tplName" class="form-control" data-parsley-required="true"></td>' +
+                '<td><i class="up fa fa-arrow-up" style="cursor:pointer;padding: 5px;" title="${msg['msg.conf.sms.tpl.column.operation.up']}"></i>' +
+                '<i class="down fa fa-arrow-down" style="cursor:pointer;padding: 5px;" title="${msg['msg.conf.sms.tpl.column.operation.down']}"></i>' +
+                '<i class="del fa fa-remove" style="cursor:pointer;padding: 5px;" title="${msg['msg.conf.sms.tpl.column.operation.del']}"></i></td></tr>');
+            binEvent();
+        });
+
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                if ($('#hasTpl').is(":checked") && $("#tab tbody>tr").length == 0) {
+                    Toast.error("${msg['msg.conf.sms.tpl.required']}");
+                    return false;
+                }
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    form.resetForm();
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+
+    function binEvent(){
+        $("#tab .up").unbind("click").on("click",function(){
+            var p=$(this).parent().parent();
+            var nextTR = p.prev();
+            if (nextTR.length > 0) {
+                nextTR.insertAfter(p);
+            }
+        });
+        $("#tab .down").unbind("click").on("click",function(){
+            var p=$(this).parent().parent();
+            var nextTR = p.next();
+            if (nextTR.length > 0) {
+                nextTR.insertBefore(p);
+            }
+        });
+        $("#tab .del").unbind("click").on("click",function(){
+            var tr=$("#tab tbody").find("tr");
+            if (tr.length > 0) {
+                $(this).parent().parent().remove();
+            }
+        });
+    }
+</script>
+<!--#}#-->
+
+

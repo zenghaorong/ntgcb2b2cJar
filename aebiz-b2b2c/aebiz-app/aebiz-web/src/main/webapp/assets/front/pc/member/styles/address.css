@@ -1,0 +1,6 @@
+#fullName,#mobile,#phone,#postCode,#fullName1,#mobile1,#phone1,#postCode1{ min-width:60px; }
+#AddForm .form-group{ margin-left: 100px }
+#AddForm .form-group label{float: left}
+#AddForm .form-group .col-sm-8{float: left;margin-left: 20px}
+#add-default1,#add-default2{min-width:20px;}
+.required{color:red}

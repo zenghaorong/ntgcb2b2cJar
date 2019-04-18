@@ -1,0 +1,1375 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<style>
+    .rule-group-cnd,.rule-group-act{
+        margin: 5px 5px 5px 15px; padding: 5px;display: none;
+    }
+    .rule-cnd-def ul{
+        list-style-type:none
+    }
+    .rule-cnd-def ul li{
+        padding: 5px;
+    }
+    .cnd-panel{
+        overflow-x:auto; white-space:nowrap;
+    }
+    .cnd-del{
+        cursor:pointer;padding: 5px;
+    }
+
+    .rule-price-input-sm{
+        width: 60px;
+    }
+    .rule-input-sm{
+        width: 50px;
+    }
+    .member-lvs{
+        display: inline-block
+    }
+    .member-lv-inline {
+        position: relative;
+        display: inline-block;
+        padding-top: 7px;
+        padding-left: 1px;
+        margin-bottom: 0;
+        font-weight: 400;
+        vertical-align: middle;
+    }
+    .rule-input-rate{
+        width: 100px;min-width: 80px;
+    }
+    .rule-input-price{
+        width: 120px;min-width: 100px;
+    }
+    .rule-input-number{
+        width: 60px;min-width: 40px;
+    }
+</style>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base!}/platform/self/sales/rule/order" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+    <div class="pull-right">
+        <div class="btn-group tool-button">
+            <button class="btn btn-primary navbar-btn js-to-check" data-loading-text="${msg['globals.button.submit.tip']}" >保存并提交审核</button>
+            <button class="btn btn-primary navbar-btn js-save" data-loading-text="${msg['globals.button.submit.tip']}" > ${msg['globals.button.save']}</button>
+            <a id="doLink" href="${base}/platform/self/sales/rule/order/add" data-pjax></a>
+        </div>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate action="${base}/platform/self/sales/rule/order/addDo" method="post">
+                <input type="hidden" name="type" value="order">
+                <input type="hidden" name="checkStatus" value="0">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">${msg['sales.rule.order.column.name']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="name" class="form-control" name="name" data-parsley-required="true" placeholder="${msg['sales.rule.order.column.name']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="note" class="col-sm-2 control-label">${msg['sales.rule.order.column.note']}</label>
+                            <div class="col-sm-8">
+                                <textarea class="form-control" name="note" id="note" data-parsley-required="true" placeholder="${msg['sales.rule.order.column.note']}"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">${msg['sales.rule.order.column.enabled']}</label>
+                            <div class="col-sm-8 switcha">
+                                <div class="mr15">
+                                    <input type="hidden" name="disabled" value="0"/>
+                                    <input type="checkbox" name="enabled" class="js-switch-blue" checked >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="limit_priority" class="col-sm-2 control-label">${msg['sales.rule.order.column.limit_priority']}</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="limit_priority" class="form-control" name="limit_priority" data-parsley-required="true" data-parsley-range="[0, 99]" placeholder="0-99整数">
+                                <span class="help-block">数值越大优先级越高</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">${msg['sales.rule.order.column.limit_other']}</label>
+                            <div class="col-sm-8">
+                                <label class="radio-inline"><input type="radio" class="" name="limit_other" value="1" checked>是</label>
+                                <label class="radio-inline"><input type="radio" class="" name="limit_other" value="0" >否</label>
+                                <div class="js-exists-rules">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th>现有促销规则</th>
+                                                    <th>优先级</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <!--#for(var rule in ruleList!){#-->
+                                                <tr>
+                                                    <td>${rule.name}</td>
+                                                    <td>${rule.limit_priority}</td>
+                                                </tr>
+                                                <!--#}#-->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sartAt" class="col-sm-2 control-label">有效期</label>
+                            <div class="col-sm-8 form-inline">
+                                <div class="input-group date js-start-time " style="min-width:260px;" data-date="1979-09-16T05:25:07Z" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-field="sartAt">
+                                    <input type="text" size="16" readonly class="form-control" value="${@date.getDateTime()}" data-parsley-required="true" placeholder="${msg['sales.rule.order.column.sartAt']}">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                </div>
+                                <input type="hidden" id="sartAt" name="tmp_sartAt" value="${@date.getDateTime()}" />
+                                <span>至</span>
+                                <div class="input-group date js-end-time " style="min-width:260px;" data-date="1979-09-16T05:25:07Z" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-field="endAt">
+                                    <input type="text" size="16" readonly class="form-control" value="${@date.getDateTime()}" data-parsley-required="true" placeholder="${msg['sales.rule.order.column.endAt']}">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                </div>
+                                <input type="hidden" id="endAt" name="tmp_endAt" value="${@date.getDateTime()}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">适用终端</label>
+                            <div class="col-sm-8">
+                                <label class="checkbox-inline"><input type="checkbox" name="limit_client" value="1">${msg['goods.enum.saleclient.pc']}</label>
+                                <label class="checkbox-inline"><input type="checkbox" name="limit_client" value="2" >${msg['goods.enum.saleclient.wap']}</label>
+                                <label class="checkbox-inline"><input type="checkbox" name="limit_client" value="3" >${msg['goods.enum.saleclient.tv']}</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">适用区域</label>
+                            <div class="col-sm-8">
+                                <div class="form-inline">
+                                    <label class="checkbox-inline"><input type="checkbox" class="js-sel-area-unlimited" name="partitionBy"/>不限</label>
+                                    <button type="button" class="btn btn-default btn-sm js-sel-area-btn" ><i class="fa fa-plus mr5"></i>选择区域</button>
+                                </div>
+                                <div class="js-selected-area"></div>
+                                <input type="hidden" name="limit_areas">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">适用对象</label>
+                            <div class="col-sm-8 form-inline">
+                                <!--# for (m in memberTypeList!) {#-->
+                                <div class="members" >
+                                    <label class="checkbox-inline"><input type="checkbox" class="" name="memberType" value="${m.id}" data-lv-value="[]">${m.name}</label>
+                                    <div class="member-lvs">
+                                        <span class="member-lv-inline">(</span>
+                                        <!--# for (lv in memberTypeMap[m.id+'']!) {#-->
+                                        <label class="checkbox-inline"><input type="checkbox" name="memberTypeLv" value="${lv.id}">${lv.name}</label>
+                                        <!--# }#-->
+                                        <span class="member-lv-inline">)</span>
+                                    </div>
+                                </div>
+                                <!--# }#-->
+                                <input type="hidden" id="limit_members" name="limit_members" >
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">优惠条件</label>
+                            <div class="col-sm-8">
+                                <div class="panel panel-default js-rule-cnd">
+                                    <div class="panel-body">
+                                        <div class="radio rule-group js-rule-group">
+                                            <label><input type="radio" class="js-rule-group-tpl" name="cnd_tpl" value="tpl_sale_order_cnd_userdefined" >用户自定义促销模板</label>
+                                            <div class="rule-group-cnd js-rule-group-cnd">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-body cnd-panel">
+                                                        <div class="js-cnd" data-cnds-type="sale_order_group_combine" data-cnds-aggregator="all" data-cnds-val="1">
+                                                            <span class="help-block">优惠条件(判断订单是否满足条件)</span>
+                                                            <div class="rule-cnd-def js-rule-cnd-user-def">
+                                                                <ul>
+
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="js-act-cnd" data-cnds-type="sale_order_group_item" data-cnds-aggregator="" data-cnds-val="">
+                                                            <span class="help-block">应用条件(优惠方案要应用到的商品)</span>
+                                                            <div class="rule-cnd-def js-rule-actcnd-user-def">
+                                                                <ul>
+
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="radio rule-group js-rule-group">
+                                            <label><input type="radio" class="js-rule-group-tpl" name="cnd_tpl" value="tpl_sale_order_cnd_subtotalselectgoods" >当订单商品总价满X，对指定的商品(货品)优惠</label>
+                                            <div class="rule-group-cnd js-rule-group-cnd">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-body">
+                                                        <div class="js-cnd" data-cnds-type="sale_order_group_combine" data-cnds-aggregator="all" data-cnds-val="1">
+                                                            <span class="help-block">优惠条件(判断订单是否满足条件)</span>
+                                                            <div class="form-inline">
+                                                                <span>订单金额满</span>
+                                                                <div class="input-group rule-input-price">
+                                                                    <span class="input-group-addon">￥</span>
+                                                                    <input type="text" class="form-control input-sm" name="cnd_value" data-cnd-type="sales_order_item_order" data-cnd-attr="order_subtotal" data-cnd-op="ge" >
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="js-act-cnd js-cnd-sel-group" data-cnds-type="sale_order_group_item" data-cnds-aggregator="all" data-cnds-val="1">
+                                                            <span class="help-block">应用条件(优惠方案要应用到的商品)</span>
+                                                            <div class="form-inline">
+                                                                <span>货品</span>
+                                                                <input type="hidden" name="cnd_type" value="sales_order_item_goods"/>
+                                                                <input type="hidden" name="cnd_attr" value="goods_product_id"/>
+                                                                <select name="cnd_op" class="form-control input-sm" >
+                                                                    <option value="in" >包含</option>
+                                                                    <option value="ni" >不包含</option>
+                                                                </select>
+                                                                <button type="button" class="btn btn-default btn-sm js-cnd-sel-product"><i class="fa fa-plus mr5"></i>选择货品</button>
+                                                                <input type="hidden" name="cnd_value" value="" />
+                                                            </div>
+                                                            <div class="form-inline js-row-product">
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="radio rule-group js-rule-group">
+                                            <label><input type="radio" class="js-rule-group-tpl" name="cnd_tpl" value="tpl_sale_order_cnd_allorderallgoods" >当订单商品总价满X，对所有商品优惠</label>
+                                            <div class="rule-group-cnd js-rule-group-cnd">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-body">
+                                                        <div class="js-cnd" data-cnds-type="sale_order_group_combine" data-cnds-aggregator="all" data-cnds-val="1">
+                                                            <div class="form-inline">
+                                                                <span>订单金额满</span>
+                                                                <div class="input-group rule-input-price">
+                                                                    <span class="input-group-addon">￥</span>
+                                                                    <input type="text" class="form-control input-sm" name="cnd_value" data-cnd-type="sales_order_item_order" data-cnd-attr="order_subtotal" data-cnd-op="ge" >
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="js-act-cnd" data-cnds-type="sale_order_group_item" data-cnds-aggregator="all" data-cnds-val="1">
+                                                            <input type="hidden" name="cnd_value" value="0" data-cnd-type="sales_order_item_goods" data-cnd-attr="goods_price" data-cnd-op="ge" >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="radio rule-group js-rule-group">
+                                            <label><input type="radio" class="js-rule-group-tpl" name="cnd_tpl" value="tpl_sale_order_cnd_itemsquanityallgoods" >当订单商品数量满X，给予优惠</label>
+                                            <div class="rule-group-cnd js-rule-group-cnd">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-body">
+                                                        <div class="js-cnd" data-cnds-type="sale_order_group_combine" data-cnds-aggregator="all" data-cnds-val="1">
+                                                            <div class="form-inline">
+                                                                <span>订单商品数量满</span>
+                                                                <div class="input-group rule-input-number">
+                                                                    <input type="text" class="form-control input-sm" name="cnd_value" data-cnd-type="sales_order_item_order" data-cnd-attr="order_items_quantity" data-cnd-op="ge" >
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="js-act-cnd" data-cnds-type="sale_order_group_item" data-cnds-aggregator="all" data-cnds-val="1">
+                                                            <input type="hidden" name="cnd_value" value="0" data-cnd-type="sales_order_item_goods" data-cnd-attr="goods_price" data-cnd-op="ge" >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="radio rule-group js-rule-group">
+                                            <label><input type="radio" class="js-rule-group-tpl" name="cnd_tpl" value="tpl_sale_order_cnd_subtotalallgoods" >对所有订单给予优惠</label>
+                                            <div class="rule-group-cnd js-rule-group-cnd js-rule-group-cnd-hidden">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-body">
+                                                        <div class="js-cnd" data-cnds-type="sale_order_group_combine" data-cnds-aggregator="all" data-cnds-val="1">
+                                                            <div class="form-inline">
+                                                                <span></span>
+                                                                <div class="input-group rule-input-number">
+                                                                    <input type="text" class="form-control input-sm" name="cnd_value" value="0" data-cnd-type="sales_order_item_order" data-cnd-attr="order_subtotal" data-cnd-op="ge" >
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="js-act-cnd" data-cnds-type="sale_order_group_item" data-cnds-aggregator="all" data-cnds-val="1">
+                                                            <input type="hidden" name="cnd_value" value="0" data-cnd-type="sales_order_item_goods" data-cnd-attr="goods_price" data-cnd-op="ge" >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <input type="hidden" name="conditions"/>
+                                        <input type="hidden" name="action_conditions"/>
+                                        <input type="hidden" name="cnd_template"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">优惠方案</label>
+                            <div class="col-sm-8">
+                                <div class="panel panel-default js-rule-sol">
+                                    <div class="panel-body">
+                                        <div class="radio rule-group js-rule-group">
+                                            <label>
+                                                <input type="radio" name="sol_tpl" value="tpl_sale_sol_shipfree" >订单免运费
+                                            </label>
+                                            <div class="rule-group-act js-rule-group-act">
+                                                <div class="panel panel-default js-rule-sol">
+                                                    <div class="panel-body">
+                                                        <div class="form-inline">
+                                                            <span>免运费</span>
+                                                            <div class="input-group rule-input-price" style="display: none">
+                                                                <span class="input-group-addon">￥</span>
+                                                                <input type="text" class="form-control input-sm " name="act_sol_value" value="0" data-sol-type="order" >
+                                                            </div>
+                                                            <span></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="radio rule-group js-rule-group">
+                                            <label>
+                                                <input type="radio" name="sol_tpl" value="tpl_sale_sol_nscore" >订单送N倍积分
+                                            </label>
+                                            <div class="rule-group-act js-rule-group-act">
+                                                <div class="panel panel-default js-rule-sol">
+                                                    <div class="panel-body">
+                                                        <div class="form-inline">
+                                                            <span>获得</span>
+                                                            <div class="input-group rule-input-number">
+                                                                <input type="text" class="form-control input-sm " name="act_sol_value" data-sol-type="order" >
+                                                            </div>
+                                                            <span>倍积分</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="radio rule-group js-rule-group">
+                                            <label>
+                                                <input type="radio" name="sol_tpl" value="tpl_sale_sol_addscore" >订单送固定积分
+                                            </label>
+                                            <div class="rule-group-act js-rule-group-act">
+                                                <div class="panel panel-default js-rule-sol">
+                                                    <div class="panel-body">
+                                                        <div class="form-inline">
+                                                            <span>赠送积分</span>
+                                                            <div class="input-group rule-input-number">
+                                                                <input type="text" class="form-control input-sm " name="act_sol_value" data-sol-type="order" >
+                                                            </div>
+                                                            <span></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="radio rule-group js-rule-group">
+                                            <label>
+                                                <input type="radio" name="sol_tpl" value="tpl_sale_sol_percent" >订单以固定折扣出售
+                                            </label>
+                                            <div class="rule-group-act js-rule-group-act">
+                                                <div class="panel panel-default js-rule-sol">
+                                                    <div class="panel-body">
+                                                        <div class="form-inline">
+                                                            <span>订单总价格乘以</span>
+                                                            <div class="input-group rule-input-rate">
+                                                                <input type="text" class="form-control input-sm " name="act_sol_value" data-sol-type="order" >
+                                                                <span class="input-group-addon">%</span>
+                                                            </div>
+                                                            <span>折扣出售</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="radio rule-group js-rule-group">
+                                            <label>
+                                                <input type="radio" name="sol_tpl" value="tpl_sale_sol_fixed" >订单以固定价格购买
+                                            </label>
+                                            <div class="rule-group-act js-rule-group-act">
+                                                <div class="panel panel-default js-rule-sol">
+                                                    <div class="panel-body">
+                                                        <div class="form-inline">
+                                                            <span>订单总价格以</span>
+                                                            <div class="input-group rule-input-price">
+                                                                <span class="input-group-addon">￥</span>
+                                                                <input type="text" class="form-control input-sm " name="act_sol_value" data-sol-type="order" >
+                                                            </div>
+                                                            <span>出售</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="radio rule-group js-rule-group">
+                                            <label>
+                                                <input type="radio" name="sol_tpl" value="tpl_sale_sol_subpercent" >订单减去固定折扣出售
+                                            </label>
+                                            <div class="rule-group-act js-rule-group-act">
+                                                <div class="panel panel-default js-rule-sol">
+                                                    <div class="panel-body">
+                                                        <div class="form-inline">
+                                                            <span>订单总价格减去</span>
+                                                            <div class="input-group rule-input-rate">
+                                                                <input type="text" class="form-control input-sm " name="act_sol_value" data-sol-type="order" >
+                                                                <span class="input-group-addon">%</span>
+                                                            </div>
+                                                            <span>折扣出售</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="radio rule-group js-rule-group">
+                                            <label>
+                                                <input type="radio" name="sol_tpl" value="tpl_sale_sol_subfixed" >订单减固定价格购买
+                                            </label>
+                                            <div class="rule-group-act js-rule-group-act">
+                                                <div class="panel panel-default js-rule-sol">
+                                                    <div class="panel-body">
+                                                        <div class="form-inline">
+                                                            <span>订单总价格优惠</span>
+                                                            <div class="input-group rule-input-price">
+                                                                <span class="input-group-addon">￥</span>
+                                                                <input type="text" class="form-control input-sm " name="act_sol_value" data-sol-type="order" >
+                                                            </div>
+                                                            <span>出售</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <input type="hidden" name="action_solution"/>
+                                        <input type="hidden" name="sale_template"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+<div id="dialogSelectArea" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <div class="modal-title">
+                    <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" value="0">${msg["goods.main.select.option.unlimited"]}</label>
+                    <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" value="1" checked>${msg["goods.product.select.partitionBy.option.area"]}</label>
+                    <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" value="2" >${msg["goods.product.select.partitionBy.option.city"]}</label>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12 js-select-area-div" align="left">
+                        <!--# for (area in areaList!) {#-->
+                        <label class="checkbox-inline"><input type="checkbox" name="saleToArea" value="${area.code}" >${area.name}</label>
+                        <!--# }#-->
+                    </div>
+                    <div class="col-xs-12 js-select-area-city-div" align="left">
+                        <div id="jsTreeCity" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary" id="dialog_select_area_ok">${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogCndSelect" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">选择</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary" >${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="tpl_sale_order_group_combine" type="text/html">
+    <li data-cnd-class="group">
+        <div class="form-inline" >
+            {{if showDel}}
+            <i class="del fa fa-remove cnd-del js-cnd-del-cnd" title="删除"></i>
+            {{/if}}
+            <input type="hidden" name="group_type" value="sale_order_group_combine"/>
+            <select name="aggregator" class="form-control input-sm">
+                <option value="all">组内所有条件（组合）</option>
+                <option value="any">任一条件（组合）</option>
+            </select>
+            <select name="value" class="form-control input-sm">
+                <option value="0">不满足</option>
+                <option value="1" selected>满足</option>
+            </select>
+            <select name="cnd_sel" class="form-control input-sm js-cnd-sel-cnd" >
+                <option value="">选择需要添加的条件（组合）</option>
+                <optgroup label="-----条件组合-----">
+                    <option value="sale_order_group_combine">条件组合</option>
+                    <option value="sale_order_group_found">商品属性组合</option>
+                </optgroup>
+                <optgroup label="-----订单属性-----">
+                    <option value="order_subtotal">订单总价</option>
+                    <option value="order_subtotal_weight">订单总重量</option>
+                    <option value="order_subtotal_gain_score">订单获得积分总数</option>
+                    <option value="order_items_quantity">订单商品总数量</option>
+                </optgroup>
+            </select>
+        </div>
+        <ul></ul>
+    </li>
+</script>
+<script id="tpl_sale_order_group_item" type="text/html">
+    <li data-cnd-class="group">
+        <div class="form-inline js-group-head">
+            {{if showDel}}
+            <i class="del fa fa-remove cnd-del js-cnd-del-cnd" title="删除"></i>
+            {{/if}}
+            <input type="hidden" name="group_type" value="sale_order_group_item"/>
+            <select name="aggregator" class="form-control input-sm">
+                <option value="all">组内所有条件（组合）</option>
+                <option value="any">任一条件（组合）</option>
+            </select>
+            <select name="value" class="form-control input-sm">
+                <option value="0">不满足</option>
+                <option value="1" selected>满足</option>
+            </select>
+            <select name="cnd_sel" class="form-control input-sm js-cnd-sel-cnd" >
+                <option value="">选择需要添加的条件（组合）</option>
+                <optgroup label="-----条件组合-----">
+                    <option value="sale_order_group_item">条件组合</option>
+                </optgroup>
+                <optgroup label="-----商品属性-----">
+                    <!--<option value="goods_goods_id">商品</option>-->
+                    <option value="goods_name">商品名称</option>
+                    <option value="goods_product_id">货品</option>
+                    <!--<option value="goods_type_id">商品类型</option>-->
+                    <option value="goods_sku">商品货号</option>
+                    <option value="goods_price">销售价</option>
+                    <option value="goods_cost">成本价</option>
+                </optgroup>
+            </select>
+        </div>
+        <ul></ul>
+    </li>
+</script>
+<script id="tpl_sale_order_group_found" type="text/html">
+    <li data-cnd-class="group">
+        <div class="form-inline js-group-head">
+            {{if showDel}}
+            <i class="del fa fa-remove cnd-del js-cnd-del-cnd" title="删除"></i>
+            {{/if}}
+            <input type="hidden" name="group_type" value="sale_order_group_found"/>
+            <select name="aggregator" class="form-control input-sm">
+                <option value="all">组内所有条件（组合）</option>
+                <option value="any">任一条件（组合）</option>
+            </select>
+            <select name="value" class="form-control input-sm">
+                <option value="0">不满足</option>
+                <option value="1" selected>满足</option>
+            </select>
+            <select name="cnd_sel" class="form-control input-sm js-cnd-sel-cnd" >
+                <option value="">选择需要添加的条件（组合）</option>
+                <!--<option value="goods_goods_id">商品</option>-->
+                <option value="goods_name">商品名称</option>
+                <option value="goods_product_id">货品</option>
+                <!--<option value="goods_type_id">商品类型</option>-->
+                <option value="goods_sku">商品货号</option>
+                <option value="goods_price">销售价</option>
+                <option value="goods_cost">成本价</option>
+            </select>
+        </div>
+        <ul></ul>
+    </li>
+</script>
+<script id="tpl_attr_type_price" type="text/html">
+    <li data-cnd-class="val">
+        <div class="form-inline">
+            {{if showDel}}
+            <i class="del fa fa-remove cnd-del js-cnd-del-cnd" title="删除"></i>
+            {{/if}}
+            <span>{{text}}</span>
+            <input type="hidden" name="cnd_type" value="{{type}}"/>
+            <input type="hidden" name="cnd_attr" value="{{attr}}"/>
+            <select name="cnd_op" class="form-control input-sm">
+                <option value="lt" {{op=="lt"?"selected":""}} >小于</option>
+                <option value="le" {{op=="le"?"selected":""}}>小于等于</option>
+                <option value="gt" {{op=="gt"?"selected":""}}>大于</option>
+                <option value="ge" {{op=="ge"?"selected":""}}>大于等于</option>
+                <option value="eq" {{op=="eq"?"selected":""}}>等于</option>
+                <option value="ne" {{op=="ne"?"selected":""}}>不等于</option>
+            </select>
+            <div class="input-group rule-input-price">
+                <span class="input-group-addon">￥</span>
+                <input type="text" class="form-control input-sm" name="cnd_value" value="{{value}}">
+            </div>
+        </div>
+    </li>
+</script>
+<script id="tpl_attr_type_number" type="text/html">
+    <li data-cnd-class="val">
+        <div class="form-inline">
+            {{if showDel}}
+            <i class="del fa fa-remove cnd-del js-cnd-del-cnd" title="删除"></i>
+            {{/if}}
+            <span>{{text}}</span>
+            <input type="hidden" name="cnd_type" value="{{type}}"/>
+            <input type="hidden" name="cnd_attr" value="{{attr}}"/>
+            <select name="cnd_op" class="form-control input-sm">
+                <option value="lt" {{op=="lt"?"selected":""}} >小于</option>
+                <option value="le" {{op=="le"?"selected":""}}>小于等于</option>
+                <option value="gt" {{op=="gt"?"selected":""}}>大于</option>
+                <option value="ge" {{op=="ge"?"selected":""}}>大于等于</option>
+                <option value="eq" {{op=="eq"?"selected":""}}>等于</option>
+                <option value="ne" {{op=="ne"?"selected":""}}>不等于</option>
+            </select>
+            <div class="input-group rule-input-price">
+                <input type="text" class="form-control input-sm" name="cnd_value" value="{{value}}">
+            </div>
+        </div>
+    </li>
+</script>
+<script id="tpl_attr_type_text" type="text/html">
+    <li data-cnd-class="val_text">
+        <div class="form-inline js-group-head">
+            {{if showDel}}
+            <i class="del fa fa-remove cnd-del js-cnd-del-cnd" title="删除"></i>
+            {{/if}}
+            <span>{{text}}</span>
+            <input type="hidden" name="cnd_type" value="{{type}}"/>
+            <input type="hidden" name="cnd_attr" value="{{attr}}"/>
+            <select name="cnd_op" class="form-control input-sm" >
+                <option value="sw" {{op=="sw"?"selected":""}} >开头包含</option>
+                <option value="ew" {{op=="ew"?"selected":""}} >结尾包含</option>
+                <option value="like" {{op=="like"?"selected":""}} >包含</option>
+                <option value="nlike" {{op=="nlike"?"selected":""}} >不包含</option>
+                <option value="eqs" {{op=="eqs"?"selected":""}} >等于</option>
+                <option value="nes" {{op=="nes"?"selected":""}} >不等于</option>
+            </select>
+            <input type="text" name="cnd_value" class="form-control input-sm" value="{{value}}"/>
+        </div>
+    </li>
+</script>
+<script id="tpl_attr_type_select" type="text/html">
+    <li class="js-cnd-sel-group" data-cnd-class="val_sel">
+        <div class="form-inline">
+            {{if showDel}}
+            <i class="del fa fa-remove cnd-del js-cnd-del-cnd" title="删除"></i>
+            {{/if}}
+            <span>{{text}}</span>
+            <input type="hidden" name="cnd_type" value="{{type}}"/>
+            <input type="hidden" name="cnd_attr" value="{{attr}}"/>
+            <select name="cnd_op" class="form-control input-sm" >
+                <option value="in" {{op=="in"?"selected":""}} >包含</option>
+                <option value="ni" {{op=="ni"?"selected":""}} >不包含</option>
+            </select>
+            <button type="button" class="btn btn-default btn-sm js-cnd-sel-{{target}}"><i class="fa fa-plus mr5"></i>选择{{text}}</button>
+            <input type="hidden" name="cnd_value" value="{{value}}"/>
+        </div>
+        <div class="form-inline js-row-{{target}}">
+
+        </div>
+    </li>
+</script>
+<script id="tpl_row_goods" type="text/html">
+    {{each goods}}
+    <div class="row">
+        <div class="col-xs-5" style="width: 23px;"><i class="del fa fa-remove cnd-del js-cnd-del-goods" title="删除"></i></div>
+        <div class="col-xs-5">{{$value.name}}</div>
+    </div>
+    {{/each}}
+</script>
+<script id="tpl_row_product" type="text/html">
+    {{each products as product}}
+    <div class="row" data-sku="{{product.sku}}">
+        <div class="col-xs-1" style="width: 23px;"><i class="del fa fa-remove cnd-del js-cnd-del-product" title="删除"></i></div>
+        <div class="col-xs-5">{{product.name}}</div>
+        <div class="col-xs-6">{{product.sku}}</div>
+    </div>
+    {{/each}}
+</script>
+
+<script language="JavaScript">
+    var productsDatatable;
+    $(document).ready(function () {
+        myForm.init();
+        initAreaTreeView();
+
+        //初始化自定义条件模板
+        $(".js-rule-cnd-user-def ul").html(template("tpl_sale_order_group_combine", {showDel:false}));
+        $(".js-rule-actcnd-user-def ul").html(template("tpl_sale_order_group_item", {showDel:false}));
+
+        //禁用启用颠倒了
+        $("[name='enabled']").change(function () {
+            if (this.checked) {
+                $("[name='disabled']:hidden").val(0);
+            } else {
+                $("[name='disabled']:hidden").val(1);
+            }
+        });
+
+        $('.js-start-time').datetimepicker({
+            language:  "${lang!'zh-CN'}",
+            format:'yyyy-mm-dd hh:ii:ss',
+            pickerPosition: 'bottom-left',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1,
+            endDate: new Date("${@date.getDate()}")
+        }).on("changeDate", function (e) {
+            $('.js-end-time').datetimepicker('setStartDate', e.date);
+        });
+
+        $('.js-end-time').datetimepicker({
+            language:  "${lang!'zh-CN'}",
+            format:'yyyy-mm-dd hh:ii:ss',
+            pickerPosition: 'bottom-left',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1,
+            startDate: new Date("${@date.getDate()}")
+        }).on("changeDate", function (e) {
+            $('.js-start-time').datetimepicker('setEndDate', e.date);
+        });
+
+        $("[name='limit_other']").click(function () {
+            if (this.value == 1) {
+                $(".js-exists-rules").show();
+            } else {
+                $(".js-exists-rules").hide();
+            }
+        });
+
+        $(".js-sel-area-unlimited").change(function () {
+            if (this.checked) {
+                $("[name='limit_areas']:hidden").val("");
+                $(".js-selected-area").empty().hide();
+            }
+        });
+        //选择区域
+        $(".js-sel-area-btn").click(function () {
+            $("#dialogSelectArea").modal("show");
+        });
+        //区域modal初始化
+        $("#dialogSelectArea").on("show.bs.modal", function () {
+            var $dialog = $(this);
+            var obj = JSON.parse($("[name='limit_areas']:hidden").val()||"{\"partitionBy\":0,\"values\":[]}");
+            if (obj.partitionBy == 0) {//不限时默认按片区显示
+                $(".js-select-area-city-div", $dialog).hide();
+                var $checked = $("[name='partitionBy'][value='1']:checkbox", $dialog).prop("checked", true);
+                $("[name='partitionBy']:checkbox", $dialog).not($checked).prop("checked", false);
+            }
+            if (obj.partitionBy == 1) {//按片区
+                $(".js-select-area-div", $dialog).show();
+                $(".js-select-area-city-div", $dialog).hide();
+                var $checked = $("[name='partitionBy'][value='1']:checkbox", $dialog).prop("checked", true);
+                $("[name='partitionBy']:checkbox", $dialog).not($checked).prop("checked", false);
+                $(obj.values).each(function () {
+                    $("[name=saleToArea][value='"+this.area+"']:checkbox", $dialog).prop("checked", true);
+                });
+            } else if (obj.partitionBy == 2) {//按省市
+                $(".js-select-area-div", $dialog).hide();
+                $(".js-select-area-city-div", $dialog).show();
+                var $checked = $("[name='partitionBy'][value='2']:checkbox", $dialog).prop("checked", true);
+                $("[name='partitionBy']:checkbox", $dialog).not($checked).prop("checked", false);
+                var cityValues = $(obj.values).map(function () {
+                    return this.city == "null" || this.city == null ? this.province : this.city;
+                }).get();
+                $("#jsTreeCity").jstree(true).select_node(cityValues);
+            }
+        }).on('hide.bs.modal', function () {
+            var $dialog = $(this);
+            var tree = $("#jsTreeCity").jstree(true);
+            tree.deselect_all();
+            tree.close_all();
+            tree.open_node(tree.get_node(".jstree-container-ul li"));
+            $("[name='partitionBy'][value='0']:checkbox,[name='partitionBy'][value='2']:checkbox", $dialog).prop("checked", false);
+            $("[name='partitionBy'][value='1']:checkbox", $dialog).prop("checked", true);
+            $("[name=saleToArea]:checkbox", $dialog).prop("checked", false);
+            $(".js-selected-area").show();
+        });
+        $("#dialogSelectArea [name=partitionBy]:checkbox").change(function () {
+            var $dialog = $("#dialogSelectArea");
+            switch (this.value) {
+                case '0': { //销售区域(不限)
+                    if (this.checked) {
+                        $("[name=partitionBy]:checkbox", $dialog).not(this).prop("checked", false);
+                        $(".js-select-area-div,.js-select-area-city-div", $dialog).hide();
+                    }
+                };break;
+                case '1': { //销售区域(按片区)
+                    if (this.checked) {
+                        $("[name=partitionBy]:checkbox", $dialog).not(this).prop("checked", false);
+                        $(".js-select-area-div", $dialog).show();
+                        $(".js-select-area-city-div", $dialog).hide();
+                    } else {
+                        $(".js-select-area-div", $dialog).hide();
+                    }
+                };break;
+                case '2': { //销售区域(按省市)
+                    if (this.checked) {
+                        $("[name=partitionBy]:checkbox", $dialog).not(this).prop("checked", false);
+                        $(".js-select-area-city-div", $dialog).show();
+                        $(".js-select-area-div", $dialog).hide();
+                    }else {
+                        $(".js-select-area-city-div", $dialog).hide();
+                    }
+                };break;
+            }
+        });
+        $("#dialog_select_area_ok").click(function () {
+            var $dialog = $("#dialogSelectArea");
+            var partitionBy = $("[name='partitionBy']:checked", $dialog).val();
+            var areas = {partitionBy: partitionBy};
+            if (partitionBy == '0') {//不限
+                areas.values = [];
+                $("[name='limit_areas']:hidden").val(JSON.stringify(areas));
+                $(".js-selected-area").empty().hide();
+            } else if (partitionBy == '1') {//按片区
+                areas.values = $("[name=saleToArea]:checked", $dialog).map(function () {
+                    return {
+                        partitionBy: partitionBy,
+                        area: this.value,
+                    };
+                }).get();
+                if (areas.values.length == 0) {
+                    Toast.warning("${msg['goods.product.tip.selectArea']}");
+                    return false;
+                }
+                var areasText = $("[name=saleToArea]:checked", $dialog).map(function () {
+                    return $(this).parent().text();
+                }).get().join(",");
+                $("[name='limit_areas']:hidden").val(JSON.stringify(areas));
+                $(".js-sel-area-unlimited").prop("checked", false);
+                $(".js-selected-area").html(areasText).show();
+            }else if (partitionBy == '2') {//按省市
+                var tree = $("#jsTreeCity").jstree(true);
+                var nodes = tree.get_bottom_checked(true);
+                areas.values = $(nodes).map(function () {
+                    var parentId = tree.get_parent(this);
+                    return {
+                        partitionBy: partitionBy,
+                        province: parentId == "86" ? this.id : parentId,
+                        city: parentId == "86" ?  null : this.id
+                    }
+                }).get();
+                if (areas.values.length == 0) {
+                    Toast.warning("${msg['goods.product.tip.selectCity']}");
+                    return false;
+                }
+                var areasText = $(nodes).map(function () {
+                    return tree.get_path(this, "/");
+                }).get().join(",");
+                $("[name='limit_areas']:hidden").val(JSON.stringify(areas));
+                $(".js-sel-area-unlimited").prop("checked", false);
+                $(".js-selected-area").html(areasText).show();
+            }
+            $dialog.modal("hide");
+        });
+
+        $("[name='cnd_tpl']:radio").click(function () {
+            var $cndDiv = $(this).parent().next(".js-rule-group-cnd");
+            if (!$cndDiv.is(".js-rule-group-cnd-hidden")) {
+                $cndDiv.show();
+            }
+            $(".js-rule-group-cnd").not($cndDiv).hide();
+        });
+        $("[name='sol_tpl']:radio").click(function () {
+            var $solDiv = $(this).parent().next(".js-rule-group-act");
+            $solDiv.show();
+            $(".js-rule-group-act").not($solDiv).hide();
+        });
+
+        $("[name='memberType']").change(function () {
+            $(this).parents(".members:first").find("[name='memberTypeLv']").prop("checked", this.checked);
+        });
+        $("[name='memberTypeLv']").change(function () {
+            if (this.checked) {
+                $(this).parents(".members:first").find("[name='memberType']").prop("checked", this.checked);
+            } else {
+                if ($(this).parents(".members:first").find("[name='memberTypeLv']:checked").length == 0) {
+                    $(this).parents(".members:first").find("[name='memberType']").prop("checked", false);
+                }
+            }
+        });
+
+        //选择条件
+        $(document).on("click", ".js-cnd-sel-cnd", function () {
+            var tpl_id = "";
+            var data = {//模板数据
+                showDel:true,
+                text: $(":selected", this).text(),
+            };
+            switch (this.value) {
+                //条件组合
+                case 'sale_order_group_combine': tpl_id = this.value;break;
+                case 'sale_order_group_item': tpl_id = this.value;break;
+                case 'sale_order_group_found': tpl_id = this.value;break;
+                //商品属性
+                case 'goods_goods_id': {
+                    tpl_id = 'attr_type_select';
+                    data.type = 'sales_order_item_goods';
+                    data.attr = this.value;
+                    data.target = 'goods';
+                };break;
+                case 'goods_product_id': {
+                    tpl_id = 'attr_type_select';
+                    data.type = 'sales_order_item_goods';
+                    data.attr = this.value;
+                    data.target = 'product'
+                };break;
+                case 'goods_name': {
+                    tpl_id = 'attr_type_text';
+                    data.type = 'sales_order_item_goods';
+                    data.attr = this.value;
+                };break;
+                case 'goods_type_id': {
+                    tpl_id = 'attr_type_select';
+                    data.type = 'sales_order_item_goods';
+                    data.attr = this.value;
+                    data.target = 'goods_type';
+                };break;
+                case 'goods_sku': {
+                    tpl_id = 'attr_type_text';
+                    data.type = 'sales_order_item_goods';
+                    data.attr = this.value;
+                };break;
+                case 'goods_price': {
+                    tpl_id = 'attr_type_price';
+                    data.type = 'sales_order_item_goods';
+                    data.attr = this.value;
+                };break;
+                case 'goods_cost': {
+                    tpl_id = 'attr_type_price';
+                    data.type = 'sales_order_item_goods';
+                    data.attr = this.value;
+                }break;
+                //订单
+                case 'order_subtotal': {
+                    tpl_id = 'attr_type_price';
+                    data.type = 'sales_order_item_order';
+                    data.attr = 'order_subtotal';
+                };break;
+                case 'order_subtotal_weight': {
+                    tpl_id = 'attr_type_number';
+                    data.type = 'sales_order_item_order';
+                    data.attr = 'order_subtotal_weight';
+                };break;
+                case 'order_subtotal_gain_score': {
+                    tpl_id = 'attr_type_number';
+                    data.type = 'sales_order_item_order';
+                    data.attr = 'subgoods_subtotal_gain_score';
+                };break;
+                case 'order_items_quantity': {
+                    tpl_id = 'attr_type_number';
+                    data.type = 'sales_order_item_order';
+                    data.attr = 'order_items_quantity';
+                };break;
+            };
+            if (tpl_id != "") {
+                var liHtml = template("tpl_"+tpl_id, data);
+                $(this).parents("div:first").siblings("ul").append(liHtml);
+            }
+            $(this).val("");
+        });
+
+        //选择商品
+        $(document).on("click", ".js-cnd-sel-goods", function () {
+            $("#dialogCndSelect").modal("show");
+        });
+        //删除商品
+        $(document).on("click", ".js-cnd-del-goods", function () {
+            $(this).parents('div.row:first').remove();
+        });
+        //选择货品
+        $(document).on("click", ".js-cnd-sel-product", function () {
+            var $cndValue = $(this).siblings("[name='cnd_value']");
+            var $showDiv = $(this).parents(".js-cnd-sel-group:first").children(".js-row-product");
+            var $dialog =  $("#dialogCndSelect");
+            $dialog.modal({
+                remote: "${base}/platform/self/sales/rule/order/product/index"
+            }).off("shown.bs.modal").on("shown.bs.modal", function () {
+                $(".js-dialog-sel-product", $dialog).click(function () {
+                    var datas = productsDatatable.rows('.selected').data();
+                    if (datas.length > 0) {
+                        var data = {
+                            products: []
+                        };
+                        var skus = [];
+                        for (var i = 0; i < datas.length; i++) {
+                            skus.push(datas[i].sku);
+                            data.products.push({
+                                name: datas[i].name,
+                                sku: datas[i].sku
+                            });
+                        }
+                        $showDiv.html(template("tpl_row_product", data));
+                        $cndValue.val(JSON.stringify(skus));
+                    }
+                    $dialog.modal("hide");
+                });
+            }).modal("show");
+        });
+        //删除货品
+        $(document).on("click", ".js-cnd-del-product", function () {
+            var $cndValue = $(this).parents(".js-cnd-sel-group:first").find("[name='cnd_value']");
+            var $row = $(this).parents('div.row:first');
+            var ids = $(this).parents(".js-row-product:first").find(".row").not($row).map(function () {
+                return $(this).attr("data-sku");
+            }).get();
+            $cndValue.val(JSON.stringify(ids));
+            $row.remove();
+        });
+        //删除条件
+        $(document).on("click", ".js-cnd-del-cnd", function () {
+            $(this).parents("li:first").remove();
+        });
+
+        $("#dialogCndSelect").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+
+        //提交审核
+        $(".js-to-check").click(function () {
+            if (!$('#addForm').parsley().validate()) {
+                Toast.warning("还有必填项未填写");
+                return false;
+            }
+            if (validateForm()) {
+                fillForm();
+                $("input[name='checkStatus']").val("1");
+                $('#addForm').submit();
+            }
+        });
+
+        //保存
+        $(".js-save").click(function () {
+            if (!$('#addForm').parsley().validate()) {
+                Toast.warning("还有必填项未填写");
+                return false;
+            }
+            if (validateForm()) {
+                fillForm();
+                $('#addForm').submit();
+            }
+        });
+
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    if ("1" == $("input[name='checkStatus']").val()) {
+                        $("#doLink").attr("href", "${base}/platform/self/sales/rule/order").trigger("click");
+                    } else {
+                        ("#doLink").attr("href", "${base}/platform/self/sales/rule/order/edit/"+data.data).trigger("click");
+                    }
+                } else {
+                    $("input[name='checkStatus']").val("0");
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            },
+            error: function (data, statusText, xhr, form) {
+                alert(44)
+            }
+        });
+    });
+
+    function validateForm() {
+        var $form = $("#addForm");
+        //适用终端、适用区域、适用对象，至少选一个
+        var $clients = $("[name='limit_client']:checked", $form);
+        var area = $("[name='limit_areas']:hidden", $form).val();
+        var $members = $("[name='memberType']:checked", $form);
+        if ($clients.length == 0 && $.trim(area) == '' && $members.length == 0) {
+            Toast.warning("适用终端、适用区域、适用对象，至少选一个!");
+            return false;
+        }
+
+        //优惠条件必选必填
+        var $cnd_tpl = $("[name='cnd_tpl']:checked", $form);
+        if ($cnd_tpl.length == 0) {
+            Toast.warning("优惠条件必选!");
+            return false;
+        }
+        switch ($cnd_tpl.val()) {
+            case '':{
+                Toast.warning("xx!");
+                return false;
+            };break;
+        }
+
+        //优惠方案必选必填
+        var $sol_tpl = $("[name='sol_tpl']:checked", $form);
+        if ($sol_tpl.length == 0) {
+            Toast.warning("优惠方案必选!");
+            return false;
+        }
+        switch ($sol_tpl.val()) {
+            case '':{
+                Toast.warning("xx!");
+                return false;
+            };break;
+        }
+        return true;
+    }
+
+    function fillForm() {
+        //适用区域
+
+        //适用对象
+        var limit_members = $("[name='memberType']:checked").map(function () {
+            return {
+                id: this.value,
+                children: $(this).parents(".members:first").find("[name='memberTypeLv']:checked").map(function () {
+                    return this.value;
+                }).get()
+            };
+        }).get();
+        $("[name='limit_members']:hidden").val(JSON.stringify(limit_members));
+
+        //优惠条件
+        var $cnd_panel = $("div.js-rule-cnd");
+        var $cnd_chk = $("[name='cnd_tpl']:checked", $cnd_panel);
+        var $cnd_group  = $cnd_chk.parents(".js-rule-group:first");
+        var conditions, action_conditions, $cnds, $act_cnds;
+        if ($cnd_chk.val() == 'tpl_sale_order_cnd_userdefined') {
+            var $root = $(".js-rule-cnd-user-def>ul>li");
+            conditions = {
+                type: $("[name='group_type']", $root).val(),
+                aggregator: $("[name='aggregator']", $root).val(),
+                value: $("[name='value']", $root).val(),
+                conditions: getConditions($root.children("ul"))
+            };
+            var $actRoot = $(".js-rule-actcnd-user-def>ul>li");
+            action_conditions = {
+                type: $("[name='group_type']", $actRoot).val(),
+                aggregator: $("[name='aggregator']", $actRoot).val(),
+                value: $("[name='value']", $actRoot).val(),
+                conditions: getConditions($actRoot.children("ul"))
+            };
+        } else if ($cnd_chk.val() == 'tpl_sale_order_cnd_subtotalselectgoods') {
+            //规则条件
+            $cnds = $(".js-cnd", $cnd_group);
+            conditions = {
+                type: $cnds.attr("data-cnds-type"),
+                aggregator: $cnds.attr("data-cnds-aggregator"),
+                value: $cnds.attr("data-cnds-val"),
+                conditions: $("[name='cnd_value']", $cnds).map(function () {
+                    return {
+                        type: $(this).attr("data-cnd-type"),
+                        attr: $(this).attr("data-cnd-attr"),
+                        op: $(this).attr("data-cnd-op"),
+                        value: this.value
+                    }
+                }).get()
+            };
+            //动作执行条件
+            $act_cnds = $(".js-act-cnd", $cnd_group);
+            action_conditions = {
+                type: $act_cnds.attr("data-cnds-type"),
+                aggregator: $act_cnds.attr("data-cnds-aggregator"),
+                value: $act_cnds.attr("data-cnds-val"),
+                conditions: $("[name='cnd_value']", $act_cnds).map(function () {
+                    return {
+                        type: $("[name='cnd_type']:hidden", $act_cnds).val(),
+                        attr: $("[name='cnd_attr']:hidden", $act_cnds).val(),
+                        op: $("select[name='cnd_op']", $act_cnds).val(),
+                        value: this.value
+                    }
+                }).get()
+            };
+        } else {
+            //规则条件
+            $cnds = $(".js-cnd", $cnd_group);
+            conditions = {
+                type: $cnds.attr("data-cnds-type"),
+                aggregator: $cnds.attr("data-cnds-aggregator"),
+                value: $cnds.attr("data-cnds-val"),
+                conditions: $("[name='cnd_value']", $cnds).map(function () {
+                    return {
+                        type: $(this).attr("data-cnd-type"),
+                        attr: $(this).attr("data-cnd-attr"),
+                        op: $(this).attr("data-cnd-op"),
+                        value: parseFloat(this.value)*100
+                    }
+                }).get()
+            };
+            //动作执行条件
+            $act_cnds = $(".js-act-cnd", $cnd_group);
+            action_conditions = {
+                type: $act_cnds.attr("data-cnds-type"),
+                aggregator: $act_cnds.attr("data-cnds-aggregator"),
+                value: $act_cnds.attr("data-cnds-val"),
+                conditions: $("[name='cnd_value']", $act_cnds).map(function () {
+                    return {
+                        type: $(this).attr("data-cnd-type"),
+                        attr: $(this).attr("data-cnd-attr"),
+                        op: $(this).attr("data-cnd-op"),
+                        value: parseFloat(this.value)*100
+                    }
+                }).get()
+            };
+        }
+        $("[name='conditions']:hidden").val(JSON.stringify(conditions));
+        $("[name='action_conditions']:hidden").val(JSON.stringify(action_conditions));
+        $("[name='cnd_template']:hidden").val($cnd_chk.val());
+
+        //动作执行方案
+        var $sol_panel = $("div.js-rule-sol");
+        var $sol_chk = $("[name='sol_tpl']:checked", $sol_panel);
+        var $sol_group  = $sol_chk.parents(".js-rule-group:first");
+        var $sol = $("[name='act_sol_value']", $sol_group);
+        var sol_by = $sol_chk.val();
+        var tmp = {};
+        switch (sol_by) {
+            case 'tpl_sale_sol_shipfree': tmp = {
+                type: $sol.attr("data-sol-type"),
+                ship_amount: parseFloat($sol.val())*100
+            };break;
+            case 'tpl_sale_sol_nscore': tmp = {
+                type: $sol.attr("data-sol-type"),
+                gain_score: $sol.val()
+            };break;
+            case 'tpl_sale_sol_addscore': tmp = {
+                type: $sol.attr("data-sol-type"),
+                gain_score: $sol.val()
+            };break;
+            case 'tpl_sale_sol_percent': tmp = {
+                type: $sol.attr("data-sol-type"),
+                percent: $sol.val()
+            };break;
+            case 'tpl_sale_sol_subpercent': tmp = {
+                type: $sol.attr("data-sol-type"),
+                percent: $sol.val()
+            };break;
+            case 'tpl_sale_sol_fixed': tmp = {
+                type: $sol.attr("data-sol-type"),
+                total_amount: parseFloat($sol.val())*100
+            };break;
+            case 'tpl_sale_sol_subfixed': tmp = {
+                type: $sol.attr("data-sol-type"),
+                total_amount: parseFloat($sol.val())*100
+            };break;
+        }
+        var action_solution = {};
+        action_solution[sol_by] = tmp;
+        $("[name='action_solution']:hidden").val(JSON.stringify(action_solution));
+        $("[name='sale_template']:hidden").val(sol_by);
+    }
+
+    //获取条件值数组
+    function getConditions($ul) {
+        var $lis = $ul.children("li");
+        if ($lis.length == 0) {
+            return [];
+        }
+        return $lis.map(function () {
+            var clazz = $(this).attr("data-cnd-class");
+            if (clazz == 'group') {
+                return {
+                    type: $("[name='group_type']", this).val(),
+                    aggregator: $("[name='aggregator']", this).val(),
+                    value: $("[name='value']", this).val(),
+                    conditions: getConditions($(this).children("ul"))
+                };
+            } else if (clazz == 'val') {
+                return {
+                    type: $("[name='cnd_type']", this).val(),
+                    attr: $("[name='cnd_attr']", this).val(),
+                    op: $("[name='cnd_op']", this).val(),
+                    value: $("[name='cnd_value']", this).val()
+                };
+            } else if (clazz == 'val_sel') {
+                return {
+                    type: $("[name='cnd_type']", this).val(),
+                    attr: $("[name='cnd_attr']", this).val(),
+                    op: $("[name='cnd_op']", this).val(),
+                    value: $("[name='cnd_value']", this).val()
+                };
+            } else {
+                return {
+                    type: $("[name='cnd_type']", this).val(),
+                    attr: $("[name='cnd_attr']", this).val(),
+                    op: $("[name='cnd_op']", this).val(),
+                    value: $("[name='cnd_value']", this).val()
+                };
+            }
+        }).get();
+    }
+    //初始化销售区域树
+    function initAreaTreeView() {
+        $("#jsTreeCity").jstree({
+            plugins: ["wholerow", "checkbox", "changed", "json_data"],
+            core: {
+                data: function (node, callback){
+                    $.get("${base!}/platform/self/goods/publish/area/tree", function (ret) {
+                        if (ret) {
+                            var areas = $(ret).map(function () {
+                                this["state"] = {disabled: this.parent === "#", opened: this.parent === "#"};
+                                return this;
+                            }).get();
+                            callback(areas);
+                        }
+                    }, "json");
+                },
+                multiple: true
+            },
+            checkbox: {
+                three_state: true,
+                cascade: 'down'
+            }
+        }).on("select_node.jstree", function (e, data) {
+            var tree = $(this).jstree();
+            if (!tree.is_leaf(data.node)) {
+                tree.open_node(data.node);
+            }
+        });
+    }
+</script>
+<!--#}#-->
+
+

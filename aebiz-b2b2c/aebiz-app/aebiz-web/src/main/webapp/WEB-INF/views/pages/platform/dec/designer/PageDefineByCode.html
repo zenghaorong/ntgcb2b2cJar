@@ -1,0 +1,356 @@
+<!doctype html>
+<html>
+<head>
+    <script>
+        var ContextPath="${base}";
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>全网数商-界面设计器</title>
+    <meta name="keywords" content="界面设计器" />
+    <meta name="description" content="界面设计器" />
+    <!-- Le styles -->
+    <link href="${base!}/assets/decorate/pc/decoratecommon/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${base!}/assets/decorate/pc/decoratecommon/css/select2.min.css" rel="stylesheet">
+    <link href="${base!}/assets/decorate/pc/decoratecommon/js/layui/css/layui.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1gsf231el4cdte29.css">
+    <link href="${base!}/assets/decorate/pc/decoratecommon/css/layoutit.css" rel="stylesheet">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://ibootstrap-file.b0.upaiyun.com/www.layoutit.com/js/html5shiv.js"></script>
+    <![endif]-->
+    <!-- Fav and touch icons -->
+
+
+
+    <script type="text/javascript" src="${base!}/assets/decorate/pc/decoratecommon/js/jquery-2.0.0.min.js"></script>
+    <script type="text/javascript" src="${base!}/assets/decorate/pc/decoratecommon/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${base!}/assets/decorate/pc/decoratecommon/js/template.js"></script>
+    <script type="text/javascript" src="${base!}/assets/decorate/pc/decoratecommon/js/layer/layer.js"></script>
+    <script type="text/javascript" src="${base!}/assets/decorate/pc/decoratecommon/js/select2.min.js"></script>
+    <script type="text/javascript" src="${base!}/assets/decorate/pc/decoratecommon/js/mainCode.js"></script>
+
+    <!--引入编辑器-->
+    <link rel="stylesheet" href="${base!}/assets/platform/vendor/frontpage/js/codemirror/lib/codemirror.css">
+    <script src="${base!}/assets/platform/vendor/frontpage/js/codemirror/lib/codemirror.js"></script>
+    <script src="${base!}/assets/platform/vendor/frontpage/js/codemirror/mode/xml/xml.js"></script>
+    <script src="${base!}/assets/platform/vendor/frontpage/js/codemirror/mode/htmlembedded/htmlembedded.js"></script>
+
+
+    <style>
+        .m-design-sidebar{
+            width:0;
+            left:0;
+        }
+        .m-design-container{
+            margin-left: 0;
+            height:800px;
+        }
+    </style>
+
+</head>
+
+<body class="m-design-editor">
+    <input type="hidden" value='${pageModelJson}' id="pageModelJson">
+    <input type="hidden" value="${versionType}" id="versionType">
+    <div class="m-design-hd">
+        <div class="m-targethtml">
+            您当前正在编辑
+        </div>
+        <div class="m-targetinfo">
+            <span>${templateName}</span>
+            <select name="" id="select_new_page">
+                <!--# for(o in pageList){
+#-->
+                <option value="${o.id}" <!--#if(pageUuid==o.id){#-->selected<!--#}#-->>${o.pageName}</option>
+                <!--#
+}#-->
+            </select>
+        </div>
+        <div class="m-opbar">
+            <a href="javascript:void(0)" class="btn btn-primary" id="save">
+                <i class="iconfont icon-baocun"></i>  ${msg['dec.templates.manager.button.preservation']}
+            </a>
+           <!-- <a href="javascript:void(0)" class="btn btn-primary" id="savenew">&#45;&#45;%>
+                <i class="iconfont icon-baocun"></i> 保存为新版本
+            </a>-->
+            <a href="javascript:void(0)" class="btn btn-primary" id="osave">
+                <i class="iconfont icon-lingcunwei"></i> ${msg['dec.templates.manager.button.saveAs']}
+            </a>
+            <a data-href="${base!}/platform/dec/templates/manager/run?templateUuid=${templateUuid}&pageUuid=${pageUuid}" target="_blank" class="btn btn-primary" id="preview">
+                <i class="iconfont icon-yulan"></i> ${msg['dec.templates.manager.button.preview']}
+            </a>
+            <a href="javascript:void(0)" class="btn btn-primary" id="transversion">
+                <i class="iconfont icon-qiehuan"></i>  ${msg['dec.templates.manager.button.switchVersion']}
+            </a>
+        </div>
+        <div class="m-targetversion">
+            ${msg['dec.templates.manager.column.currentVersion']} v${pageCurrentVersion}
+        </div>
+        <!--/.navbar-collapse -->
+    </div>
+    <div class="m-design-bd">
+        <div class="m-design-sidebar">
+            <div class="m-compslist">
+
+            </div>
+        </div>
+        <div class="m-design-container">
+            <textarea rows="" cols="" name="layoutContent" id="layoutContent" class="form-control"  data-rule-required="true" >${pageViewHtml}</textarea>
+        </div>
+    </div>
+    <!--/.navbar-fixed-top -->
+    <!--/.fluid-container-->
+
+    <script id="transversionTable" type="text/html">
+        {{each transversionlist as value i}}
+        <tr data-using="{{value.isUsing}}">
+            <td>{{value.versionNo}}</td>
+            <td>{{value.opeTime}}</td>
+            <td>{{value.description}}</td>
+            <td>
+                <a href="javascript:void(0)" class="trans_t text-info" data-id="{{value.uuid}}">切换</a>
+                <a href="javascript:void(0)" class="trans_d text-danger" data-id="{{value.uuid}}">${msg['globals.button.delete']}</a>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+
+    <script id="newPageoption" type="text/html">
+        {{each list as value i}}
+        <option value="{{value.name}}">{{value.value}}</option>
+        {{/each}}
+    </script>
+
+    <!-- modal -->
+    <div class="modal fade" id="rowSetModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">${msg['dec.templates.manager.column.rowAttributeConfiguration']}</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" class="form-horizontal">
+                        <div class="form-group">
+                            <label for="rowbgcolor" class="col-sm-2 control-label">${msg['dec.templates.manager.column.backgroundColor']}：</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control col-md-6" name="rowbgcolor" id="rowbgcolor" placeholder="请填写颜色值">
+                            </div>
+                            <div class="col-sm-1" style="padding:0">
+                                <input type="color" class="form-control" style="padding:3px" id="chooseColor">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">${msg['dec.templates.manager.button.close']}</button>
+                    <button type="button" class="btn btn-primary j_rowconfig_save">${msg['dec.templates.manager.button.preservation']}</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- end -->
+
+    <!-- modal -->
+    <div class="modal fade" id="columnSetModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">${msg['dec.templates.manager.column.columnAttributeConfiguration']}</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" class="form-horizontal">
+                        <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">宽度：</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control col-md-6" name="columnwidth" id="columnwidth" placeholder="请填写宽度">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">${msg['dec.templates.manager.button.close']}</button>
+                    <button type="button" class="btn btn-primary j_columnconfig_save">${msg['dec.templates.manager.button.preservation']}</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- end -->
+
+    <!-- modal -->
+    <div class="modal fade" id="pageNewModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">${msg['dec.templates.manager.button.newPage']}</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="">${msg['dec.templates.manager.column.pageName']}：</label>
+                            <input type="text" class="form-control" name="pageName" id="newPageName">
+                        </div>
+                        <div class="form-group">
+                            <label for="">${msg['dec.templates.manager.column.fileName']}：</label>
+                            <input type="text" class="form-control" name="pageFileName" id="newPageFileName" placeholder="以.html结尾">
+                        </div>
+                        <div class="form-group">
+                            <label for="">${msg['dec.templates.manager.column.pageType']}：</label>
+                            <select name="pageType" id="newPagetype" class="form-control">
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">${msg['dec.templates.manager.column.pageDescription']}：</label>
+                            <textarea name="description" id="newPagedescription" cols="30" rows="10" class="form-control"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">${msg['dec.templates.manager.button.close']}</button>
+                    <button type="button" class="btn btn-primary j_addpage_save">${msg['dec.templates.manager.button.preservation']}</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- end -->
+
+
+    <!-- modal -->
+    <div class="modal fade" id="editorModal" data-compId="">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">属性编辑</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">${msg['dec.templates.manager.button.close']}</button>
+                    <button type="button" class="btn btn-primary j_save">${msg['dec.templates.manager.button.determine']}</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal fade" id="saveNewModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">${msg['dec.templates.manager.button.saveNewSub']}</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="">${msg['dec.templates.manager.column.versionDescription']}：</label>
+                            <textarea name="versionDescribe" id="versionDescribe" cols="30" rows="5" class="form-control"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">${msg['dec.templates.manager.button.close']}</button>
+                    <button type="button" class="btn btn-primary j_newpage_save">${msg['dec.templates.manager.button.preservation']}</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- end -->
+
+    <div class="modal fade" id="osaveModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">${msg['dec.templates.manager.button.saveAs']}</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="">${msg['dec.templates.manager.column.pageName']}：</label>
+                            <input type="text" class="form-control" name="pageName" id="pageName">
+                        </div>
+                        <div class="form-group">
+                            <label for="">${msg['dec.templates.manager.column.pageType']}：</label>
+                            <select name="osavePageType" id="osavenewPagetype" class="form-control">
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">${msg['dec.templates.manager.column.fileName']}：</label>
+                            <input type="text" class="form-control" name="pageFileName" id="PageFileName" placeholder="以.html结尾">
+                        </div>
+                        <div class="form-group">
+                            <label for="">${msg['dec.templates.manager.column.pageDescription']}：</label>
+                            <textarea name="description" id="description" cols="30" rows="10" class="form-control"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">${msg['dec.templates.manager.button.close']}</button>
+                    <button type="button" class="btn btn-primary j_osave">${msg['dec.templates.manager.button.preservation']}</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- end -->
+
+    <div class="modal fade" id="transversionModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">${msg['dec.templates.manager.column.switchVersion']}</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>${msg['dec.templates.manager.column.versionNum']}</th>
+                            <th>${msg['dec.templates.manager.column.versionCreateAt']}</th>
+                            <th>${msg['dec.templates.manager.column.versionDescription']}</th>
+                            <th>${msg['globals.table.column.operation']}</th>
+                        </tr>
+                        </thead>
+                        <tbody id="transversionTableList">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.table.button.close']}</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- end -->
+
+    <script>
+        var editor = CodeMirror.fromTextArea(layoutContent, {
+            lineNumbers: true,
+            mode: "text/html"
+        });
+        editor.setSize('auto','800px');
+    </script>
+</body>
+
+</html>

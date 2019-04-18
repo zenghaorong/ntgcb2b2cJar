@@ -1,0 +1,41 @@
+.left1{
+	float: left;
+	color: red;
+	margin-right:10px ;
+}
+
+.left2{
+	float: left;
+}
+
+.right1{
+	float: right;
+	
+}
+ .pon{
+ 	z-index: 9999;
+ }
+.text-color-1{
+	color: #919191;
+}
+.top-color{
+	background-color:rgb(56,206,204) ;
+}
+
+.seach-1{
+	background: white;
+}
+.noborder{
+	border: 0;
+}
+
+.mui-grid-view.mui-grid-9 .mui-table-view-my{
+	margin-left: 10px;
+	vertical-align: top;
+}
+
+.tutorial{
+	font-size:0.775em;
+	color: #919191;
+	float: left;
+}

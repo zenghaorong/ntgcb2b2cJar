@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+
+
+<form class="form-horizontal" id="pictureadform">
+
+    <div class="form-group">
+        <label for="mdetail_url" class="col-sm-3 control-label">搜索页跳转url</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="mdetail_url" placeholder="请输入跳转url">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="mdetail_url" class="col-sm-3 control-label">分类页跳转url</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="mcategory_url" placeholder="请输入跳转url">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="mdetail_url" class="col-sm-3 control-label">购物车跳转url</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="mcart_url" placeholder="请输入跳转url">
+        </div>
+    </div>
+
+</form>
+
+
+</body>
+
+
+<script type="text/javascript">
+    var pageJson = ${webPageModelJsonStr};
+
+    var componentsParam = {
+        initParamData: function (pageJson) {
+            if (typeof (pageJson) == "string") {
+                pageJson = JSON.parse(pageJson);
+            }
+
+
+            if (pageJson.mdetail_url) {
+                $("#mdetail_url").val(pageJson.mdetail_url);
+            }
+
+            if (pageJson.mcategory_url) {
+                $("#mcategory_url").val(pageJson.mcategory_url);
+            }
+
+            if (pageJson.mcart_url) {
+                $("#mcart_url").val(pageJson.mcart_url);
+            }
+
+
+        },
+        saveParamData: function () {
+            var pageJson = {
+                compId: 'mplist',
+                "mdetail_url":$("#mdetail_url").val(),
+                "mcategory_url":$("#mcategory_url").val(),
+                "mcart_url":$("#mcart_url").val()
+            };
+            return pageJson;
+        },
+
+        showParamData: function () {
+
+            var paramData = [];
+
+            var srcImage = {
+                type: 'src',
+                target: 'img',
+                value: $("#imgSrc").val()
+            }
+
+            paramData.push(srcImage);
+
+            return paramData;
+        }
+    }
+
+    componentsParam.initParamData(pageJson);
+</script>
+
+
+</html>

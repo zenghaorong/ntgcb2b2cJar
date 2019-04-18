@@ -1,0 +1,54 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="modal-title">${msg["goods.main.modal.dialogChecklog.title"]}</h4>
+</div>
+<div class="modal-body">
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>${msg["goods.main.checklog.column.opBy"]}</th>
+            <th>${msg["goods.main.checklog.column.opType"]}</th>
+            <th>${msg["goods.main.checklog.column.checkStatus"]}</th>
+            <th>${msg["goods.main.checklog.column.opAt"]}</th>
+            <th>${msg["goods.main.checklog.column.reason"]}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--# for (o in checklogList) { #-->
+        <tr>
+            <td width="10%">
+                <!--#if (o.opType == 0) {#-->
+                ${o.storeMain.storeName!}
+                <!--#if(isNotEmpty(o.applicant.name)){#-->[${o.applicant.name}]<!--#}#-->
+                <!--#} else {#-->
+                ${o.checker.username!}
+                <!--#}#-->
+            </td>
+            <td width="10%">${o.opType == 0 ? msg["goods.main.checklog.opType.apply"] : msg["goods.main.checklog.opType.check"]}</td>
+            <td width="10%">
+                <!--#
+                if (o.checkStatus == 0) {
+                    print(msg["goods.enum.checkstatus.wait"]);
+                } else if (o.checkStatus == 1) {
+                    print(msg["goods.enum.checkstatus.pass"]);
+                } else if (o.checkStatus == 2) {
+                    print(msg["goods.enum.checkstatus.nopass"]);
+                } else if (o.checkStatus == 3) {
+                    print(msg["goods.enum.checkstatus.illegl"]);
+                }
+                #-->
+            </td>
+            <td width="20%">${@date.getDate(o.opAt)}</td>
+            <td width="50%">${o.reason}</td>
+        </tr>
+        <!--# } elsefor {#-->
+        <tr>
+            <td colspan="5">${msg["goods.main.checklog.norecord"]}</td>
+        </tr>
+        <!--# }#-->
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">${msg["goods.main.btn.close"]}</button>
+</div>

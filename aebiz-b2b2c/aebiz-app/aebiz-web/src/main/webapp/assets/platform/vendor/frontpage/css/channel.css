@@ -1,0 +1,112 @@
+
+/*======礼品卡 页面=======*/
+
+/*header*/
+.h_header{position:relative; background:#fff; padding-bottom:4px;}
+.h_header .w_logo{padding-top:25px;}
+.h_header span{width:125px; height:90px; display:block; border-left:1px solid #e7e7e7; background:url(../img/ysp.jpg) no-repeat center;margin: 23px 0 0 20px;padding-left: 20px;}
+.h_header .zp_box{position:absolute; right:0; top:40px; width:45%; min-width:250px; height:40px;padding-left: 20px; background:#95bb56; border-radius:3px 0 0 3px;}
+.h_header .zp_box li{float:left; }
+.h_header .zp_box li a{ display:block;color:#fff;padding: 12px 20px 5px;margin: 0 10px;-webkit-transition: transform 0.3s;transition: transform 0.3s;}
+.h_header .zp_box li.active a{border-bottom:2px solid #fff;}
+.h_header .zp_box li a:hover{border-bottom:2px solid #fff;}
+
+/*大图广告*/
+.h_bigpic{width:100%; height:500px;}
+.h_bigpic img{width:100%; height:500px;}
+
+/*优食卡*/
+.h_foodcard{  background:#fff; overflow:hidden;padding: 40px 0 70px;}
+.h_foodcard_p{padding: 40px 0 0;}
+.card_tit{ position:relative; border-bottom:2px solid #ddd; margin-top:40px;padding-bottom: 10px;}
+.card_tit h3{font-size:40px; color:#9db032;border-bottom:2px solid #9db032;position: absolute;top: -40px;left: 0;padding-bottom: 10px;}
+.card_tit h3 em{font-size:26px; color:#d1d1d1;}
+.h_foodcard .card_box{padding:0 90px;}
+.h_foodcard .title{width:100%;border-bottom:1px solid #e5e5e5; margin-bottom:15px;}
+.h_foodcard  h4{  text-align:center; font-size:24px; padding: 33px 0 23px 0}
+.h_foodcard  h4 b{width: 38px;height: 38px;line-height: 38px;text-align: center;border-radius: 2px;-webkit-border-radius: 2px;font-weight: normal;color: #FFFFFF;background-color: #9db032;margin-right: 10px;display: inline-block;font-size: 30px;}
+.h_foodcard .card_cont{padding-top:55px;}
+.h_foodcard .card_cont .pic{margin-right:50px;width:250px; height:250px; overflow:hidden;margin-left:170px;}
+.h_foodcard .card_cont .pic img{width:250px;height:250px;}
+.h_foodcard .card_cont .txt{ width:600px;}
+.h_foodcard .card_cont .txt h3{font-size:25px;line-height:3;}
+.h_foodcard .card_cont .txt a{text-decoration: none;}
+.h_foodcard .card_cont .price{ font-size:24px; color:#6e7e02; border-top:1px dashed #e5e5e5; padding:5px 0 60px; width:100%;}
+.h_foodcard .card_cont .price span{ font-size:14px; color:#999; }
+.h_foodcard .card_cont .time{ margin:15px 0 45px;}
+.h_foodcard .card_cont .time a{ margin-right:10px;}
+
+/*套餐切换*/
+.h_foodcard .owl-controls{display:block;}
+.h_foodcard .owl-theme .owl-buttons div{display: block;background: none;top: 20px;border: none;margin-top:0;font-family: "宋体";right: 16%;left: auto;height: 25px;width: 25px;text-align: center;color:#9db032;font-size: 20px;font-weight: bold;}
+.h_foodcard .flex-direction-nav a{top: 32px;right: 15%;left: auto;height: 40px;background: none;font-size: 12px;font-family: "????";color: #fff;line-height: 45px;font-weight: bold;text-align: center;position:absolute;color: #9db032;}
+.h_foodcard .owl-theme .owl-buttons .owl-prev{right: 11%;}
+.h_foodcard .owl-theme .owl-buttons .owl-next{right: 1%;}
+.h_foodcard .owl-theme .owl-pagination{top: 21px;right: 2%;width: 10%;height: 20px;left: auto;}
+.h_foodcard .owl-theme .owl-pagination .owl-page {width: 8px;height: 8px;}
+.h_foodcard .owl-theme .owl-pagination .owl-page.active {background: #9db032;}
+
+/*最安全的食品*/
+.h_safefood{ background:#eeede8; overflow:hidden; padding:50px 0 45px 0; margin-top:30px; clear:both;}
+.h_safefood .des{ background:url(../img/tit_bg.jpg) no-repeat left top; padding:0 0 30px 190px;}
+.h_safefood .des h3{ font-size:30px; color:#606151; border-bottom:2px solid #d3d3c7;height:40px; margin-bottom:20px;}
+.h_safefood .des p{ margin-bottom:20px; color:#5f5f55;}
+.h_safefood ul{padding-left:190px;}
+.h_safefood ul li{ float:left; text-align:center;margin: 0 25px 40px 0;display: block;-webkit-transition: transform 0.5s;transition: transform 0.5s;}
+.h_safefood ul li .picbox{ width:160px; height:160px;margin-bottom: 10px; overflow:hidden;}
+.h_safefood ul li .picbox img{ width:160px; height:160px; border-radius:160px;-webkit-transition: transform 0.5s;transition: transform 0.5s;}
+.h_safefood ul li:hover img{transform:scale(1.2);-webkit-transform:scale(1.2);}
+.h_safefood ul li a{display:block;}
+
+/*======宅配卡 页面=======*/
+
+/*banner切换*/
+.y_dqslides{height:360px;width:100%; margin:0 auto;overflow:hidden}
+.y_dqslides .flexslider .slides li{ height:360px; overflow:hidden}
+.y_dqslides .flexslider .slides li img{max-width: 100%;height: 100%;}
+.y_dqslides .flex-control-nav{bottom:10px;}
+.y_dqslides .flex-control-nav li{ margin:0 5px;}
+.y_dqslides .flex-control-nav li a{background: #ccc;width:12px; height:12px; }
+.y_dqslides .flex-control-nav li a:hover{background:#f1f0ee}
+.y_dqslides .flex-control-nav li a.flex-active{background:#90c51c;transform:scale(1.2)}
+.y_dqslides .flex-direction-nav a{width:45px;height:70px;visibility:hidden;opacity:0;position:absolute;left:50px;top:50%;margin-top:-35px;border:none;box-shadow:none;}
+.y_dqslides .flex-direction-nav a:hover{background-color:rgba(0,0,0,0.5)}
+.y_dqslides .flex-direction-nav .flex-prev{background:url(../img/prev.png) no-repeat;transform:translateX(-50px)}
+.y_dqslides .flex-direction-nav .flex-next{left:auto;right:50px;background:url(../img/next.png) no-repeat;transform:translateX(50px)}
+.y_dqslides:hover .flex-direction-nav li a{visibility:visible;opacity:1;transform:translateX(0)}
+
+/*优食配*/
+.h_compound{background:#f7f7f7;padding-top: 20px;}
+.h_compound .tit{width: 100%;border-bottom: 1px solid #ededed;text-align: center;padding-bottom: 57px;position: relative;}
+.h_compound .tit h3{color: #ccc;font-size: 30px;position: absolute;left: 50%;top: 9px;margin-left: -102px;}
+.h_compound .tit b{color: #525251;font-weight: normal;margin: 0 10px;}
+.h_compound .tit span{display: block;color: #d1d1d1;font-size: 13px;background: #f7f7f7;padding: 10px 15px;}
+.h_compound ul.tab_style3{padding:30px 100px 0;}
+.h_compound ul.tab_style3 li{ height:360px; width:33%; border:none;}
+.h_compound ul.tab_style3 li a{width:300px;}
+.h_compound ul.tab_style3 li.active a{ background:url(../img/pic_bg.png) no-repeat;}
+.h_compound ul.tab_style3 li .pic{margin:50px 0 10px 0; }
+.h_compound ul.tab_style3 li .p-name{font-size:18px;}
+.h_compound ul.tab_style3 li .logisangle{position:absolute;left:166px;bottom:-2px;width: 26px;height: 14px;background: url(../img/adimg/icon_arrow.png) no-repeat;display: none;}
+.h_compound ul.tab_style3 li.active .logisangle{display: block;}
+.h_compound .pic_show{float:left;display: block;}
+
+	/*--切换标题--*/
+	
+.h_compound .t_box{overflow:hidden; width:1280px; margin:0 auto;}
+.h_compound .tab-content{ background:#fff; border-top:1px solid #9bbf61;}
+.h_compound .tab-content .tab-pane{display:none;}
+.h_compound .tab-content .tab-pane.active{display:block;}
+.h_compound .h_foodcard{padding:0; position:relative;}
+.h_compound .h_foodcard h4{padding: 0;text-align: left;margin-bottom: 15px;}
+.h_compound .h_foodcard span{color:#999;margin: 18px 0 0 10px;}
+.h_compound .h_foodcard .card_cont .price{padding:5px 0 30px 0}
+.h_compound .h_foodcard .card_cont .pic{width:380px; height:318px; text-align:right;}
+.h_compound .h_foodcard .card_cont .pic img{width:318px; height:318px;}
+
+	/*--切换内容--*/
+.h_foodcard 	.flexslider .slides img{width:auto;display:inline;}
+.h_foodcard .flex-control-nav{top: 20px;right: 13.2%;width: 40px;height: 20px;left: auto;}
+.h_foodcard .flex-control-nav li{margin:0 2px;}
+.h_foodcard .flex-direction-nav a{top: 32px;right: 15%;left:auto;height: 40px;background: none;font-size: 12px;font-family: "宋体";color: #fff;line-height: 45px;font-weight: bold;text-align: center;color: #9db032;}
+.h_foodcard .flex-direction-nav .flex-next{right: 12%;}

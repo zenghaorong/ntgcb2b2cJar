@@ -1,0 +1,1 @@
+"use strict";$(document).on("click",".btn-evaluate",function(){layer.open({type:1,content:$("#evaluate"),area:"560px",title:["提示","font-size:18px;color:#ba9963;font-weight:600"],btn:["确定"],shadeClose:!0,btnAlign:"c",scrollbar:!1})});

@@ -1,0 +1,73 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-form">
+                <form id="addForm" role="form" class="form-horizontal parsley-form"
+                      action="${base}/platform/member/account/money/addDo" method="post" data-parsley-validate>
+                    <input id="accountId" name="accountId" type="hidden" value="${obj.accountId}">
+                    <div class="row mb10 mt10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">${msg['member.account.money.localMoney']}</label>
+                                <div class="col-sm-8 ">
+                                    <input type="text" id="oldMoney" name="oldMoney" class="form-control"
+                                           value="${money}" readonly style="color: red">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="diffMoney" class="col-sm-2 control-label">${msg['member.account.money.adjustMoney']}</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="diffMoney" name="diffMoney" class="form-control"
+                                           data-parsley-required="true" data-parsley-min="-${money}"
+                                           data-parsley-type="price"
+                                           placeholder="${msg['member.account.score.adjustMoney.tip']}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="note" class="col-sm-2 control-label">${msg['member.account.money.column.note']}</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="note" class="form-control" name="note"
+                                           data-parsley-required="true" data-parsley-minlength="2"
+                                           placeholder="${msg['member.account.money.column.note']}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-6">
+                        <div class="form-group text-center">
+                            <button class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                            <button class="btn btn-primary " data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    $(document).ready(function () {
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    var om = $("#oldMoney").val();
+                    var diff = $("#diffMoney").val();
+                    var om1 = parseFloat(om) + parseFloat(diff);
+                    $("#oldMoney").val(om1.toFixed(2));
+                    $("#diffMoney").val("");
+                    $("#note").val("");
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+
+

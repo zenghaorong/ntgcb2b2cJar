@@ -1,0 +1,37 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">${obj.styleName}</a>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                            <tr>
+                                <td>${msg['dec.templates.style.column.templateName']}</td><td>${obj.templateName}</td>
+                            </tr>
+                            <tr>
+                                <td>${msg['dec.templates.style.column.styleName']}</td><td>${obj.styleName}</td>
+                            </tr>
+                            <tr>
+                                <td>${msg['dec.templates.style.column.styleFileName']}</td><td>${obj.styleFileName}</td>
+                            </tr>
+                                                        <tr>
+                                <td style="height:40px;width:40px">${msg['dec.templates.style.column.styleImage']}</td><td style="height:40px;width:40px"><img src="${obj.styleImage!}"/></td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['dec.templates.style.column.disabled']}</td><td>${obj.disabled}</td>
+
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

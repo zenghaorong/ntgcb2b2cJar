@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!--#
+include("/pages/front/pc/member/inc/header.html"){}
+#-->
+<div class="m-bd">
+	<div class="g-center f-push-30-t">
+		<!--#
+            include("/pages/front/pc/member/inc/left.html"){}
+        #-->
+		<div class="ps-main f-fl border">
+			<input type="hidden" id="status" value="${status}">
+			<div class="hd">
+				<ul class="center-tab f-cb">
+					<li class="active" data-label><a href="#" onclick="dong(0)">商品收藏</a></li>
+					<li data-label><a href="#" id="store" onclick="dong(1)">店铺收藏</a></li>
+				</ul>
+				<div class="qwang-search search-collect">
+					<div class="search-input">
+						<input type="" name="" id="search" value="" placeholder="输入商品(店铺)名称搜索"><button id="submit" type="submit">搜索</button>
+					</div>
+				</div>
+			</div>
+			<div class="bd">
+				<div id="content">
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<!--#
+			include("/pages/front/pc/member/inc/tail.html"){}
+		#-->
+<!-- end -->
+<div id="collect-delete" class="m-layer-pop">
+	<div class="info">确认取消收藏?</div>
+</div>
+<div id="ly-delete" class="m-layer-pop pop-cancelOrder">
+	<div class="info">您未选中想要进行删除的对象</div>
+</div>
+<script src="${base!}/assets/front/pc/member/vendor/jquery/jquery.min.js"></script>
+<script src="${base!}/assets/front/pc/member/vendor/jquery/jquery.SuperSlide.js"></script>
+<script src="${base!}/assets/front/pc/member/vendor/layer/layer.js"></script>
+<script src="${base!}/assets/front/pc/member/vendor/jquery/base.js"></script>
+<script src="${base!}/assets/front/pc/member/scripts/collection.js"></script>
+<script language="JavaScript">
+    //设置左侧选择框被选中是变红
+    $("#member_left li a[href|='/member/collection']").parent("li").addClass("active").siblings("li").removeClass("active");
+    var page = 1;
+    var rows = 10;
+    var status= 0;
+    //count属性是设置全选或全不选的
+    var count = 1;
+    var count1 = 1;
+    $(document).ready(function () {
+
+        $(document).on("click",".qx-delete",function(){
+            var indexCause = layer.open({
+                type: 1,
+                content: $('#ly-delete'),
+                offset: '200px',
+                area: "560px",
+                title: ['请先选择', 'font-size:18px;color:#ba9963;font-weight:600'],
+                btn: ['确定', '取消']
+                ,yes: function(index, layero){
+                    //按钮【按钮一】的回调
+                    if($("#cause").val() != 0){
+                        layer.close(indexCause);
+                    }else{
+                        return false
+                    }
+                },
+                shadeClose: true,
+                btnAlign: 'c',
+                scrollbar: false,
+            })
+        });
+
+        if(parseInt($("#status").val()) == 0){
+            selectCoupon(page,rows,status);
+        }else {
+            $("#store").trigger("click");
+        }
+        //实现全选或全不选(商品)
+        $(document).on("click","#checkboxAll",function(){
+            if(count % 2 ==1){
+                count++;
+                $(".checkbox1").prop({checked:true});
+            }else{
+                count++;
+                $(".checkbox1").prop({checked:false});
+            }
+        });
+
+        //实现全选或全不选(店铺)
+        $(document).on("click","#checkboxAllStore",function(){
+            if(count1 % 2 ==1){
+                count1++;
+                $(".checkbox2").prop({checked:true});
+            }else{
+                count1++;
+                $(".checkbox2").prop({checked:false});
+            }
+        });
+    });
+    function selectCoupon(page,rows,status) {
+        var param={
+            "pageNo": page,
+            "status": status,
+            "rows":rows
+        }
+        $.post("/member/collection/data",param,function (data) {
+            //alert(data);
+            $("#content").html(data);
+        });
+    }
+    //查询方法
+    function dong(val) {
+        //设置页面页数
+        count = 1;
+        count1 = 1;
+        page = 1;
+        status = val;
+        selectCoupon(page,rows,status);
+    }
+    $("#submit").click(function () {
+        count = 1;
+        count1 = 1;
+        page = 1;
+        var content = $("#search").val();
+        selectCoupon1(page,rows,status,content);
+    });
+    function search() {
+        id = $("input[name='id']").val();
+        order.load(1);
+    }
+    function selectCoupon1(page,rows,status,content) {
+        var param={
+            "pageNo": page,
+            "status": status,
+            "rows":rows,
+            "content":content
+        }
+        $.post("/member/collection/search",param,function (data) {
+            //alert(data);
+            $("#content").html(data);
+        });
+    }
+</script>

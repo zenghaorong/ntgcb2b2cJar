@@ -1,0 +1,687 @@
+<!--#layout("/layouts/platform.html"){#-->
+
+<style>
+
+    .div-img-album{
+        list-style-type: none;
+        margin: 2px;
+        height: 118px;
+        float: left;
+    }
+    .divImg{
+        float: left;
+        margin: 2px;
+        padding: 2px;
+        height:108px;
+        width:100px;
+        border: 1px solid #dcdcdc;
+        cursor: pointer;
+    }
+    .divImgD{
+        float: left;
+        margin: 2px;
+        padding: 2px;
+        height:108px;
+        width:100px;
+        border: 1px solid #dcdcdc;
+        cursor: pointer;
+    }
+    .line-height-sm{
+        height: 30px;
+    }
+    .goods-search-class {
+        width: 30%;min-width: 160px;
+    }
+    .goods-area-label{
+        float:left;margin:3px 1px 2px 1px;
+    }
+    .col-half{
+        width:50%;
+        float: left;
+    }
+
+</style>
+<header class="header">
+    <a class="btn btn-default navbar-btn pull-right" href="/platform/self/order/afterSale" data-pjax>${msg['globals.button.back']}</a>
+    <!--#if(obj.afterMain.afterSaleState == 0){#-->
+    <button type="button" class="btn btn-success navbar-btn" data-toggle="modal" data-target="#opeModal"
+            data-whatever="1">
+        ${msg['order.after.button.agreeApply']}
+    </button>
+    <button type="button" class="btn btn-warning navbar-btn" data-toggle="modal" data-target="#opeModal"
+            data-whatever="2">
+        ${msg['order.after.button.disagreeApply']}
+    </button>
+    <!--#}#-->
+
+    <!--#if(obj.afterMain.afterSaleState == 8){#-->
+    <button type="button" class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#opeModal"
+            data-whatever="3">
+        ${msg['order.after.button.checkGoodsPass']}
+    </button>
+    <button type="button" class="btn btn-warning navbar-btn" data-toggle="modal" data-target="#opeModal"
+            data-whatever="4">
+        ${msg['order.after.button.checkGoodsNotPass']}
+    </button>
+    <!--#}#-->
+
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper">
+        <header class="btn center-block">
+            <h3>${obj.afterSaleState}(<span style="color:red">${obj.applyType}</span>)</h3>
+        </header>
+        <!--买家退货信息start-->
+        <div class="row">
+            <div class="col-md-12">
+                <!--#if(obj.afterMain.afterSaleState == 8 ){#-->
+                <div class="panel panel-danger">
+                    <div class="panel-heading">${msg['order.after.title.returnedGoodsMessage']}</div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <label class="col-sm-1 control-label">${msg['order.after.returns.column.logisticsSheetId']}</label>
+                            <div class="row">
+                                <div class="col-sm-3">${obj.orderAfterReturns.logisticsSheetId!}</div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-sm-1 control-label">${msg['order.after.returns.column.logisticsCompany']}</label>
+                            <div class="row">
+                                <div class="col-sm-3">${obj.orderAfterReturns.logisticsCompany!}</div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-sm-1 control-label">${msg['order.after.returns.column.returnsTime']}</label>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <!--#if(obj.orderAfterReturns.returnsTime != null ){#-->
+                                    ${@date.getDate(obj.orderAfterReturns.returnsTime)}
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-sm-1 control-label">${msg['order.after.returns.column.note']}</label>
+                            <div class="row">
+                                <div class="col-sm-3">${obj.orderAfterReturns.note!}</div>
+                            </div>
+                        </li>
+                        <li class="list-group-item center-block">
+                            <label class="col-sm-1 control-label">${msg['order.after.main.column.evidence']}</label>
+                            <div class="row">
+                                <!--#if(obj.orderAfterReturns.evidence1 != null){#-->
+                                <div class="col-sm-1">
+                                    <a href="javascript:viod(0);" class="thumbnail">
+                                        <img class="img-rounded" onclick="viewImg(this)" src="${obj.orderAfterReturns.evidence1}" alt="" title="">
+                                    </a>
+                                </div>
+                                <!--#}#-->
+                                <!--#if(obj.orderAfterReturns.evidence2 != null){#-->
+                                <div class="col-sm-1">
+                                    <a href="javascript:viod(0);" class="thumbnail">
+                                        <img class="img-rounded" onclick="viewImg(this)" src="${obj.orderAfterReturns.evidence2}" alt="" title="">
+                                    </a>
+                                </div>
+                                <!--#}#-->
+                                <!--#if(obj.orderAfterReturns.evidence3 != null){#-->
+                                <div class="col-sm-1">
+                                    <a href="javascript:viod(0);" class="thumbnail">
+                                        <img class="img-rounded" onclick="viewImg(this)" src="${obj.orderAfterReturns.evidence3}" alt="" title="">
+                                    </a>
+                                </div>
+                                <!--#}#-->
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!--#}#-->
+            </div>
+        </div>
+        <!--买家退货信息end-->
+
+        <!--售后申请信息start-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">${msg['order.after.title.afterSaleApplyMessage']}</div>
+                    <div class="panel-body">
+                        <ul class="list-group col-half">
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.id']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.afterMain.id}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.orderId']}</label>
+                                <div class="row primary">
+                                    <div class="col-sm-8">
+                                            ${obj.afterMain.orderId}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.applyTime']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${@date.getDate(obj.afterMain.applyTime)}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.applyMan']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.afterMain.applyMan}</div>
+                                </div>
+                            </li>
+                            <!--#if(obj.afterMain.applyType != 2){#-->
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.returnMoney']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <!--#if(obj.afterMain.returnMoney != null ){#-->
+                                        ￥${@money.fenToYuan(obj.afterMain.returnMoney)}
+                                        <!--#}#-->
+                                    </div>
+                                    <!--#if(obj.afterMain.returnMoney != null ){#-->
+                                    <input hidden id="js-returnMoney" type="text" value="${@money.fenToYuan(obj.afterMain.returnMoney)}">
+                                    <!--#}#-->
+                                </div>
+                            </li>
+                            <!--#}#-->
+                            <!--#if(obj.afterMain.applyType != 0 ){#-->
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.packWell']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <!--#if(obj.afterMain.packWell){#-->
+                                        ${msg['order.after.main.column.packGreat']}
+                                        <!--#}else{#-->
+                                        ${msg['order.after.main.column.packBroken']}
+                                        <!--#}#-->
+                                    </div>
+                                </div>
+                            </li>
+                            <!--#}#-->
+                            <!--#if(obj.afterMain.afterSaleState == 12 ){#-->
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.cancelReason']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.afterMain.cancelReason}</div>
+                                </div>
+                            </li>
+                            <!--#}#-->
+                            <li class="list-group-item center-block">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.evidence']}</label>
+                                <div class="row">
+                                    <!--#if(obj.afterMain.evidence1 != null){#-->
+                                    <div class="col-sm-2">
+                                        <a href="javascript:viod(0);" class="thumbnail" style="margin-bottom:12px">
+                                            <img class="img-rounded" onclick="viewImg(this)" src="${obj.afterMain.evidence1}" alt="${msg['order.after.main.column.evidence1']}" title="${msg['order.after.button.viewBigImage']}">
+                                        </a>
+                                    </div>
+                                    <!--#}#-->
+                                    <!--#if(obj.afterMain.evidence2 != null){#-->
+                                    <div class="col-sm-2">
+                                        <a href="javascript:viod(0);" class="thumbnail" style="margin-bottom:12px">
+                                            <img class="img-rounded" onclick="viewImg(this)" src="${obj.afterMain.evidence2}" alt="${msg['order.after.main.column.evidence2']}" title="${msg['order.after.button.viewBigImage']}">
+                                        </a>
+                                    </div>
+                                    <!--#}#-->
+                                    <!--#if(obj.afterMain.evidence3 != null){#-->
+                                    <div class="col-sm-2">
+                                        <a href="javascript:viod(0);" class="thumbnail" style="margin-bottom:12px">
+                                            <img class="img-rounded" onclick="viewImg(this)" src="${obj.afterMain.evidence3}" alt="${msg['order.after.main.column.evidence3']}" title="${msg['order.after.button.viewBigImage']}">
+                                        </a>
+                                    </div>
+                                    <!--#}#-->
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="list-group col-half">
+                            <li class="list-group-item list-group-item-rmbdt">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.storeUuid']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.afterMain.storeUuid}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item list-group-item-rmbdt">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.storeName']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.afterMain.storeName}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.returnReason']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.afterMain.returnReason}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.description']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.afterMain.description}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.applyManMobile']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.afterMain.applyManMobile}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.afterSaleState']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.afterMain.afterSaleStateName}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.applyType']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.afterMain.applyTypeName}</div>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--售后申请信息end-->
+
+        <!--订单信息start-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading">${msg['order.after.title.orderMessage']}</div>
+                    <div class="panel-body">
+                        <ul class="list-group col-half">
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.main.column.id']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                            ${obj.orderMain.id}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.main.column.orderAt']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${@date.getDate(obj.orderMain.orderAt)}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.main.column.payStatus']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.orderMain.payStatusName}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.main.column.orderStatus']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.orderMain.orderStatusName}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.main.column.payMoney']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        ￥${@money.fenToYuan(obj.orderMain.payMoney)}
+                                        (含${msg['order.main.column.freightMoney']}￥${@money.fenToYuan(obj.orderMain.freightMoney)})
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+                        <ul class="list-group col-half">
+                            <li class="list-group-item list-group-item-rmbdt">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.storeUuid']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.afterMain.storeUuid}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item list-group-item-rmbdt">
+                                <label class="col-sm-3 control-label">${msg['order.after.main.column.storeName']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.afterMain.storeName}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.main.column.accountId']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.orderMain.accountId}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.main.column.payType']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.orderMain.payTypeName}</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <label class="col-sm-3 control-label">${msg['order.main.column.payName']}</label>
+                                <div class="row">
+                                    <div class="col-sm-8">${obj.orderMain.payName}</div>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--订单信息end-->
+
+        <!--售后商品明细start-->
+        <div class="row">
+            <div class="col-md-12">
+                <!--#if(obj.goodsList != null && obj.goodsList.~size > 0){#-->
+                <div class="panel panel-info">
+                    <div class="panel-heading">${msg['order.after.title.afterSaleGoodsDetail']}</div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>${msg['order.goods.column.goodsName']}</th>
+                            <th>${msg['order.goods.column.buyPrice']}</th>
+                            <th>${msg['order.goods.column.buyNum']}</th>
+                            <th>${msg['order.goods.column.freeMoney']}</th>
+                            <th>${msg['order.goods.column.payMoney']}</th>
+                            <th>${msg['order.after.detail.column.afterSaleNum']}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!--#for(goods in obj.goodsList!){#-->
+                        <tr>
+                            <td>
+                                <a href="javascript:viod(0);" >
+                                    <img class="img-rounded" style="width: 30px; height: 30px" onclick="viewImg(this)" src="${goods.imgUrl}" alt="" title="">
+                                </a>
+                                ${goods.goodsName}
+                            </td>
+                            <td>${@money.fenToYuan(goods.buyPrice)}</td>
+                            <td>${goods.buyNum}</td>
+                            <td>${@money.fenToYuan(goods.freeMoney)}</td>
+                            <td>${@money.fenToYuan(goods.payMoney)}</td>
+                            <td>${goods.afterSaleNum}</td>
+
+                        </tr>
+                        <!--#}#-->
+                        </tbody>
+                    </table>
+                </div>
+                <!--#}#-->
+            </div>
+        </div>
+        <!--售后商品明细end-->
+
+        <!--售后日志-->
+        <div class="row">
+            <div class="col-md-12">
+                <!--#if(obj.afterLogs != null && obj.afterLogs.~size > 0){#-->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">${msg['order.after.title.afterSaleLog']}</div>
+                    <!--日志信息-->
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th width="15%">${msg['order.after.log.column.handleTime']}</th>
+                            <th width="10%">${msg['order.after.log.column.handleType']}</th>
+                            <th width="10%">${msg['order.after.log.column.handleMan']}</th>
+                            <th width="10%">${msg['order.after.log.column.afterSaleState']}</th>
+                            <th width="30%">${msg['order.after.log.column.description']}</th>
+                            <th width="25%">${msg['order.after.log.column.evidence']}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!--#
+                        for(log in obj.afterLogs){
+                        #-->
+                        <tr>
+                            <td>${@date.getDate(log.opAt)}</td>
+                            <td>${log.handleTypeName}</td>
+                            <td>${log.handleMan}</td>
+                            <td>${@com.aebiz.app.order.modules.models.em.OrderAfterStateEnum.getValue(log.afterSaleState)}</td>
+                            <td>${log.description}</td>
+                            <td>
+                                <div class="row">
+                                    <!--#if(log.evidence1 != null){#-->
+                                    <div class="col-sm-2">
+                                        <a href="javascript:viod(0);" class="" style="height: 18px; width: 25px;">
+                                            <img class="img-rounded" onclick="viewImg(this)" src="${log.evidence1}" alt="" title="${msg['order.after.button.viewBigImage']}">
+                                        </a>
+                                    </div>
+                                    <!--#}#-->
+                                    <!--#if(log.evidence2 != null){#-->
+                                    <div class="col-sm-2">
+                                        <a href="javascript:viod(0);" class="" style="height: 18px; width: 25px;">
+                                            <img class="img-rounded" onclick="viewImg(this)" src="${log.evidence2}" alt="" title="${msg['order.after.button.viewBigImage']}">
+                                        </a>
+                                    </div>
+                                    <!--#}#-->
+                                    <!--#if(log.evidence3 != null){#-->
+                                    <div class="col-sm-2">
+                                        <a href="javascript:viod(0);" class="" style="height: 18px; width: 25px;">
+                                            <img class="img-rounded" onclick="viewImg(this)" src="${log.evidence3}" alt="" title="${msg['order.after.button.viewBigImage']}">
+                                        </a>
+                                    </div>
+                                    <!--#}#-->
+                                </div>
+                            </td>
+                        </tr>
+                        <!--#}#-->
+                        </tbody>
+                    </table>
+                </div>
+                <!--#}#-->
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<!--处理对话框-->
+<div class="modal fade" id="opeModal" tabindex="-1" role="dialog" aria-labelledby="opeModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 id="opeModalLabel">${msg['order.after.title.afterSaleHandle']}(<span style="color:red"></span>)</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form">
+                    <input type="hidden" id="afterSaleId" name="afterSaleId" value="${obj.afterMain.id}">
+                    <input type="hidden" id="afterSaleType" name="afterSaleType" value="${obj.afterMain.applyType}">
+                    <input type="hidden" id="vouchers" name="vouchers">
+                    <div class="row mt5">
+                        <div class="from-group" id="js-backMoney">
+                            <div class="col-sm-8 col-md-offset-2">${msg['order.after.refundment.confirmReturnMoney']}：</div>
+                            <div class="col-sm-8 col-md-offset-2">
+                                <input id="returnMoney" name="returnMoney" type="text" class="form-control" placeholder="${msg['order.after.main.column.returnMoney']}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-md-offset-2">
+                                <input id="note" class="form-control" name="note" placeholder="${msg['order.after.title.placeholderNote']}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-md-offset-2">
+                                <div id="queue"></div>
+                                <div>
+                                    <input id="file_upload" name="file_upload" type="file" multiple="true">
+                                </div>
+                                <div id="div_img" class="div-img"></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button type="button" class="btn btn-primary" id="confirm" onclick="sellerHandle(this)">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--图片查看框-->
+<div class="modal fade" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="imgModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <img class="js-viewImg" src="" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var delayTime = 500;
+    var timer;
+
+    $(document).ready(function () {
+        myForm.init();
+        // 文件上传
+        $('#file_upload').uploadifive(initAlbumOptions());
+
+        $("#opeModal").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+
+    /**
+     * 初始化相册
+     */
+    function initAlbumOptions() {
+        var queueId = "queue";
+        var fileuploadId = "file_upload";
+        var imgDivIdPrefix = "div_album";
+        var albumContainer = document.getElementById("div_img");
+        var sort = Sortable.create(albumContainer);
+        var imgIndex = $(albumContainer).children().size();
+        return {
+            'auto': true,
+            'multi': true,
+            'width': '100%',
+            'height': '35',
+            'buttonText': "${msg['order.after.title.uploadImgNote']}",
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024,
+            'queueSizeLimit': 3,
+            'removeCompleted':true,
+            'removeTimeout':0,
+            'formData': {},
+            'queueID': queueId,
+            'uploadScript': '${base!}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    var c = "divImg";
+                    imgIndex++;
+                    if(imgIndex == 1){
+                        c = "divImgD";
+                    }
+                    var imgDivId = imgDivIdPrefix + imgIndex;
+                    $(albumContainer).append("<div id='"+imgDivId+"' class='"+c+"' style='width:100px;'>" +
+                        "<img class='uploadImg' src='" + data.data+ "' style='width:100px;height: 80px;margin-bottom: 1px;'><br>" +
+                        "<i style='float: right;padding-top: 4px;' class='fa fa-close' onclick=\"delAlbumImg('"+imgDivId+"')\"></i>" +
+                        "</div>");
+                    sort.destroy();
+                    sort = Sortable.create(albumContainer);
+                    $("#"+queueId).empty();
+                } else {
+                    Toast.error(data.msg);
+                }
+            },
+            'onSelect' : function(queue) {
+                if($(albumContainer).children().length >= 3){
+                    Toast.warning("${msg['order.after.title.uploadImgWarning']}");
+                    $("#" + fileuploadId).uploadifive('cancel', $('.uploadifive-queue-item').first().data('file'));
+                }
+            }
+        };
+    }
+
+    function delAlbumImg(id){
+        $("#"+id).remove();
+    }
+
+    // 卖家处理
+    function sellerHandle(el) {
+        var flag = $(el).data("id");
+        var _vouchers = "";
+        $("#div_img .uploadImg").each(function () {
+            var src = $(this).attr('src');
+            _vouchers += src + ",";
+        })
+        var returnMoney = $("#returnMoney").val();
+        if(flag == 1 || flag == 3){
+            var reg = /^(([1-9][0-9]*)|([0-9]+\.[0-9]{1,2}))$/;
+            if(!reg.test(returnMoney)){
+                alert("请正确输入数字(不超过两位小数)！");
+                $("#returnMoney").focus();
+                return;
+            }
+        }
+
+        $.post("${base}/platform/self/order/afterSale/sellerHandle", {
+            afterSaleId: $("#afterSaleId").val(),
+            flag: flag + "",
+            applyType: "${obj.afterMain.applyType}",
+            voucher: _vouchers,
+            note: $("#note").val(),
+            returnMoney:returnMoney
+        }, function (res) {
+            if (res.code == 0) {
+                Toast.success("${msg['globals.result.success']}");
+                $("#opeModal").modal("hide");
+                window.location.reload();
+            } else {
+                Toast.error(res.msg);
+
+            }
+        });
+    }
+
+
+    $('#opeModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);// 获取触发模态框的按钮
+        var flag = button.data('whatever');// 获取按钮的扩展属性whatever的值,作为后期处理判断的依据
+        if(flag == 2 || flag == 4){
+            $("#js-backMoney").hide();
+        }else{
+            var backMoney = $("#js-returnMoney").val();
+            $("#returnMoney").val(backMoney);
+            $("#js-backMoney").show();
+        }
+        $("#confirm").data("id", flag);//为模态框中的确认按钮的data-id添加值
+        $(this).find("#opeModalLabel span").text(button.text());// 设置模态框的标题
+    })
+
+    //查看图片
+    function viewImg(el) {
+        var imgSrc = $(el).attr("src");
+        $("#imgModal .js-viewImg").attr("src", imgSrc);
+        $("#imgModal").modal("show");
+    }
+
+    var msg = {
+        a:1,
+        b:2,
+        c:3
+    };
+    var a = msg[a];
+</script>
+<!--#}#-->

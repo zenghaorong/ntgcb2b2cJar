@@ -1,0 +1,259 @@
+<!--#
+layout("/layouts/store.html"){
+#-->
+
+
+<header class="header navbar bg-white shadow">
+	<div class="pull-left">
+		<div class="btn-group tool-button">
+			<a class="btn btn-primary navbar-btn" href="${base}/store/home" id="goBack"
+			   data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+		</div>
+	</div>
+</header>
+
+<div class="content-wrap">
+	<div class="wrapper" style="min-height: 500px; height: 100%;">
+		<div class="box-tab">
+			<ul class="nav nav-tabs">
+				<li class="active"><a href="#type" data-toggle="tab">${msg['store.main.column.typeId']}</a></li>
+				<li><a href="#level" data-toggle="tab">${msg['store.main.column.levelId']}</a></li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane fade active in" id="type">
+					<form  role="form" class="form-horizontal parsley-form" data-parsley-validate onsubmit="return false;">
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="typeId" class="col-sm-2 control-label">${msg['store.type.apply']}</label>
+							<div class="col-sm-8">
+								<select id="typeId" name="typeId" class="form-control" data-parsley-required="true">
+									<!--#for(o in typeList){#-->
+									<option value="${o.id!}" >${o.name!}</option>
+									<!--#}#-->
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3"></div>
+					<div class="col-lg-6">
+						<div class="form-group text-center">
+							<label></label>
+							<div>
+								<button class="btn btn-primary btn-block btn-lg btn-parsley" onclick="editType()" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+							</div>
+						</div>
+					</div>
+					</form>
+					<div class=panel-body style="padding-top: 200px;">
+						<div class="table-responsive no-border">
+							<table id="typedata" class="table table-bordered table-striped mg-t datatable">
+								<thead>
+								<tr>
+									<th>${msg['store.apply.class.column.applyNote']}</th>
+									<th>${msg['store.apply.class.column.applyAt']}</th>
+									<th>${msg['store.apply.class.column.status']}</th>
+									<th>${msg['store.apply.class.column.checkNote']}</th>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane fade" id="level">
+					<form  role="form" class="form-horizontal parsley-form" data-parsley-validate onsubmit="return false;">
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="levelId" class="col-sm-2 control-label">${msg['store.level.apply']}</label>
+
+							<div class="col-sm-8">
+								<select id="levelId" name="levelId" class="form-control" data-parsley-required="true">
+									<!--#for(o in levelList){#-->
+									<option value="${o.id!}" >${o.name!} (${msg['store.level.column.goodsLimit']}：${o.goodsLimit!} ${msg['store.level.column.price']}：${o.price!})</option>
+									<!--#}#-->
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3"></div>
+					<div class="col-lg-6">
+						<div class="form-group text-center">
+							<label></label>
+							<div>
+								<button class="btn btn-primary btn-block btn-lg btn-parsley" onclick="editLevel()" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+							</div>
+						</div>
+					</div>
+					<div class=panel-body style="padding-top: 200px;">
+						<div class="table-responsive no-border">
+							<table id="leveldata" class="table table-bordered table-striped mg-t datatable">
+								<thead>
+								<tr>
+									<th>${msg['store.apply.level.column.applyNote']}</th>
+									<th>${msg['store.apply.level.column.applyAt']}</th>
+									<th>${msg['store.apply.level.column.status']}</th>
+									<th>${msg['store.apply.level.column.checkNote']}</th>
+							</table>
+						</div>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('#typedata').DataTable({
+			"dom": '<"toolbar">frtip',
+			"searching": false,
+			"processing": false,
+			"serverSide": true,
+			"select": true,
+			"ordering": true,
+			"language": {
+				"url": "${base}/assets/platform/vendor/datatables/locale/${lang!}.json"
+			},
+			"preDrawCallback": function () {
+				sublime.showLoadingbar($(".main-content"));
+			},
+			"drawCallback": function () {
+				sublime.closeLoadingbar($(".main-content"));
+			},
+			"ajax": {
+				"url": "${base}/store/setting/shop/typeData",
+				"type": "post",
+				"data": function (d) {
+				}
+			},
+			"order": [[0, "desc"]],
+			"columns": [
+                {"data": "applyNote", "bSortable": true},
+                {"data": "applyAt", "bSortable": true},
+                {"data": "status", "bSortable": true},
+                {"data": "checkNote", "bSortable": true},
+			],
+			"columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return moment(parseInt(data * 1000)).format("YYYY-MM-DD HH:mm:ss");
+                        }
+                        return '';
+                    },
+                    "targets": 1
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data == 0)
+                            return "待审核";
+                        else if (data == 1)
+                            return "审核通过";
+                        else if (data == 2)
+                            return "审核不通过";
+                        else
+                            return '';
+                    },
+                    "targets": 2
+                }
+			]
+		});
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+
+    var leveldatatable;
+    function initlevelDatatable() {
+        leveldatatable = $('#leveldata').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang!}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/store/setting/shop/levelData",
+                "type": "post",
+                "data": function (d) {
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "applyNote", "bSortable": true},
+                {"data": "applyAt", "bSortable": true},
+                {"data": "status", "bSortable": true},
+                {"data": "checkNote", "bSortable": true},
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return moment(parseInt(data * 1000)).format("YYYY-MM-DD HH:mm:ss");
+                        }
+                        return '';
+                    },
+                    "targets": 1
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data == 0)
+                            return "待审核";
+                        else if (data == 1)
+                            return "审核通过";
+                        else if (data == 2)
+                            return "审核不通过";
+                        else
+                            return '';
+                    },
+                    "targets": 2
+                }
+            ]
+        });
+        leveldatatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            leveldatatable.ajax.reload();
+        });
+    }
+
+    function editType() {
+        $.post("${base}/store/setting/shop/editType", {typeId: $('#typeId').val()}, function (data) {
+            if (data.code == 0) {
+                Toast.success(data.msg);
+                datatable.ajax.reload();
+            } else {
+                Toast.error(data.msg);
+            }
+        }, "json");
+    }
+
+    function editLevel() {
+        $.post("${base}/store/setting/shop/editLevel", {levelId: $('#levelId').val()}, function (data) {
+            if (data.code == 0) {
+                Toast.success(data.msg);
+                leveldatatable.ajax.reload();
+            } else {
+                Toast.error(data.msg);
+            }
+        }, "json");
+    }
+
+    $(function () {
+        initDatatable();
+        initlevelDatatable();
+    });
+</script>
+
+<!--#}#-->

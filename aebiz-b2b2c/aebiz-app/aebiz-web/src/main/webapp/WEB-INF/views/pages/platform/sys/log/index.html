@@ -1,0 +1,188 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <script language="JavaScript" type="text/javascript" src="${base}/assets/platform/vendor/My97DatePicker/WdatePicker.js"></script>
+    <div class="btn-group tool-button">
+        <div class="input-group date form_datetime " style="width:150px;float:left;padding-left: 5px;padding-right: 5px"
+             data-date-format="dd MM yyyy" data-link-field="beginDate">
+            <input class="form-control" type='text'
+                   id="beginDate" name="beginDate" value='${today!}'
+                   onFocus="WdatePicker({minDate:'${month!}-01',maxDate:'#F{$dp.$D(\'endDate\')||\'%y-%M-%d\'}'})" />
+        </div>
+        <div class="input-group date form_datetime " style="width:150px;float:left;padding-left: 5px;padding-right: 5px"
+             data-date-format="dd MM yyyy" data-link-field="endDate">
+            <input class="form-control" type='text'
+                   id='endDate' name='endDate' value='${today!}'
+                   onFocus="var date=limitMonthDate(2);WdatePicker({minDate:'#F{$dp.$D(\'beginDate\')||\'${month!}-01\'}',maxDate:date})" />
+        </div>
+        <div class="input-group date " style="width:150px;float:left;padding-left: 5px;padding-right: 5px" >
+            <input type="text" id="username" name="username" size="16"  class="form-control" value="" placeholder="${msg['sys.log.pleaseoperation']}"
+                   data-parsley-required="true">
+        </div>
+
+    </div>
+
+
+
+    <div id="btns" class="btn-group tool-button">
+        <button class="btn btn-default navbar-btn" onclick="search()">${msg['sys.log.select']}</button>
+    </div>
+
+    <div class="pull-right">
+        <div class="btn-group tool-button">
+            <button class="btn btn-danger navbar-btn" onclick="delCheck()"><i class="ti-close"></i>
+                ${msg['sys.log.clearlog']}
+            </button>
+        </div>
+    </div>
+</header>
+<div class=panel-body style="padding-top: 50px;">
+    <div class="table-responsive no-border">
+        <input id="unitid" type="hidden">
+        <table class="table table-bordered table-striped mg-t datatable">
+            <thead>
+            <tr>
+                <th> ${msg['sys.log.type']}</th>
+                <th> ${msg['sys.log.description']}</th>
+                <th> ${msg['sys.log.module']}</th>
+                <th> ${msg['sys.log.username']}</th>
+                <th> ${msg['sys.log.opAt']}</th>
+                <th> ${msg['sys.log.ip']}</th>
+        </table>
+    </div>
+</div>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['sys.log.del']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['sys.log.del.note']} <br/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['sys.log.cancel']}</button>
+                <button id="ok" type="button" class="btn btn-primary" data-loading-text="${msg['sys.log.deleting']}">
+                    ${msg['sys.log.determine']}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang!}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/sys/log/data/",
+                "type": "post",
+                "data": function (d) {
+                    d.beginDate = $("#beginDate").val();
+                    d.endDate = $("#endDate").val();
+                    d.username = $("#username").val();
+                }
+            },
+            "order": [[4, "desc"]],
+            "columns": [
+                {"data": "type", "bSortable": true},
+                {"data": "description", "bSortable": false},
+                {"data": "module", "bSortable": false},
+                {"data": "username", "bSortable": true},
+                {"data": "opat", "bSortable": true},
+                {"data": "ip", "bSortable": true}
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return moment(parseInt(data * 1000)).format("YYYY-MM-DD HH:mm:ss");
+                        }
+                        return '';
+                    },
+                    "targets": 4
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+    function search() {
+        datatable.ajax.reload();
+    }
+    function delCheck() {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#ok").unbind("click");
+        dialog.find("#ok").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/sys/log/delete", {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null, false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+    //限制开始和结束时间为同一个月
+    function limitMonthDate(e) {
+        var DateString;
+        if (e == 2) {
+            var beginDate = $dp.$("beginDate").value;
+            if (beginDate != "" && beginDate != null) {
+                var limitDate = new Date(beginDate);
+                limitDate.setDate(new Date(limitDate.getFullYear(), limitDate
+                        .getMonth() + 1, 0).getDate()); //获取此月份的天数
+                DateString = limitDate.getFullYear() + '-'
+                    + (limitDate.getMonth() + 1) + '-'
+                    + limitDate.getDate();
+                return DateString;
+            }
+        }
+        if (e == 1) {
+            var endDate = $dp.$("endDate").value;
+            if (endDate != "" && endDate != null) {
+                var limitDate = new Date(endDate);
+                limitDate.setDate("1"); //设置闲置时间为月初
+                DateString = limitDate.getFullYear() + '-'
+                    + (limitDate.getMonth() + 1) + '-'
+                    + limitDate.getDate();
+                return DateString;
+            }
+        }
+
+    }
+    $(function () {
+        initDatatable();
+    });
+</script>
+
+<!--#}#-->

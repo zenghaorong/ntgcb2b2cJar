@@ -1,0 +1,184 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.config.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.all.js"></script>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/shop/payment" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/shop/payment/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="code" class="col-sm-2 control-label">${msg['shop.payment.column.code']}</label>
+                            <div class="col-sm-8">
+                                <select  class="form-control" id="code" name="code">
+                                    <option value="" data-parsley-required="true">-请选择-</option>
+                                    <option value="alipay" <!--#if(obj.code=="alipay"){#-->selected<!--#}#-->>支付宝</option>
+                                    <option value="wxpay" <!--#if(obj.code=="wxpay"){#-->selected<!--#}#-->>微信</option>
+                                    <option value="yzf" <!--#if(obj.code=="bestpay"){#-->selected<!--#}#-->>翼支付</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">${msg['shop.payment.column.name']}</label>
+                            <div class="col-sm-8">
+                                <input id="name" class="form-control" name="name" data-parsley-required="true" value="${obj.name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="online" class="col-sm-2 control-label">${msg['shop.payment.column.online']}</label>
+                            <div class="col-sm-8">
+                                <select id="online" name="online" class="form-control">
+                                    <option value ="0">是</option>
+                                    <option value="1">否</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="note" class="col-sm-2 control-label">${msg['shop.payment.column.note']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="note" class="form-control" name="note" data-parsley-required="true"
+                                       placeholder="${msg['shop.payment.column.note']}" value="${obj.note}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="url" class="col-sm-2 control-label">${msg['shop.payment.column.url']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="url" class="form-control" name="url" data-parsley-required="true"
+                                       placeholder="${msg['shop.payment.column.url']}" value="${obj.url}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="info" class="col-sm-2 control-label">${msg['shop.payment.column.info']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="info" class="form-control" name="info" data-parsley-required="true"
+                                       placeholder="${msg['shop.payment.column.info']}" value="${obj.info}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="imgurl" class="col-sm-2 control-label">${msg['shop.payment.column.imgurl']}</label>
+                            <div class="col-sm-8">
+                                <div id="queue"></div>
+                                <div>
+                                    <input id="file_upload" name="file_upload" type="file" multiple="false">
+                                </div>
+                                <div id="img" style="padding: 5px;">
+                                    <!--#if(!isEmpty(obj.imgurl)){#-->
+                                    <img src='${obj.imgurl!}' style='width:150px;'>
+                                    <i class="fa fa-close" onclick="$('#imgurl').val('');$('#img').html('');"></i>
+                                    <!--#}#-->
+                                </div>
+                                <input type="hidden" id="imgurl" name="imgurl" value="${obj.imgurl!}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="disabled" class="col-sm-2 control-label">${msg['shop.payment.column.disabled']}</label>
+                            <div class="col-sm-8 switcha">
+                                <input type="checkbox" id="disabled"  name="disabled" class="js-switch-blue"  <!--#if(obj.disabled){#-->checked<!--#}#--> >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="location" class="col-sm-2 control-label">${msg['shop.payment.column.location']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="location" class="form-control" name="location" data-parsley-required="true"
+                                       placeholder="${msg['shop.payment.column.location']}" value="${obj.location}" >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<script language="JavaScript">
+    function clearFile() {
+        $("#img").html("");
+        $("#queue").html("");
+        $("#imgurl").val("");
+    }
+    $(document).ready(function () {
+        //根据下拉框的code值去填写支付的名称
+        $("#code").change(function () {
+            var code=$("#code").val();
+            if(code =="alipay"){
+                $("#name").val("支付宝")
+            }else if(code=="wxpay"){
+                $("#name").val("微信")
+            }else if(code=="bestpay"){
+                $("#name").val("翼支付")
+            }
+        })
+        $('#file_upload').uploadifive({
+            'auto': true,
+            'multi': false,
+            'width': '100%',
+            'height': '35',
+            'buttonText': '${msg['cms.article.column.selectpicture']}',
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024,
+            'queueSizeLimit': 1,
+            'formData': {},
+        'queueID': 'queue',
+            'uploadScript': '${base}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+            data = JSON.parse(data);
+            if (data.code == 0) {
+                Toast.success(data.msg);
+                $("#img").html("<img src='" + data.data + "' style='width:150px;height:95px;'>");
+                $("#imgurl").val(data.data);
+            } else {
+                clearFile();
+                Toast.error(data.msg);
+            }
+        },
+        'onDrop': function (file, fileDropCount) {
+            clearFile();
+        },
+        'onClearQueue': function (queue) {
+            clearFile();
+        },
+        'onCancel': function () {
+            clearFile();
+        }
+    });
+        myForm.init();
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<!--#}#-->

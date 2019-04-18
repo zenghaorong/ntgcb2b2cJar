@@ -1,0 +1,148 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.config.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.all.js"></script>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/dec/templates/manager" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/dec/templates/manager/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="templateZhName" class="col-sm-2 control-label">${msg['dec.templates.manager.column.templateZhName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="templateZhName" class="form-control" name="templateZhName" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.manager.column.templateZhName']}" value="${obj.templateZhName}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="templateEnName" class="col-sm-2 control-label">${msg['dec.templates.manager.column.templateEnName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="templateEnName" class="form-control" name="templateEnName" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.manager.column.templateEnName']}" value="${obj.templateEnName}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="templateImage" class="col-sm-2 control-label">${msg['dec.templates.manager.column.templateImage']}</label>
+                            <div class="col-sm-8">
+                                <div id="queue"></div>
+                                <div>
+                                    <input id="file_upload" name="file_upload" type="file" multiple="false">
+                                </div>
+                                <div id="img" style="padding: 5px;">
+                                    <!--#if(!isEmpty(obj.templateImage)){#-->
+                                    <img src='${obj.templateImage!}' style='width:150px;'>
+                                    <i class="fa fa-close" onclick="$('#templateImage').val('');$('#img').html('');"></i>
+                                    <!--#}#-->
+                                </div>
+                                <input type="hidden" id="templateImage" name="templateImage" value="${obj.templateImage!}" >
+                            </div>
+                        </div>
+                        <input hidden="hidden" value="${obj.versionType}">
+                        <div class="form-group">
+                            <label for="useType" class="col-sm-2 control-label">${msg['dec.templates.manager.column.useType']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="useType" class="form-control" name="useType" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.manager.column.useType']}" value="${obj.useType}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="col-sm-2 control-label">${msg['dec.templates.manager.column.description']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="description" class="form-control" name="description" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.manager.column.description']}" value="${obj.description}" >
+                            </div>
+                        </div>
+                        <div class="form-group" hidden="hidden">
+                            <label for="disabled" class="col-sm-2 control-label">${msg['dec.templates.manager.column.disabled']}</label>
+                            <div class="col-sm-8 switcha">
+                                <input type="checkbox" id="disabled"  name="disabled" class="js-switch-blue"  <!--#if(obj.disabled){#-->checked<!--#}#--> >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<script language="JavaScript">
+    function clearFile() {
+        $("#img").html("");
+        $("#queue").html("");
+        $("#imgurl").val("");
+    }
+    $(document).ready(function () {
+        $('#file_upload').uploadifive({
+            'auto': true,
+            'multi': false,
+            'width': '100%',
+            'height': '35',
+            'buttonText': '${msg['cms.article.column.selectpicture']}',
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024,
+            'queueSizeLimit': 1,
+            'formData': {},
+        'queueID': 'queue',
+            'uploadScript': '${base}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+            data = JSON.parse(data);
+            if (data.code == 0) {
+                Toast.success(data.msg);
+                $("#img").html("<img src='" + data.data + "' style='width:150px;height:95px;'>");
+                $("#templateImage").val(data.data);
+            } else {
+                clearFile();
+                Toast.error(data.msg);
+            }
+        },
+        'onDrop': function (file, fileDropCount) {
+            clearFile();
+        },
+        'onClearQueue': function (queue) {
+            clearFile();
+        },
+        'onCancel': function () {
+            clearFile();
+        }
+    });
+        myForm.init();
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<!--#}#-->

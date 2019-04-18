@@ -1,0 +1,91 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">商品促销</a>
+                        <small>${obj.name}</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                            <tr>
+                                <td>${msg['sales.rule.goods.column.name']}</td><td>${obj.name}</td>
+                            </tr>
+                            <tr>
+                                <td>${msg['sales.rule.goods.column.note']}</td><td>${obj.note}</td>
+                            </tr>
+                            <tr>
+                                <td>生效时间</td><td>${@date.getDate(obj.sartAt)} - ${@date.getDate(obj.endAt)}</td>
+                            </tr>
+                            <tr>
+                                <td>${msg['sales.rule.goods.column.limit_priority']}</td><td>${obj.limit_priority}</td>
+                            </tr>
+                            <tr>
+                                <td>${msg['sales.rule.goods.column.disabled']}</td>
+                                <td>
+                                    <!--#if (obj.disabled) {#-->
+                                    <i class="fa fa-circle text-danger ml5"></i>
+                                    <!--#}else {#-->
+                                    <i class="fa fa-circle text-success ml5"></i>
+                                    <!--#}#-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>${msg['sales.rule.goods.column.cnd_template']}</td>
+                                <td>
+                                    <!--#if (obj.cnd_template == 'tpl_sale_goods_cnd_typeandbrand') {#-->
+                                    商品类型+商品品牌
+                                    <!--#} else if (obj.cnd_template == 'tpl_sale_goods_cnd_goods_type') {#-->
+                                    商品类型
+                                    <!--#} else if (obj.cnd_template == 'tpl_sale_goods_cnd_allgoods') {#-->
+                                    所有商品
+                                    <!--#} else if (obj.cnd_template == 'tpl_sale_goods_cnd_userdefined') {#-->
+                                    自定义商品促销模板
+                                    <!--#}#-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>${msg['sales.rule.goods.column.sale_template']}</td>
+                                <td>
+                                    <!--#if (obj.sale_template == 'tpl_sale_sol_nscore') {#-->
+                                    符合应用条件的商品X倍积分
+                                    <!--#} else if (obj.sale_template == 'tpl_sale_sol_addscore') {#-->
+                                    符合应用条件的商品赠送积分
+                                    <!--#} else if (obj.sale_template == 'tpl_sale_sol_percent') {#-->
+                                    符合应用条件的商品以固定折扣出售
+                                    <!--#} else if (obj.sale_template == 'tpl_sale_sol_fixed') {#-->
+                                    符合应用条件的商品固定价格购买
+                                    <!--#} else if (obj.sale_template == 'tpl_sale_sol_subpercent') {#-->
+                                    符合应用条件的商品减去固定折扣出售
+                                    <!--#} else if (obj.sale_template == 'tpl_sale_sol_subfixed') {#-->
+                                    符合应用条件的商品减固定价格购买
+                                    <!--#}#-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>${msg['sales.rule.goods.column.checkStatus']}</td>
+                                <td>
+                                    <!--#if (obj.checkStatus == 0) {#-->
+                                    未提交
+                                    <!--#}else if (obj.checkStatus == 1) {#-->
+                                    待审核
+                                    <!--#} else if (obj.checkStatus == 2) {#-->
+                                    审核通过
+                                    <!--#} else if (obj.checkStatus == 3) {#-->
+                                    未通过
+                                    <!--#}#-->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

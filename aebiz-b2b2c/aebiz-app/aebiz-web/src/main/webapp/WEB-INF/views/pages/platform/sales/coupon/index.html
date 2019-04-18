@@ -1,0 +1,195 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button" style="padding-top: 8px;">
+        <form class="form-inline js-search-form" >
+            <div class="form-group">
+                <label class="control-label"></label>
+                <input type="text" class="form-control" name="name" placeholder="${msg['sales.coupon.column.name']}" />
+            </div>
+            <div class="form-group">
+                <label class="control-label"></label>
+                <input type="text" class="form-control" name="codeprefix" placeholder="${msg['sales.coupon.column.codeprefix']}" />
+            </div>
+            <div class="form-group">
+                <label class="control-label"></label>
+                <select class="form-control" name="type">
+                    <option value="">请选择类型</option>
+                    <option value="A">A类</option>
+                    <option value="B">B类</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label"></label>
+                <select class="form-control" name="p_enabled">
+                    <option value="">是否启用</option>
+                    <option value="true">禁用</option>
+                    <option value="false">启用</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label"></label>
+                <select class="form-control" name="p_checkStatus">
+                    <option value="">请选择审核状态</option>
+                    <!--#for(status in salesCheckStatusEnumValues!){#-->
+                    <option value="${status.key}">${status.value}</option>
+                    <!--#}#-->
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary js-search-ok" >${msg['globals.button.search']}</button>
+                <button type="button" class="btn btn-default js-search-reset" >${msg['globals.button.reset']}</button>
+            </div>
+        </form>
+    </div>
+</header>
+<section class="content-wrap bg-white">
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border"  style="min-height: 500px;">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                    <tr>
+                        <th>${msg['sales.coupon.column.name']}</th>
+                        <th>${msg['sales.coupon.column.codeprefix']}</th>
+                        <th>${msg['sales.coupon.column.type']}</th>
+                        <th>${msg['sales.coupon.column.limit_num']}</th>
+                        <th>${msg['sales.coupon.column.send_num']}</th>
+                        <th>${msg['sales.coupon.column.send_type']}</th>
+                        <th>${msg['sales.coupon.column.score']}</th>
+                        <th>${msg['sales.coupon.column.enabled']}</th>
+                        <th>${msg['sales.coupon.column.checkStatus']}</th>
+                        <th>${msg['globals.table.column.operation']}</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/sales/coupon/data",
+                "type": "post",
+                "data": function (d) {
+                    var $searchForm = $(".js-search-form");
+                    d.name = $("[name='name']", $searchForm).val()||"";
+                    d.codeprefix = $("[name='codeprefix']", $searchForm).val()||"";
+                    d.type = $("[name='type']", $searchForm).val()||"";
+                    d.p_enabled = $("[name='p_enabled']", $searchForm).val()||"";
+                    d.p_checkStatus = $("[name='p_checkStatus']", $searchForm).val()||"";
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "name", "bSortable": true},
+                {"data": "codeprefix", "bSortable": true},
+                {"data": "type", "bSortable": true},
+                {"data": "limit_num", "bSortable": true},
+                {"data": "send_num", "bSortable": true},
+                {"data": "send_type", "bSortable": true},
+                {"data": "score", "bSortable": false},
+                {"data": "disabled", "bSortable": true},
+                {"data": "checkStatus", "bSortable": true},
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        if (data == 'receive') {
+                            return '领取';
+                        } else if (data == 'score') {
+                            return '积分兑换';
+                        }
+                        return '';
+                    },
+                    "targets": 5
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (row.send_type == 'score') {
+                            return data;
+                        }
+                        return '';
+                    },
+                    "targets": 6
+                },
+                {//0 未提交  1 待审核  2 审核通过  3 未通过
+                    "render": function (data, type, row) {
+                        var str = "";
+                        switch (data) {
+                            case 0: str = "未提交";break;
+                            case 1: str = "待审核";break;
+                            case 2: str = "审核通过";break;
+                            case 3: str = "未通过";break;
+                        }
+                        return str;
+                    },
+                    "targets": 8
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return '<i id="disabled_' + row.id + '" class="fa fa-circle text-danger ml5"></i>';
+                        } else {
+                            return '<i id="disabled_' + row.id + '" class="fa fa-circle text-success ml5"></i>';
+                        }
+                    },
+                    "targets": 7
+                },
+                {
+                    "render": function (data, type, row) {
+                        var str = '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">';
+                        str += ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">';
+                        str += '<li><a href="${base}/platform/sales/coupon/detail/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">${msg["globals.button.detail"]}</a></li>';
+                        if (row.checkStatus == 1) {
+                            str += '<li><a href="${base}/platform/sales/coupon/check/' + row.id + '" data-pjax>审核</a></li>';
+                        }
+                        return str;
+                    },
+                    "targets": 9
+                }
+            ]
+        });
+        $(".js-search-ok").click(function () {
+            $('.datatable').DataTable().ajax.reload();
+        });
+
+        $(".js-search-reset").click(function () {
+            $(".js-search-form").resetForm();
+            $('.datatable').DataTable().ajax.reload();
+        });
+    }
+
+    $(function () {
+        initDatatable();
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+</script>
+<!--#}#-->

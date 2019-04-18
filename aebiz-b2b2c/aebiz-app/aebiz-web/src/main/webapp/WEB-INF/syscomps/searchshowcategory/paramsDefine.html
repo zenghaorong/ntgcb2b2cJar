@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<form class="form-horizontal">
+	<div class="form-group"> 
+		<label  class="col-sm-3 control-label">是否异步加载</label>
+		<div class="col-sm-3">
+			<input type="radio" id="yesAsync"  name="needAsyncInit" value="true">是
+			<input type="radio" id="noAsync"  name="needAsyncInit" value="false">否
+		</div>
+	</div>
+	<div class="form-group"> 
+		<label  class="col-sm-3 control-label">商品列表页地址</label>
+		<div class="col-sm-3">
+			<input type="text" id="productListUrl" name="productListUrl" class="form-control" value=""/>
+		</div>
+	</div>
+	<div class="form-group"> 
+		<label  class="col-sm-3 control-label">共享数据</label>
+		<div class="col-sm-3">
+			<input type="text" id="shareDataName" name="shareDataName" class="form-control" value=""/>
+		</div>
+	</div>
+</form>
+
+<script type="text/javascript">
+//获取属性配置JSON
+var pageJson = ${webPageModelJsonStr};
+
+//构建属性配置
+var componentsParam = {
+		initParamData:function(paramJson){ //初始化渲染属性配置
+			if(typeof(paramJson) == "string"){
+				paramJson = JSON.parse(paramJson);
+			}
+		    if(paramJson.needAsyncInit == "true"){
+		    	$("#yesAsync").attr("checked","checked");
+		    }else{
+		    	$("#noAsync").attr("checked","checked");
+		    }
+		    if(paramJson.productListUrl != null && paramJson.productListUrl != ""){
+		    	$("#productListUrl").val(paramJson.productListUrl);
+		    }
+		    if(paramJson.shareDataName != null && paramJson.shareDataName != ""){
+		    	$("#shareDataName").val(paramJson.shareDataName);
+		    }
+		},
+		saveParamData:function(){ //返回属性配置JSON
+			var needAsyncInit = $("input[name='needAsyncInit']:checked").val();
+		    if(needAsyncInit == null){
+		    	alert("请选择是否异步加载！");
+		    	return false;
+		    }
+		    var productListUrl = $("#productListUrl").val();
+		    if(productListUrl == null || productListUrl == ""){
+		    	alert("请输入商品列表页地址！");
+		    	return false;
+		    }
+		    var shareDataName = $("#shareDataName").val();
+		    if(shareDataName == null || shareDataName == ""){
+		    	alert("请输入共享数据名称！");
+		    	return false;
+		    }
+	        var paramJson = {
+	        		needAsyncInit:needAsyncInit,
+	        		productListUrl:productListUrl,
+	        		shareDataName:shareDataName
+	        };
+	        return paramJson;
+		}
+}
+
+componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+</script>
+</body>
+</html>

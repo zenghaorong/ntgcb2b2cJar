@@ -1,0 +1,34 @@
+<!--# for(o in obj){
+#-->
+<tr data-tt-id="${o.id}" data-tt-parent-id="${o.parentId}"
+	data-tt-branch="${o.hasChildren}">
+	<td><span class="pd-l-sm"></span>${o.name!}</td>
+	<td>${o.code!}</td>
+	<td>
+		<!--# if (!o.disabled) {#-->
+                              <i id="disabled_${o.id!}" class="fa fa-circle text-success ml5"></i>
+                        <!--# } else {#-->
+                              <i id="disabled_${o.id!}" class="fa fa-circle text-danger ml5"></i>
+                       <!--#  }#-->
+	</td>
+	<td>
+		<div class="btn-group">
+			<button type="button" class="btn btn-default btn-xs dropdown-toggle"
+				data-toggle="dropdown">
+				<i class="ti-settings"></i> <span class="ti-angle-down"></span>
+			</button>
+			<ul class="dropdown-menu" role="menu">
+				<li><a href="${base}/platform/shop/config/area/edit/${o.id}" data-pjax>${msg['shop.config.area.modification']}</a></li>
+				<li><a href="javascript:;" onclick="del('${o.id}')">${msg['shop.config.area.del']}</a></li>
+				<li class="divider"></li>
+				<li><a href="${base}/platform/shop/config/area/add/${o.id}" data-pjax>${msg['shop.config.area.addchild']}</a></li>
+				<li class="divider"></li>
+				<li><a href="javascript:;" onclick="enable('${o.id}')">${msg['shop.config.area.enable']}</a></li>
+				<li><a href="javascript:;" onclick="disable('${o.id}')">${msg['shop.config.area.disabled']}</a></li>
+
+			</ul>
+		</div>
+	</td>
+</tr>
+<!--#
+}#-->

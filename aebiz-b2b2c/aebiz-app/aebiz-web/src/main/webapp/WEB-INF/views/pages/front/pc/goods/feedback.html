@@ -1,0 +1,72 @@
+<table>
+    <!--# if(isNotEmpty(orderGoodsFeedbacks)){ #-->
+        <!--# for(var feedback in orderGoodsFeedbacks){  var length =  strutil.length(feedback.accountInfo.loginname); #-->
+            <tr>
+                <td class="td1">
+                    <img src="${feedback.accountInfo.imageUrl}"/>
+                    <div class="user-namer">${strutil.subStringTo(feedback.accountInfo.loginname,0,1)} **** ${strutil.subStringTo(feedback.accountInfo.loginname,length-1,length)}</div>
+                </td>
+                <td class="td2">
+                <p>${feedback.feedNote}</p>
+                <!--# if(isNotEmpty(feedback.feedImage)){ var imgList = strutil.split(feedback.feedImage); #-->
+                <div class="item-imgs f-cb">
+                    <!--# for(var img in imgList){ #-->
+                    <div class="img"><img src="${img}"/></div>
+                    <!--# } #-->
+                </div>
+                <!--# } #-->
+                <div class="big-img"></div>
+                <div class="item-fd">
+                    规格： <!--# var specGroup = @org.nutz.json.Json.fromJson(feedback.spec);
+                                for (g in specGroup) {
+                                    print(g.spec_value_name);
+                                }
+                          #-->
+                    <span class="date"><!--#if(!isEmpty(feedback.feedAt)){#-->${@date.getDate(feedback.feedAt)} <!--#}#--></span></div>
+                </td>
+            </tr>
+        <!--# } #-->
+    <!--# } #-->
+    <!--<tr>
+        <td class="td1">
+            <img src="/assets/front/pc/images/ps-photo.png"/>
+            <div class="user-namer">z****u</div>
+        </td>
+        <td class="td2">
+            <p>包装相当高档，我看很大一部分成本花在包装盒上了！送礼可以有，但是自己喝的话就有点浪费，希望能推出简单包装的便宜的同类产品。</p>
+            <div class="big-img"></div>
+            <div class="item-fd">规格：安溪铁观音单盒160克 <span class="date">2017-05-29 16:34</span></div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td1">
+            <img src="/assets/front/pc/images/ps-photo.png"/>
+            <div class="user-namer">z****u</div>
+        </td>
+        <td class="td2">
+            <p>不错，味道纯正！</p>
+            <div class="item-imgs f-cb">
+                <div class="img"><img src="/assets/front/pc/images/cnxh1.png"/></div>
+                <div class="img"><img src="/assets/front/pc/images/detail3.png"/></div>
+                <div class="img"><img src="/assets/front/pc/images/detail1.png"/></div>
+            </div>
+            <div class="big-img"></div>
+            <div class="item-fd">规格：安溪铁观音单盒160克 <span class="date">2017-05-29 16:34</span></div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td1">
+            <img src="/assets/front/pc/images/ps-photo.png"/>
+            <div class="user-namer">z****u</div>
+        </td>
+        <td class="td2">
+            <p>包装精美，还有详细的冲泡方法，不错</p>
+            <div class="item-imgs f-cb">
+                <div class="img"><img src="/assets/front/pc/images/index-cj1.png"/></div>
+                <div class="img"><img src="/assets/front/pc/images/index-cj2.png"/></div>
+            </div>
+            <div class="big-img"></div>
+            <div class="item-fd">规格：安溪铁观音单盒160克 <span class="date">2017-05-29 16:34</span></div>
+        </td>
+    </tr>-->
+</table>

@@ -1,0 +1,34 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">${obj.storeMain.storeName} 类型审核详情</a>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>${msg['store.apply.class.column.applyNote']}</td><td>${obj.applyNote}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['store.apply.class.column.applyAt']}</td><td>${@date.getDate(obj.applyAt)}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['store.apply.class.column.status']}</td><td>${@storeStatus.getStatus(obj.status)}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['store.apply.class.column.checkNote']}</td><td>${obj.checkNote}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

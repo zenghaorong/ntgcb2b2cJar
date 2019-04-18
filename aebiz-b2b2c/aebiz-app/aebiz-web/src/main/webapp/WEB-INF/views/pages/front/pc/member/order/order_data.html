@@ -1,0 +1,133 @@
+
+<div class="m-order-list">
+    <table class="f-push-10 f-push-10-t">
+        <tr class="list_hd">
+            <td width="500" class="f-tal f-pdg-20-l">
+                <select name="" id="" class="f-fl">
+                    <option value="">近一个月订单</option>
+                    <option value="">近三个月订单</option>
+                    <option value="">近半年订单</option>
+                </select>
+                订单详情
+            </td>
+            <td width="110">收货人</td>
+            <td width="110">金额</td>
+            <td width="110">状态</td>
+            <td width="130">操作</td>
+        </tr>
+    </table>
+    <!--# var goodsList;var deliveryDetailList; for(var o in obj.data){ goodsList=o.goodsList; deliveryDetailList=o.deliveryDetailList;  #-->
+    <table>
+        <tr>
+            <th colspan="5" class="list_hd">
+                <span class="time"><!--#if(!isEmpty(o.orderAt)){#-->${@date.getDate(o.orderAt)} <!--#}#--></span>
+                <span class="orderId f-push-30-l">订单编号：${o.id!}</span>
+                <span class="shop f-push-30-l">${o.storeMain.storeName!}</span>
+                <span class="tel f-push-30-l">${o.storeMain.storeTel!}</span>
+                <!-- <span class="iconfont icon-delete"></span> -->
+            </th>
+        </tr>
+        <tr>
+            <td width="450">
+                <!--# for(var goods in goodsList){ #-->
+                <div class="good-info f-cb">
+                    <div class="pic"><a href="/front/detail?sku=${goods.sku!}"><img src="${goods.imgUrl!}"/></a></div>
+                    <a href="/front/detail?sku=${goods.sku!}" class="info f-push-40-r">${goods.goodsName} <br/> ${goods.name}</a>
+                    <div class="num">x${goods.buyNum!}</div>
+                    <!--#if((o.orderStatus == 1 && o.deliveryStatus == 3 && o.payType == 1) || (o.orderStatus == 1 && o.getStatus == 1 && o.payType == 1)){#-->
+                        <a style="float: right;margin-right: 20px;margin-top: 14px;padding:3px;color: green;border: 1px;border-color:#c1dbff;border-style:solid;border-radius:3px" href="${base!}/member/orderAfter/applyOrderAfter?orderId=${o.id}&orderGoodsId=${goods.id}">退款 / 退货</a>
+                    <!--#}else if( o.orderStatus == 1 && o.getStatus == 1 && o.payType != 1 ){#-->
+                        <a style="float: right;margin-right: 20px;margin-top: 14px;padding:3px;color: green;border: 1px;border-color:#c1dbff;border-style:solid;border-radius:3px" href="${base!}/member/orderAfter/applyOrderAfter?orderId=${o.id}&orderGoodsId=${goods.id}">退款 / 退货</a>
+                    <!--#}#-->
+                </div>
+                <!--# } #-->
+               <!-- <div class="good-info f-cb">
+                    <div class="pic"><a href=""><img src="${base!}/assets/front/pc/member/images/ps-good1.png"/></a></div>
+                    <a href="" class="info f-push-40-r">龙井 2017明前茶 绿茶 清香型   特级 素朴 100g....</a>
+                    <div class="num">x1</div>
+                </div>-->
+            </td>
+            <td width="110">
+                <div class="u-userInfo">
+                    ${o.deliveryName!}
+                    <div class="userInfoWrap f-dn">
+                        <div class="hd"> ${o.deliveryName!}</div>
+                        <div class="bd">
+                            <div class="add">${@area.getNameByCode(o.deliveryProvince)} ${@area.getNameByCode(o.deliveryCity)} ${@area.getNameByCode(o.deliveryCounty)} ${o.deliveryAddress!}</div>
+                            <div class="tel">183****4079</div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td width="150">
+                商品总额￥${@money.fenToYuan(o.goodsPayMoney)}<br />
+                应付￥${@money.fenToYuan(o.payMoney)}(含运费：￥${@money.fenToYuan(o.freightMoney)})<br />
+                <a href="#">${@com.aebiz.app.order.modules.models.em.OrderPayTypeEnum.getValue(o.payType)}</a> <br />
+                <!--# if(o.payStatus  >=  0 && o.payStatus < 3){ #-->
+
+                <!--# }else{ #-->
+
+                <!--# } #-->
+            </td>
+            <td width="110">
+                <!--# if(o.orderStatus == 1 && o.payStatus  >=  0 && o.payStatus < 3){ #-->
+                <!--# if(isEmpty(o.endTime)){ #-->
+                <span class="mark">已过期</span>
+                <!--# }else{ #-->
+                <span class="mark">等待付款</span>
+                <!--# } #-->
+
+                <!--# }else if(o.orderStatus == 1 && o.payStatus == 3){ #-->
+                <span class="mark">已付款</span>
+                <!--# }else if(o.orderStatus == 1 && o.getStatus == 1){ #-->
+                <span class="mark">已完成</span>
+                <!--# }else if(o.orderStatus == 3 || o.orderStatus == 4){ #-->
+                <span class="mark">交易关闭</span>
+                <!--# }else{ #-->
+                <span class="mark">未知,请检查数据正确</span>
+                <!--# } #-->
+                <div class="u-logistics">
+                    <i class="iconfont icon-car"></i>&nbsp;跟踪
+                    <div class="logistics-wrap f-dn">
+                        <div class="hd">普通快递</div>
+                        <div class="bd">
+                            <iframe name="kuaidi100" id="kuaidi100" style="margin-left: 0px;" src="${o.expressInfo!}" width="550" height="380" marginwidth="0" marginheight="0"
+                                    hspace="0" vspace="0" frameborder="0" scrolling="no">
+
+                            </iframe>
+                            <!-- <ul>
+                                <li>打包成功 <p>2017-05-12 07:44:30</p></li>
+                                <li>【南京市】您的订单在京东【南京分拨中心】发货完成<p>2017-05-13 02:29:10</p></li>
+                                <li>【南京市】您的订单在京东【南京分拨中心】发货完成，准备送往京东【雨山站】<p>2017-05-13 05:54:42</p></li>
+                                <li>【合肥市】您的订单已到达【蜀山新产业园站】，请您耐心等待。<p>2017-05-14 06:30:00</p></li>
+                            </ul> -->
+                            <br /><br /><br /><br />
+                        </div>
+                    </div>
+                </div>
+                <a href="${base!}/member/orderDetail/getDetail?orderId=${o.id}">订单详情</a>
+            </td>
+            <td width="130">
+                <!--# if(o.orderStatus == 1 && (o.payStatus  >=  0 && o.payStatus < 3) && o.payType == 0){ #-->
+                    <!--# if(isNotEmpty(o.endTime)){ #-->
+                    <i class="iconfont icon-shijian"></i>&nbsp;剩余${o.endTime!}<br />
+                    <a href="${base!}/member/order/count/${o.id}" class="r-btn">付款</a>
+                    <a class="cancelOrder" data-val="${o.id!}">取消订单</a>
+                    <!--# } #-->
+                <!--# } #-->
+                <!--# if(o.orderStatus == 1 && o.getStatus == 1){ #-->
+                <a href="" class="r-btn buyAgain">再次购买</a>
+                <a href="/member/personalOrder/getOrderDetail?orderId=${o.id}">评价/晒单</a>
+                <!--# } #-->
+                <!--# if(o.orderStatus == 1 && (( o.payStatus == 3 &&  o.payType == 0) || ((o.payType == 1 || o.payType == 2 || o.payType == 3)) && o.deliveryStatus < 3 )){ #-->
+                <span class="mark">等待卖家发货</span><br />
+                <!--# } #-->
+                <!--# if(o.orderStatus == 1 && o.deliveryStatus == 3 && o.getStatus == 0){ #-->
+                <a class="r-btn receipt" data-val="${o.id!}">确认收货</a>
+                <!--# } #-->
+            </td>
+        </tr>
+    </table>
+    <!--# } #-->
+</div>
+<input type="hidden" name="pageTotal" value="${pageTotal}">

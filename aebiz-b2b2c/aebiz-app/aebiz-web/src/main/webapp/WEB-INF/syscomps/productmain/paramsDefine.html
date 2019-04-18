@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+	<form action="/" method="post">
+		   <div class="checkbox">
+			  <label>
+			     	 <input type="checkbox"  name="showMarketPrice" id="needAsyncInit">异步加载
+			    </label>
+			</div>
+			<div class="checkbox">
+			    <label>
+			     	 <input type="checkbox"  name="showMarketPrice" id="showMarketPrice">显示市场价
+			    </label>
+			</div>
+			<div class="checkbox">
+			     <label>
+			     	 <input type="checkbox"  name="showAppraise" id="showAppraise">显示商品评价星
+			    </label>
+			 </div>
+			 <div class="checkbox">
+		     	<label>
+		     	 <input type="checkbox"  name="showStock" id="showStock">校验库存
+		    	</label>
+		     </div>
+			 <div class="checkbox">
+			    <label>
+			     	 <input type="checkbox" name="showBuy" id="showBuy">显示立即购买按钮
+			    </label>
+		 	 </div>
+		 	 <div class="form-horizontal">
+		  		<div class="form-group  ">
+		   			<label class="control-label col-sm-2 ">登陆发布主题</label>
+		   			<div class="col-sm-10">
+		      			<input type="text"  placeholder="登陆时发布topicp名称" autocomplete="off" class="form-control " id="productmain-login-topic"
+		      			value="login">
+		      		</div>
+		      	</div>
+		     </div>
+		 	 <div class="form-horizontal">
+		  		<div class="form-group  ">
+		   			<label class="control-label col-sm-2 ">购物车发布主题</label>
+		   			<div class="col-sm-10">
+		      			<input type="text"  placeholder="加入购物车主题" autocomplete="off" class="form-control " id="cartEventTopic"
+		      			value="addToCart">
+		      		</div>
+		      	</div>
+		     </div>
+		      <div class="form-horizontal">
+		  		<div class="form-group  ">
+		   			<label class="control-label col-sm-2 ">sku</label>
+		   			<div class="col-sm-10">
+		      			<input type="text"  placeholder="默认sku" autocomplete="off" class="form-control " id="productUuid"
+		      			value="50760337367003536301">
+		      		</div>
+		      	</div>
+		     </div>
+	</form>
+</body>
+<script type="text/javascript">
+	//获取属性配置JSON
+	var pageJson = ${webPageModelJsonStr};
+	
+	//构建属性配置
+	var componentsParam = {
+			initParamData:function(config){ //初始化渲染属性配置
+				if(typeof(config) == "string"){
+					config = JSON.parse(config);
+				}
+				if(config){
+					$("#needAsyncInit").prop("checked",config.needAsyncInit);
+					$("#showMarketPrice").prop("checked",config.showMarketPrice);
+					$("#showAppraise").prop("checked",config.showAppraise);
+					$("#showStock").prop("checked",config.showStock);
+					$("#showBuy").prop("checked",config.showBuy);
+					$("#cartEventTopic").val(config.cartEventTopic)
+					$("#productmain-login-topic").val(config.loginTopic);
+					if(config.productUuid && config.productUuid!="" && config.productUuid != null){
+						$("#productUuid").val(config.productUuid);
+					}else{
+						$("#productUuid").val("59df4f2cdff849c29970c15bbf9e4589");
+						
+					}
+					
+				} 
+			},
+			saveParamData:function(){ //返回属性配置JSON
+				var config = {};
+				config.showMarketPrice = $("#showMarketPrice").prop("checked");
+				config.showAppraise = $("#showAppraise").prop("checked");
+				config.showStock = $("#showStock").prop("checked");
+				config.showBuy = $("#showBuy").prop("checked");
+				config.needAsyncInit = $("#needAsyncInit").prop("checked");
+				config.cartEventTopic = $("#cartEventTopic").val();
+				config.productUuid= $("#productUuid").val();
+				config.loginTopic =$("#productmain-login-topic").val();
+				
+			  	var err = this.validateData(config);
+	            if(!err.success){
+	                return err;
+	            }
+				return config;
+			},
+	        validateData:function(config){
+	            var err={
+	                success:true,
+	                msg:""
+	            }
+	            var msg=[];
+	            msg = decoration.base.validateSpecial(msg,config.loginTopic,"登陆时发布主题包含特殊字符，请重新输入！<br>");
+	            msg = decoration.base.validateSpecial(msg,config.cartEventTopic,"购物车发布主题包含特殊字符，请重新输入！<br>");
+	            if(msg.length>0){
+	                err.success = false;
+	                err.msg = msg.join("");
+	            }
+	            return err;
+	        }
+	}
+
+	componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+
+</script>
+</html>

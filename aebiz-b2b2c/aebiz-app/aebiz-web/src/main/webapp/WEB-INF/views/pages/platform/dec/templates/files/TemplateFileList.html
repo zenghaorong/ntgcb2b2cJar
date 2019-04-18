@@ -1,0 +1,501 @@
+<!doctype html>
+<html>
+<head>
+<!-- dynatree CSS -->
+<link rel="stylesheet" href="${base!}/assets/platform/styles/dynatree/ui.dynatree.css">
+<!-- jQuery UI -->
+<link rel="stylesheet" href="${base!}/assets/decorate/pc/decoratecommon/css/style.css">
+<link rel="stylesheet" href="${base!}/assets/platform/styles/dynatree/ui.dynatree.css">
+<link rel="stylesheet" href="${base!}/assets/platform/styles/aebiz-0.1.css">
+<script src="${base!}/assets/platform/vendor/jquery/jquery.min.js"></script>
+<script src="${base!}/assets/platform/vendor/jquery.ui/jquery.ui.core.min.js"></script>
+<script src="${base!}/assets/platform/vendor/jquery.ui/jquery.ui.widget.min.js"></script>
+<!-- 分类树结构的调用js -->
+<script src="${base!}/assets/platform/vendor/dynatree/aebiz.dynatree.js"></script>
+<!-- dynatree -->
+<script src="${base!}/assets/platform/vendor/dynatree/jquery.dynatree.js"></script>
+<!-- Colorbox -->
+<!-- 上传图片插件js -->
+<script src="${base!}/assets/platform/vendor/fileupload/bootstrap-fileupload.min.js"></script>
+<!-- 上传图片插件js -->
+<script src="${base!}/assets/platform/vendor/ajaxfileupload.js"></script>
+<script src="${base!}/assets/platform/vendor/jquery.form/jquery.form.js"></script>
+<script src="${base!}/assets/platform/vendor/colorbox/jquery.colorbox-min.js"></script>
+<script src="${base!}/assets/platform/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="${base!}/assets/platform/vendor/bootstrap-colorpalette/js/bootstrap-colorpalette.js"></script>
+<script src="${base!}/assets/platform/vendor/jquery.easing/jquery.easing.compatibility.js"></script>
+<script src="${base!}/assets/platform/vendor/bootbox/jquery.bootbox.js"></script>
+<script src="${base!}/assets/platform/scripts/jquery.pjax.js"></script>
+<script src="${base!}/assets/platform/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="${base!}/assets/platform/vendor/bootstrap-colorpalette/js/bootstrap-colorpalette.js"></script>
+<script src="${base!}/assets/platform/vendor/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="${base!}/assets/platform/vendor/jquery.easing/jquery.easing.min.js"></script>
+<script src="${base!}/assets/platform/vendor/chosen/chosen.jquery.min.js"></script>
+<script src="${base!}/assets/platform/vendor/treetable/jquery.treetable.js"></script>
+<script src="${base!}/assets/platform/vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="${base!}/assets/platform/vendor/datatables/js/dataTables.bootstrap.js"></script>
+<script src="${base!}/assets/platform/vendor/jstree/jstree.min.js"></script>
+<script src="${base!}/assets/platform/vendor/switchery/switchery.min.js"></script>
+<script src="${base!}/assets/platform/vendor/jquery.placeholder.js"></script>
+<script src="${base!}/assets/platform/vendor/moment/locale/${lang!}.js"></script>
+<script src="${base!}/assets/platform/vendor/parsleyjs/parsley.min.js"></script>
+
+	<!--ie8及以下支持响应式的js-->
+<!--[if lte IE 8]>
+<script src="${base!}/assets/platform/vendor/respond.min.js"></script>
+<![endif]-->
+<!-- Favicon -->
+<link rel="shortcut icon" href="img/favicon.ico"/>
+<!-- Apple devices Homescreen icon -->
+<link rel="apple-touch-icon-precomposed" href="${base!}/assets/platform/images/apple-touch-icon-precomposed.png"/>
+</head>
+	<div id="content">
+		<!--模板源文件管理页面主体-->
+		<div class="row y_classmage">
+			<!--左侧文件夹目录-->
+			<div class="col-sm-3 y_classtre w_tre1020">
+				<div class="box">
+					<div class="box-title">
+						<h3><i class="fa fa-file"></i>源文件管理</h3>
+					</div>
+					<div class="box-content">
+						<input type="hidden" id="selectUuid" />
+						<input type="hidden" id="templateUuid" value="${templateUuid}" />
+						<button class="btn btn-primary" data-toggle="modal" data-target="#createFolderModal" id="create"><i class="fa fa-folder-open"></i>新建根文件夹</button>
+					  <div id="folderOpeDiv">
+						  <button class="btn btn-deflaut dele" id="deleteFolder">删除</button>
+						  <button class="btn btn-deflaut dele" id="uploadResourceFiles">上传资源文件</button>
+						</div>
+						<div class="filetree">
+							<div id="tree">
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><!-- end 左侧文件夹目录-->
+
+			<div id="list">
+			</div>
+
+		</div>
+	</div><!-- end 图片管理页面主体-->
+</div>
+
+<!-- 新建文件夹模态框 start -->
+<div class="modal fade" id="createFolderModal" tabindex="-1" role="dialog" aria-labelledby="createFolderLabel" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="createFolderLabel">新建文件夹</h4>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+      		<div class="form-group">
+						<label class="control-label col-sm-2">名称：</label>
+						<input type="text" name="showName" id="showName" class="form-control" data-rule-required="true" data-rule-minlength="2" data-rule-maxlength="10">
+						<input type="hidden" id="showNameError" value="true"/>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-2">备注：</label>
+						<textarea name="note" id="note" class="form-control" data-rule-required="true" data-rule-maxlength="100"></textarea>
+						<input type="hidden" id="noteError" value="true"/>
+					</div>
+				</div>
+      </div>
+      <div class="modal-footer">
+      	<button type="button" class="btn btn-primary" id="createFolder">确定</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 新建文件夹模态框 end -->
+
+<!-- 编辑文件夹 -->
+<div class="modal fade" id="updateFolderModal" tabindex="-1" role="dialog" aria-labelledby="UpdateFolderLabel" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="UpdateFolderLabel">编辑文件夹</h4>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+      		<div class="form-group">
+						<label  class="control-label col-sm-2">名称：</label>
+						<input type="text" name="showName2" id="showName2" class="form-control" data-rule-required="true" data-rule-minlength="2" data-rule-maxlength="10">
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-2">备注：</label>
+						<textarea name="note2" id="note2" class="form-control" data-rule-required="true" data-rule-maxlength="100"></textarea>
+					</div>
+				</div>
+      </div>
+      <div class="modal-footer">
+      	<button type="button" class="btn updateFolder btn-primary"  data-dismiss="modal">确定</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">退出</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 上传资源文件 -->
+<div class="modal fade" id="uploadFilesModal" tabindex="-1" role="dialog" aria-labelledby="uploadFilesLabel" >
+  <form action="${base}/platform/dec/templates/files/uploadFiles" method="POST" enctype="multipart/form-data" class='form-bordered form-validate' id="uploadForm" onsubmit="return saveReport();">
+	  <input type="hidden" id="nowSelectKey" name="nowSelectKey">
+
+	  <input type="hidden" name="folderId" id="folderId" value="" />
+	  <input type="hidden" name="templateUuid" value="${templateUuid}" />
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <h4 class="modal-title" id="uploadFilesLabel">上传资源文件 </h4>
+	      </div>
+	      <div class="modal-body">
+	      	<div class="row">
+	      		<div class="form-control" style="padding:0; border:none;">
+			    		<div class="fileinput fileinput-new" data-provides="fileinput">
+								<div class="input-group">
+									<input class="form-control" data-trigger="fileinput" style="width:400px">
+									<span class="input-group-addon btn btn-default btn-file">
+										<span class="fileinput-new">选择文件</span>
+										<span class="fileinput-exists">修改</span>
+										<input type="file" name="resourceFiles" id="resourceFiles" multiple data-min-file-count="1" data-rule-required="true" >
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn uploadFiles btn-primary"  data-dismiss="modal">确认</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">退出</button>
+	      </div>
+	    </div>
+	  </div>
+	</form>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+		</div>
+	</div>
+</div>
+	<script>
+		$("#create").click(function(){
+			$("#showName").val("");
+			$("#note").val("");
+			$("span[name='namespan1']").remove();
+			$("span[name='namespan2']").remove();
+		});
+
+	/*文件夹名称长度验证*/
+	$('input[name="showName"]').keyup(function() {
+		//每次都把span的内容清空
+		$("span[name='namespan1']").remove();
+		var showName = "";
+		showName = $("input[name='showName']").val();
+		if (showName != '') {
+			var len = parseInt(showName.length);
+			if (len >= 2 && len <= 20) {
+				$("#showNameError").val("true");
+				$("span[name='namespan1']").remove();
+			}else{
+				$('input[name="showName"]').after("<span name='namespan1'><font color='red'>请输入2-15位字符</font></span>");
+				$("#showNameError").val("false");
+			}
+		}
+	});
+
+	/*备注非空和长度验证*/
+	$('textarea[name="note"]').keyup(function() {
+		//每次都把span的内容清空
+		$("span[name='namespan2']").remove();
+		var note = "";
+		note = $("textarea[name='note']").val();
+		if (note != '') {
+			var len = parseInt(note.length);
+			if (len <= 100) {
+				$("#noteError").val("true");
+				$("span[name='namespan2']").remove();
+			}else{
+				$('textarea[name="note"]').after("<span name='namespan2'><font color='red'>最多输入100个字符</font></span>");
+				$("#noteError").val("false");
+			}
+		}
+	});
+
+		$("#createFolder").click(function(){
+			$("span[name='namespan1']").remove();
+			$("span[name='namespan2']").remove();
+
+			var templateUuid = $("#templateUuid").val();
+			var selectUuid = $.trim($("#selectUuid").val());
+			var showName = $.trim($("#showName").val());
+			var note = $.trim($("#note").val());
+			if(showName == ""){
+				$('input[name="showName"]').after("<span name='namespan1'><font color='red'>该项为必填项</font></span>");
+				return;
+			}
+			var showNameError=$.trim($("#showNameError").val());
+			var noteError=$.trim($("#noteError").val());
+			if(showNameError=="true" && noteError == "true"){
+				$.getJSON("${base}/platform/dec/templates/files/createFolder",
+				{"templateUuid":templateUuid,"showName":showName,"parentUuid":selectUuid,"note":note},
+				function(data) {
+					if (data.rsp) {
+						$("#createFolderModal").modal('hide');
+						$(".modal-backdrop").remove();
+						var tree=$("#tree").dynatree("getTree");
+						tree.reload();
+					} else {
+						var errorMsg = data.errorMsg;
+						if (errorMsg == "") {
+							errorMsg = "保存失败";
+						}
+                        bootbox.alert(errorMsg);
+						$("#createFolderModal").modal('hide');
+						$(".modal-backdrop").remove();
+					}
+				});
+			}
+		});
+
+		//编辑文件夹
+		$(".updateFolder").click(function(){
+			var selectUuid = $.trim($("#selectUuid").val());
+			var showName = $.trim($("#showName2").val());
+			var note = $.trim($("#note2").val());
+			if(showName == ""){
+                bootbox.alert("请输入文件夹名称");
+				return;
+			}
+			$.getJSON("${base}/platform/dec/templates/files/updateFolder",
+				{"showName":showName,"selectUuid":selectUuid,"note":note},
+				function(data) {
+					if (data.rsp) {
+						$("#updateFolderModal").modal('hide');
+						var tree=$("#tree").dynatree("getTree");
+						var dtnode=tree.getNodeByKey(selectUuid);
+						dtnode.setTitle(showName);
+						//tree.reload();
+						dtnode.activate();
+					} else {
+                        bootbox.alert('上传失败');
+						$("#updateFolderModal").modal('hide');
+					}
+			});
+		});
+
+		// 删除文件夹
+		$("#deleteFolder").click(function(){
+			var selectUuid=$.trim($("#selectUuid").val());
+			if(selectUuid == ""){
+                bootbox.alert("请选择文件夹！");
+				return;
+			}
+			bootbox.confirm("确认删除该文件夹以及子文件夹?",
+			function(r){
+        	if(r) {
+					$.get("${base}/platform/dec/templates/files/deleteFolder",
+						{"selectUuid":selectUuid},
+						function(data) {
+							if (data == "success") {
+								var tree=$("#tree").dynatree("getTree");
+								tree.reload();
+							} else if(data == "isSystemFolder"){
+                                bootbox.alert("系统文件夹！不让删除！");
+							} else {
+                                bootbox.alert("删除失败!");
+							}
+					});
+        }
+	    });
+		});
+
+		$("#uploadResourceFiles").click(function(){
+			var selectUuid=$.trim($("#selectUuid").val());
+			if(selectUuid == ""){
+                bootbox.alert("请选择文件夹！");
+				return;
+			}
+			$("#folderId").val(selectUuid);
+			$("#uploadFilesModal").modal('show');
+		});
+
+		$("#resourceFiles").change(function() {
+			var fileList = this.files;
+			var fileNames = "";
+    	for( var i = 0 ; i < fileList.length ; i++ ){
+    		fileNames += fileList[i].name;
+    		if (i != fileList.length - 1) {
+      		fileNames += ",";
+      	}
+   		}
+			$(this).parent("span").siblings(".form-control").val(fileNames);
+		});
+
+		//上传资源文件
+		$(".uploadFiles").click(function(){
+			var fileEl = $("#resourceFiles")[0];
+			if(fileEl.files.length>0){
+				//$("#uploadForm").submit();
+                sub();
+            }
+		});
+        function sub() {
+            // jquery 表单提交
+            $("#uploadForm").ajaxSubmit(function(message) {
+                // 对于表单提交成功后处理，message为返回内容
+                $("#list").load("${base}/platform/dec/templates/files/resourceIndex/?folderUuid="+$("#nowSelectKey").val()+"&random="+Math.random());
+				console.log(message);
+            });
+
+            return false; // 必须返回false，否则表单会自己再做一次提交操作，并且页面跳转
+        }
+        $(function(){
+			drawTree();
+ 		});
+
+		function drawTree(){
+			var templateUuid = $("#templateUuid").val();
+			$("#tree").dynatree({
+				title: "Lazy Tree",
+				rootVisible: true,
+				autoFocus:false,
+				fx: { height: "toggle", duration: 100 },
+				isLazy:true,
+				initAjax: {
+					type: 'GET',
+					url: "${base}/platform/dec/templates/files/getNodes",
+					data: {key:"", templateUuid:templateUuid},
+					dataType: "json",
+					contentType: 'application/json; charset=utf-8'
+				},
+				onFocus:function(dtnode){
+					$("#nowSelectKey").val(dtnode.data.key);
+
+					$("#selectUuid").val(dtnode.data.key);
+					$("#folderId").val(dtnode.data.key);
+					$("#showName2").val(dtnode.data.title);
+					$("#note2").val(dtnode.data.note);
+					//$.colorbox.remove();
+					if (dtnode.data.isFolder) {
+						$("#folderOpeDiv").show();
+						$("#list").load("${base}/platform/dec/templates/files/resourceIndex/?folderUuid="+dtnode.data.key+"&random="+Math.random());
+					} else {
+						$("#folderOpeDiv").hide();
+						var templateUuid = $("#templateUuid").val();
+						var pageUuid = dtnode.data.key;
+						var showHtml = '<div class="col-sm-9 y_classedit">';
+						showHtml += '<a class="btn btn-primary" target="_blank" href="${base}/platform/dec/templates/manager/toPageDefine?templateUuid='+templateUuid+'&pageUuid='+pageUuid+'" title="可视化编辑" rel="tooltip">可视化编辑</a>';
+						showHtml += '<a class="btn btn-primary" href="javascript:deletePage(\''+pageUuid+'\');" class="btn" rel="tooltip" title="删除">删除</a>' ;
+						showHtml += '</div>';
+						$("#list").html(showHtml);
+					}
+				},
+				onPostInit: function(isReloading, isError) {
+					var key = "";
+					if(key!=null && key!="null" && key!=""){
+						var node = this.getNodeByKey(key);
+
+						node.focus();
+						//node.activate();
+						//this.reactivate();
+						//this.activateKey(key);
+					}
+				},
+				onActivate: function (dtnode) {
+				},
+				onLazyRead: function (dtnode) {
+
+					var key=dtnode.data.key;
+					dtnode.appendAjax({
+						type: 'GET',
+						url: "${base}/platform/dec/templates/files/getNodes",
+						data: {key:key, templateUuid:templateUuid},
+						dataType: "json",
+						contentType: 'application/json; charset=utf-8'
+					});
+				}
+			});
+		}
+
+		// 删除页面文件
+		function deletePage(pageUuid){
+            bootbox.confirm("是否确认删除该页面？",
+			function(r){
+        	if(r) {
+					$.get("${base}/platform/dec/templates/files/deletePage",
+						{"pageUuid":pageUuid},
+						function(data) {
+							if (data == "success") {
+								var tree=$("#tree").dynatree("getTree");
+								tree.reload();
+							} else {
+                                bootbox.alert("删除失败");
+							}
+					});
+        }
+	    });
+		}
+	</script>
+<script>
+    function bindLeft() {
+        $('.main-navigation a[data-pjax]').on('click', function () {
+            $('.main-navigation a[data-pjax]').each(function () {
+                $(this).parent().removeClass('active');
+            });
+            $(this).parent().addClass('active');
+        });
+    }
+    $(document).ready(function () {
+        if ($.support.pjax) {
+            <!--#if(@shiro.getPrincipalProperty('loginPjax')){#-->
+            $(document).pjax('a[data-pjax]', '#container', {
+                maxCacheLength: 0,
+                push: false,
+                replace: true,
+                fragment: '#container',
+                timeout: 8000
+            });
+            <!--#}#-->
+            bindLeft();
+            $('#topnav a[data-pjax]').on('click', function () {
+                $.get("${base!}/platform/home/left?url=" + $(this).attr("href"), function (data) {
+                    $("#leftnav").html(data);
+                    bindLeft();
+                }, "html");
+            });
+            $.get("${base!}/platform/home/path?url=" + window.location.href, function (data) {
+                $("#leftnav").html(data);
+                bindLeft();
+            }, "html");
+            <!--#if(@shiro.getPrincipalProperty('loginPjax')){#-->
+            $(document).on('pjax:send', function () { //pjax链接点击后显示加载动画；
+                $(".gallery-loader").fadeIn();
+            });
+            $(document).on('pjax:complete', function () { //pjax链接加载完成后隐藏加载动画；
+                setTimeout(function () {
+                    $(".gallery-loader").fadeOut()
+                }, 250);
+            });
+            <!--#}#-->
+        }
+
+        try {
+            $(".gallery-loader").fadeOut();
+        } catch (e) {
+        }
+        $('#homeDetail').on('hidden.bs.modal', function () {
+            $(this).removeData("bs.modal");
+        });
+        $(".toggle-sidebar").click(function () {
+            $(".o_img").toggleClass("o_hide");
+        });
+    });
+</script>
+</html>

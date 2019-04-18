@@ -1,0 +1,81 @@
+<div id="$_side_compId" class="y_rtfixbx  m-components" style="width: 35px;">
+    <div class="m-comsloading" id="$_side_compId_comsloading"></div>
+	<input type="hidden" id="$_side_compId_loginIsShow" name="loginIsShow" value=""/>
+	<input type="hidden" id="$_side_compId_cartIsShow" name="cartIsShow" value=""/>
+	<input type="hidden" id="$_side_compId_collectionIsShow" name="collectionIsShow" value=""/>
+	<input type="hidden" id="$_side_compId_quesNaireIsShow" name="quesNaireIsShow" value=""/>
+	<input type="hidden" id="$_side_compId_qqIsShow" name="quesNaireIsShow" value=""/>
+	<input type="hidden" id="$_side_compId_onlineIsShow" name="quesNaireIsShow" value=""/>
+
+	<div class="y_ifixed y_nologin y_rtcthide">
+		<div class="y_ifixbox">
+			<div class="y_userbox" id="$_side_compId_pr_userlogin">
+				<div class="y_rtbtn y_userbtn" id="$_side_compId_nologin" ><i class="fa fa-user"></i></div>
+				<!--会员已登陆状态-->
+				<div class="y_rtbtn y_userbtn add-tooltip" id="$_side_compId_userlogin"><a id="$_side_compId_customer_index" class="y_pic add-tooltip" href="/customer/toIndex" data-toggle="tooltip" data-placement="left" title="全网会员名"><img id="$_side_compId_userphoto" src="${contextPath}/assets/platform/vendor/frontpage/img/decorate/test_user.jpg"></a></div>
+			</div>
+
+            <div class="add-popover pop-qq" id="$_side_compId_pr_qq" data-container="body" data-toggle="popover" data-placement="left" style="cursor:pointer;background:#000;position: absolute;bottom: 140px;left: 0" title="在线咨询">
+                <img src="/assets/platform/vendor/frontpage/img/decorate/qqservice.png" style="width: 35px;">
+            </div>
+
+			<div class="y_rtbtn y_rtlove add-tooltip" id="$_side_compId_pr_mycollection"  data-toggle="tooltip" data-placement="left" title="我的收藏"></div>
+			<a class="y_rtbtn y_sugges add-tooltip"  id="$_side_compId_pr_quesnaire" target="_blank" href="/questionnairesurvey/toQuestionnaireSurvey" data-toggle="tooltip" data-placement="left" title="调查问卷"></a>
+		</div>
+		<div class="y_rtcart" id="$_side_compId_w_cart">
+			<b></b>
+			<p class="y_rcatnm">购物车</p>
+			<span class="y_rcatsize" id="cartsTotal">0</span>
+			<div class="y_rtline"></div>
+		</div>
+		<div id="baidusq" style="margin:280px 0 15px !important;height:135px;width:35px;cursor:pointer;transition:all 0.5s;background-color:#000;position:absolute;left:0;top:0;" onClick="window.open('http://p.qiao.baidu.com//im/index?siteid=9114593&ucid=20903751','newwindow','height=600,width=800,top=50,left=100,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');">
+			<b></b>
+			<p class="y_rcatnm" style="height:65px !important;">在线咨询</p>
+			<div class="y_rtline"></div>
+		</div>
+		<p class="y_rtbtn y_totop add-tooltip" data-toggle="tooltip" data-placement="left" title="返回顶部"></p>
+	<!--右侧登录  -->
+		<div class="y_rtdlbox">
+			<form id="domainForm222" action="" method="get" class='form-horizontal form-bordered form-validate3' >
+				<input type="hidden" id="hasVilidateCode1" name="hasVilidateCode" value="false">
+				<div class="alert alert-danger" style="display:none;"></div>
+				<span class="y_rdltit">帐号</span>
+				<input type="text" class="form-control" id="loginName1" name="loginName" placeholder="手机号/邮箱/用户名">
+				<span class="y_rdltit">密码</span>
+				<input type="password" class="form-control" id="pwd1" name="pwd">
+				<div id="code"></div>
+				<label class="y_remeve"><input type="checkbox" name="remember" id="remember" >记住我</label>
+				<button  id="btn_customer_login" class="btn btn-custom u-btn-primary">登 录</button>
+				<p class="clearfix">
+					<a id="$_side_compId_a_forgetpwd"  class="fl" href="/customerfindpwd/toFindPwdStep1">忘记密码?</a>
+					<a id="$_side_compId_a_reg"  class="fr" href="/customerregist/toRegister">免费注册</a>
+				</p>
+				<b class="y_closedlbx"><i class="fa fa-times"></i></b>
+			</form>
+		</div>
+
+	</div>
+	<div class="y_rtmsbx">
+		<form action="/order/toBalance" id="cartForm" method="post">
+			<div id="shoppingCart" class="y_rtctbx">
+				   <!--购物车无商品-->
+                <div class="y_slidecartno">
+                    <span class="y_carticon"><i class="fa fa-shopping-cart"></i></span>
+                    <span class="y_cartnoms">
+			                              购物车内暂时没有商品，快去挑选自己喜欢的商品吧~
+			        </span>
+                </div>
+			</div>
+		</form>
+		<div class="y_rtlovebx">
+			<h4>我的收藏</h4>
+            <div class="y_lovescroll">
+                <ul class="y_lvlist">
+                </ul>
+                <div class="y_rtlvbtn">
+                </div>
+            </div>
+		</div>
+	</div>
+	<span class="y_closertms"></span>
+</div>

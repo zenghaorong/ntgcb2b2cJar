@@ -1,0 +1,201 @@
+<!--#
+include("/pages/front/pc/member/inc/header.html"){}
+#-->
+<style>
+.import{
+	border-color: red !important;
+}
+.importBorder{
+	border-color: #ccc !important;
+}
+</style>
+<div class="m-bd">
+	<div class="g-center f-push-30-t">
+		<!--#
+			include("/pages/front/pc/member/inc/left.html"){}
+		#-->
+		<script src="/assets/front/pc/member/scripts/safe.js"></script>
+		<link href="http://at.alicdn.com/t/font_paidwj9uheyiudi.css" rel="stylesheet">
+		<div class="ps-main m-Account-safe f-fl">
+			<div class="u-meun-chain g-center"><i class="iconfont icon-wode"></i><a href="">个人中心</a>><a href="">账号安全</a>><span>修改绑定手机</span></div>
+
+			<div class="mas-tit">
+				修改绑定手机<small>Modify binding mobile phone</small>
+			</div>
+
+			<div class="m-modify-form f-cb">
+				<div class="f-tac f-pdg-50 f-pdg-40-t"><img src="/assets/front/pc/member/images/cbm-2.png" alt="" /></div>
+				<form id="form1" action="${base!}/member/security/bindMobile" method="post">
+					<ul>
+						<li>
+							<label>绑定新手机</label><input type="text" id="mobile" name="mobile" value=""><span id="checkMobileInfo" style="margin-left: 10px;"></span>
+						</li>
+						<li>
+							<label>短信验证码</label>
+							<input type="text" id="mobileCode" name="mobileCode" style="width: 150px;" />
+							<a id="getMobileCaptcha" class="getCode btn f-push-20-l" >获取短信验证码</a>
+							<span class="tip f-push-20-l" id="sendMsg">${error!}</span>
+						</li>
+						<li>
+							<label></label><a id="step" class="btn bgRed f-push-20-r">下一步</a>
+						</li>
+					</ul>
+				</form>
+			</div>
+		</div>
+
+	</div>
+</div>
+<!-- end -->
+<div class="g-center">
+	<div class="picScroll-left f-push-20-t">
+		<div class="list_hd">
+			猜你喜欢
+			<a class="next iconfont icon-next"></a>
+			<a class="prev iconfont icon-prev"></a>
+		</div>
+		<div class="bd">
+			<ul class="picList">
+				<li>
+					<div class="pic"><a href="" target="_blank"><img src="/assets/front/pc/member/images/ps-lb.png"></a></div>
+					<div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+				</li>
+				<li>
+					<div class="pic"><a href="" target="_blank"><img src="/assets/front/pc/member/images/ps-lb.png"></a></div>
+					<div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+				</li>
+				<li>
+					<div class="pic"><a href="" target="_blank"><img src="/assets/front/pc/member/images/ps-lb.png"></a></div>
+					<div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+				</li>
+				<li>
+					<div class="pic"><a href="" target="_blank"><img src="/assets/front/pc/member/images/ps-lb.png"></a></div>
+					<div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+				</li>
+				<li>
+					<div class="pic"><a href="" target="_blank"><img src="/assets/front/pc/member/images/ps-lb.png"></a></div>
+					<div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+				</li>
+				<li>
+					<div class="pic"><a href="" target="_blank"><img src="/assets/front/pc/member/images/ps-lb.png"></a></div>
+					<div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+				</li>
+				<li>
+					<div class="pic"><a href="" target="_blank"><img src="/assets/front/pc/member/images/ps-lb.png"></a></div>
+					<div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<!--#
+	include("/pages/front/pc/member/inc/tail.html"){}
+#-->
+
+<script>
+    $().ready(function () {
+        $("#mobileCode").blur(function () {
+            var len1 = $(this).val().length;
+            if (parseInt(len1) == 0) {
+                $("#mobileCode").css("border-color","red");
+            }else{
+                $("#mobileCode").css("border-color","#eaeaea");
+            }
+        });
+        $("#mobileCode").focus(function () {
+            $("#mobileCode").css("border-color","#eaeaea");
+        });
+        //获取手机验证码
+        $("#getMobileCaptcha").click(function () {
+            if($(this).css("cursor")=="no-drop"){
+                return;
+			}else{
+                $("#mobile").blur();
+			}
+            if($("#getMobileCaptcha").css("cursor")=="no-drop" | $("#mobile").css("border-color")=="rgb(255, 0, 0)"){
+                return;
+            }else {
+				$(this).attr('disabled',"true");
+				$(this).css("cursor","no-drop");
+				var i=59;
+				function show(){
+					$("#getMobileCaptcha").html(" "+(i--)+"秒后再次获取");
+				}
+
+				var iCount = setInterval(show,1000);// 注意函数名没有引号和括弧！
+				//setInterval(count,1000);
+				setTimeout(function () {
+					$("#getMobileCaptcha").removeAttr("disabled");
+					clearInterval(iCount);
+					$("#getMobileCaptcha").html("获取短信验证码");
+					$("#sendMsg").html("");
+                    $("#getMobileCaptcha").css("cursor","pointer");
+				}, 60000);
+
+				$.ajax({
+					type:"POST",
+					url:"/member/security/getMobileCaptcha/"+$("#mobile").val(),
+					dataType:"JSON",
+					async:false,
+					success:function(data){
+						if(data.code==1){
+                            $("#sendMsg").html("发送失败！");
+						}else{
+                            $("#sendMsg").html("短信验证码已发送成功，请注意查收！");
+						}
+					}
+				});
+            }
+
+        });
+
+        $("#step").click(function () {
+            $("#mobileCode").blur();
+            $("#mobile").blur();
+            var i=0;
+            if($("#mobileCode").css("border-color")=="rgb(255, 0, 0)"){
+                i++;
+            }
+            if($("#mobile").css("border-color")=="rgb(255, 0, 0)"){
+                i++;
+            }
+            if(i==0){
+                $("#form1").submit();
+            }
+        });
+
+        $("#mobile").focus(function () {
+            $(this).removeClass("import");//边框颜色
+            $(this).addClass("importBorder");
+            $("#checkMobileInfo").html("请输入手机号").css("color","#969696");
+        });
+
+        $("#mobile").blur(function () {
+            $(this).removeClass("importBorder");
+            var mobile = $(this).val();
+            if(mobile.length==0) {
+                $("#checkMobileInfo").html("请输入手机号");
+                $("#mobile").addClass("import");
+            }else if(mobile.length!=11){
+                $("#checkMobileInfo").html("格式有误").css("color","red");
+                $("#mobile").addClass("import");
+            }else{
+                $.ajax({
+                    type:"POST",
+                    url:"/member/security/checkMobile/"+$(this).val(),
+                    dataType:"JSON",
+                    success:function(data){
+                        if(data.code==1){
+                            $("#checkMobileInfo").html("该手机号已存在！").css("color","red");
+                            $("#mobile").addClass("import");
+                        }else{
+                            $("#mobile").css("border-color","#1AEC35");
+                            $("#checkMobileInfo").html("");
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+</script>

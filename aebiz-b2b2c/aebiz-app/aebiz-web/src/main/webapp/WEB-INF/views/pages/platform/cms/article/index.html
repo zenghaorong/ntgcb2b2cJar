@@ -1,0 +1,267 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<aside class="sidebar-250 canvas-right bg-default ">
+    <header class="header navbar clearfix bb bg-default pl0 pr0">
+        <p class="navbar-text"><i class="fa fa-sitemap mr5"></i> ${msg['cms.article.column.columnlist']}</p>
+    </header>
+    <div class="content-wrap no-p">
+        <div class="wrapper2">
+            <div class="m5">
+                <div id="jsTree"></div>
+            </div>
+        </div>
+    </div>
+</aside>
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button">
+            <a class="btn btn-primary navbar-btn" href="${base}/platform/cms/article/add" data-pjax id="addLink"><i class="ti-plus"></i> ${msg['cms.article.column.addarticle']}</a>
+            <button class="btn btn-danger navbar-btn" onclick="delCheck()"><i class="ti-close"></i> ${msg['cms.article.column.deletearticle']}</button>
+        </div>
+        <div class="pull-right offscreen-right">
+            <button class="btn btn-primary navbar-btn" onclick="sublime.toggleFilter('.cd-panel')"><i
+                    class="fa fa-sliders"></i> ${msg['cms.article.column.screening']}
+            </button>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;" >
+        <div class="table-responsive no-border" style="min-height:500px;">
+            <input id="channelId" type="hidden">
+            <table class="table table-bordered table-striped mg-t datatable mb15 mt10">
+                <thead>
+                <tr>
+                    <th>${msg['cms.article.column. articletitle']}</th>
+                    <th>${msg['cms.article.column.author']}</th>
+                    <th>${msg['cms.article.column.releasetime']}</th>
+                    <th>${msg['cms.article.column.releasestatus']}</th>
+                    <th>${msg['cms.article.column.operation']}</th>
+            </table>
+        </div>
+    </div>
+</section>
+<div class="cd-panel from-right">
+    <header class="cd-panel-header">
+        <h4>${msg['cms.article.column.advancedscreening']}</h4>
+        <a href="javascript:;" class="cd-panel-close text-center"><i class="ti-close"></i> </a>
+    </header>
+    <div class="cd-panel-container">
+        <div class="cd-panel-content shadow">
+            <div class="form-group">
+                <label for="title">${msg['cms.article.column.articletitle']}</label>
+                <input type="text" id="title" name="title" class="form-control" placeholder="${msg['cms.article.column.articletitle']}" autofocus>
+            </div>
+            <button id="searchBtn" type="button" class="btn btn-default">${msg['cms.article.column.query']}</button>
+        </div>
+    </div>
+</div>
+<!-- 删除 -->
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['cms.article.column.deletearticle']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                       ${msg['cms.article.column.text']}  <br/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['cms.article.column.cancel']}</button>
+                <button id="ok" type="button" class="btn btn-primary" data-loading-text="${msg['cms.article.column.nowdelete']}">${msg['cms.article.column.soure']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 详情 -->
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang!}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/cms/article/data",
+                "type": "post",
+                "data": function (d) {
+                    d.channelId = $("#channelId").val();
+                    d.title = $("#title").val();
+                }
+            },
+            "order": [[2, "desc"]],
+            "columns": [
+                {"data": "title", "bSortable": true},
+                {"data": "author", "bSortable": true},
+                {"data": "publishAt", "bSortable": true},
+                {"data": "disabled", "bSortable": true}
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                                '<li><a href="${base}/platform/cms/article/edit/' + row.id + '" data-pjax>${msg['cms.article.column.edit']}</a></li>' +
+                                '<li><a href="javascript:;" onclick="del(\'' + row.id + '\')">${msg['cms.article.column.delete']}</a></li>' +
+                                '<li class="divider"></li>' +
+                                '<li><a href="javascript:;" onclick="enable(\'' + row.id + '\')">${msg['cms.article.column.release']}</a></li>' +
+                                '<li><a href="javascript:;" onclick="disable(\'' + row.id + '\')">${msg['cms.article.column.cancelrelease']}</a></li>' +
+                                '</ul></div>';
+                    },
+                    "targets": 4
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (!data) {
+                            return '<i id="disable_' + row.id + '" class="fa fa-circle text-success ml5"></i>';
+                        } else {
+                            return '<i id="disable_' + row.id + '" class="fa fa-circle text-danger ml5"></i>';
+                        }
+                    },
+                    "targets": 3
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return moment(parseInt(data*1000)).format("YYYY-MM-DD HH:mm:ss");
+                        }
+                        return '';
+                    },
+                    "targets": 2
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+    var unitTreeTable;
+    var selected = [];
+    function initTreeView() {
+        $("#jsTree").jstree({
+            plugins: ["wholerow"],
+            core: {
+                data: {
+                    url: function (node) {
+                        return node.id === "#" ? "${base}/platform/cms/article/tree" : "${base}/platform/cms/article/tree/" + node.id
+                    }
+                },
+                multiple: false
+            }
+        }).on("select_node.jstree", function (node, selected) {
+            var id = selected.selected;
+            $("#channelId").val(id);
+            $("#searchForm").find("input[type='text']").val("");
+            if (datatable) {
+                $(".cd-panel-content").find("input").val("");
+                datatable.ajax.reload();
+            } else {
+                initDatatable();
+            }
+            $("#addLink").attr("href","${base}/platform/cms/article/add/"+id);
+        }).on("loaded.jstree", function (node, jstree) {
+            var id = $(node.target).find("li:first").attr("id");
+            if (id) {
+                jstree.instance.select_node(id);
+            }
+        });
+    }
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#ok").unbind("click");
+        dialog.find("#ok").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/cms/article/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                //重置按钮状态，关闭提示框
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#ok").unbind("click");
+            dialog.find("#ok").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/platform/cms/article/delete/",{ids:ids.toString()}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null,false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("${msg['cms.article.column.choosedeletearticle']}");
+        }
+    }
+    function enable(id) {
+        $.post("${base}/platform/cms/article/enable/" + id, {}, function (data) {
+            if (data.code == 0) {
+                $("#disable_" + id).attr("class", "fa fa-circle text-success ml5");
+            } else {
+                Toast.error(data.msg);
+            }
+        }, "json");
+    }
+    function disable(id) {
+        $.post("${base}/platform/cms/article/disable/" + id, {}, function (data) {
+            if (data.code == 0) {
+                $("#disable_" + id).attr("class", "fa fa-circle text-danger ml5");
+            } else {
+                Toast.error(data.msg);
+            }
+        }, "json");
+    }
+    $(document).ready(function () {
+        initTreeView();
+        initDatatable();
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+</script>
+<!--#}#-->

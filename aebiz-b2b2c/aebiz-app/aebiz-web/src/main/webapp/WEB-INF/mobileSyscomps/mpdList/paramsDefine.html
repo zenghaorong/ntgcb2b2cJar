@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+
+
+<form class="form-horizontal" id="pictureadform">
+
+    <div class="form-group">
+        <label for="showType" class="col-sm-3 control-label">展现形式</label>
+        <div class="col-sm-3">
+            <label class="radio-inline">
+                <input type="radio" name="showType" id="showType1" value="1" checked> 纵向
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="showType" id="showType2" value="0"> 横向
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="mdetail_url" class="col-sm-3 control-label">详情页跳转url</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="mdetail_url" placeholder="请输入跳转url">
+        </div>
+    </div>
+
+</form>
+
+
+</body>
+
+
+<script type="text/javascript">
+    var pageJson = ${webPageModelJsonStr};
+
+    var componentsParam = {
+        initParamData: function (pageJson) {
+            if (typeof (pageJson) == "string") {
+                pageJson = JSON.parse(pageJson);
+            }
+
+            if (pageJson.showType) {
+                if(pageJson.showType == '0'){
+                    $('#showType2').prop('checked',true)
+                }else{
+                    $('#showType1').prop('checked',true)
+                }
+            }
+
+            if (pageJson.mdetail_url) {
+                $("#mdetail_url").val(pageJson.mdetail_url);
+            }
+
+
+        },
+        saveParamData: function () {
+            var pageJson = {
+                compId: 'mplist',
+                "showType": $("[name=showType]:checked").val(),
+                "mdetail_url":$("#mdetail_url").val()
+            };
+            return pageJson;
+        },
+
+        showParamData: function () {
+
+            var paramData = [];
+
+            var srcImage = {
+                type: 'src',
+                target: 'img',
+                value: $("#imgSrc").val()
+            }
+
+            paramData.push(srcImage);
+
+            return paramData;
+        }
+    }
+
+    componentsParam.initParamData(pageJson);
+</script>
+
+
+</html>

@@ -1,0 +1,92 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<section class="content-wrap bg-white">
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border"  style="min-height: 500px;">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                    <tr>
+                        <th>${msg['order.after.exchange.column.id']}</th>
+                        <th>${msg['order.after.exchange.column.afterSaleId']}</th>
+                        <th>${msg['order.after.exchange.column.oldOrder']}</th>
+                        <th>${msg['order.after.exchange.column.newOrder']}</th>
+                        <th>${msg['order.after.exchange.column.logisticsCompany']}</th>
+                        <th>${msg['order.after.exchange.column.logisticsId']}</th>
+                        <th>${msg['order.after.exchange.column.exchangeState']}</th>
+                        <th>${msg['globals.table.column.operation']}</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/order/after/exchange/data",
+                "type": "post",
+                "data": function (d) {
+
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                    {"data": "id", "bSortable": true},
+                    {"data": "afterSaleId", "bSortable": true},
+                    {"data": "oldOrder", "bSortable": true},
+                    {"data": "newOrder", "bSortable": true},
+                    {"data": "logisticsCompany", "bSortable": true},
+                    {"data": "logisticsId", "bSortable": true},
+                    {"data": "exchangeState", "bSortable": true}
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                                '<li><a href="${base}/platform/order/after/exchange/detail/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">${msg["globals.button.detail"]}</a></li>' +
+                                '</ul></div>';
+                    },
+                    "targets": 7
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+    $(function () {
+        initDatatable();
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+</script>
+<!--#}#-->

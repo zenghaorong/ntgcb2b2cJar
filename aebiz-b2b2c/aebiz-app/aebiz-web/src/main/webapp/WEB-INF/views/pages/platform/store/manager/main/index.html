@@ -1,0 +1,397 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<style>
+    .tool-search-line{
+        padding-top: 8px;
+    }
+    .search-input {
+        width: 30%;min-width: 250px;
+    }
+</style>
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button tool-search-line">
+            <form class="form-inline js-search-form" id="search_form">
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <input type="text" class="form-control search-input" name="storeName" placeholder="${msg['store.main.column.storeName']}/${msg['store.main.column.loginName']}">
+                </div>
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <select class="form-control" name="typeId" placeholder="${msg['store.main.column.typeId']}">
+                        <option value="">${msg['store.main.column.typeId']}</option>
+                        <!--#for(o in typeList){#-->
+                        <option value="${o.id!}" >${o.name!}</option>
+                        <!--#}#-->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <select class="form-control" name="levelId" placeholder="${msg['store.main.column.levelId']}">
+                        <option value="">${msg['store.main.column.levelId']}</option>
+                        <!--#for(o in levelList){#-->
+                        <option value="${o.id!}" >${o.name!}</option>
+                        <!--#}#-->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <select class="form-control" name="disabled" placeholder="${msg['store.main.column.disabled']}">
+                        <option value="">${msg['store.main.column.disabled']}</option>
+                        <option value="true">是</option>
+                        <option value="false">否</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary js-search-ok">${msg['globals.button.search']}</button>
+                    <button type="button" class="btn btn-default js-search-reset">${msg['globals.button.reset']}</button>
+                </div>
+            </form>
+        </div>
+        <div class="btn-group tool-button pull-right">
+            <a id="add" class="btn btn-primary navbar-btn" href="${base}/platform/store/manager/main/check" data-pjax><i class="ti-plus"></i> ${msg['globals.button.add']}</a>
+           <!-- <button class="btn btn-danger navbar-btn" onclick="delCheck()"><i class="ti-close"></i> ${msg['globals.button.delete.more']}</button>-->
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border"  style="min-height: 500px;">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>${msg['store.main.column.storeName']}</th>
+                        <th>${msg['store.main.column.loginName']}</th>
+                        <th>${msg['store.main.column.classId']}</th>
+                        <th>${msg['store.main.column.levelId']}</th>
+                        <th>${msg['store.main.column.typeId']}</th>
+                        <th>${msg['store.main.column.logo']}</th>
+                        <!--<th>${msg['store.main.column.joininYear']}</th>
+                        <th>${msg['store.main.column.endAt']}</th>-->
+                        <!-- <th>${msg['store.main.column.storeAddress']}</th>
+                        <th>${msg['store.main.column.storeTel']}</th>
+                        <th>${msg['store.main.column.storePostcode']}</th>-->
+                        <th>${msg['store.main.column.storeProvince']}</th>
+                        <th>${msg['store.main.column.storeCity']}</th>
+                        <!-- <th>${msg['store.main.column.storeCounty']}</th>
+                        <th>${msg['store.main.column.storeTown']}</th>-->
+                        <th>${msg['store.main.column.disabled']}</th>
+                        <!--<th>${msg['store.main.column.recommend']}</th>-->
+                        <th>${msg['globals.table.column.operation']}</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div id="dialogPaasword" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">重置密码</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">知道了</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/store/manager/main/data",
+                "type": "post",
+                "data": function (d) {
+                    var form = $(".js-search-form");
+                    d.storeName = $("input[name='storeName']", form).val();
+                    d.typeId = $("[name='typeId']", form).val();
+                    d.levelId = $("[name='levelId']", form).val();
+                    d.disabled = $("[name='disabled']", form).val();
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                    {"data": "id", "visible":false},
+                    {"data": "storename", "bSortable": true},
+                    {"data": "loginname", "bSortable": true},
+                    {"data": "classname", "bSortable": true},
+                    {"data": "levelname", "bSortable": true},
+                    {"data": "typename", "bSortable": true},
+                    {"data": "logo", "bSortable": true},
+                  /*  {"data": "joininYear", "bSortable": true},
+                    {"data": "endAt", "bSortable": true},
+                    {"data": "storeAddress", "bSortable": true},
+                    {"data": "storeTel", "bSortable": true},
+                    {"data": "storePostcode", "bSortable": true},*/
+                    {"data": "storeprovince", "bSortable": true},
+                    {"data": "storecity", "bSortable": true},
+                   /* {"data": "storeCounty", "bSortable": true},
+                    {"data": "storeTown", "bSortable": true},*/
+                    {"data": "disabled", "bSortable": true},
+                    /*{"data": "recommend", "bSortable": true},*/
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                                /*'<li><a href="${base}/platform/store/manager/main/detail/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">${msg["globals.button.detail"]}</a></li>' +*/
+                                '<li><a href="${base}/platform/store/manager/main/edit/' + row.id + '" data-pjax>${msg["globals.button.update"]}</a></li>' +
+                                '<li><a href="javascript:;" onclick="resetPwd(\'' + row.id + '\')">密码重置</a></li>' +
+                                '<li class="divider"></li>' +
+                                '<li><a href="javascript:;" onclick="del(\'' + row.id + '\')">${msg["globals.button.delete"]}</a></li>' +
+                                '<li class="divider"></li>' +
+                                '<li><a href="javascript:;" onclick="enableUser(\'' + row.id + '\')">启用</a></li>' +
+                                '<li><a href="javascript:;" onclick="disableUser(\'' + row.id + '\')">禁用</a></li>' +
+                                '</ul></div>';
+                    },
+                    "targets": 10
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (!data) {
+                            return '<i id="disable_' + row.id + '" class="fa fa-circle text-success ml5"></i>';
+                        } else {
+                            return '<i id="disable_' + row.id + '" class="fa fa-circle text-danger ml5"></i>';
+                        }
+                    },
+                    "targets": 9
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return data;
+                        }else {
+                            return "";
+                        }
+                    },
+                    "targets": 3
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return data;
+                        }else {
+                            return "";
+                        }
+                    },
+                    "targets": 4
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return data;
+                        }else {
+                            return "";
+                        }
+                    },
+                    "targets": 5
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return '<a href="' + row.logo + '" target="_blank"><img src="' + row.logo + '" style="width: 20px;height: 20px;"></a>';
+                        }
+                        return '';
+                    },
+                    "targets": 6
+                }
+
+            ]
+        });
+
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+
+        $(".js-search-ok").click(function () {
+            $('.datatable').DataTable().ajax.reload();
+        });
+
+        $(".js-search-reset").click(function () {
+            $(".js-search-form").resetForm();
+            $('.datatable').DataTable().ajax.reload();
+        });
+
+    }
+
+    function enableUser(id) {
+        $.post("${base}/platform/store/manager/main/enable/" + id, {}, function (data) {
+            if (data.code == 0) {
+                $("#disable_" + id).attr("class", "fa fa-circle text-success ml5");
+            } else {
+                Toast.error(data.msg);
+            }
+        }, "json");
+    }
+
+    function disableUser(id) {
+        $.post("${base}/platform/store/manager/main/disable/" + id, {}, function (data) {
+            if (data.code == 0) {
+                $("#disable_" + id).attr("class", "fa fa-circle text-danger ml5");
+            } else {
+                Toast.error(data.msg);
+            }
+        }, "json");
+    }
+    function resetPwd(id) {
+        $.post("${base}/platform/store/manager/main/resetPwd/" + id, {}, function (data) {
+            var dialog = $("#dialogPaasword");
+            if (data.code == 0) {
+                dialog.find(".col-xs-12").html("密码重置成功，请复制新密码：" + data.data);
+                dialog.modal("show");
+            } else {
+                dialog.find(".col-xs-12").html(data.msg);
+                dialog.modal("show");
+            }
+        }, "json");
+    }
+
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/store/manager/main/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#okDel").unbind("click");
+            dialog.find("#okDel").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/platform/store/manager/main/delete", {ids: ids.toString()}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null,false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("${msg['globals.button.delete.select']}");
+        }
+    }
+
+    $(function () {
+        initDatatable();
+        $('#file_upload').uploadifive({
+            'auto' : true,
+            'multi' : false,
+            'width' : '100%',
+            'height' : '35',
+            'buttonText' : "${msg['cms.site.column.selectpicture']}",
+            'fileType' : 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit' : 1024,
+            'queueSizeLimit' : 1,
+            'formData' : {},
+            'queueID' : 'queue',
+            'uploadScript' : '${base}/open/file/upload/image',
+            'onUploadComplete' : function(file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    $("#img")
+                        .html(
+                            "<img src='" + data.data + "' style='width:150px;'>");
+                    $("#logo").val(
+                        data.data);
+                } else {
+                    clearFile();
+                    Toast.error(data.msg);
+                }
+            },
+            'onDrop' : function(file,
+                                fileDropCount) {
+                clearFile();
+            },
+            'onClearQueue' : function(queue) {
+                clearFile();
+            },
+            'onCancel' : function() {
+                clearFile();
+            }
+        });
+
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+</script>
+<!--#}#-->

@@ -1,0 +1,18 @@
+﻿/*-------------------------------------*/
+/* 前台skin: orange
+/*-------------------------------------*/
+a:hover{color:#ff5b20}
+.fa:hover{color:#ff5b20}
+.btn-custom:hover, .btn-custom:focus, .btn-custom:active, .btn-custom.active, .open .dropdown-toggle.btn-custom{background:#f40;}
+.y_serch .y_serlist{border-color:#ff5b20;}
+.y_serch .form-control{border-color:#ff5b20;}
+.y_serch .btn{background:#ff5b20}
+.y_serch .btn:hover, .y_serch .btn:focus, .y_serch .btn:active{background:#f40;}
+.y_topcart .dropdown-toggle{background:#ff5b20;border-color:#ff5b20}
+.y_topcart.open .dropdown-toggle{background:#f40;border-color:#f40}
+.y_topcart .dropdown-cart-menu{border-top-color:#ff5b20}
+.y_topcart .dropdown-cart-product-list .dropdown-cart-details .item-price{color:#ff5b20}
+.dropdown-cart-total li{color:#ff5b20}
+.dropdown-cart-total li .sub-price{color:#ff5b20}
+.dropdown-cart-action .btn{background:#ff5b20;border-color:#ff5b20}
+

@@ -1,0 +1,30 @@
+<input type="text" name="topBar_title" id="topBar_title" value="内容">
+
+
+<script type="text/javascript">
+    //获取属性配置JSON
+    var pageJson = ${webPageModelJsonStr};
+
+    //构建属性配置
+    var componentsParam = {
+        initParamData:function(paramJson){ //初始化渲染属性配置
+            $("#topBar_title").val(paramJson.title);
+        },
+        saveParamData:function(){ //返回属性配置JSON
+            var title=	 $("#topBar_title").val();
+            var paramJson = {"compId":'123',"title":title};
+            return paramJson;
+        },
+        showParamData:function(){
+            var paramData = [];
+            var labelName = {
+                type:'text',
+                target:'title',
+                value:$("#topBar_title").val()
+            }
+            paramData.push(labelName);
+            return paramData;
+        }
+    }
+    componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+</script>

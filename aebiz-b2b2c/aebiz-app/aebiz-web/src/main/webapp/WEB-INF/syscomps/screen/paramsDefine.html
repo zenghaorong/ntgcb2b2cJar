@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<form class="form-horizontal" role="form">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">是否异步加载：</label>
+        <div id="needAsyncInit" class="col-sm-10">
+            <label class="radio-inline">
+                <input type="radio" name="needAsyncInit" id="needAsyncInit_t" value="true"> 是
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="needAsyncInit" id="needAsyncInit_f" value="false"> 否
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="shareDataName" class="col-sm-2 control-label">共享数据：</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="shareDataName" placeholder="与要共享的组件的设置页面填写一致">
+        </div>
+    </div>
+    <div class="form-group" style="display:none">
+        <label for="pageShow" class="col-sm-2 control-label">商品每页显示的数量：</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="pageShow" placeholder="">
+        </div>
+    </div>
+</form>
+<script>
+    //获取属性配置JSON
+    var pageJson = ${webPageModelJsonStr};
+
+    //构建属性配置
+    var componentsParam = {
+        initParamData:function(paramJson){ //初始化渲染属性配置
+            if(typeof(paramJson) == "string"){
+                paramJson = JSON.parse(paramJson);
+            }
+
+                $("#needAsyncInit input[value="+paramJson.needAsyncInit+"]").prop("checked",true);
+                $("#pageShow").val(paramJson.pageShow);
+                $("#shareDataName").val(paramJson.shareDataName);
+        },
+        saveParamData:function(){ //返回属性配置JSON
+            var needAsyncInit = $("#needAsyncInit input:checked").val();
+            var pageShow = $("#pageShow").val();
+            var shareDataName = $("#shareDataName").val();
+            var paramJson = {
+                compId: 'cart',
+                "needAsyncInit": needAsyncInit,
+                "shareDataName": shareDataName,
+                "pageShow": 16
+            };
+            return paramJson;
+        }
+    }
+
+    componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+
+</script>
+</body>
+</html>

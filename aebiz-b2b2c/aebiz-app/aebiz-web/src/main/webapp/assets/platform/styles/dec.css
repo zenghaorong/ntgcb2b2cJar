@@ -1,0 +1,178 @@
+.btn-file > input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    font-size: 23px;
+    height: 100%;
+    direction: ltr;
+    cursor: pointer;
+}
+
+.fileinput {
+    margin-bottom: 9px;
+    display: inline-block;
+}
+
+.fileinput .form-control {
+    padding-top: 7px;
+    padding-bottom: 5px;
+    display: inline-block;
+    margin-bottom: 0px;
+    vertical-align: middle;
+    cursor: text;
+    width:auto;
+}
+
+.fileinput .thumbnail {
+    overflow: hidden;
+    display: inline-block;
+    margin-bottom: 5px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.fileinput .thumbnail > img {
+    max-height: 100%;
+}
+
+.fileinput .btn {
+    vertical-align: middle;
+}
+.fileinput-inline .fileinput-controls {
+    display: inline;
+}
+
+.fileinput-filename {
+    vertical-align: middle;
+    display: inline-block;
+    overflow: hidden;
+}
+
+.form-control .fileinput-filename {
+    vertical-align: bottom;
+}
+
+.fileinput-new .input-group .btn-file {
+    border-radius: 0 0 0 0;
+    width:auto;
+    position: relative;
+}
+
+.fileinput-new .input-group .btn-file.btn-xs,
+.fileinput-new .input-group .btn-file.btn-sm {
+    border-radius: 0 0 0 0;
+}
+
+.fileinput-new .input-group .btn-file.btn-lg {
+    border-radius: 0 0 0 0;
+}
+input[type=file] {
+    display: block;
+    width: 81px;
+}
+.leadbox .form-group {
+    display: block;
+}
+.form-inline .form-group {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+.mt10 {
+    margin-top: 10px;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.leadbox .form-group {
+    display: block;
+}
+.nopadding {
+    padding: 0 !important;
+}
+.btn.btn-large {
+    padding: 10px 16px;
+}
+.form-inline .form-group {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+.leadbox .upload_con label {
+    float: left;
+    width: 220px !important;
+}
+.form-inline .control-label {
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+.control-label {
+    font-weight: normal;
+}
+label, input, button, select, textarea {
+    font-size: 13px;
+}
+label {
+    display: inline-block;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+label {
+    cursor: default;
+}
+.fileinput-exists .fileinput-new,
+.fileinput-new .fileinput-exists {
+    display: none;
+}
+.form-actions {
+    padding: 15px;
+    text-align: left;
+}
+.form-actions {
+    background: 0;
+    border: 0;
+}
+.a_size_1 {
+    width: 10%;
+}
+.btn {
+    background: #d3d3d3;
+    border: 0;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    text-shadow: none;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    color: #444;
+    padding: 5px 9px;
+    filter: none;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #428bca;
+    border-color: #357ebd;
+}
+.btn {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

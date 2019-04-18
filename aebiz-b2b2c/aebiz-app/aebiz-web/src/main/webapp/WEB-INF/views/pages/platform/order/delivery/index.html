@@ -1,0 +1,273 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+</header>
+<div class="content-wrap" >
+    <div class="wrapper" style="min-height:500px;">
+        <form class="form-horizontal parsley-form">
+            <div class="box-tab">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#delivery" onclick="query(0)"  data-toggle="tab"><!--# if(obj.noSendNum > 0 ) { #--><span class="badge pull-right" style="background-color: #ff2e1d">${obj.noSendNum}</span><!--# } #-->未发货&nbsp;</a></li>
+                    <li><a href="#delivery" onclick="query(1)" data-toggle="tab"><!--# if(obj.sendNum > 0 ) { #--><span class="badge pull-right" style="background-color: #ff2e1d">${obj.sendNum}</span><!--# } #-->已发货&nbsp;</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="delivery">
+                        <form >
+                            <div class="form-group">
+                                <label class="control-label col-sm-1">物流单号:</label>
+                                <div class="col-sm-2"> <input type="text" name="expressNo" class="form-control"></div>
+                                <label class="control-label col-sm-1">收货人:</label>
+                                <div class="col-sm-2"> <input type="text" name="deliveryName" class="form-control"></div>
+                                <label class="control-label col-sm-1">手机号:</label>
+                                <div class="col-sm-2"> <input type="text" name="deliveryMobile" class="form-control"></div>
+                                <button type="button" class="btn btn-info" onclick="search()">查询</button>
+                                <button type="reset" class="btn btn-default">清空</button>
+                            </div>
+                        </form>
+                        <div class="table-responsive no-border" style="min-height: 500px;">
+                            <table class="table s-table datatable"  >
+                                <caption></caption>
+                                <thead>
+                                <tr>
+                                    <th style="width: 26%">货品信息</th>
+                                    <th style="width: 4%">单价(元)</th>
+                                    <th style="width: 10%">发货数量</th>
+                                    <th style="width: 12%">订单编号</th>
+                                    <th style="width: 12%">下单时间</th>
+                                    <th style="width: 12%">买家名称</th>
+                                    <th style="width: 14%">买家联系号码</th>
+                                    <th style="width: 12%">物流公司</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .order_imgbx{
+        float: left;
+        width: 82px;
+        height: 82px;
+        border: 1px solid #e5e5e5;
+        margin: 0px 8px;
+        overflow: hidden;
+        -webkit-transition: border 0.3s;
+        transition: border 0.3s;
+    }
+    table .s-input{margin: auto;}
+    table,table.s-table tr td,table tr {border: 1px solid #ddd;text-align: center;vertical-align: middle;}
+
+    .order_table_space{
+        height: 10px;
+        border: none !important;
+        padding: 0;
+    }
+
+    .delivery_a {
+        color: #368ee0;
+    }
+    .delivery_a:hover{
+        text-decoration: underline !important;
+    }
+
+</style>
+<script language="JavaScript">
+
+    var expressStatus=0;//默认查询打配货单
+    var expressNo = ""; //物流单号查询条件
+    var deliveryName = "";//收货人姓名
+    var deliveryMobile = "";//收货人手机号
+    var datatable;
+    var rowData = [];
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                var api = this.api();
+                var rows = api.rows( {page:'current'} ).nodes();
+                var data = api.rows( {page:'current'} ).data();
+                rowData = data;
+                api.column(0, {page:'current'} ).data().each( function ( group, i ) {
+                    var trView = [];
+                    trView.push('<tr class="order_table_space"><td colspan="8" class="order_table_space"></td></tr>' +
+                        '<tr style="background-color: #F5F5F5;margin-top: 5px;"><th  colspan="8"><div style="float: left;font-weight: normal!important;"><input type="checkbox">&nbsp;&nbsp;'+ moment(parseInt((data[i]["opAt"])*1000)).format("YYYY-MM-DD HH:mm:ss")+'  |  配货单号: '+data[i]["checkNo"]+'  |  收货人: '+ data[i]["deliveryName"]+'  |  收货人手机号: '+ (data[i]["deliveryMobile"] == null? "暂无": data[i]["deliveryMobile"]) +'</div><div style="left:5vw;">'+buttonRender(data[i])+'</div></th></tr>');
+
+                    var detailList = data[i]['detailList'];
+                    if(detailList != null){
+                        for(var n= 0;n< detailList.length;n++){
+                            trView.push('<tr>' +
+                                '<td><div><a href="#" class="order_imgbx"> <img src="'+ data[i]['detailList'][n]['orderGoods']['imgUrl'] +'"  alt="..."></a></div><div>'+ data[i]['detailList'][n]['orderGoods']['goodsName']+'&nbsp;&nbsp;&nbsp;&nbsp;'+data[i]['detailList'][n]['orderGoods']['name']+'</div></td>' +
+                                '<td>¥' + setPrice(data[i]['detailList'][n]['orderGoods']['buyPrice'])  +'</td>' +
+                                '<td>' + data[i]['detailList'][n]['sendNum']  +'</td>'+
+                                '<td><a class="delivery_a" href="${base!}/platform/order/main/detail/' + data[i]['detailList'][n]['orderId'] + '" data-pjax>' + data[i]['detailList'][n]['orderId']  +'</a></td>'+
+                                '<td>' + (data[i]['detailList'][n]['orderGoods']['orderMain'] == null?"暂无":moment(parseInt((data[i]['detailList'][n]['orderGoods']['orderMain']['orderAt'])*1000)).format("YYYY-MM-DD HH:mm:ss")) +'</td>'+
+                                '<td>' + data[i]['detailList'][n]['orderGoods']['accountUser']['loginname'] +'</td>'+
+                                '<td>' + data[i]['detailList'][n]['orderGoods']['accountUser']['mobile'] +'</td>'
+                            );
+
+                            if(n == 0){
+                                trView.push('<td  rowspan='+detailList.length+'>' +'<p style="color: #ff4336">'+(data[i]['expressName']==null?"暂无":data[i]['expressName'])+'</p></td>');
+                            }
+                            trView.push('</tr>');
+                        }
+                    }
+                    $(rows).eq( i ).replaceWith(trView.join());
+                });
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base!}/platform/order/delivery/data",
+                "type": "post",
+                "data": function (d) {
+                    if(expressStatus != null){
+                        d.expressStatus = expressStatus;
+                    }
+                    if(deliveryName != null && deliveryName != ""){
+                        d.deliveryName = deliveryName;
+                    }
+                    if(expressNo != null && expressNo != ""){
+                        d.expressNo = expressNo;
+                    }
+                    if(deliveryMobile != null && deliveryMobile != ""){
+                        d.deliveryMobile = deliveryMobile;
+                    }
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "id","bSortable": true,"sDefaultContent" : ""},
+                {"data": "checkNo","sDefaultContent" : ""},
+                {"data": "sendType","sDefaultContent" : ""},
+                {"data": "sendMoney","sDefaultContent" : ""},
+                {"data": "expressId","sDefaultContent" : "", "bSortable": true},
+                {"data": "expressName","sDefaultContent" : "", "bSortable": true},
+                {"data": "expressNo", "bSortable": true,"sDefaultContent" : ""},
+                {"data": "deliveryName","sDefaultContent" : ""},
+                {"data": "deliveryMobile","sDefaultContent" : "","visible": false},
+                {"data": "expressStatus","sDefaultContent" : "", "visible": false}
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        /*var buttonList = [];
+                         //打配货单
+                         //打快递单
+                         switch (row.expressStatus){
+                         case 0:
+                         buttonList.push('<li class="divider"></li>');
+                         buttonList.push('<li><a data-toggle="modal" data-target="#dialogConfirm" onclick="confirm('+row.id+')">确认发货</a></li>');
+                         buttonList.push('<li><a href="${base!}/platform/self/order/delivery/printDelivery/' + row.id + '" data-pjax>打印配货单</a></li>');
+                         buttonList.push('<li><a href="${base!}/platform/self/order/delivery/printExpress/' + row.id + '" data-pjax>打印快递单</a></li>');
+                         buttonList.push('<li><a data-toggle="modal" data-target="#dialogCancel" onclick="cancel('+row.id+')"  >取消发货</a></li>');
+                         break;
+                         case 1:
+                         break;
+                         default:
+                         }
+
+                         return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                         ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                         '<li><a href="${base!}/platform/self/order/delivery/detail/' + row.id + '" data-pjax>${msg["globals.button.detail"]}</a></li>' +
+                         buttonList.join("")+
+                         '</ul>' +
+                         '</div>';*/
+                    },
+                    "targets": 8
+                }
+            ]
+        });
+
+        /* datatable.on('click', 'tr', function () {
+         $(this).toggleClass('selected');
+         });*/
+
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    };
+
+    $(function () {
+        initDatatable();
+    });
+
+    //配货单TAB查询
+    function query(val) {
+        deliveryMobile = $("input[name='deliveryMobile']").val();
+        deliveryName =  $("input[name='deliveryName']").val();
+        expressNo = $("input[name='expressNo']").val();
+        expressStatus = val;
+        datatable.ajax.reload();
+    }
+
+    //配货单查询
+    function search() {
+        deliveryMobile = $("input[name='deliveryMobile']").val();
+        deliveryName =  $("input[name='deliveryName']").val();
+        expressNo = $("input[name='expressNo']").val();
+        datatable.ajax.reload();
+    }
+
+
+    $(document).ready(function () {
+
+    });
+
+
+
+    //获取一行数据
+    function getRow(id) {
+        for(var i =0;i<rowData.length;i++){
+            if(rowData[i].id == id){
+                return rowData[i];
+            }
+        }
+    }
+
+
+
+    //按钮动态加载渲染方法
+    function buttonRender(row) {
+        var buttonList = [];
+        //buttonList.push('<li class="order_button"><a href="${base!}/platform/order/delivery/detail/' + row.id + '" data-pjax>${msg["globals.button.detail"]}</a></li>');
+        //打配货单
+        //打快递单
+        buttonList.push('<div class="btn-group" style="float: right;right: 100px"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"> <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" style="min-width: 120px" role="menu">');
+        buttonList.push('<li class="order_button"><a href="${base!}/platform/order/delivery/detail/' + row.id + '" data-pjax>${msg["globals.button.detail"]}</a></li>');
+        buttonList.push('</ul></div>');
+        return buttonList.join('');
+    }
+
+    //配送方式渲染
+    function sendTypeRender(data) {
+        let result='';
+        switch (data){
+            case 0:
+                result = "<span>${msg['order.enum.ssendtype.express']}</span>";
+                break;
+            case 1:
+                result = "<span>${msg['order.enum.ssendtype.hand']}</span>";
+                break;
+            default:
+        }
+        return result;
+    }
+
+</script>
+<!--#}#-->

@@ -1,0 +1,144 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/order/pay/refunds" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/order/pay/refunds/addDo" method="post">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="groupId" class="col-sm-2 control-label">${msg['order.pay.refunds.column.groupId']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="groupId" class="form-control" name="groupId" data-parsley-required="true" placeholder="${msg['order.pay.refunds.column.groupId']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="orderId" class="col-sm-2 control-label">${msg['order.pay.refunds.column.orderId']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="orderId" class="form-control" name="orderId" data-parsley-required="true" placeholder="${msg['order.pay.refunds.column.orderId']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="accountId" class="col-sm-2 control-label">${msg['order.pay.refunds.column.accountId']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="accountId" class="form-control" name="accountId" data-parsley-required="true" placeholder="${msg['order.pay.refunds.column.accountId']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="storeId" class="col-sm-2 control-label">${msg['order.pay.refunds.column.storeId']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="storeId" class="form-control" name="storeId" data-parsley-required="true" placeholder="${msg['order.pay.refunds.column.storeId']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="payMoney" class="col-sm-2 control-label">${msg['order.pay.refunds.column.payMoney']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="payMoney" class="form-control" name="payMoney" data-parsley-required="true" placeholder="${msg['order.pay.refunds.column.payMoney']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="payCode" class="col-sm-2 control-label">${msg['order.pay.refunds.column.payCode']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="payCode" class="form-control" name="payCode" data-parsley-required="true" placeholder="${msg['order.pay.refunds.column.payCode']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="payName" class="col-sm-2 control-label">${msg['order.pay.refunds.column.payName']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="payName" class="form-control" name="payName" data-parsley-required="true" placeholder="${msg['order.pay.refunds.column.payName']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="payAccount" class="col-sm-2 control-label">${msg['order.pay.refunds.column.payAccount']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="payAccount" class="form-control" name="payAccount" data-parsley-required="true" placeholder="${msg['order.pay.refunds.column.payAccount']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="payIp" class="col-sm-2 control-label">${msg['order.pay.refunds.column.payIp']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="payIp" class="form-control" name="payIp" data-parsley-required="true" placeholder="${msg['order.pay.refunds.column.payIp']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="return_url" class="col-sm-2 control-label">${msg['order.pay.refunds.column.return_url']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="return_url" class="form-control" name="return_url" data-parsley-required="true" placeholder="${msg['order.pay.refunds.column.return_url']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="trade_no" class="col-sm-2 control-label">${msg['order.pay.refunds.column.trade_no']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="trade_no" class="form-control" name="trade_no" data-parsley-required="true" placeholder="${msg['order.pay.refunds.column.trade_no']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="note" class="col-sm-2 control-label">${msg['order.pay.refunds.column.note']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="note" class="form-control" name="note" data-parsley-required="true" placeholder="${msg['order.pay.refunds.column.note']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="payAt" class="col-sm-2 control-label">${msg['order.pay.refunds.column.payAt']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="payAt" class="form-control" name="payAt" data-parsley-required="true" placeholder="${msg['order.pay.refunds.column.payAt']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="finishAt" class="col-sm-2 control-label">${msg['order.pay.refunds.column.finishAt']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="finishAt" class="form-control" name="finishAt" data-parsley-required="true" placeholder="${msg['order.pay.refunds.column.finishAt']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="paySucess" class="col-sm-2 control-label">${msg['order.pay.refunds.column.paySucess']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="paySucess" class="form-control" name="paySucess" data-parsley-required="true" placeholder="${msg['order.pay.refunds.column.paySucess']}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+<script language="JavaScript">
+    $(document).ready(function () {
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    form.resetForm();
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<!--#}#-->
+
+

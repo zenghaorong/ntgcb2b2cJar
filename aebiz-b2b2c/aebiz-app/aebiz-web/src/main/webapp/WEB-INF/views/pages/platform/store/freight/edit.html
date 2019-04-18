@@ -1,0 +1,555 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.config.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.all.js"></script>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/store/freight" id="goBack" data-pjax><i
+                class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+    <div class="btn-group tool-button pull-right">
+        <a class="btn btn-primary navbar-btn" href="javascript:;" id="save" data-pjax>${msg['globals.button.save']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/store/freight/editDo" method="post">
+                <input type="hidden" name="id" value="${obj.id}">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="templateName" class="col-sm-1 control-label">${msg['store.freight.column.templateName']}</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="templateName" class="form-control" name="templateName"
+                                       data-parsley-required="true"
+                                       placeholder="${msg['store.freight.column.templateName']}"
+                                       value="${obj.templateName}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">默认规则</label>
+
+
+
+
+
+                        <div class="col-sm-10">
+                            <span class="control-label" style="float: left">计费方式:</span>
+                            <select id="billingType" name="billingType" class="form-control" style="width: 120px;float: left">
+                                <option value="1" <!--# if (obj.billingType=="1"){#-->selected<!--#}#-->>按件数</option>
+                                <option value="2" <!--# if (obj.billingType=="2"){#-->selected<!--#}#-->>按重量</option>
+                                <option value="3" <!--# if (obj.billingType=="3"){#-->selected<!--#}#-->>按体积</option>
+                            </select>
+                            <input style="width: 145px;float: left" data-parsley-type="integer" class="form-control"  type="text" name="defaultUnit" value="${obj.defaultUnit}" data-parsley-required="true"><input id="defaultUnit" readonly style="float: left;width: 40px;border-left:0px;border-top:0px;border-right:0px;border-bottom:1px" value="件内,">
+                            <input style="width: 155px;float: left" data-parsley-price="true" class="form-control" type="text" name="defautAffix" data-parsley-required="true" value="${@money.fenToYuan(obj.defautAffix)}"><span class="control-label" style="float: left">元,每增加</span>
+                            <input style="width: 155px;float: left" type="text" name="addUnit" class="form-control" data-parsley-type="integer" data-parsley-required="true" value="${obj.addUnit}">
+                            <input id="addUnit" readonly style="float: left;width: 80px;border-left:0px;border-top:0px;border-right:0px;border-bottom:1px" value="件,增加运费">
+                            <input style="width: 145px;float: left" type="text" data-parsley-price="true"  class="form-control" name="addCost" data-parsley-required="true" value="${@money.fenToYuan(obj.addCost)}
+"> <span class="control-label" style="float: left">元</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">模板规则</label>
+                        <div class="col-sm-10">
+                            <table class="col-lg-12 table table-bordered">
+                                <tr>
+                                    <td colspan="9"><a id="addFreight" class="btn btn-primary navbar-btn"
+                                           style="height: 30px;margin-top: 0px;float: right">增加规则</a></td>
+                                </tr>
+                                <tr>
+                                    <th>配送地区</th>
+                                    <th>商品分类</th>
+                                    <th>物流公司</th>
+                                    <th>计费方式</th>
+                                    <th>首</th>
+                                    <th>首费</th>
+                                    <th>续</th>
+                                    <th>续费</th>
+                                    <th>操作</th>
+                                </tr>
+                                <!--# for (R in objRules!) {#-->
+                                <tr class="js-tamp-tr"  id="${R.id}">
+                                    <td><input class="js-areaName" style="width: 80px;border-left:0px;border-top:0px;border-right:0px;border-bottom:1px"  type="text" readonly name="areaName" placeholder="未添加地区" value="${R.areaName}"><a data-toggle="modal" onclick="areaEdit(this)" style="color: blue" href="javascript:void(0)">编辑</a>
+                                        <input class="js-area" type="hidden" name="areaCode" value="${R.areaCode}"></td>
+                                    <td><input class="js-goodsName" type="text" readonly style="width: 80px;border-left:0px;border-top:0px;border-right:0px;border-bottom:1px" placeholder="未添加商品" value="${R.goodsName}"><a data-toggle="modal" onclick="goodsEdit(this)" style="color: blue" href="javascript:void(0)">编辑</a>
+                                        <input class="js-goods" id="goodsId' + addFreight + '" type="hidden"
+                                               name="goodsId" value="${R.goodsId}">
+                                    </td>
+                                    <td><input class="js-logisticsName" type="text" readonly style="width: 80px;border-left:0px;border-top:0px;border-right:0px;border-bottom:1px" name="logisticsName" placeholder="未添加物流" value="${R.logisticsName}" ><a data-toggle="modal" onclick="logisticsEdit(this)" style="color: blue" href="javascript:void(0)">编辑</a><input
+                                            class="js-logistics" id="logisticsCode' + addFreight + '" type="hidden"
+                                            name="logisticsCode" value="${R.logisticsCode}"></td>
+                                    <td><select name="valuationType" class="js-valuation form-control">
+                                        <option value="1" <!--# if (R.valuationType=="1"){#-->selected<!--#}#-->
+                                        >按件数</option>
+                                        <option value="2" <!--# if (R.valuationType=="2"){#-->selected<!--#}#-->
+                                        >按重量</option>
+                                        <option value="3" <!--# if (R.valuationType=="3"){#-->selected<!--#}#-->
+                                        >按体积</option></select></td>
+                                    <td><input type="text" name="firstUnit" data-parsley-type="integer" data-parsley-required="true"
+                                               class="form-control" style="width:60px" value="${R.firstUnit}"
+                                               placeholder="首"/></td>
+                                    <td><input type="text" name="firstCost" data-parsley-price="true" data-parsley-required="true"
+                                               class="form-control" style="width:60px"
+                                               value="${@money.fenToYuan(R.firstCost)}" placeholder="首费"/>
+                                    </td>
+                                    <td><input type="text" name="continueUnit" data-parsley-type="integer" data-parsley-required="true"
+                                               class="form-control" style="width:60px" value="${R.continueUnit}"
+                                               placeholder="续"/></td>
+                                    <td><input type="text" name="continueCost" data-parsley-price="true" data-parsley-required="true"
+                                               class="form-control" style="width:60px"
+                                               value="${@money.fenToYuan(R.continueCost)}" placeholder="续费"/>
+                                    </td>
+                                    <td><a onclick="remove('${R.id}')" class="btn btn-primary navbar-btn"
+                                           style="height: 30px;margin-top: 0px">删除</a></td>
+                                </tr>
+                                <!--# }#-->
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="templateExplain" class="col-sm-1 control-label">模板说明</label>
+                        <div class="col-sm-10">
+                                <textarea id="templateExplain" name="templateExplain"
+                                          style="width: 100%; height: 100px;">${obj.templateExplain!}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="enabled" class="col-sm-1 control-label">是否默认</label>
+                        <div class="col-sm-10 ">
+                            <div class="mr15">
+                                <input type="checkbox"  class="js-switch-blue" id="enabled"  name="enabled"  <!--# if (obj.enabled){#-->checked<!--# }#-->
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <input type="hidden" name="temps"/>
+            </form>
+        </section>
+    </div>
+</div>
+<div id="areaEdit" class="modal fade bs-modal-sm" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12" align="left">
+                        <!--# for (o in areaList!) {#-->
+                        <input type="checkbox" name="areaCode" value="${o.code}"> ${o.name}
+                        <input id="${o.code}" type="hidden" name="areaName" value="${o.name}">
+                        <!--# }#-->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}
+                </button>
+                <button type="button" class="btn btn-primary" id="area_ok">${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="logisticsEdit" class="modal fade bs-modal-sm" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12" align="left">
+                        <!--# for (L in logisticsList!) {#-->
+                        <input type="checkbox" name="logisticsCode" value="${L.code}">
+                        <label>${L.name}</label>
+                        <input id="${L.code}" type="hidden" name="logisticsName" value="${L.name}">
+                        <!--# }#-->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}
+                </button>
+                <button type="button" class="btn btn-primary" id="logistics_ok">${msg["goods.class.column.enter"]}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="dialogSelectFrontClass" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeFrontClass" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary"  id="goods_ok" >${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script language="JavaScript">
+        //初始化前台分类树
+        function initFrontClassTreeView() {
+            var $dialog = $("#dialogSelectFrontClass");
+            $("#jsTreeFrontClass").jstree({
+                plugins: ["wholerow", "json_data", "checkbox", "search"],
+                core: {
+                    data: function (node, callback) {
+                        $.get("${base}/platform/store/freight/class/tree", function (ret) {
+                            var classes = [];
+                            if (ret) {
+                                classes = $(ret).map(function () {
+                                    return {
+                                        id: this.id,
+                                        text: this.name,
+                                        parent: this.parentId == "" ? "#" : this.parentId,
+                                    }
+                                }).get();
+                            }
+                            callback(classes);
+                        }, "json");
+                    },
+                    multiple: true
+                }
+            }).on("dblclick.jstree", function (node) {
+                var tree = $(this).jstree();
+                var node = tree.get_selected(true);
+                if (node.length && tree.is_leaf(node)) {
+                    selectFrontClass();
+                }
+            }).on("select_node.jstree", function (e, data) {
+                //禁止选父节点
+                var tree = $(this).jstree();
+                if (tree.is_parent(data.node)) {
+                    tree.open_node(data.node);
+                }
+            });
+
+            $('.js-search-class-input', $dialog).keyup(function () {
+                if(frontClassTo) {
+                    clearTimeout(frontClassTo);
+                }
+                frontClassTo = setTimeout(function () {
+                    var text = $.trim($('.js-search-class-input', $dialog).val());
+                    if (text != "") {
+                        $('#jsTreeFrontClass').jstree(true).search(text);
+                    }
+                }, 250);
+            });
+            $(".js-search-class", $dialog).click(function () {
+                var text = $.trim($(".js-search-class-input", $dialog).val());
+                if (text != "") {
+                    $('#jsTreeFrontClass').jstree(true).search(text);
+                }
+            });
+        }
+
+
+        function fillArea() {
+            var temps = $("tr.js-tamp-tr").map(function () {
+                var areaCode = $(".js-area", this).val();
+                var goodsId = $(".js-goods", this).val();
+                var logisticsCode = $(".js-logistics", this).val();
+                var valuationType = $(".js-valuation", this).val();
+                var firstUnit = $("[name=firstUnit]", this).val();
+                var firstCost = FloatMul($("[name=firstCost]", this).val(), 100);
+                var continueCost = FloatMul($("[name=continueCost]", this).val(), 100);
+                var continueUnit = $("[name=continueUnit]", this).val();
+                return {
+                    areaCode: areaCode,
+                    goodsId: goodsId,
+                    logisticsCode: logisticsCode,
+                    valuationType: valuationType,
+                    firstUnit: firstUnit,
+                    firstCost: firstCost,
+                    continueCost: continueCost,
+                    continueUnit: continueUnit,
+                };
+            }).get();
+            $("[name=temps]:hidden").val(JSON.stringify(temps));
+        }
+        var needTransfer = ["defautAffix", "addCost"];
+        var ue;
+        $(document).ready(function () {
+            myForm.init();
+            initFrontClassTreeView();
+            setTimeout(function () {
+                ue = new baidu.editor.ui.Editor();
+                ue.render('templateExplain');
+            }, 500);
+            var addFreight = 1;
+            $("#save").click(function () {
+                fillArea();
+                if (isExist()) {
+                    Toast.warning("存在重复");
+                }else{
+                    $('#editForm').submit();
+                }
+            });
+            $('#editForm').ajaxForm({
+                dataType: 'json',
+                beforeSubmit: function (arr, form, options) {
+                    for (var i in arr) {
+                        //若提交的表单包含以上的金额,则元转换为分
+                        if (needTransfer.contains(arr[i].name)) {
+                            var val = arr[i].value;
+                            arr[i].value = FloatMul(val, 100);
+                        }
+                    }
+                    form.find("button:submit").button("loading");
+                },
+                success: function (data, statusText, xhr, form) {
+                    if (data.code == 0) {
+                        Toast.success(data.msg);
+                        window.location.href="${base!}/platform/store/freight";
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    form.find("button:submit").button("reset");
+                }
+
+            });
+            if(${obj.billingType}=="2"){
+                $("#defaultUnit").val("g内");
+                $("#addUnit").val("g,增加运费");
+            }
+            if(${obj.billingType}=="1"){
+                $("#defaultUnit").val("件内");
+                $("#addUnit").val("件,增加运费");
+            }
+            if(${obj.billingType}=="3"){
+                $("#defaultUnit").val("cm³内");
+                $("#addUnit").val("cm³,增加运费");
+            }
+        });
+        $("#addFreight").click(function () {
+            addFreight = Number(addFreight)+1;
+            $(this)
+                .parent()
+                .parent()
+                .parent()
+                .append(
+                    '<tr class="js-tamp-tr" id="addFreight' + addFreight + '"><td><input class="js-areaName" style="width: 80px;border-left:0px;border-top:0px;border-right:0px;border-bottom:1px"  type="text" readonly  placeholder="未添加地区"><a data-toggle="modal" onclick="areaEdit(this)" style="color: blue" href="javascript:void(0)">编辑</a> <input class="js-area" id="areaCode' + addFreight + '" type="hidden" name="areaCode" value=""></td><td> <input class="js-goodsName" type="text" readonly style="width: 80px;border-left:0px;border-top:0px;border-right:0px;border-bottom:1px" placeholder="未添加商品"><a data-toggle="modal" onclick="goodsEdit(this)" style="color: blue" href="javascript:void(0)">编辑</a> <input class="js-goods" id="goodsId' + addFreight + '" type="hidden" name="goodsId"></td><td><input class="js-logisticsName"   type="text" readonly style="width: 80px;border-left:0px;border-top:0px;border-right:0px;border-bottom:1px" placeholder="未添加物流"><a data-toggle="modal" onclick="logisticsEdit(this)" style="color: blue" href="javascript:void(0)">编辑</a><input class="js-logistics" id="logisticsCode' + addFreight + '"  type="hidden" name="logisticsCode"></td> <td><select name="valuationType" class="js-valuation form-control"><option value="1">按件数</option><option value="2">按重量</option><option value="3">按体积</option></select></td><td><input type="text" name="firstUnit" data-parsley-type="integer" class="form-control" style="width:60px" value="" placeholder="首" data-parsley-required="true"/></td> <td><input type="text" name="firstCost" data-parsley-price="true" class="form-control" style="width:60px" value="" placeholder="首费" data-parsley-required="true"/></td> <td><input type="text" name="continueUnit" data-parsley-type="integer" class="form-control" style="width:60px" value="" placeholder="续" data-parsley-required="true"/></td> <td><input type="text" name="continueCost" data-parsley-price="true" class="form-control" style="width:60px" value="" placeholder="续费" data-parsley-required="true"/></td> <td><a onclick="removeFreight(' + addFreight + ')" class="btn btn-primary navbar-btn" style="height: 30px;margin-top: 0px">删除</a></td> </tr>'
+                );
+        })
+        var variableArea;
+        function areaEdit(obj) {
+            variableArea = $(obj);
+            $('#areaEdit').on("show.bs.modal", function () {
+                var areas = variableArea.siblings(".js-area").val() || "";
+                if (areas != "") {
+                    $(areas.split(",")).each(function () {
+                        $('#areaEdit [value=' + this + ']:checkbox').prop("checked", true);
+                    })
+                }
+            });
+            $('#areaEdit').modal('show');
+        }
+        var variableVal;
+        function valuationEdit(obj) {
+            variableVal = $(obj);
+            $('#valuationEdit').on("show.bs.modal", function () {
+                var variable = variableVal.siblings(".js-valuation").val() || "";
+                if (variable != "") {
+                    $(variable.split(",")).each(function () {
+                        $('#valuationEdit [value=' + this + ']:radio').prop("checked", true);
+                    })
+                }
+            });
+            $('#valuationEdit').modal('show');
+        }
+        $("#valuation_ok").click(function () {
+            var cks = $("#valuationEdit :checked").map(function () {
+                return this.value;
+            }).get().join(",");
+            variableVal.siblings(".js-valuation").val(cks);
+            $('#valuationEdit').on("hide.bs.modal", function () {
+                $('#valuationEdit :radio').prop("checked", false);
+            });
+            $('#valuationEdit').modal('hide');
+        })
+
+        $("#area_ok").click(function () {
+            var areaObj="";
+            var cks = $("#areaEdit :checked").map(function () {
+                var id = this.value;
+                areaObj+=$("#"+id).val()+";";
+                return this.value;
+            }).get().join(",");
+            variableArea.siblings(".js-area").val(cks);
+            $(".js-areaName", variableArea.parents("tr:first")).val(areaObj)
+            $('#areaEdit').on("hide.bs.modal", function () {
+                $('#areaEdit :checkbox').prop("checked", false);
+            });
+            $('#areaEdit').modal('hide');
+        })
+        var variableGoods;
+        function goodsEdit(obj) {
+            variableGoods = $(obj);
+            var ids = variableGoods.siblings(".js-goods").val().split(",");
+            var tree = $("#jsTreeFrontClass").jstree(true);
+            tree.deselect_all();
+            tree.select_node (ids);
+            $('#dialogSelectFrontClass').modal('show');
+        }
+        var variableLogistics;
+        function logisticsEdit(obj) {
+            variableLogistics = $(obj);
+            $('#logisticsEdit').on("show.bs.modal", function () {
+                var logistics = variableLogistics.siblings(".js-logistics").val() || "";
+                if (logistics != "") {
+                    $(logistics.split(",")).each(function () {
+                        $('#logisticsEdit [value=' + this + ']:checkbox').prop("checked", true);
+                    })
+                }
+            });
+            $('#logisticsEdit').modal('show');
+        }
+        $("#goods_ok").click(function () {
+            var tree = $.jstree.reference("#jsTreeFrontClass");
+            var nodes = tree.get_bottom_selected(true);
+            var idsStr = $(nodes).map(function () {
+                return this.id;
+            }).get().join(",");
+            var text = $(nodes).map(function () {
+                return tree.get_path(this, "/");
+            }).get().join(",");
+            tree.close_all();
+            variableGoods.siblings(".js-goods").val(idsStr);
+            variableGoods.siblings(".js-goodsName").val(text);
+            $("#dialogSelectFrontClass").modal("hide");
+        })
+        $("#logistics_ok").click(function () {
+            var logisticsObj="";
+            var cks = $("#logisticsEdit :checked").map(function () {
+                var code = this.value;
+                logisticsObj+=$("#"+code).val()+";";
+                return this.value;
+            }).get().join(",");
+            variableLogistics.siblings(".js-logistics").val(cks);
+            $(".js-logisticsName", variableLogistics.parents("tr:first")).val(logisticsObj)
+            $('#logisticsEdit').on("hide.bs.modal", function () {
+                $('#logisticsEdit :checkbox').prop("checked", false);
+            });
+            $('#logisticsEdit').modal('hide');
+        })
+        function removeFreight(obj) {
+            $("#addFreight" + obj).detach();
+        }
+        function remove(obj) {
+            $.post("${base!}/platform/store/freight/deleteRules/" + obj, function () {
+                $("#" + obj).remove();
+            });
+        }
+        //数组的包含方法
+        Array.prototype.contains = function (needle) {
+            for (i in this) {
+                if (this[i] == needle) return true;
+            }
+            return false;
+        }
+        //浮点数乘法运算
+        function FloatMul(arg1, arg2) {
+            var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+            try {
+                m += s1.split(".")[1].length
+            } catch (e) {
+            }
+            try {
+                m += s2.split(".")[1].length
+            } catch (e) {
+            }
+            return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+        }
+        $("#billingType").change(function(){
+            if($("#billingType").val()=="2"){
+                $("#defaultUnit").val("g内");
+                $("#addUnit").val("g,增加运费");
+            }
+            if($("#billingType").val()=="1"){
+                $("#defaultUnit").val("件内");
+                $("#addUnit").val("件,增加运费");
+            }
+            if($("#billingType").val()=="3"){
+                $("#defaultUnit").val("cm³内");
+                $("#addUnit").val("cm³,增加运费");
+            }
+
+        });
+
+        function isExist() {
+            var flag = false;
+            $("tr.js-tamp-tr").each(function () {
+                var $tr = $(this);
+                var rules = getArr($tr);
+                $("tr.js-tamp-tr").not($tr).each(function () {
+                    var $others = getArr($(this));
+                    if (duplicate(rules, $others)) {
+                        flag = true;
+                        return false;
+                    }
+                });
+                if (flag) {
+                    return false;
+                }
+            });
+            return flag;
+        }
+
+        function duplicate(srcs, targets) {
+            var flag = false;
+            fist:for (var i = 0; i < srcs.length; i++) {
+                for (var j = 0; j < srcs.length; j++) {
+                    if (srcs[i] == targets[j]) {
+                        flag = true;
+                        break fist;
+                    }
+                }
+            }
+            return flag;
+        }
+
+        function getArr($tr) {
+            var arr = [];
+            var areaCodes = $("[name='areaCode']", $tr).val().split(",");
+            var classes = $("[name='goodsId']", $tr).val().split(",");
+            var logisticsCodes = $("[name='logisticsCode']", $tr).val().split(",");
+            if (areaCodes.length == 0) {
+                areaCodes.push("all")
+            }
+            if (classes.length == 0) {
+                classes.push("all")
+            }
+            if (logisticsCodes.length == 0) {
+                logisticsCodes.push("all")
+            }
+            $(areaCodes).each(function () {
+                var areaCode = this;
+                $(classes).each(function () {
+                    var clazz = this;
+                    $(logisticsCodes).each(function () {
+                        var logisticsCode = this;
+                        arr.push(areaCode+","+clazz+""+logisticsCode);
+                    });
+                });
+            });
+            return arr;
+        }
+
+    </script>
+    <!--#}#-->
+
+

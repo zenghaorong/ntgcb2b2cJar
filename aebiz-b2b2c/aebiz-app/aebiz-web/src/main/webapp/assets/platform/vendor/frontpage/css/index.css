@@ -1,0 +1,105 @@
+/*产品首页样式*/
+/*首页公告*/
+.slider_right{position: relative;z-index: 8;top: -486px;}
+.slider_right #news{position: absolute;right: 0;padding: 0;}
+.slider_right #lifeserv{position: absolute;right: 0;padding: 0;}
+#news{height:235px;width:226px;overflow:hidden;top:3px;border:solid 1px #e4e4e4;border-bottom:0}
+#news .mc{height:140px;padding:8px 0 0 15px}
+.mt{border-bottom:1px solid #eeeeee;height:40px;line-height:40px;font-size:16px;padding-left:10px;font-family:"Microsoft Yahei"}
+#news .mt .extra{float:right;font-size:12px;margin-right:10px;}
+#news li{width:210px;height:27px;line-height:27px;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;}
+#news li span{font-weight:700;margin-right:5px}
+#lifeserv{height:228px;width:226px;overflow:hidden;top:236px;border:solid 1px #e4e4e4;}
+#lifeserv .mc{height:140px;padding:18px 0 0 5px}
+.life_tit{height: 25px;overflow: hidden;}
+.life_tit li{float: left;margin-right: 6px;text-align: center;}
+.life_tit li a{_float: left;position: relative;display: block;width:80px;line-height: 22px;color: #fff;white-space: nowrap;height: 25px;background: url(../img/tit_bg.png) center 0 no-repeat;}
+.content-iframe{position: relative;height: 146px;padding-right:8px;}
+.form-top{height: 35px;line-height: 35px;overflow: hidden;background:#f5f5f5;margin-bottom:15px;}
+.form-top dt,.form-top dd{float: left;display: inline;height: 35px;overflow: hidden;margin-right: 5px;}
+.form-top dt label{display: inline-block;width: 30px;margin: 0;line-height: 35px;font-size:14px;padding-left:10px;font-family:"Microsoft Yahei"}
+.form-top dd .form-control-input{color: #999;float: left;height: 35px;padding: 0 4px;margin: 0;line-height: 35px;border:none;background:#f5f5f5;text-align: right;}
+.btn-wrap{text-align:center;}
+/*首页楼层标题样式*/
+.y_catatit{height:34px;width:100%;overflow:hidden;border-bottom:2px solid #eb5e58;}
+.y_catatit h2{font-size:20px;float:left;width:190px;overflow:hidden;line-height:34px;margin:0}
+.y_catatit h2 strong{font-family:'microsoft YaHei';font-weight:normal;padding-left:10px;}
+/*楼层图标*/
+.floor_ico{width:24px;height:24px;display:inline-block;float:left;}
+/*楼层不同颜色、皮肤*/
+.y_inflor1 a:hover{color:#eb5e58 !important}
+.y_inflor1 .y_piclist .y_lorbtn:hover{background-color:#eb5e58}
+.y_inflor1 .flex-control-paging li a:hover,.y_inflor1 .flex-control-paging li a.flex-active {background: #eb5e58 !important; }
+.y_inflor2 .y_catatit,.y_inflor2 .y_flortabtit{border-color:#eb5e58}
+.y_inflor2 .y_florad{border-top-color:#eb5e58}
+.y_inflor2 .y_flortabtit li.y_active{background:#eb5e58}
+.y_inflor2 .y_piclist .y_lorbtn:hover{background-color:#eb5e58}
+.y_inflor2 a:hover{color:#eb5e58 !important}
+.y_inflor2 .tooltip-inner{background-color: #eb5e58;}
+.y_inflor2 .tooltip.left .tooltip-arrow {border-left-color: #eb5e58;}
+.y_inflor2 .flex-control-paging li a:hover,.y_inflor2 .flex-control-paging li a.flex-active {background: #eb5e58 !important; }
+.y_inflor3 .y_catatit,.y_inflor3 .y_flortabtit{border-color:#ff4301}
+.y_inflor3 .y_florad{border-top-color:#ff4301}
+.y_inflor3 .y_flortabtit li.y_active{background:#eb5e58}
+.y_inflor3 .y_piclist .y_lorbtn:hover{background-color:#ff4301}
+.y_inflor3 a:hover{color:#ff4301 !important}
+.y_inflor3 .tooltip-inner{background-color: #ff4301;}
+.y_inflor3 .tooltip.left .tooltip-arrow {border-left-color: #ff4301;}
+.y_inflor3 .flex-control-paging li a:hover,.y_inflor3 .flex-control-paging li a.flex-active {background: #ff4301 !important; }
+.y_inflor4 .y_catatit,.y_inflor4 .y_flortabtit{border-color:#6d79db}
+.y_inflor4 .y_florad{border-top-color:#6d79db}
+.y_inflor4 .y_flortabtit li.y_active{background:#eb5e58}
+.y_inflor4 .y_piclist .y_lorbtn:hover{background-color:#6d79db}
+.y_inflor4 a:hover{color:#6d79db !important}
+.y_inflor4 .tooltip-inner{background-color: #6d79db;}
+.y_inflor4 .tooltip.left .tooltip-arrow {border-left-color: #6d79db;}
+.y_inflor4 .flex-control-paging li a:hover,.y_inflor4 .flex-control-paging li a.flex-active {background: #6d79db !important; }
+.y_inflor5 .y_catatit,.y_inflor5 .y_flortabtit{border-color:#5db5db}
+.y_inflor5 .y_florad{border-top-color:#5db5db}
+.y_inflor5 .y_flortabtit li.y_active{background:#eb5e58}
+.y_inflor5 .y_piclist .y_lorbtn:hover{background-color:#5db5db}
+.y_inflor5 a:hover{color:#5db5db !important}
+.y_inflor5 .tooltip-inner{background-color: #5db5db;}
+.y_inflor5 .tooltip.left .tooltip-arrow {border-left-color: #5db5db;}
+.y_inflor5 .flex-control-paging li a:hover,.y_inflor5 .flex-control-paging li a.flex-active {background: #5db5db !important; }
+.y_inflor6 .y_catatit,.y_inflor6 .y_flortabtit{border-color:#e74c3c}
+.y_inflor6 .y_florad{border-top-color:#e74c3c}
+.y_inflor6 .y_flortabtit li.y_active{background:#eb5e58}
+.y_inflor6 .y_piclist .y_lorbtn:hover{background-color:#eb5e58}
+.y_inflor6 a:hover{color:#e74c3c !important}
+.y_inflor6 .tooltip-inner{background-color: #e74c3c;}
+.y_inflor6 .tooltip.left .tooltip-arrow {border-left-color: #e74c3c;}
+.y_inflor6 .flex-control-paging li a:hover,.y_inflor6 .flex-control-paging li a.flex-active {background: #e74c3c !important; }
+
+/*页面左侧悬浮楼层导航*/
+.y_florfix{position:fixed;left:20px;top:50%;margin-top:-110px;width:57px;overflow:hidden;z-index:999;background:#fff;opacity:0;visibility:hidden;-webkit-transform:scale(0.6);transform:scale(0.6);-webkit-transition:all 0.5s;transition:all 0.5s;}
+.y_florfix span{width:32px;height:32px;padding-left:25px;display:block;cursor:pointer;font:12px/22px 'microsoft YaHei';background:url(../img/y_fixflobg.gif) 0 0 no-repeat;}
+.y_florfix .y_fixfl2{background-position:0 -32px;}
+.y_florfix .y_fixfl3{background-position:0 -64px;}
+.y_florfix .y_fixfl4{background-position:0 -96px;}
+.y_florfix .y_fixfl5{background-position:0 -128px;}
+.y_florfix .y_fixfl6{background-position:0 -160px;}
+.y_florfix span:hover{color:#fff;background-position:-164px 0;}
+.y_florfix .y_fixfl2:hover{background-position:-164px -32px;}
+.y_florfix .y_fixfl3:hover{background-position:-164px -64px;}
+.y_florfix .y_fixfl4:hover{background-position:-164px -96px;}
+.y_florfix .y_fixfl5:hover{background-position:-164px -128px;}
+.y_florfix .y_fixfl6:hover{background-position:-164px -160px;}
+.y_florfix span.y_active{color:#eb5e58;background-position:-79px 0;}
+.y_florfix .y_fixfl2.y_active{background-position:-79px -32px;}
+.y_florfix .y_fixfl3.y_active{background-position:-79px -64px;}
+.y_florfix .y_fixfl4.y_active{background-position:-79px -96px;}
+.y_florfix .y_fixfl5.y_active{background-position:-79px -128px;}
+.y_florfix .y_fixfl6.y_active{background-position:-79px -160px;}
+.y_fixshow{-webkit-transform:scale(1);transform:scale(1);opacity:1;visibility:visible;}
+
+/*首页楼层切换商品的响应式css-由于ie7\8下是js实现响应式效果，但是组件的css有时在js后面运行，所以提取到首页的css中来*/
+@media (max-width: 1209px) {
+	.y_productmc .y_piclist .y_itemwrap li{width:25%;*width:23%;}
+	.y_productmc .y_piclist .style1 li.y_item1{margin-right:75%;}
+  .y_productmc .y_piclist .y_slide {
+    width: 75%;left:25%;
+  }
+  .y_productmc .y_piclist .style1 .y_item6,.y_productmc .y_piclist .style1 .y_item7{display:none;}
+  .y_productmc .y_piclist .style2 .y_item9,.y_productmc .y_piclist .style2 .y_item10{display:none;}
+}

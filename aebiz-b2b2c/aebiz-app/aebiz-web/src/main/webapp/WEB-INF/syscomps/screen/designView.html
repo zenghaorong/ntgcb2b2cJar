@@ -1,0 +1,160 @@
+<div id="$_compId" class="m-components m-screenselector filtrate-containner f-push-20-t selector">
+    <div class="box">
+        <div class="m-comsloading" id="$_compId_comsloading"></div>
+
+        <div id="$_compId_chooseAttributesDIV" class="condition conditioned">
+            <!-- condition 已选条件 star -->
+            <!-- 如果想要显示出 已经选择好的条件  只要在"conditioned"后面添加 block就可以了 -->
+            <div class="condition-title">已选条件：</div>
+            <div class="condition-cont">
+                <ul id="$_compId_chooseAttributes">
+                    <li class="j_attribute" data-name="attributeBrand">
+                        <a href="javascript:void(0);" class="condition-name">
+                            <span class="j_attrName"></span>：
+                            <strong class="j_attrValue"></strong>
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="clear-condition">
+                <a id="$_compId_clearAll" href="javascript:void(0);">清除所有</a>
+            </div>
+        </div>
+
+        <div id="$_compId_brandModule" class="J_selectorLine s-brand">
+            <div class="sl-wrap">
+                <div class="sl-key">
+                    <strong>品牌：</strong>
+                </div>
+                <div class="sl-value">
+                    <ul class="sl-b-letter j_brandLetter">
+                        <li data-initial="0" class="curr">所有品牌</li>
+                        <li data-initial="a" class="">A</li>
+                        <li data-initial="b" class="">B</li>
+                        <li data-initial="c" class="">C</li>
+                        <li data-initial="d" class="">D</li>
+                        <li data-initial="e" class="">E</li>
+                        <li data-initial="f" class="">F</li>
+                        <li data-initial="g" class="">G</li>
+                        <li data-initial="h" class="">H</li>
+                        <li data-initial="i" class="">I</li>
+                        <li data-initial="j" class="">J</li>
+                        <li data-initial="k" class="">K</li>
+                        <li data-initial="l" class="">L</li>
+                        <li data-initial="m" class="">M</li>
+                        <li data-initial="n" class="">N</li>
+                        <li data-initial="o" class="">O</li>
+                        <li data-initial="p" class="">P</li>
+                        <li data-initial="q" class="">Q</li>
+                        <li data-initial="r" class="">R</li>
+                        <li data-initial="s" class="">S</li>
+                        <li data-initial="t" class="">T</li>
+                        <li data-initial="u" class="">U</li>
+                        <li data-initial="v" class="">V</li>
+                        <li data-initial="w" class="">W</li>
+                        <li data-initial="x" class="">X</li>
+                        <li data-initial="y" class="">Y</li>
+                        <li data-initial="z" class="">Z</li>
+                        <li data-initial="other" class="">其它</li>
+                    </ul>
+                    <!--<div class="sl-b-search J_brandSearch">
+                        <i></i>
+                        <input type="text" class="input-txt placehoder" data-placehoder="可输入拼音、汉字查找品牌">
+                    </div>-->
+                    <div class="clr"></div>
+                    <div class="sl-v-logos">
+                        <ul id="$_compId_brandLoop" class="v-fixed">
+                            <li class="j_brand" data-initial="h" style="display: block;">
+                                <a class="j_brandUrl" href="javascript:void(0)" rel="nofollow"  title="华为（HUAWEI）">
+                                    <i></i>
+                                    <img class="j_brandImgUrl" src="" width="102" height="36">
+                                    <p class="j_brandName">华为（HUAWEI）</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="sl-b-selected j_selectedDiv">
+                        <span class="sl-b-key">已选条件：</span>
+                        <ul class="sl-v-list j_selected brand-selected"></ul>
+                    </div>
+                    <div class="sl-btns">
+                        <a class="btn btn-primary j_btnsConfirm disabled" href="javascript:;">确定</a>
+                        <a class="btn btn-default j_btnsCancel" href="javascript:;">取消</a>
+                    </div>
+                </div>
+                <div class="sl-ext">
+                    <a id="$_compId_showMore" class="sl-e-more j_extMore" href="javascript:;" style="visibility: visible;">更多<i></i></a>
+                    <a id="$_compId_multiple" class="sl-e-multiple j_extMultiple" href="javascript:;">多选<i></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div id="$_compId_priceModule" class="J_selectorLine s-price">
+            <div class="sl-wrap">
+                <div class="sl-key"><strong>价格：</strong></div>
+                <div class="sl-value">
+                    <div class="sl-v-list">
+                        <ul id="$_compId_priceLoop" class="J_valueList">
+                            <li class="j_priceModule">
+                                <a class="j_value" href="javascript:void(0)" rel="nofollow" >
+
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!--<div class="sl-ext">
+                    <a class="sl-e-more j_extMore" href="javascript:;" style="visibility: hidden;">更多<i></i></a>
+                </div>-->
+            </div>
+        </div>
+        <div id="$_compId_categoryModule" class="J_selectorLine s-category">
+            <div class="sl-wrap">
+                <div class="sl-key">
+                    <strong>分类：</strong>
+                </div>
+                <div class="sl-value">
+                    <div class="sl-v-list">
+                        <ul class="j_cateLoop J_valueList">
+                            <li class="j_cateModule">
+                                <input type="hidden" class="j_categoryUuid"/>
+                                <a class="j_value" href="javascript:void(0)" rel="nofollow" onclick="doSearch('categoryUuid','100')">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="j_other J_selectorLine s-line">
+            <div class="sl-wrap">
+                <div class="sl-key">
+                    <span class="j_attrName"></span>
+                </div>
+                <div class="sl-value">
+                    <div class="sl-v-list">
+                        <ul class="j_attrLoop J_valueList">
+                            <li class="j_attrModule">
+                                <a class="j_value" href="javascript:void(0)" rel="nofollow" onclick="doSearch('attributePrice','100')">
+                                    <i></i>100
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="sl-b-selected j_selectedDiv">
+                        <span class="sl-b-key">已选条件：</span>
+                        <ul class="sl-v-list j_selected brand-selected"></ul>
+                    </div>
+                    <div class="sl-btns">
+                        <a class="btn btn-primary j_btnsConfirm disabled" href="javascript:;">确定</a>
+                        <a class="btn btn-default j_btnsCancel" href="javascript:;">取消</a>
+                    </div>
+                </div>
+                <div class="sl-ext">
+                    <a class="sl-e-multiple j_extMultiple" href="javascript:;">多选<i></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

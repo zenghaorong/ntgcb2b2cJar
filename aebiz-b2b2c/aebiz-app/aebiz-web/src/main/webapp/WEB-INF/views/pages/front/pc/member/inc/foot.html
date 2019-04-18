@@ -1,0 +1,71 @@
+<div class="g-center">
+    <div class="picScroll-left f-push-20-t">
+        <div class="list_hd">
+            猜你喜欢
+            <a class="next iconfont icon-next"></a>
+            <a class="prev iconfont icon-prev"></a>
+        </div>
+        <div class="bd">
+            <ul class="picList">
+
+                <!--<li>
+                    <div class="pic"><a href="" target="_blank"><img src="${base!}/assets/front/pc/member/images/ps-lb.png"/></a></div>
+                    <div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+                </li>
+                <li>
+                    <div class="pic"><a href="" target="_blank"><img src="${base!}/assets/front/pc/member/images/ps-lb.png"/></a></div>
+                    <div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+                </li>
+                <li>
+                    <div class="pic"><a href="" target="_blank"><img src="${base!}/assets/front/pc/member/images/ps-lb.png"/></a></div>
+                    <div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+                </li>
+                <li>
+                    <div class="pic"><a href="" target="_blank"><img src="${base!}/assets/front/pc/member/images/ps-lb.png"/></a></div>
+                    <div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+                </li>
+                <li>
+                    <div class="pic"><a href="" target="_blank"><img src="${base!}/assets/front/pc/member/images/ps-lb.png"/></a></div>
+                    <div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+                </li>
+                <li>
+                    <div class="pic"><a href="" target="_blank"><img src="${base!}/assets/front/pc/member/images/ps-lb.png"/></a></div>
+                    <div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+                </li>
+                <li>
+                    <div class="pic"><a href="" target="_blank"><img src="${base!}/assets/front/pc/member/images/ps-lb.png"/></a></div>
+                    <div class="title"><a href="" target="_blank">龙井 2017明前茶 绿茶<p class="price">￥139</p></a></div>
+                </li>-->
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    $(function(){
+        $.get("${base!}/goods/guessFavoorite",function (data) {
+            if(data !=null && data.length>0){
+                var goodsHtml="";
+                for(var i=0;i<data.length;i++){
+                    var product=data[i];
+                    goodsHtml+='<li>'+
+                        '<div class="pic"><a href="${base!}/front/detail?sku='+product.product.sku+'" target="_blank"><img src="'+product.img+'"/></a></div>'+
+                        '<div class="title"><a href="" target="_blank">'+product.product.name+'<p class="price">￥'+(product.product.salePrice/100).toFixed(2)+'</p></a></div>'+
+                        '</li>'
+                }
+            }
+            $(".picList").html(goodsHtml);
+            //订单中心轮播
+            jQuery(".picScroll-left").slide(
+                {
+                    titCell:".hd ul",
+                    mainCell:".bd ul",
+                    autoPage:!0,
+                    effect:"left",
+                    autoPlay:!0,
+                    scroll:5,
+                    vis:5,
+                    easing:"easeOutCirc"
+                })
+        })
+    })
+</script>

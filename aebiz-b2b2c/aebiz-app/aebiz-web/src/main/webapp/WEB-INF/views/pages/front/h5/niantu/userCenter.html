@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>个人中心</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!--标准mui.css-->
+    <link rel="stylesheet" href="${base!}/assets/front/h5/css/mui.min.css" />
+    <link rel="stylesheet" type="text/css" href="${base!}/assets/front/h5/css/icons-extra.css" />
+    <link rel="stylesheet" href="${base!}/assets/front/h5/css/hryc.css" />
+    <!--App自定义的css-->
+    <!--<link rel="stylesheet" type="text/css" href="../css/app.css"/>-->
+    <style>
+        .noBorder{
+
+        }
+    </style>
+</head>
+<body style="background: white;">
+
+
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #0a0a0a;"></a>
+    <p class="mui-title" >
+        个人中心
+    </p>
+</header>
+
+<!--底部导航栏-->
+<nav class="mui-bar mui-bar-tab" style="background: white;">
+    <a class="mui-tab-item" onclick="window.location.href='${base!}/open/h5/niantu/index.html'">
+        <span class="mui-icon mui-icon-home"></span>
+        <span class="mui-tab-label">首页</span>
+    </a>
+    <a class="mui-tab-item" onclick="window.location.href='${base!}/open/h5/cart/shoppingCart.html'">
+        <span class="mui-icon mui-icon-extra mui-icon-extra-cart"></span>
+        <span class="mui-tab-label">购物车</span>
+    </a>
+    <a class="mui-tab-item" onclick="window.location.href='${base!}/open/h5/coupon/receiveCoupon.html'">
+        <span class="mui-icon mui-icon-extra mui-icon-extra-gift"></span>
+        <span class="mui-tab-label">领劵中心</span>
+    </a>
+    <a class="mui-tab-item  mui-active" href="#tabbar">
+        <span class="mui-icon mui-icon-person"></span>
+        <span class="mui-tab-label">个人中心</span>
+    </a>
+</nav>
+<div class="mui-content" style="padding-bottom: 0;background: white;">
+    <ul class="mui-table-view mui-grid-view mui-grid-9" style="background: rgb(56,206,204);margin-top: 0px;">
+        <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" style="padding: 0;border:0;">
+        <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" style="padding: 0;border:0;">
+            <a href="productList.html">
+                <img src="${base!}/assets/front/h5/img/tu1.png" width="80px;"/>
+                <div class="mui-media-body" style="color: white;">${accountUser.loginname!}</div>
+            </a>
+        </li>
+        <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" style="padding: 0;border:0;">
+    </ul>
+</div>
+
+<div class="mui-content" style="padding-top: 0px;background: white;">
+    <ul class="mui-table-view mui-grid-view mui-grid-9 noborder" style="background: white;">
+        <li class="mui-table-view-cell mui-media mui-col-xs-2 mui-col-sm-3" style="padding: 0;margin-left:10px;border: 0; ">
+            <a href="${base!}/open/h5/order/goOrderList.html">
+                <img src="${base!}/assets/front/h5/img/c1.png" width="62px;"/>
+                <div class="mui-media-body">待付款</div>
+            </a>
+        </li>
+        <li class="mui-table-view-cell mui-media mui-col-xs-2 mui-col-sm-3" style="padding: 0;margin-left:10px;border: 0; ">
+            <a href="${base!}/open/h5/order/goOrderList.html">
+                <img src="${base!}/assets/front/h5/img/c2.png" width="62px;"/>
+                <div class="mui-media-body">待发货</div>
+            </a>
+        </li>
+        <li class="mui-table-view-cell mui-media mui-col-xs-2 mui-col-sm-3" style="padding: 0;margin-left:10px;border: 0; ">
+            <a href="${base!}/open/h5/order/goOrderList.html">
+                <img src="${base!}/assets/front/h5/img/c3.png" width="62px;"/>
+                <div class="mui-media-body">待收货</div>
+            </a>
+        </li>
+        <li class="mui-table-view-cell mui-media mui-col-xs-2 mui-col-sm-3" style="padding: 0;margin-left:10px;border: 0; ">
+            <a href="${base!}/open/h5/order/goOrderList.html">
+                <img src="${base!}/assets/front/h5/img/c4.png" width="62px;"/>
+                <div class="mui-media-body">待评价</div>
+            </a>
+        </li>
+        <li class="mui-table-view-cell mui-media mui-col-xs-2 mui-col-sm-3" style="padding: 0;margin-left:10px;border: 0; ">
+            <a href="#">
+                <img src="${base!}/assets/front/h5/img/c5.png" width="62px;"/>
+                <div class="mui-media-body">退款售后</div>
+            </a>
+        </li>
+
+    </ul>
+</div>
+
+<ul class="mui-table-view">
+    <li class="mui-table-view-cell">
+        <a class="mui-navigate-right">
+            <img width="30" style="margin-bottom: -10px;" src="${base!}/assets/front/h5/img/cr1.png" />
+            <span style="margin-left: 15px;">我的积分</span>
+        </a>
+    </li>
+    <li class="mui-table-view-cell">
+        <a class="mui-navigate-right">
+            <img width="30" style="margin-bottom: -10px;" src="${base!}/assets/front/h5/img/cr2.png" />
+            <span style="margin-left: 15px;">我的视频</span>
+        </a>
+    </li>
+    <li class="mui-table-view-cell">
+        <a class="mui-navigate-right" href="${base!}/open/h5/coupon/goMyCoupon.html">
+            <span class="mui-icon-extra mui-icon-extra-gift"></span>
+            <span style="margin-left: 15px;">我的优惠劵</span>
+        </a>
+    </li>
+
+</ul>
+
+<div class="mui-content-padded" style="width: 70%;margin: 60px auto;margin-top:60px;">
+    <button id='out' class="mui-btn mui-btn-block mui-btn-primary" style="border-color: rgb(206, 56, 56);
+    background-color: rgb(206, 56, 56);">退出登录</button>
+</div>
+
+
+<script type="text/javascript" src="${base!}/assets/front/h5/js/mui.js" ></script>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/jquery-2.0.0.min.js" ></script>
+<script type="text/javascript" src="${base!}/assets/decorate/pc/decoratecommon/js/layer/mobile/layer.js" ></script>
+<script type="application/javascript">
+    mui.init({
+        swipeBack:true //启用右滑关闭功能
+    });
+
+    $("#out").click(function () {
+        window.location.href= '${base!}/open/H5/login/logout.html';
+    })
+
+</script>
+</body>
+</html>

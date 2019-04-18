@@ -1,0 +1,213 @@
+<!--#
+include("/pages/front/pc/inc/header.html"){}
+#-->
+<!-- body -->
+<script src="${base!}/assets/front/pc/vendor/jquery.qrcode.min.js"></script>
+<div class="m-hd">
+
+	<!--#
+    include("/pages/front/pc/inc/navbar.html"){}
+#-->
+</div>
+
+	<div class="m-navbar">
+		<div class="m-center">
+			<div class="logo">
+				<a href="#"><img src="/assets/front/pc/images/logo-g.png"/></a>
+				<span>提交订单</span>
+			</div>
+		</div>
+	</div>
+	
+</div>
+<div class="m-bd m-count">
+	<div class="m-center">
+		<div class="count-info">
+			<div class="hd"><i class="iconfont icon-check"></i>订单提交成功，现在只差最后一步啦！</div>
+			<p>请您在提交订单后<span class="mark">2小时00分</span>内完成支付，否则订单会自动取消！</p>
+			<div class="bd">
+				<p>${goods.storeMain.storeName!} ${goods.goodsName!}  ${goods.name}  等${goodsNum}件商品...</p>
+				<p>${goods.storeMain.storeName!}发货</p>
+				<p>收货信息：${@area.getNameByCode(order.deliveryProvince)},${@area.getNameByCode(order.deliveryCity)},${@area.getNameByCode(order.deliveryCounty)},${order.deliveryAddress!},${accountUser.loginname!}，手机： ${strutil.subStringTo(accountUser.mobile,0,3)}****${strutil.subStringTo(accountUser.mobile,7,11)}</p>
+				<a href="#" class="order">我的订单 ></a>
+			</div>
+		</div>
+		<div class="count-info">
+			<p>支付金额：<b class="mark">¥${@money.fenToYuan(payMoney)}</b></p>
+			<div class="bd f-cb">
+				<div class="item f-cb f-fl active" data-label>
+					<i class="check"></i>
+					<div class="pic"><img src="/assets/front/pc/images/log-pay1.png"/></div>
+				</div>
+				<div  id="wxPay" class="item f-cb f-fl" data-label>
+					<i class="check"></i>
+					<div class="pic"><img src="/assets/front/pc/images/log-pay3.png"/></div>
+				</div>
+				<div class="item f-cb f-fl" data-label>
+					<i class="check"></i>
+					<div class="pic"><img src="/assets/front/pc/images/log-pay2.png"/></div>
+				</div>
+			</div>
+			<div class="pay-code f-push-50-t">
+			    <div class="wxPay" hidden>
+				<div class="hd">
+					<p>扫一扫付款（元）</p>
+					<div class="mark">￥${@money.fenToYuan(payMoney)}</div>
+				</div>
+				<div class="code">
+					<div id="qrCode"></div>
+					<!--<img src="/assets/front/pc/images/z-code.png"/>-->
+					<div class="fd">
+						<i class="iconfont icon-saoyisao"></i>
+						<p>打开手机</p>
+						<p>扫一扫继续付款</p>
+					</div>
+				</div>
+			   </div>
+				<div class="default">暂未开通,敬请期待！</div>
+			</div><br /><br /><br />
+		</div>
+	</div>
+	
+</div> 
+
+<div class="m-fd">
+	<div class="m-login-info">
+		<div class="g-center">
+			<ul class="f-cb">
+				<li class="col">
+					<dl>
+						<dt>客服电话</dt>
+						<dd>
+							<p class="tel">400-0000-000</p>
+							<p class="time">9:00-22:00</p>
+						</dd>
+					</dl>
+				</li>
+				<li class="col">
+					<dl>
+						<dt>关于我们</dt>
+						<dd>
+							<p class="inner">原产地直供1000家合作社联盟10万亩茶园直供从源头全程严格把控商品生产环节，力求帮消费者甄选到优质的商品。</p>
+						</dd>
+					</dl>
+				</li>
+				<li class="col last-col">
+					<dl>
+						<dd><img src="/assets/front/pc/images/code.png"/></dd>
+						<small>下载领1000元礼包</small>
+					</dl>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="login-fd">
+		<div class="g-center">
+			<img src="/assets/front/pc/images/login-footer.png"/>
+			<div class="login-href-fd">
+				<div><a href="">关于我们</a> | <a href="">帮助中心</a> | <a href="">售后服务</a> | <a href="">配送与验收</a> | <a href="">商务合作</a> | <a href="">企业采购</a> | <a href="">友情链接</a></div>
+				<p>全网数商公司版权所有 © 1997-2017   食品经营许可证：JY13301080111719
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- end -->
+<script>
+    var goodsName = "${goods.goodsName!}";//商品名称
+
+    var goodsNum = ${goodsNum}; //商品件数
+
+    var payBody = goodsName+"等"+goodsNum+"件商品";
+    //获取微信二维码
+    function getWxPaycode(groupId) {
+        $.post("${base!}/open/pay/wxPay",{"groupId":groupId,"payBody":payBody},function (result) {
+            if (result.code == 0) {
+                $("#qrCode").empty();
+                $("#qrCode").qrcode({width: 200, height: 200, text: result.data});
+            } else {
+                $("#qrCode").html(result.msg);
+            }
+        })
+    }
+
+    //查询微信支付是否成功
+    function wxPayIsSuccess(groupId) {
+        $.post("${base!}/order/isPaySuccess",{"groupId":groupId},function (result) {
+            if(result.code == 0){
+                clear();
+                window.location.href = "${base!}/order/paySuccess/"+groupId;
+            }
+        })
+    }
+
+    $(document).ready(function () {
+        CountDown.init(1, 59, 59, $("span.mark")).begin();
+        var groupId = '${groupId}';
+        $(".count-info").find(".item.f-cb").click(function () {
+            //先清除所有的定时器
+            clear();
+            $("#qrCode").empty();
+            var id = $(this).attr("id");
+            switch (id){
+                case "wxPay":
+                    $(".wxPay").removeAttr("hidden");
+                    $(".wxPay").siblings().attr("hidden",true);
+                    getWxPaycode(groupId);
+                    initInterval(groupId);
+                    break;
+                default:
+                    $(".default").removeAttr("hidden");
+                    $(".default").siblings().attr("hidden",true);
+                    clear();
+            }
+        });
+    });
+    var t ={};
+    //初始化定时器
+    function initInterval(groupId) {
+        t=  setInterval(function(){wxPayIsSuccess(groupId)},2000);
+    }
+
+    function clear() {
+        window.clearInterval(t);
+    }
+
+    var CountDown = {
+		init: function (h, m, s, container) {
+			this.h = h;
+			this.m = m;
+			this.s = s;
+			this.container = container;
+			return this;
+        },
+        begin: function () {
+            this.container.text(this.h+":"+this.m+":"+this.s);
+            this.time = setInterval("CountDown.run()",1000);
+        },
+        run: function () {
+            --this.s;
+            if(this.s<0){
+                --this.m;
+                this.s=59;
+            }
+            if(this.m<0){
+                --this.h;
+                this.m=59
+            }
+            if(this.h<0){
+                this.s=0;
+                this.m=0;
+            }
+            this.container.text(this.h+":"+this.m+":"+this.s);
+            if (this.s == 0 && this.m == 0 && this.h == 0) {
+                clearInterval(this.time);
+                window.location.href = "${base!}/order/orderFail";
+            }
+        }
+	};
+</script>
+
+</body>
+
+</html>

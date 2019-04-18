@@ -1,0 +1,913 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.config.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.all.js"></script>
+<form id="addForm" role="form" class="form-horizontal parsley-form"
+      data-parsley-validate action="${base}/platform/shop/config/editDo"
+      method="post">
+    <input name="id" id="id" value="${obj.id!}" type="hidden">
+    <header class="header navbar bg-white shadow">
+        <div class="pull-right">
+            <div class="btn-group tool-button">
+                <button class="btn btn-primary navbar-btn" type="button" id="save">
+                    ${msg['globals.button.save']}</button>
+            </div>
+        </div>
+    </header>
+    <div class="content-wrap">
+        <div class="wrapper" style="min-height: 500px; height: 100%;">
+            <div class="box-tab">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#home1" data-toggle="tab">${msg['shop.config.column.shopbasics']}</a>
+                    </li>
+                    <li><a href="#storeInformation" data-toggle="tab">${msg['shop.config.column.storeinformation']}</a></li>
+                    <li><a href="#settings1" data-toggle="tab">${msg['shop.config.column.loginsettings']}</a></li>
+                    <li><a href="#settings2" data-toggle="tab">${msg['shop.config.column.integralset']}</a></li>
+                    <li><a href="#settings3" data-toggle="tab">${msg['shop.config.column.shoppingset']}</a></li>
+                    <li><a href="#settings4" data-toggle="tab">${msg['shop.config.column.orderLogistics']}</a></li>
+                    <li><a href="#settings5" data-toggle="tab">${msg['shop.config.column.agreementset']}</a></li>
+                    <li><a href="#settings6" data-toggle="tab">${msg['shop.config.column.secretset']}</a></li>
+                    <li><a href="#settings7" data-toggle="tab">${msg['shop.config.column.othersettings']}</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="home1">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="shopLogo" class="col-sm-2 control-label">${msg['shop.config.column.shopLogo']}:</label>
+                                <div class="col-sm-8">
+                                    <div id="queue"></div>
+                                    <div>
+                                        <input id="file_upload" name="file_upload" type="file"
+                                               multiple="false">
+                                    </div>
+                                    <div id="img" style="padding: 5px;">
+                                        <!--#if(!isEmpty(obj.shopLogo)){#-->
+                                        <img src='${obj.shopLogo!}' style='width: 150px;'> <i
+                                            class="fa fa-close"
+                                            onclick="$('#shopLogo').val('');$('#img').html('');"></i>
+                                        <!--#}#-->
+                                    </div>
+                                    <input type="hidden" id="shopLogo" name="shopLogo"
+                                           value="${obj.shopLogo!}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="shopName" class="col-sm-2 control-label">${msg['shop.config.column.shopName']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="shopName" class="form-control"
+                                           name="shopName" value="${obj.shopName!}" placeholder="${msg['shop.config.column.shopName']}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="shopLoginLogo" class="col-sm-2 control-label">${msg['shop.config.column.shopLoginLogo']}:</label>
+                                <div class="col-sm-8">
+                                    <div id="wap_queue"></div>
+                                    <div>
+                                        <input id="login_file_upload" name="login_file_upload" type="file"
+                                               multiple="false">
+                                    </div>
+                                    <div id="img_wap" style="padding: 5px;">
+                                        <!--#if(!isEmpty(obj.shopLoginLogo)){#-->
+                                        <img src='${obj.shopLoginLogo!}' style='width: 150px;'>
+                                        <i class="fa fa-close"
+                                           onclick="$('#shopLoginLogo').val('');$('#img_wap').html('');"></i>
+                                        <!--#}#-->
+                                    </div>
+                                    <input type="hidden" id="shopLoginLogo" name="shopLoginLogo"
+                                           value="${obj.shopLoginLogo!}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="storeInformation">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="shopLinkCompany" class="col-sm-2 control-label">${msg['shop.config.column.shopLinkCompany']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="shopLinkCompany" class="form-control"
+                                           name="shopLinkCompany" placeholder="${msg['shop.config.column.shopLinkCompany']}" value="${obj.shopLinkCompany!}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="shopLinkName" class="col-sm-2 control-label">${msg['shop.config.column.shopLinkName']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="shopLinkName" class="form-control"
+                                           name="shopLinkName" placeholder="${msg['shop.config.column.shopLinkName']}"
+                                           value="${obj.shopLinkName!}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="shopLinkPhone" class="col-sm-2 control-label">${msg['shop.config.column.shopLinkPhone']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="shopLinkPhone" class="form-control"
+                                           name="shopLinkPhone" placeholder="${msg['shop.config.column.shopLinkPhone']}" value="${obj.shopLinkPhone!}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="shopLinkMobile" class="col-sm-2 control-label">${msg['shop.config.column.shopLinkMobile']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="shopLinkMobile" class="form-control"
+                                           name="shopLinkMobile" placeholder="${msg['shop.config.column.shopLinkMobile']}"
+                                           value="${obj.shopLinkMobile!}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="shopLinkEmail" class="col-sm-2 control-label">${msg['shop.config.column.shopLinkEmail']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="shopLinkEmail" class="form-control" data-parsley-type="email"
+                                           name="shopLinkEmail" placeholder="${msg['shop.config.column.shopLinkEmail']}"
+                                           value="${obj.shopLinkEmail!}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="shopLinkQQ" class="col-sm-2 control-label">${msg['shop.config.column.shopLinkQQ']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="shopLinkQQ" class="form-control" data-parsley-type="number" data-parsley-min="0" data-parsley-max="10"
+                                           name="shopLinkQQ" placeholder="${msg['shop.config.column.shopLinkQQ']}"
+                                           value="${obj.shopLinkQQ!}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="shopLinkQrcode" class="col-sm-2 control-label">${msg['shop.config.column.shopLinkQrcode']}:</label>
+                                <div class="col-sm-8">
+                                    <div id="queue_weixin"></div>
+                                    <div>
+                                        <input id="file_upload_weixin" name="file_upload_weixin"
+                                               type="file" multiple="false">
+                                    </div>
+                                    <div id="img_weixin" style="padding: 5px;">
+                                        <!--#if(!isEmpty(obj.shopLinkQrcode)){#-->
+                                        <img src='${obj.shopLinkQrcode!}'
+                                             style='width: 150px; height: 95px;'> <i
+                                            class="fa fa-close"
+                                            onclick="$('#shopLinkQrcode').val('');$('#img_weixin').html('');"></i>
+                                        <!--#}#-->
+                                    </div>
+                                    <input type="hidden" id="shopLinkQrcode" name="shopLinkQrcode"
+                                           value="${obj.shopLinkQrcode!}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="shopLinkWeibo" class="col-sm-2 control-label">${msg['shop.config.column.shopLinkWeibo']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="shopLinkWeibo" class="form-control"
+                                           name="shopLinkWeibo" placeholder="http://"
+                                           value="${obj.shopLinkWeibo!}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="shopLinkAddress" class="col-sm-2 control-label">${msg['shop.config.column.shopLinkAddress']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="shopLinkAddress" class="form-control" data-parsley-type="number"
+                                           name="shopLinkAddress" placeholder="${msg['shop.config.column.shopLinkAddress']}" value="${obj.shopLinkAddress!}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="shopLinkPostcode" class="col-sm-2 control-label">${msg['shop.config.column.shopLinkPostcode']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="shopLinkPostcode" class="form-control" data-parsley-type="number"
+                                           name="shopLinkPostcode" placeholder="${msg['shop.config.column.shopLinkPostcode']}" value="${obj.shopLinkPostcode!}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="settings1">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="memberLoginType" class="col-sm-2 control-label">${msg['shop.config.column.memberLoginType']}:</label>
+                                <div class="col-sm-8">
+                                    <select id="memberLoginType" name="memberLoginType"  class="form-control">
+                                        <option value="self"  <!--# if (obj.memberLoginType=="self"){#-->selected<!--#}#--> >${msg['shop.config.column.jumploginpage']}</option>
+                                        <option value="open"  <!--# if (obj.memberLoginType=="open"){#-->selected<!--#}#--> >${msg['shop.config.column.popup']}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.memberLoginCaptcha']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="memberLoginCaptcha1" type="radio"
+                                           name="memberLoginCaptcha"
+                                           value="1" <!--# if (obj.memberLoginCaptcha==true){#-->checked<!--#}#-->>
+                                    <label for="memberLoginCaptcha1">
+                                    ${msg['shop.config.column.enable']}
+                                    </label>
+                                    <input id="memberLoginCaptcha2" type="radio"
+                                           name="memberLoginCaptcha"
+                                           value="0" <!--# if (obj.memberLoginCaptcha==false){#-->checked<!--#}#-->>
+                                    <label for="memberLoginCaptcha2">
+                                    ${msg['shop.config.column.disable']}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.memberRegisterCaptcha']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="memberRegisterCaptcha1" type="radio"
+                                           name="memberRegisterCaptcha"
+                                           value="1" <!--# if (obj.memberRegisterCaptcha==true){#-->checked<!--#}#-->>
+                                    <label for="memberRegisterCaptcha1">
+                                    ${msg['shop.config.column.enable']}
+                                    </label>
+                                    <input id="memberRegisterCaptcha2" type="radio"
+                                           name="memberRegisterCaptcha"
+                                           value="0" <!--# if (obj.memberRegisterCaptcha==false){#-->checked<!--#}#-->>
+                                    <label for="memberRegisterCaptcha2">
+                                    ${msg['shop.config.column.disable']}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.memberSmsCaptcha']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="memberSmsCaptcha1" type="radio"
+                                           name="memberSmsCaptcha"
+                                           value="1" <!--# if (obj.memberSmsCaptcha==true){#-->checked<!--#}#-->>
+                                    <label for="memberSmsCaptcha1">
+                                        ${msg['shop.config.column.enable']}
+                                    </label>
+                                    <input id="memberSmsCaptcha2" type="radio"
+                                           name="memberSmsCaptcha"
+                                           value="0" <!--# if (obj.memberSmsCaptcha==false){#-->checked<!--#}#-->>
+                                    <label for="memberSmsCaptcha2">
+                                    ${msg['shop.config.column.disable']}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.memberRegisterOnlyMobile']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="memberRegisterOnlyMobile1" type="radio"
+                                           name="memberRegisterOnlyMobile"
+                                           value="1" <!--# if (obj.memberRegisterOnlyMobile==true){#-->checked<!--#}#-->>
+                                    <label for="memberRegisterOnlyMobile1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="memberRegisterOnlyMobile2" type="radio"
+                                           name="memberRegisterOnlyMobile"
+                                           value="0" <!--# if (obj.memberRegisterOnlyMobile==false){#-->checked<!--#}#-->>
+                                    <label for="memberRegisterOnlyMobile2">
+                                    ${msg['shop.config.column.disable']}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="settings2">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="scoreMethod" class="col-sm-2 control-label">${msg['shop.config.column.scoreMethod']}:</label>
+                                <div class="col-sm-8">
+                                    <select id="scoreMethod" name="scoreMethod"  class="form-control">
+                                        <option value="1" <!--# if (obj.scoreMethod==true){#-->selected<!--#}#--> >${msg['shop.config.column.computeintegralpriceorder']}</option>
+                                        <option value="0" <!--# if (obj.scoreMethod==false){#-->selected<!--#}#--> >${msg['shop.config.column.useintegral']}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="scoreUsage" class="col-sm-2 control-label">${msg['shop.config.column.scoreUsage']}:</label>
+                                <div class="col-sm-8">
+                                    <select id="scoreUsage" name="scoreUsage"  class="form-control">
+                                        <option value="0" <!--# if (obj.scoreUsage==0){#-->selected<!--#}#-->>${msg['shop.config.column.onlyusedchange']}</option>
+                                        <option value="1" <!--# if (obj.scoreUsage==1){#-->selected<!--#}#-->>${msg['shop.config.column.onlyuseddeduction']}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.scoreSignin']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="scoreSignin1" type="radio" name="scoreSignin" onclick="signIntegral(1)" value="1"  <!--# if (obj.scoreSignin== true){#-->checked<!--#}#-->/>
+                                    <label for="scoreSignin1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="scoreSignin2" type="radio"  name="scoreSignin" onclick="signIntegral(0)" value="0"  <!--# if (obj.scoreSignin==false){#-->checked<!--#}#-->/>
+                                    <label for="scoreSignin2">
+                                    ${msg['shop.config.column.disable']}
+                                        </label>
+                                </div>
+                            </div>
+                            <div class="form-group" id="scoreSignin">
+                                <label for="scoreSigninValue" class="col-sm-2 control-label">${msg['shop.config.column.scoreSigninValue']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="scoreSigninValue" class="form-control"
+                                           name="scoreSigninValue" data-parsley-min="0" placeholder="${msg['shop.config.column.scoreSigninValue']}" value="${obj.scoreSigninValue!}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="scoreRate" class="col-sm-2 control-label">${msg['shop.config.column.scoreRate']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="scoreRate" class="form-control" data-parsley-max="100" data-parsley-min="0" data-parsley-type="number"
+                                           name="scoreRate" placeholder="${msg['shop.config.column.scoreRate']}" value="${obj.scoreRate!}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.scoreExpire']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="radio" id="scoreExpire1" onclick="integralExpirationTimeSettings(1)"  name="scoreExpire" value="1"<!--# if (obj.scoreExpire== true){#-->checked<!--#}#-->/>
+                                   <label for="scoreExpire1"> ${msg['shop.config.column.enable']}</label>
+                                    <input type="radio" id="scoreExpire2" onclick="integralExpirationTimeSettings(0)" name="scoreExpire" value="0" <!--# if (obj.scoreExpire== false){#-->checked<!--#}#-->/>
+                                    <label for="scoreExpire2">
+                                    ${msg['shop.config.column.disable']}</label>
+                                </div>
+                            </div>
+                            <div class="form-group" id="timeSType">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.scoreExpireType']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="radio" name="scoreExpireType" id="sType1" onclick="integralExpirationTypeSettings(1)"  value="1" <!--# if (obj.scoreExpireType== 1){#-->checked<!--#}#-->/>
+                                   <label for="sType1">
+                                    ${msg['shop.config.column.setexpirydays']}</label>
+                                    <input type="radio" name="scoreExpireType" id="sType2" onclick="integralExpirationTypeSettings(0)"  value="0"  <!--# if (obj.scoreExpireType== 0){#-->checked<!--#}#-->/>
+                                    <label for="sType2">
+                                    ${msg['shop.config.column.settingendtime']}</label>
+                                </div>
+                            </div>
+                            <div class="form-group" id="timeScoreExpireTime1">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.scoreExpireTime']}:</label>
+                                <div class="col-sm-8">
+                                    <div class="col-sm-8 input-group date form_datetime "
+                                         style="padding-left: 16px; padding-right: 16px;"
+                                         data-date="1979-09-16T05:25:07Z"
+                                         data-date-format="dd MM yyyy - HH:ii p" data-link-field="at">
+                                        <input type="text" size="16" readonly class="form-control" id="TimeAt"
+                                               value="" data-parsley-required="true">
+                                        <span class="input-group-addon"><span
+                                                class="glyphicon glyphicon-remove"></span></span> <span
+                                            class="input-group-addon"><span
+                                            class="glyphicon glyphicon-th"></span></span>
+                                    </div>
+                                    <input type="hidden" id="at" name="at"
+                                           value="${@date.getDateTime()}" />
+                                </div>
+                            </div>
+                            <div class="form-group" id="timeScoreExpireTime2">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.numberdays']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="scoreExpireTime2" class="form-control" name="scoreExpireTime" value="${obj.scoreExpireTime!}" placeholder="${msg['shop.config.column.numberdays']}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="settings3">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="saleMoneyType" class="col-sm-2 control-label">${msg['shop.config.column.saleMoneyType']}:</label>
+                                <div class="col-sm-8">
+                                    <select id="saleMoneyType" name="saleMoneyType"  class="form-control">
+                                        <option value="1" <!--# if (obj.saleMoneyType==1){#-->selected<!--#}#-->>${msg['shop.config.column.takedownthewhole']}</option>
+                                        <option value="0"<!--# if (obj.saleMoneyType==0){#-->selected<!--#}#-->>${msg['shop.config.column.rounded']}</option>
+                                        <option value="2"<!--# if (obj.saleMoneyType==2){#-->selected<!--#}#-->>${msg['shop.config.column.takeupthewhole']}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">${msg['shop.config.column.resumePrice']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="resumePrice1" type="radio" name="resumePrice" value="1"  <!--# if (obj.resumePrice==true){#-->checked<!--#}#-->/>
+                                   <label for="resumePrice1"> ${msg['shop.config.column.enable']}</label>
+                                    <input id="resumePrice2" type="radio" name="resumePrice" value="0" <!--# if (obj.resumePrice==false){#-->checked<!--#}#-->/>
+                                   <label for="resumePrice2">
+                                    ${msg['shop.config.column.disable']}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">${msg['shop.config.column.saleAutoCancelOrder']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="saleAutoCancelOrder1" type="radio" name="saleAutoCancelOrder" onclick="cancelOrder(1)" value="1"  <!--# if (obj.saleAutoCancelOrder==true){#-->checked<!--#}#-->/>
+                                    <label for="saleAutoCancelOrder1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="saleAutoCancelOrder2" type="radio" name="saleAutoCancelOrder"  onclick="cancelOrder(0)" value="0" <!--# if (obj.saleAutoCancelOrder==false){#-->checked<!--#}#-->/>
+                                    <label for="saleAutoCancelOrder2">
+                                    ${msg['shop.config.column.disable']}</label>
+                                </div>
+                            </div>
+                            <div class="form-group" id="saleAutoCancelTime">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.saleAutoCancelTime']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" data-parsley-type="number" data-parsley-min="0" name="saleAutoCancelTime" class="form-control" value="${obj.saleAutoCancelTime!}" placeholder="${msg['shop.config.column.saleAutoCancelTime']}"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.salePostcode']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="salePostcode1" type="radio"  name="salePostcode" value="1" <!--# if (obj.salePostcode==true){#-->checked<!--#}#--> />
+                                    <label for="salePostcode1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="salePostcode2" type="radio" name="salePostcode" value="0" <!--# if (obj.salePostcode==false){#-->checked<!--#}#-->/>
+                                    <label for="salePostcode2">
+                                    ${msg['shop.config.column.disable']}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.saleInvoice']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="saleInvoice1" type="radio" name="saleInvoice" value="1"  <!--# if (obj.saleInvoice==true){#-->checked<!--#}#-->/>
+                                    <label for="saleInvoice1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="saleInvoice2" type="radio" name="saleInvoice" value="0"  <!--# if (obj.saleInvoice==false){#-->checked<!--#}#-->/>
+                                    <label for="saleInvoice2">
+                                    ${msg['shop.config.column.disable']}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.saleReceiveMore']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="saleReceiveMore1" type="radio" name="saleReceiveMore" onclick="saleReceiveTme(1)" value="1" <!--# if (obj.saleReceiveMore==true){#-->checked<!--#}#--> />
+                                    <label for="saleReceiveMore1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="saleReceiveMore2" type="radio" name="saleReceiveMore" onclick="saleReceiveTme(0)" value="0" <!--# if (obj.saleReceiveMore==false){#-->checked<!--#}#--> />
+                                    <label for="saleReceiveMore2">
+                                    ${msg['shop.config.column.disable']}</label>
+                                </div>
+                            </div>
+                            <div class="form-group" id="saleReceiveT">
+                                <label for="saleReceiveTime" class="col-sm-2 control-label">${msg['shop.config.column.saleReceiveTime']}:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" data-parsley-type="number" data-parsley-min="0" id="saleReceiveTime" class="form-control" name="saleReceiveTime" value="${obj.saleReceiveTime!}" placeholder="${msg['shop.config.column.saleReceiveTime']}"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.saleReceiveDate']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="saleReceiveDate1" type="radio" name="saleReceiveDate" value="1" <!--# if (obj.saleReceiveDate==true){#-->checked<!--#}#-->/>
+                                    <label for="saleReceiveDate1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="saleReceiveDate2" type="radio" name="saleReceiveDate" value="0" <!--# if (obj.saleReceiveDate==false){#-->checked<!--#}#-->/>
+                                    <label for="saleReceiveDate2">
+                                    ${msg['shop.config.column.disable']}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.saleReceiveNght']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="saleReceiveNght1" type="radio" name="saleReceiveNght" value="1" <!--# if (obj.saleReceiveNght==true){#-->checked<!--#}#-->/>
+                                    <label for="saleReceiveNght1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="saleReceiveNght2" type="radio" name="saleReceiveNght" value="0" <!--# if (obj.saleReceiveNght==false){#-->checked<!--#}#-->/>
+                                    <label for="saleReceiveNght2">
+                                    ${msg['shop.config.column.disable']}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="settings4">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label  class="col-sm-6 control-label" readonly>${msg['shop.config.column.conditions']}</label>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.deliveryman']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="deliveryName1" type="radio" name="deliveryName" value="1" <!--# if (obj.deliveryName==true){#-->checked<!--#}#-->/>
+                                    <label for="deliveryName1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="deliveryName2" type="radio" name="deliveryName" value="0" <!--# if (obj.deliveryName==false){#-->checked<!--#}#-->/>
+                                    <label for="deliveryName2">
+                                    ${msg['shop.config.column.disable']}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.deliveryProvince']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="deliveryProvince1" type="radio" name="deliveryProvince" value="1" <!--# if (obj.deliveryProvince==true){#-->checked<!--#}#-->/>
+                                    <label for="deliveryProvince1">
+                                    ${msg['shop.config.column.enable']}
+                                    </label>
+                                    <input id="deliveryProvince2" type="radio" name="deliveryProvince" value="0" <!--# if (obj.deliveryProvince==false){#-->checked<!--#}#-->/>
+                                    <label for="deliveryProvince2">
+                                    ${msg['shop.config.column.disable']}
+                                    </label>
+                                      </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.Delivery']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="deliveryCity1" type="radio" name="deliveryCity" value="1" <!--# if (obj.deliveryCity==true){#-->checked<!--#}#-->/>
+                                    <label for="deliveryCity1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="deliveryCity2" type="radio" name="deliveryCity" value="0" <!--# if (obj.deliveryCity==false){#-->checked<!--#}#-->/>
+                                    <label for="deliveryCity2">
+                                    ${msg['shop.config.column.disable']}</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.deliveryArea']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="deliveryCounty1" type="radio" name="deliveryCounty" value="1" <!--# if (obj.deliveryCounty==true){#-->checked<!--#}#-->/>
+                                    <label for="deliveryCounty1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="deliveryCounty2" type="radio" name="deliveryCounty" value="0" <!--# if (obj.deliveryCounty==false){#-->checked<!--#}#-->/>
+                                    <label for="deliveryCounty2">
+                                    ${msg['shop.config.column.disable']}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.deliveryStreet']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="deliveryTown1" type="radio" name="deliveryTown" value="1" <!--# if (obj.deliveryTown==true){#-->checked<!--#}#-->/>
+                                    <label for="deliveryTown1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="deliveryTown2" type="radio" name="deliveryTown" value="0" <!--# if (obj.deliveryTown==false){#-->checked<!--#}#-->/>
+                                    <label for="deliveryTown2">
+                                    ${msg['shop.config.column.disable']}
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.shippingAddress']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="deliveryAddress1" type="radio" name="deliveryAddress" value="1" <!--# if (obj.deliveryAddress==true){#-->checked<!--#}#-->/>
+                                    <label for="deliveryAddress1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="deliveryAddress2" type="radio" name="deliveryAddress" value="0" <!--# if (obj.deliveryAddress==false){#-->checked<!--#}#-->/>
+                                    <label for="deliveryAddress2">
+                                    ${msg['shop.config.column.disable']}
+                                    </label>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.deliveryPhoneNumber']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="deliveryMobile1" type="radio" name="deliveryMobile" value="1" <!--# if (obj.deliveryMobile==true){#-->checked<!--#}#-->/>
+                                    <label for="deliveryMobile1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="deliveryMobile2" type="radio" name="deliveryMobile" value="0" <!--# if (obj.deliveryMobile==false){#-->checked<!--#}#-->/>
+                                    <label for="deliveryMobile2">
+                                        ${msg['shop.config.column.disable']}</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.deliveryPhone']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="deliveryPhone1" type="radio" name="deliveryPhone" value="1" <!--# if (obj.deliveryPhone==true){#-->checked<!--#}#-->/>
+                                    <label for="deliveryPhone1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="deliveryPhone2" type="radio" name="deliveryPhone" value="0" <!--# if (obj.deliveryPhone==false){#-->checked<!--#}#-->/>
+                                    <label for="deliveryPhone2">
+                                    ${msg['shop.config.column.disable']}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.zipCode']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="deliveryPostcode1" type="radio" name="deliveryPostcode" value="1" <!--# if (obj.deliveryPostcode==true){#-->checked<!--#}#-->/>
+                                    <label for="deliveryPostcode1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="deliveryPostcode2" type="radio" name="deliveryPostcode" value="0" <!--# if (obj.deliveryPostcode==false){#-->checked<!--#}#-->/>
+                                    <label for="deliveryPostcode2">
+                                    ${msg['shop.config.column.disable']}</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="settings5">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.agreement']}:</label>
+                                <div class="col-sm-8">
+                                    <div class="col-sm-8">
+						<textarea id="agreement" name="agreement"
+                                  style="width: 100%; height: 200px;">${obj.agreement!}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="settings6">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.secret']}:</label>
+                                <div class="col-sm-8">
+                                    <div class="col-sm-8">
+						<textarea id="secret" name="secret"
+                                  style="width: 100%; height: 200px;">${obj.secret!}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="settings7">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.goodsNeedCheck']}:</label>
+                                <div class="col-sm-8">
+
+                                    <input id="goodsNeedCheck1" type="radio" name="goodsNeedCheck" value="1" <!--# if (obj.goodsNeedCheck==true){#-->checked<!--#}#-->/>
+                                    <label for="goodsNeedCheck1">
+                                    ${msg['shop.config.column.enable']}</label>
+
+                                    <input id="goodsNeedCheck2" type="radio" name="goodsNeedCheck" value="0" <!--# if (obj.goodsNeedCheck==false){#-->checked<!--#}#-->/>
+                                    <label for="goodsNeedCheck2">
+                                    ${msg['shop.config.column.disable']}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['shop.config.column.saleCommentModeration']}:</label>
+                                <div class="col-sm-8">
+                                    <input id="saleCommentModeration1" type="radio" name="saleCommentModeration" value="1" <!--# if (obj.saleCommentModeration==true){#-->checked<!--#}#-->/>
+                                    <label for="saleCommentModeration1">
+                                    ${msg['shop.config.column.enable']}</label>
+                                    <input id="saleCommentModeration2" type="radio" name="saleCommentModeration" value="0" <!--# if (obj.saleCommentModeration==false){#-->checked<!--#}#-->/>
+                                    <label for="saleCommentModeration2">
+                                    ${msg['shop.config.column.disable']}
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label"> ${msg['shop.config.column.bottomInfoConfig']}:</label>
+                                <div class="col-sm-8">
+                                    <div class="col-sm-8">
+						<textarea id="bottomInfoConfig" name="bottomInfoConfig"
+                                  style="width: 100%; height: 200px;">${obj.bottomInfoConfig!}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script language="JavaScript">
+    function clearFile() {
+        $("#img").html("");
+        $("#queue").html("");
+        $("#site_logo").val("");
+    }
+    function clearWapFile() {
+        $("#img_wap").html("");
+        $("#wap_queue").html("");
+        $("#site_wap_logo").val("");
+    }
+    function clearFile_weibo() {
+        $("#img_weixin").html("");
+        $("#queue_weixin").html("");
+        $("#shopLinkQrcode").val("");
+    }
+    function clearFile_wechat() {
+        $("#img_wechat").html("");
+        $("#queue_wechat").html("");
+        $("#wechat_qrcode").val("");
+    }
+    function cancelOrder(data){
+        if(data==false){
+            $("#saleAutoCancelTime").hide();
+        }else{
+            $("#saleAutoCancelTime").show();
+        }
+    }
+    function integralExpirationTimeSettings(data){
+        if(data==false){
+            $("#timeSType").hide();
+            $("#timeScoreExpireTime1").hide();
+        }else{
+            $("#timeSType").show();
+        }
+    }
+    function signIntegral(data){
+        if(data==false){
+            $("#scoreSignin").hide();
+        }else{
+            $("#scoreSignin").show();
+        }
+    }
+    function  integralExpirationTypeSettings(data) {
+        if(data==false){
+            $("#timeScoreExpireTime2").hide();
+            $("#timeScoreExpireTime1").show();
+            $("#scoreExpireTime2").val('');
+        }else{
+            $("#timeScoreExpireTime1").hide();
+            $("#timeScoreExpireTime2").show();
+            $("#scoreExpireTime1").val('');
+        }
+    }
+
+    function  saleReceiveTme(data) {
+        if(data==false){
+            $("#saleReceiveT").hide();
+        }else{
+            $("#saleReceiveT").show();
+        }
+    }
+
+    $(function () {
+        $("#TimeAt").val(moment(parseInt(${obj.scoreExpireTime}*1000)).format("YYYY-MM-DD HH:mm:ss"));
+        if(${obj.scoreExpire}==false){
+            $("#timeScoreExpireTime1").hide();
+            $("#timeSType").hide();
+            $("#timeScoreExpireTime2").hide();
+        }else{
+            $("#timeSType").show();
+            if(${obj.scoreExpireType}==0){
+                $("#timeScoreExpireTime2").hide();
+                $("#timeScoreExpireTime1").show();
+            }else{
+                $("#timeScoreExpireTime1").hide();
+                $("#timeScoreExpireTime2").show();
+            }
+        }
+        if(${obj.saleAutoCancelOrder}==false){
+            $("#saleAutoCancelTime").hide();
+        }
+        if(${obj.scoreSignin}==false){
+            $("#scoreSignin").hide();
+        }
+        if(${obj.saleReceiveMore}==false){
+            $("#saleReceiveT").hide();
+        }
+
+        $('.form_datetime').datetimepicker({
+            format:'yyyy-mm-dd hh:ii:ss',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1
+        });
+    });
+
+    var ue;
+    $(document).ready( function() {
+        setTimeout(function () {
+            ue= new baidu.editor.ui.Editor();
+            ue.render('bottomInfoConfig');
+        },500);
+
+        setTimeout(function () {
+            ue= new baidu.editor.ui.Editor();
+            ue.render('secret');
+        },500);
+
+        setTimeout(function () {
+            ue= new baidu.editor.ui.Editor();
+            ue.render('agreement');
+        },500);
+
+        $('#file_upload').uploadifive({
+            'auto' : true,
+            'multi' : false,
+            'width' : '100%',
+            'height' : '35',
+            'buttonText' : '${msg['cms.site.column.selectpicture']}',
+            'fileType' : 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit' : 1024,
+            'queueSizeLimit' : 1,
+            'formData' : {},
+            'queueID' : 'queue',
+            'uploadScript' : '${base}/open/file/upload/image',
+            'onUploadComplete' : function(file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    $("#img").html("<img src='" + data.data + "' style='width:150px;'>");
+                    $("#shopLogo").val(data.data);
+                } else {
+                    clearFile();
+                    Toast.error(data.msg);
+                }
+            },
+            'onDrop' : function(file,
+                                fileDropCount) {
+                clearFile();
+            },
+            'onClearQueue' : function(queue) {
+            },
+            'onCancel' : function() {
+                clearFile();
+            }
+        });
+
+        $('#login_file_upload').uploadifive({
+            'auto' : true,
+            'multi' : false,
+            'width' : '100%',
+            'height' : '35',
+            'buttonText' : '${msg['cms.site.column.selectpicture']}',
+            'fileType' : 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit' : 1024,
+            'queueSizeLimit' : 1,
+            'formData' : {},
+            'queueID' : 'wap_queue',
+            'uploadScript' : '${base}/open/file/upload/image',
+            'onUploadComplete' : function(file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    $("#img_wap").html("<img src='" + data.data + "' style='width:150px;'>");
+                    $("#shopLoginLogo").val(data.data);
+                } else {
+                    clearWapFile();
+                    Toast.error(data.msg);
+                }
+            },
+            'onDrop' : function(file, fileDropCount) {
+                clearWapFile();
+            },
+            'onClearQueue' : function(queue) {
+                clearWapFile();
+            },
+            'onCancel' : function() {
+                clearWapFile();
+            }
+        });
+
+        $('#file_upload_weixin').uploadifive({
+            'auto' : true,
+            'multi' : false,
+            'width' : '100%',
+            'height' : '35',
+            'buttonText' : '${msg['cms.site.column.selectpicture']}',
+            'fileType' : 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit' : 1024,
+            'queueSizeLimit' : 1,
+            'formData' : {},
+            'queueID' : 'queue_weixin',
+            'uploadScript' : '${base}/open/file/upload/image',
+            'onUploadComplete' : function(file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    $("#img_weixin").html("<img src='" + data.data + "' style='width:150px;height:95px;'>");
+                    $("#shopLinkQrcode").val(data.data);
+                } else {
+                    clearFile_weibo();
+                    Toast.error(data.msg);
+                }
+            },
+            'onDrop' : function(file,
+                                fileDropCount) {
+                clearFile_weibo();
+            },
+            'onClearQueue' : function(queue) {
+                clearFile_weibo();
+            },
+            'onCancel' : function() {
+                clearFile_weibo();
+            }
+        });
+
+        $('#file_upload_wechat').uploadifive({
+            'auto' : true,
+            'multi' : false,
+            'width' : '100%',
+            'height' : '35',
+            'buttonText' : '${msg['cms.site.column.selectpicture']}',
+            'fileType' : 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit' : 1024,
+            'queueSizeLimit' : 1,
+            'formData' : {},
+            'queueID' : 'queue_wechat',
+            'uploadScript' : '${base}/open/file/upload/image',
+            'onUploadComplete' : function(file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    $("#img_wechat").html("<img src='" + data.data + "' style='width:150px;height:95px;'>");
+                    $("#wechat_qrcode").val(data.data);
+                } else {
+                    clearFile_wechat();
+                    Toast.error(data.msg);
+                }
+            },
+            'onDrop' : function(file, fileDropCount) {
+                clearFile_wechat();
+            },
+            'onClearQueue' : function(queue) {
+                clearFile_wechat();
+            },
+            'onCancel' : function() {
+                clearFile_wechat();
+            }
+        });
+
+        $("#save").on("click", function() {
+            //      $("#footer_content").val(ue.getContent());
+            $('#addForm').submit();
+        });
+
+        $('#addForm').ajaxForm({
+            dataType : 'json',
+            beforeSubmit : function(arr, form, options) {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            success : function(data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                } else {
+                    Toast.error(data.msg);
+                }
+                sublime.closeLoadingbar($(".main-content"));
+            }
+        });
+    });
+</script>
+
+<!--#}#-->

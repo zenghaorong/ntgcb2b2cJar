@@ -1,0 +1,1205 @@
+<!--#
+layout("/layouts/store.html"){
+#-->
+<link href="${base!}/assets/common/vendor/city-picker/css/main.css" rel="stylesheet">
+<link href="${base!}/assets/common/vendor/city-picker/css/picker.css" rel="stylesheet">
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/store/order/main" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+    <div class="pull-right">
+        <div class="btn-group tool-button">
+            <button class="btn btn-primary navbar-btn" type="button" id="save">
+                ${msg['globals.button.save']}</button>
+        </div>
+    </div>
+</header>
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+              action="${base}/store/order/main/addDo" method="post">
+            <div class="box-tab">
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="goodsInfo">
+                        <div class="col-lg-12" style="min-height: 500px">
+                            <div class="form-group">
+                                <label for="accountId" class="col-sm-2 control-label"><span style="color: red">*</span>${msg['order.main.label.customer']}</label>
+                                <div class="col-sm-8">
+                                      <input type="hidden" id="accountId" name="accountId" >
+                                      <input type="text" readonly  id="accountName" class="form-control" style="cursor: pointer" data-toggle="modal" data-target="#dialogAccount" data-parsley-required="true" placeholder="${msg['order.main.label.customerPlaceholder']}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="accountId" class="col-sm-2 control-label">${msg['order.main.label.product']}</label>
+                            </div>
+                            <div class="form-group">
+                                <div class="table-responsive  col-md-8 col-md-offset-2 ">
+                                    <table class="table  table-bordered ">
+                                        <caption>
+                                            <button type="button" name="chooseProduct" class="btn btn-primary" data-toggle="modal" data-target="#dialogGoods" style="float: right"><i class="ti-plus"></i>${msg['goods.main.btn.classId.select']}</button>
+                                        </caption>
+                                        <thead>
+                                        <tr>
+                                            <th>${msg['order.main.productTable.productName']}</th>
+                                            <th>商品分类</th>
+                                            <th>品牌</th>
+                                            <th>${msg['order.main.productTable.sku']}</th>
+                                            <th>销售价(元)</th>
+                                            <th>${msg['order.main.productTable.costPrice']}</th>
+                                            <th>市场价(元)</th>
+                                            <th>${msg['order.main.productTable.buyNum']}</th>
+                                            <th>${msg['order.main.productTable.totalPrice']}</th>
+                                            <th>${msg['order.main.productTable.operate']}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr id="goodsTotal" style="color:red">
+                                            <td colspan="7" style="text-align: center">${msg['order.main.productTable.total']}</td>
+                                            <td id="goodsNum">0</td>
+                                            <td id="goodsPay">0.00</td>
+                                            <td></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="deliveryName" class="col-sm-2 control-label"><span style="color: red">*</span>${msg['order.main.label.deliveryName']}</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="deliveryName"  name="deliveryName"  class="form-control"  data-parsley-required="true" placeholder="${msg['order.main.label.deliveryNamePlaceholder']}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="deliveryMobile" class="col-sm-2 control-label"><span style="color: red">*</span>${msg['order.main.label.deliveryMobile']}</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="deliveryMobile" class="form-control" name="deliveryMobile" data-parsley-required="true" placeholder="${msg['order.main.label.deliveryMobilePlaceholder']}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="totalAddress" class="col-sm-2 control-label"><span style="color: red">*</span>${msg['order.main.label.totalAddress']}</label>
+                                <div class="col-sm-8">
+                                    <div style="position: relative">
+                                        <input readonly type="text" data-toggle="city-picker"  data-parsley-required="true" id="totalAddress">
+                                        <!--<input type="text" readonly id="totalAddress" class="form-control"  data-toggle="city-picker" data-parsley-required="true" placeholder="请选择地址">-->
+                                        <input type="hidden" id="deliveryProvince"  name="deliveryProvince" value=""  >
+                                        <input type="hidden" id="deliveryCity"  name="deliveryCity" value="" >
+                                        <input type="hidden" id="deliveryCounty"  name="deliveryCounty" value="" >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-2">
+                                    <textarea id="deliveryAddress" name="deliveryAddress" class="form-control" data-parsley-required="true" rows="3"></textarea>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="expressId" class="col-sm-2 control-label"><span style="color: red">*</span>${msg['order.main.label.expressName']}</label>
+                                <div  class="col-sm-4">
+                                    <select id="expressId"   class="js-example-basic-multiple form-control" style="width: 180px"  data-parsley-required="true">
+                                        <option value="">${msg['order.main.select.expressTip']}</option>
+                                        <!--#for(o in expressList){#-->
+                                        <option value="${o.id!}" lang="${o.code!}">${o.name!}</option>
+                                        <!--#}#-->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="freightMoney" class="col-md-2 control-label">${msg['order.main.label.freightMoney']}</label>
+                                <div class="col-md-2">
+                                    <input type="text" readonly class="form-control" id="freightMoney" name="freightMoney" data-parsley-price="true" value="0">
+                                </div>
+                                <label for="freeMoney" class="col-md-2 control-label">${msg['order.main.label.freeMoney']}</label>
+                                <div class="col-md-2">
+                                    <input type="text" readonly class="form-control" id="freeMoney" name="freeMoney"  data-parsley-price="true" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="goodsPayMoney" class="col-md-2 control-label">${msg['order.main.label.goodsPayMoney']}</label>
+                                <div class="col-md-2">
+                                    <input type="text" readonly class="form-control" id="goodsPayMoney" name="goodsPayMoney" data-parsley-price="true" value="0">
+                                </div>
+                                <label for="payMoney"  class="col-md-2 control-label">${msg['order.main.label.payMoney']}</label>
+                                <div class="col-md-2">
+                                    <input type="text" readonly class="form-control" id="payMoney" name="payMoney" data-parsley-price="true" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                            </div>
+                            <div class="form-group">
+                                <label for="payStatus" class="col-md-2 control-label"><span style="color: red">*</span>${msg['order.main.label.payStatus']}</label>
+                                <div class="col-sm-2">
+                                    <select id="payStatus" name="payStatus" class="form-control"  data-parsley-required="true" >
+                                        <option value="">${msg['order.main.select.payStatusTip']}</option>
+                                        <option value="0">${msg['order.enum.paystatus.nopay']}</option>
+                                        <option value="1">${msg['order.enum.paystatus.waitverify']}</option>
+                                    </select>
+                                </div>
+                                <label for="payType" class="col-md-2 control-label"><span style="color: red">*</span>${msg['order.main.label.payType']}</label>
+                                <div class="col-md-2">
+                                    <select id="payType" name="payType" class="form-control"  data-parsley-required="true">
+                                        <option value="">${msg['order.main.select.payTypeTip']}</option>
+                                        <option value="1">${msg['order.enum.paytype.cash']}</option>
+                                        <option value="2">${msg['order.enum.paytype.pos']}</option>
+                                        <option value="3">${msg['order.enum.paytype.aliqrcode']}</option>
+                                        <option value="4">${msg['order.enum.paytype.transfer']}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="payAccount" class="col-md-2 control-label"><span style="color: red">*</span>${msg['order.main.label.payAccount']}</label>
+                                <div class="col-sm-4">
+                                    <select id="payAccount"  class="form-control" >
+                                        <option value="">${msg['order.main.select.payAccountTip']}</option>
+                                        <!--#for(o in shopAccountList){#-->
+                                        <option value="${o.id!}">${o.accountName!}-${o.bankName!}(${o.bankAccount})</option>
+                                        <!--#}#-->
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="accountInfo" class="form-group">
+                                <div class="col-md-6 col-md-offset-2 ">
+                                    <table class="table table-bordered goodsTable">
+                                        <caption>${msg['order.main.goodsTable.caption']}</caption>
+                                        <thead>
+                                        <tr>
+                                            <th width="50%">${msg['order.main.goodsTable.account']}</th>
+                                            <th width="30%">${msg['order.main.goodsTable.price']}</th>
+                                            <th width="20%">${msg['order.main.goodsTable.operate']}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody >
+                                        <tr id="accountTotal" style="color:red">
+                                            <td >${msg['order.main.goodsTable.accountTotal']}</td>
+                                            <td><span>0</span></td>
+                                            <td></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="transferProve"  class="form-group">
+                                <label class="col-sm-2 control-label">${msg['order.main.label.uploadInfo']}</label>
+                                <div class="col-sm-8">
+                                    <div id="queue"></div>
+                                    <div>
+                                        <input id="file_upload"  type="file" multiple="true">
+                                    </div>
+                                    <div id="img" class="div-img-album"></div>
+                                </div>
+                            </div>
+                            <div id="remark" class="form-group">
+                                <label class="col-sm-2"></label>
+                                <div class="col-md-8">
+                                    <div class="well well-lg">
+                                        ${msg['order.main.well.uploadInfoTip']}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--会员列表-->
+<div class="modal fade" id="dialogAccount" tabindex="-1" role="dialog" aria-labelledby="dialogAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 80%;margin-left: 10%;top:5%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="dialogAccountModalLabel">会员列表</h4>
+            </div>
+            <div class="modal-body" style="height:70vh;overflow-y: auto">
+                <form id="search" class="form-inline"  role="form">
+                    <div class="form-group">
+                        <label for="loginname">用户名</label>
+                        <input type="text" id="loginname" name="loginname" onclick="this.value=''" style="width: 20%" class="form-control" placeholder="请输入用户名" autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile" >手机号码</label>
+                        <input type="text" id="mobile" name="mobile" onclick="this.value=''" style="width: 20%" class="form-control" placeholder="请输入手机号码">
+                    </div>
+                    <div class="form-group">
+                        <button id="searchBtn" type="button" class="btn btn-default">${msg['sys.role.column.query']}</button>
+                    </div>
+                </form>
+                <div class=panel-body>
+                    <div class="table-responsive no-border">
+                        <div class="table-responsive no-border" >
+                            <table class="table table-bordered table-striped mg-t datatable">
+                                <thead>
+                                <tr>
+                                    <th>会员账号ID</th>
+                                    <th>会员类型</th>
+                                    <th>会员昵称</th>
+                                    <th>用户名</th>
+                                    <th>会员等级</th>
+                                    <th>手机号码</th>
+                                    <th>${msg['globals.table.column.operation']}</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!--商品列表-->
+<div class="modal fade" id="dialogGoods" tabindex="-1" role="dialog" aria-labelledby="dialogGoodsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 80%;margin-left: 10%;top:10%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="dialogGoodsModalLabel">商品列表</h4>
+            </div>
+            <div class="modal-body" style="height:70vh;overflow-y: auto">
+                <form id="goodsSearch" class="form-inline"  role="form">
+                    <div class="form-group">
+                        <label class="control-label"></label>
+                        <input type="hidden" name="classId" value="">
+                        <input id="classId" type="text" class="form-control" placeholder="${msg['goods.main.tip.selectplease']}${msg['goods.main.column.classId']}" readonly value="" data-toggle="modal" data-target="#dialogSelectClass"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"></label>
+                        <input type="text" class="form-control" name="name" placeholder="${msg['goods.main.column.name']}/${msg['goods.product.column.sku']}">
+                    </div>
+                <!--    <div class="form-group">
+                        <label >商品分类</label>
+                        <select class="form-control">
+                            <option value="">&#45;&#45;请选择&#45;&#45;</option>
+                            <option value="0">手机数码</option>
+                            <option value="1">家用电器</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>商品名称</label>
+                        <input type="text"  onclick="this.value=''" style="width: 20%" class="form-control" >
+                    </div>
+                   &lt;!&ndash; <div class="form-group">
+                        <label>规格</label>
+                        <input type="text"  onclick="this.value=''" style="width: 20%" class="form-control" >
+                    </div>&ndash;&gt;
+                    <div class="form-group">
+                        <label >商品品牌</label>
+                        <select class="form-control">
+                            <option value="">&#45;&#45;请选择&#45;&#45;</option>
+                            <option value="0">苹果</option>
+                            <option value="1">华为</option>
+                        </select>
+                    </div>-->
+                    <div class="form-group">
+                        <button id="goodsSearchBtn" type="button" class="btn btn-default">${msg["goods.main.search.btn.searchBtn"]}</button>
+                        <button id="resetBtn" type="button" class="btn btn-default">${msg["goods.main.search.btn.resetBtn"]}</button>
+                    </div>
+                </form>
+                <div class=panel-body>
+                    <div class="table-responsive no-border">
+                            <table class="table table-bordered goodsDatatable">
+                                <thead>
+                                <tr>
+                                    <th>货品ID</th>
+                                    <th>商品ID</th>
+                                    <th>商品名称</th>
+                                    <th>商品分类</th>
+                                    <th>品牌</th>
+                                    <th>SKU</th>
+                                    <th>库存</th>
+                                    <th>销售价(元)</th>
+                                    <th>成本价(元)</th>
+                                    <th>市场价(元)</th>
+                                </tr>
+                                </thead>
+                            </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" onclick="addGoods()"  data-dismiss="modal">确认</button>
+                <button type="button" class="btn btn-default" style="float: left" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div id="dialogSelectClass" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <div class="modal-title input-group goods-search-class">
+                    <input type="text" class="form-control input-sm js-search-class-input" placeholder="${msg['goods.main.column.classId']}" />
+                    <span class="input-group-btn "><button class="btn btn-default input-sm js-search-class" type="button"><span class="ti-search"></span></button></span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeClass" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary" onclick="selectClass()">${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    input{
+        min-width: 120px !important;
+    }
+    .city-picker-span {
+        width: 100% !important;
+    }
+    .city-picker-dropdown{
+        width: 100% !important;
+    }
+    .table-bordered > tbody > tr > td{
+        border-left: 1px solid #e3e6f3 !important
+    }
+    .table-bordered > thead > tr > th{
+        border-left: 1px solid #e3e6f3 !important
+    }
+    .div-img-album{
+        list-style-type: none;
+        margin: 2px;
+        height: 118px;
+        float: left;
+    }
+    .divImg{
+        float: left;
+        margin: 2px;
+        padding: 2px;
+        height:108px;
+        width:100px;
+        border: 1px solid #dcdcdc;
+        cursor: pointer;
+    }
+    .divImgD{
+        float: left;
+        margin: 2px;
+        padding: 2px;
+        height:108px;
+        width:100px;
+        border: 1px solid red;
+        cursor: pointer;
+    }
+</style>
+<script language="JavaScript">
+
+    $.ajaxSetup({
+        async : false
+    });
+
+    var datatable = {};//会员
+    var goodsDatatable = {};//商品
+    var uploadImageList = [];//上传图片凭证
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": false,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/store/order/main/account",
+                "type": "post",
+                "data": function (d) {
+                    var  $search = $("#search");
+                    d.mobile = $("input[name='mobile']",$search).val().trim();
+                    d.loginname = $("input[name='loginname']",$search).val().trim();
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "accountId","visible":false,"sDefaultContent" : "","bSortable": false},
+                {"data": "memberType.name","sDefaultContent" : "","bSortable": false},
+                {"data": "accountInfo.nickname","sDefaultContent" : "", "bSortable": true},
+                {"data": "accountUser.loginname","sDefaultContent" : "", "bSortable": true},
+                {"data": "memberLevel.name","sDefaultContent" : "", "bSortable": true},
+                {"data": "accountUser.mobile","sDefaultContent" : "", "bSortable": true}
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        return '<button type="button" class="btn btn-xs btn-info" onclick="choose(\''+row.accountId+'\',\''+row.accountUser.loginname+'\')" > 选择</button>';
+                    },
+                    "targets": 6
+                }
+            ]
+        });
+        datatable.on('mouseover mouseout', 'tr', function () {
+            if(event.type == "mouseover"){
+                //鼠标悬浮
+                $(this).addClass('selected');
+            }else if(event.type == "mouseout"){
+                //鼠标离开
+                $(this).removeClass('selected');
+            }
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+
+    var goodsSelected = [];//商品选择数据
+    function initGoosDatatable() {
+        goodsDatatable =  $('.goodsDatatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/store/order/main/product",
+                "type": "post",
+                "data": function (d) {
+                    var  $search = $("#goodsSearch");
+                    d.classId = $("input[name=classId]:hidden", $search).val();
+                    d.name = $("input[name='name']", $search).val();
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "id","width": "5%","visible":false,"bSortable": false},
+                {"data": "goodsId","width": "5%","visible":false,"bSortable": false},
+                {"data": "name","sDefaultContent" : "", "bSortable": true,
+                    "render": function (data,type,row) {
+                        return row['goodsMain'].name+" "+data;
+                    }
+                },
+                {"data": "goodsMain.goodsClass.name","sDefaultContent" : "",
+                  "bSortable": false
+                },
+                {"data": "goodsMain.goodsBrand.name","sDefaultContent" : "","bSortable": true},
+                {"data": "sku","sDefaultContent" : "","bSortable": true},
+                {"data": "stock","sDefaultContent" : "", "bSortable": true},
+                {"data": "salePrice","sDefaultContent" : "","bSortable": true,
+                  "render": function (data, type, row) {
+                      return setPrice(data);
+                  }
+                },
+                {"data": "costPrice","sDefaultContent" : "","bSortable": true,
+                    "render": function (data, type, row) {
+                        return setPrice(data);
+                    }
+                },
+                {"data": "marketPrice","sDefaultContent" : "","bSortable": true,
+                    "render": function (data, type, row) {
+                        return setPrice(data);
+                    }
+                }
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        return '';
+                    },
+                    "targets": 8
+                }
+            ],
+            "rowCallback": function( row, data, index ) {
+                for(var i in goodsSelected){
+                    if(goodsSelected[i].id == data.id ){
+                        $(row).addClass('selected');
+                        break;
+                    }
+                }
+            }
+        });
+        $('.goodsDatatable tbody').on( 'click', 'tr', function () {
+            var goodsItem ;
+            goodsItem = goodsDatatable.row(this).data();
+            $(this).toggleClass('selected');
+            if($(this).is('.selected')){
+                goodsSelected.push(goodsItem);
+            }else{
+                goodsSelected.splice(getGoodsItemIndex(goodsSelected, goodsItem.id),1);
+            }
+        } );
+
+        $("#goodsSearchBtn").on('click', function () {
+            goodsDatatable.ajax.reload();
+        });
+        $("#resetBtn").click(function () {
+            $("#goodsSearch").find("input[type='text'],input[type='hidden'],select").val("");
+        });
+    }
+
+
+    $("#accountName").on("click",function () {
+        datatable.ajax.reload();
+    });
+
+    $("button[name='chooseProduct']").on("click",function () {
+        goodsDatatable.ajax.reload();
+    })
+    function clearDetailFile () {
+
+    }
+    function choose(accountId,loginname) {
+        $("#accountId").val(accountId);
+        $("#accountName").val(loginname);
+        $("#dialogAccount").modal('hide');
+        $.post("${base}/store/order/main/address",{accountId:accountId},function (data) {
+            if(data != null && data != ""){
+                $("#deliveryName").val(data.fullName);
+                $("#deliveryMobile").val(data.mobile);
+                $("#deliveryProvince").val(data.province);
+                $("#deliveryCity").val(data.city);
+                $("#deliveryCounty").val(data.county);
+                $("#deliveryAddress").val(data.address);
+                var province= data.province;
+                var city = data.city;
+                var county = data.county;
+                $("#totalAddress").citypicker('reset');
+                $("#totalAddress").citypicker('destroy');
+                $("#totalAddress").citypicker({
+                    province: province,
+                    city: city,
+                    county: county
+
+                },function () {
+                    countFreight();
+                });
+            }else{
+                clearAddress();
+                countFreight();
+            }
+        });
+    }
+    
+    function clearAddress() {
+        $("#deliveryName").val("");
+        $("#deliveryMobile").val("");
+        $("#deliveryProvince").val("");
+        $("#deliveryCity").val("");
+        $("#deliveryCounty").val("");
+        $("#deliveryAddress").val("");
+        $("#totalAddress").citypicker('reset');
+    }
+    
+    $(function () {
+        //初始化会员列表
+        initDatatable();
+        //初始化商品列表
+        initGoosDatatable();
+        //初始化商品分类树
+        initTreeView();
+    });
+
+
+    /*添加商品到列表*/
+    function addGoods() {
+        var tmps = goodsSelected.slice(0);
+        if (goodsSelected && goodsSelected.length > 0) {
+            $(".goodsTr").each(function () {
+                var index =  getGoodsItemIndex(goodsSelected, this.id);
+                if (index) {
+                    goodsSelected.splice(index,1);
+                    $(this).addClass("no-del");
+                }
+            });
+            $(".goodsTr").not(".no-del").remove();
+            $(".goodsTr").removeClass("no-del");
+        }
+        for(var i=0;i<goodsSelected.length;i++){
+            var brandName = "";
+            var className = "";
+            if(goodsSelected[i].goodsMain != null && goodsSelected[i].goodsMain.goodsBrand != null ) {
+                brandName =  goodsSelected[i].goodsMain.goodsBrand['name'];
+            }
+            if(goodsSelected[i].goodsMain != null && goodsSelected[i].goodsMain.goodsClass != null){
+                className =  goodsSelected[i].goodsMain.goodsClass['name'];
+            }
+            $("#goodsTotal").before("<tr  id="+goodsSelected[i].id+" class='goodsTr'>" +
+                   "<td>"+goodsSelected[i].goodsMain['name'] + " "+ goodsSelected[i].name+"</td>" +
+                   "<td>"+className+"</td>"+
+                   "<td>"+brandName+"</td>"+
+                   "<td>"+goodsSelected[i].sku+"</td>"+
+                   "<td>"+setPrice(goodsSelected[i].salePrice)+"</td>"+
+                   "<td>"+setPrice(goodsSelected[i].costPrice)+"</td>"+
+                   "<td>"+setPrice(goodsSelected[i].marketPrice)+"</td>"+
+                   "<td><input type='number' class='form-control gooodsItem' style='min-width: 60px !important;width: 80px;' placeholder='0' onkeyup='value=(parseInt((value=value.replace(/\D/g,\"\"))==\"\"||parseInt((value=value.replace(/\D/g,\"\"))==0)?\"1\":value,10))' value=1 >" +
+                   "<td><span>"+setPrice(goodsSelected[i].salePrice)+"</span></td>"+
+                   "<td><button type='button' onclick='delGoods("+goodsSelected[i].id+",this)' class='btn btn-sm btn-danger'>删除</button></td>" +
+                   "</tr>");
+            goodsSelected[i].saleNumAll = 1; //初始化数量
+            $("#"+goodsSelected[i].id).children("td").find("input").on("input propertychange",function () {
+               var id = $(this).parents("tr").attr('id');
+               var salePrice = getGoodsItem(id).salePrice;
+               //获取改变的数量
+               var buyNum =  $(this).val();
+               if(buyNum <= 0){
+                   $(this).val(1)
+                   buyNum =1;
+               }
+               buyNum = parseInt(buyNum);
+
+               $("#"+id).children("td").find("span").text(setPrice(buyNum*salePrice));
+               goodsSelected[getGoodsItemIndex(goodsSelected, id)].saleNumAll = buyNum;
+               reduseGoosNum();
+               getGoodsPay();
+               getPayMoney();
+                //合计运费
+                countFreight();
+           })
+        }
+        goodsSelected = tmps.slice(0);
+        reduseGoosNum();
+        getGoodsPay();
+        getPayMoney();
+        //合计运费
+        countFreight();
+    }
+
+    /*商品规格渲染*/
+    function specRender(data) {
+        if(data == null || data == ""){
+            return "";
+        }
+        var spec = JSON.parse(data);
+        var result = [];
+        for(var i in spec){
+            result.push(spec[i].spec_name+":"+spec[i].spec_value_name);
+        }
+        return result.join(" ");
+    }
+
+    /*删除商品*/
+    function delGoods(id,el){
+        $(el).parents("tr:first").remove();
+        goodsSelected.splice(getGoodsItemIndex(goodsSelected, id),1);
+        reduseGoosNum();
+        getGoodsPay();
+        getPayMoney();
+        //合计运费
+        countFreight();
+    }
+
+    /*合计商品数量*/
+    function reduseGoosNum(){
+        var goodsNum = 0;
+        $(".gooodsItem").each(function () {
+            goodsNum += parseInt($(this).val());
+        })
+        $("#goodsNum").text(goodsNum);
+    }
+
+    /*根据商品ID获取商品*/
+    function getGoodsItem(id) {
+        for(var i in goodsSelected){
+            if(goodsSelected[i].id == id){
+                return goodsSelected[i];
+            }
+        }
+    }
+
+
+    /*根据商品ID获取商品索引*/
+    function getGoodsItemIndex(goodsSelected, id) {
+        for(var i in goodsSelected){
+            if(goodsSelected[i].id == id){
+                return i;
+            }
+        }
+    }
+    
+    /*合计商品总金额*/
+    var goodsMoney=0;
+    function getGoodsPay() {
+        var payPrice = 0;
+        $(".gooodsItem").each(function () {
+            if(payPrice == 0){
+                payPrice = Number($(this).parent("td").next("td").children("span").text().replace(",","")).toFixed(2);
+            }else{
+                payPrice = FloatAdd(payPrice,Number($(this).parent("td").next("td").children("span").text().replace(",",""))).toFixed(2);
+            }
+        })
+        $("#goodsPay").text(payPrice);
+        $("#goodsPayMoney").val(payPrice);
+        goodsMoney = payPrice;
+    }
+    var payMoney = 0;//应付金额
+    /*合计应收金额*/
+    function getPayMoney(){
+        //商品应付金额之和
+        var goodsTotalMoney = parseFloat($("#goodsPayMoney").val());
+        //运费金额
+        var freightMoney = parseFloat($("#freightMoney").val());
+        //TODO 目前优惠金额暂时设置为0
+        //优惠金额
+        var freeMoney = 0;
+        //应收金额
+        payMoney = FloatSub(FloatAdd(goodsTotalMoney,freightMoney),freeMoney);
+        $("#payMoney").val(payMoney);
+    }
+
+    /*添加图片*/
+    function setAlbumImg(id){
+        $("#"+id).removeClass("divImg").addClass("divImgD").siblings().removeClass("divImgD").addClass("divImg");
+    }
+    /*删除图片*/
+    function delAlbumImg(id){
+        var data = $(this).prev('img').attr("src");
+        uploadImageList.splice(getImageListIndex(data),1);
+        $("#"+id).remove();
+    }
+
+    //获取上传图片的索引下标
+    function  getImageListIndex(val) {
+        for(var i=0;i<uploadImageList.length;i++){
+            if(uploadImageList[i] == val){
+                return i;
+            }
+        }
+    }
+
+    /**
+     * 初始化相册图方法
+     * @param queueId 队列元素ID
+     * @param fileuploadId 上传容器ID
+     * @param imgDivIdPrefix 图片DIV的名称前缀
+     * @param albumContainer 相册图容器Id
+     */
+    function initAlbumOptions(queueId,imgDivIdPrefix,albumContainerId) {
+        var albumContainer = document.getElementById(albumContainerId);
+        var sort = Sortable.create(albumContainer);
+        var imgIndex = $(albumContainer).children().size();
+        return {
+            'auto': true,
+            'multi': true,
+            'width': '100%',
+            'height': '35',
+            'buttonText': "请选择图片",
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024*5,
+            'queueSizeLimit': 6,
+            'formData': {},
+            'queueID': queueId,
+            'removeCompleted':true,
+            'removeTimeout':0,
+            'uploadScript': '${base!}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    uploadImageList.push(data.data);
+                    Toast.success(data.msg);
+                    var c = "divImg";
+                    imgIndex++;
+                    if(imgIndex == 1){
+                        c = "divImgD";
+                    }
+                    var imgDivId = imgDivIdPrefix + imgIndex;
+                    $(albumContainer).append("<div id='"+imgDivId+"' class='"+c+"'>" +
+                            "<img  onclick=\"setAlbumImg('"+imgDivId+"')\" src='" + data.data+ "' style='width:100px;height: 80px;margin-bottom: 1px;'><br>" +
+                            "<i style='float: right;padding-top: 4px;' class='fa fa-close' onclick=\"delAlbumImg('"+imgDivId+"')\"></i></div>");
+                    sort.destroy();
+                    sort = Sortable.create(albumContainer);
+                    $("#"+queueId).empty();
+                } else {
+                    Toast.error(data.msg);
+                }
+            },
+            'onSelect':function () {
+                if($("#img").children().size() >= 6){
+                    Toast.warning("${msg['goods.main.tip.selectimagessizestart'] + '6' + msg['goods.main.tip.selectimagessizeend']}");
+                    $("#file_upload").uploadifive('cancel', $('.uploadifive-queue-item').first().data('file'));
+                }
+            }
+        };
+    }
+
+    var accountList = [];
+    //商城账户选择事件
+    $("#payAccount").change(function () {
+        var id =$(this).val();
+        var needPayMoney = FloatSub(payMoney,accountTotal);
+
+        if(id != "" && jQuery.inArray(id,accountList) == -1){
+            //添加账号列表信息
+            $("#accountTotal").before("<tr class='accountTr' id=account"+$(this).val()+">" +
+                    "<td>"+$(this).children('option:selected').text()+"</td>" +
+                    "<td><input type='number' class='form-control accountItem' data-parsley-price='true' placeholder='0' onkeyup='price(this)'  value="+needPayMoney+">" +
+                    "</td> <td><button type='button' onclick='delAccount("+id+")' class='btn btn-danger'>删除</button></td>" +
+                    "</tr>");
+            accountList.push(id);
+            amount();
+        }
+    })
+
+    //校验价格
+    function price(obj) {
+        if( !(/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(obj.value))){
+            layer.msg("只能输入数字，小数点后只能保留两位");
+            obj.value='';
+            amount();
+            return;
+        }
+        amount();
+    }
+
+    //删除商家账户列表
+    function delAccount(id) {
+        $("#account"+id).remove();
+        accountList.splice(getAccountListIndex(id),1);
+        amount();
+    }
+
+    //获取账号List的索引下标
+    function  getAccountListIndex(id) {
+        for(var i=0;i<accountList.length;i++){
+            if(accountList[i] == id){
+                return i;
+            }
+        }
+    }
+
+
+    var accountInfoList = []; //账号收款信息
+    var accountTotal =0;//收款账户金额合计
+    //收款合计金额
+    function amount() {
+        accountTotal = 0;//收款金额
+        accountInfoList = [];
+        $(".accountItem").each(function () {
+            var orderPayment = {};
+            //获取对公账户ID
+            var id = $(this).parent("td").parent("tr").attr('id');
+            var money = $(this).val();
+            if(!money){
+                money =0;
+            }
+            orderPayment.accountId = id;
+            orderPayment.payMoney = money;
+            accountInfoList.push(orderPayment);
+            accountTotal = FloatAdd(accountTotal,parseFloat(money).toFixed(2)).toFixed(2);
+        })
+        $("#accountTotal").find("span").text(accountTotal);
+    }
+
+    //初始化商品列表和收款账户
+    function initData() {
+        //删除商品列表
+        goodsSelected = [];
+        $('.goodsTr').remove();
+        reduseGoosNum();
+        getGoodsPay();
+        getPayMoney();
+        //重置收获人列表
+        $("#totalAddress").citypicker('reset');
+        //删除收款账户列表
+        accountInfoList = [];
+        $('.accountTr').remove();
+        uploadImageList = [];
+        $("#img").empty();
+        amount();
+
+    }
+
+    //支付状态选择事件
+    $("#payStatus").change(function () {
+        var isPay = $(this).val();
+        //未支付
+        if(isPay == "0"){
+            $("#payAccount").val("");
+            $("#payAccount").attr("disabled","disabled");
+            accountInfoList = [];
+            $('.accountTr').remove();
+            $('#accountInfo').hide();
+            $('#transferProve').hide();
+            $("#remark").hide();
+        }else{
+            $("#payAccount").attr("disabled",false);
+            $('#accountInfo').show();
+            $('#transferProve').show();
+            $("#remark").show();
+        }
+    })
+
+    var needTransfer = ["goodsMoney","goodsFreeMoney","goodsPayMoney","freightMoney","freeMoney","payMoney"];
+    var freight = 0; //初始化运费
+    $(document).ready(function () {
+
+        $("#totalAddress").citypicker(function(){
+            countFreight();
+        });
+
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                //TODO 目前商品总金额暂时设置为商品的应付金额,由于商品的优惠未知
+                var goodsMoneyForm = {
+                    name: "goodsMoney",
+                    required: false,
+                    value: goodsMoney
+                }
+                arr.push(goodsMoneyForm);
+                var goodsList = JSON.stringify(goodsSelected);
+                var goods = {
+                    name: "goods",
+                    required: false,
+                    value: goodsList
+                }
+                arr.push(goods);
+                //对付款的钱进行分元转换
+                for(var i=0;i<accountInfoList.length;i++){
+                    accountInfoList[i].payMoney = FloatMul(accountInfoList[i].payMoney,100);
+                }
+                var orderPayPaymentList = JSON.stringify(accountInfoList);
+                var payments = {
+                    name: "payments",
+                    required: false,
+                    value: orderPayPaymentList
+                }
+                arr.push(payments);
+                var uploadInfo = {
+                    name : "uploadInfo",
+                    required: false
+                }
+                if(uploadImageList.length > 0){
+                    var data = JSON.stringify(uploadImageList);
+                    uploadInfo.value = data;
+                }else{
+                    uploadInfo.value = "";
+                }
+                arr.push(uploadInfo);
+                //物流信息
+                var expressId = {
+                    name : "expressId",
+                    require: false,
+                    value: $("#expressId").val()
+                }
+                arr.push(expressId);
+                var expressName = {
+                    name: "expressName",
+                    require: false,
+                    value: $("#expressId option:selected").text()
+                }
+                arr.push(expressName);
+                for(var i in arr){
+                    //若提交的表单包含以上的金额,则元转换为分
+                    if(needTransfer.contains(arr[i].name)){
+                        var val =  arr[i].value;
+                        arr[i].value = FloatMul(val,100);
+                    }
+                }
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    initData();
+                    setTimeout(function () {
+                        $.pjax({url:"${base}/store/order/main",  container: '#container'});
+                    },500);
+                    form.resetForm();
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+        $('#file_upload').uploadifive(initAlbumOptions('queue','imgItem','img'));
+        $('#save').click(function () {
+            if ($('#totalAddress').data('citypicker')) {
+                var province = $("span[data-count='province']").attr("data-code");
+                var city = $("span[data-count='city']").attr("data-code");
+                var county = $("span[data-count='county']").attr("data-code");
+                if(typeof(province) == "undefined" || province == ""){
+                    Toast.error("请选择省");
+                    return;
+                }
+                if(typeof (city) == "undefined"  || city == "" ){
+                    Toast.error("请选择市");
+                    return;
+                }
+                if(typeof (county) == "undefined"  || county == ""){
+                    Toast.error("请选择区");
+                    return;
+                }
+                $('#deliveryProvince').val(province);
+                $('#deliveryCity').val(city);
+                $('#deliveryCounty').val(county);
+            }
+            $('#addForm').submit();
+        });
+        $(".js-example-basic-multiple").select2();
+
+
+        $("#expressId").change(function () {
+            countFreight();
+        })
+
+
+    });
+
+
+   /* $(".city-select.county").find('a').click(function () {
+        countFreight();
+    })*/
+
+    //统计运费
+    function countFreight() {
+        var logisticsCode =  $("#expressId").find("option:selected").attr("lang");
+        if(logisticsCode == null || logisticsCode == ""){
+            $("#freightMoney").val(setPrice(0));
+            getPayMoney();
+            return;
+        }
+        var provinceCode = $("span[data-count='province']").attr("data-code");
+        if(provinceCode == null || provinceCode == ""){
+            $("#freightMoney").val(setPrice(0));
+            getPayMoney();
+            return;
+        }
+        var productsList = [];
+        if(goodsSelected != null && goodsSelected.length != 0) {
+            for (var i=0;i<goodsSelected.length;i++) {
+                var product = {
+                    "sku": goodsSelected[i].sku,
+                    "num": goodsSelected[i].saleNumAll
+                }
+                productsList.push(product);
+            }
+        }
+        var param ={
+            "productsLists": JSON.stringify(productsList),
+            "provinceCode": provinceCode,
+            "storeId": "2017060000000001",
+            "logisticsCode": logisticsCode
+        }
+        $.post("${base!}/store/freight/freight",param,function (data) {
+            freight = data;
+        })
+        $("#freightMoney").val(setPrice(freight));
+        getPayMoney();
+    }
+    
+    function initTreeView() {
+        $("#jsTreeClass").jstree({
+            plugins: ["wholerow", "json_data", "search"],
+            core: {
+                data: function (node, callback) {
+                    $.get("${base}/store/goods/list/class/tree", function (ret) {
+                        var classes = [];
+                        if (ret) {
+                            for (var i =0;i<ret.length;i++) {
+                                classes.push({
+                                    id: ret[i].id,
+                                    text: ret[i].name,
+                                    parent: ret[i].parentId == "" ? "#" : ret[i].parentId,
+                                    hasChildren: ret[i].hasChildren
+                                });
+                            }
+                        }
+                        callback(classes);
+                    }, "json");
+                },
+                multiple: false
+            }
+        }).on("dblclick.jstree", function (event) {
+            selectClass();
+        });
+
+        var to = false;
+        $('.js-search-class-input').keyup(function () {
+            if(to) {
+                clearTimeout(to);
+            }
+            to = setTimeout(function () {
+                var text = $.trim($('.js-search-class-input').val());
+                if (text != "") {
+                    $('#jsTreeClass').jstree(true).search(text);
+                }
+            }, 250);
+        });
+        $(".js-search-class").click(function () {
+            var text = $.trim($(".js-search-class-input").val());
+            if (text != "") {
+                $('#jsTreeClass').jstree(true).search(text);
+            }
+        });
+    }
+
+    //选择商品分类
+    function selectClass() {
+        var tree = $.jstree.reference("#jsTreeClass");
+        var nodes = tree.get_selected(true);
+        if (nodes.length == 0) return false;
+        var id = nodes[0].id;
+        $("#classId").val(nodes[0].text);
+        $("#goodsSearch input[name='classId']").val(id);
+        $("#dialogSelectClass").modal("hide");
+    }
+
+    //浮点数加法运算
+    function FloatAdd(arg1,arg2){
+        var r1,r2,m;
+        try{r1=arg1.toString().split(".")[1].length}catch(e){r1=0}
+        try{r2=arg2.toString().split(".")[1].length}catch(e){r2=0}
+        m=Math.pow(10,Math.max(r1,r2));
+        return (arg1*m+arg2*m)/m;
+    }
+
+    //浮点数减法运算
+    function FloatSub(arg1,arg2){
+        var r1,r2,m,n;
+        try{r1=arg1.toString().split(".")[1].length}catch(e){r1=0}
+        try{r2=arg2.toString().split(".")[1].length}catch(e){r2=0}
+        m=Math.pow(10,Math.max(r1,r2));
+        //动态控制精度长度
+        n=(r1=r2)?r1:r2;
+        return ((arg1*m-arg2*m)/m).toFixed(2);
+    }
+
+
+    //浮点数乘法运算
+    function FloatMul(arg1,arg2)
+    {
+        var m=0,s1=arg1.toString(),s2=arg2.toString();
+        try{m+=s1.split(".")[1].length}catch(e){}
+        try{m+=s2.split(".")[1].length}catch(e){}
+        return Number(s1.replace(".",""))*Number(s2.replace(".",""))/Math.pow(10,m);
+    }
+
+    //数组的包含方法
+    Array.prototype.contains = function ( needle ) {
+        for (i in this) {
+            if (this[i] == needle) return true;
+        }
+        return false;
+    }
+</script>
+<!--#}#-->
+
+

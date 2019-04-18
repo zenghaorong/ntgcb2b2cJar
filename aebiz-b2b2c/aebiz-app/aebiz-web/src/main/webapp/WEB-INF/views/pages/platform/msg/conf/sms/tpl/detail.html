@@ -1,0 +1,32 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">Msg_conf_sms_tpl</a>
+                        <small>${obj.id}</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>${msg['msg.conf.sms.tpl.column.smsId']}</td><td>${obj.smsId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['msg.conf.sms.tpl.column.infoId']}</td><td>${obj.infoId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['msg.conf.sms.tpl.column.tplName']}</td><td>${obj.tplName}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>订单确认</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!--标准mui.css-->
+    <link rel="stylesheet" href="${base!}/assets/front/h5/css/mui.min.css" />
+    <link rel="stylesheet" href="${base!}/assets/front/h5/css/hryc.css" />
+    <!--App自定义的css-->
+    <!--<link rel="stylesheet" type="text/css" href="../css/app.css"/>-->
+    <style>
+        .mui-table-view .mui-media-object {
+            line-height: 42px;
+            max-width: 145px;
+            height: 100px;
+        }
+        .jiage-text{
+            font-size: 18px;
+            color: red;
+            margin-right:10px ;
+        }
+        [v-cloak]{
+            display: none !important;
+        }
+    </style>
+</head>
+<body >
+<div id="order">
+
+    <header class="mui-bar mui-bar-nav top-color">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+        <h1 class="mui-title" style="color: white;">
+            订单确认
+        </h1>
+    </header>
+
+
+    <div class="mui-card" style="margin-top: 60px;">
+        <div class="mui-card-header" >
+            商品金额<span style="color: red;">￥{{videoInfo.price}}</span>
+        </div>
+        <div class="mui-card-header">
+            运费<span style="color: red;">￥0</span>
+        </div>
+        <!--<div class="mui-card-header">-->
+        <!--优惠劵<span style="color: red;">￥10.00</span>-->
+        <!--</div>-->
+    </div>
+
+    <div class="mui-card">
+        <div class="mui-card-content">
+            <ul class="mui-table-view">
+                <li class="mui-table-view-cell mui-media" >
+                    <a href="#">
+                        <img class="mui-media-object mui-pull-left" :src="videoInfo.imageUrl">
+                        <div class="mui-media-body" style="white-space:normal;" >
+                            <span>{{videoInfo.videoTitle}}</span>
+                            <p class='mui-ellipsis'style="margin-top: 35px;margin-left: 100px;" >
+                                <span class="jiage-text">￥{{videoInfo.price}}</span>
+                                <span>*1</span>
+                            </p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="mui-content-padded">
+        可用优惠劵
+        <select class="mui-btn mui-btn-block" v-model="couponId">
+            <option :value="item.couponId" v-for="item in coupons" :key="item.id">{{item.sales_coupon.name}}</option>
+        </select>
+    </div>
+
+    <nav class="mui-bar mui-bar-tab" style="height: 40px;">
+        <div class="mui-input-row mui-password" style="border: 0px;">
+            <button type="button" id="place"  class="mui-btn mui-btn-primary" style="width: 30%;top: 0px;line-height:1;
+            border: 0;background-color:red;" v-on:click="save()">立即支付</button>
+            <button type="button" style="width: 70%;top: 0px;line-height:1;border: 0;background-color:white;"
+                    class="mui-btn mui-btn-primary" id="review">
+                <span style="color: black;">应付:</span><span style="color: red;padding-left: 10px;">{{zongPrice+yunPrice}}元</span>
+            </button>
+        </div>
+    </nav>
+</div>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/mui.js" ></script>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/vue.js" ></script>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/jquery-2.0.0.min.js" ></script>
+<script type="application/javascript">
+    mui.init({
+        swipeBack:true //启用右滑关闭功能
+    });
+
+    var videoId = '${videoId}';
+
+    var vue = new Vue({
+        el: '#order',
+        data: {
+            address: '',
+            order:'',
+            videoInfo:'',
+            zongPrice:'',
+            yunPrice:0,
+            coupons:[],
+            couponId:'',
+            couponPrice:5
+        },
+        created:function () {   //实例初始化创建完成执行
+
+            this.getVideoInfo();
+
+
+        },
+        methods:{              //定义封装方法
+            //获取确认视频
+            getVideoInfo:function () {
+                var self = this;
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/cms/getVideoDesc.html",
+                    dataType:"JSON",
+                    data:{
+                        id:videoId
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            self.videoInfo = data.data;
+                            self.getMyOrderCoupon();
+                        } else {
+
+                        }
+                    }
+                });
+            },
+            //查询可用优惠劵
+            getMyOrderCoupon:function () {
+                var self = this;
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/coupon/getMyOrderCoupon.html",
+                    dataType:"JSON",
+                    data:{
+                        productNum:self.goodsList.length,
+                        price:self.zongPrice,
+                        productType:"2"
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            self.coupons = data.data;
+                            if(self.coupons.length>0) {
+                                self.couponId = self.coupons[0].couponId; //让select默认选中
+                            }
+                            self.zongPrice = self.videoInfo.price - self.couponPrice;
+                        } else {
+
+                        }
+                    }
+                });
+            },
+            save:function () {
+                window.location.href="${base!}/open/h5/order/videoCheckoutCounter.html?videoId="+videoId;
+            }
+        },
+        watch:{     //监听器
+            // carModel:function () {
+            //     this.getProvince();
+            // }
+        }
+
+    });
+
+
+</script>
+
+</body>
+</html>

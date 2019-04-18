@@ -1,0 +1,566 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<style>
+    .tool-search-line{
+        padding-top: 8px;
+    }
+    .search-input {
+        width: 30%;min-width: 120px;
+    }
+    .form-group {margin-right: 18px;}
+</style>
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button tool-search-line">
+            <form class="form-inline js-search-form" id="search_form">
+                <div class="form-group">
+                    <label class="control-label">${msg['msg.info.column.name']}：</label>
+                    <input type="text" class="form-control search-input" name="name">
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary js-search-ok">${msg['globals.button.search']}</button>
+                    <button type="button" class="btn btn-default js-search-reset">${msg['globals.button.reset']}</button>
+                </div>
+            </form>
+        </div>
+        <div class="btn-group tool-button pull-right">
+            <a  class="btn btn-primary navbar-btn emailServiceSetting" ><i class="ti-settings"></i> ${msg['msg.info.setting.email']}</a>
+            <a  class="btn btn-primary navbar-btn" href="${base}/platform/msg/conf/sms" data-pjax><i class="ti-settings"></i> ${msg['msg.info.setting.sms']}</a>
+            <!--# if(@shiro.hasRole("sysadmin")){#-->
+            <a  class="btn btn-primary navbar-btn" href="${base}/platform/msg/info" data-pjax><i class="ti-settings"></i> ${msg['msg.info.setting.msgtpl']}</a>
+            <a  class="btn btn-primary navbar-btn" href="${base}/platform/msg/info/param" data-pjax><i class="ti-settings"></i> ${msg['msg.info.setting.msgparam']}</a>
+            <!--#}#-->
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border"  style="min-height: 500px;">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                    <tr>
+                        <th>${msg['msg.info.column.name']}</th>
+                        <th>${msg['msg.info.index.column.msg']}</th>
+                        <th>${msg['msg.info.index.column.sms']}</th>
+                        <th>${msg['msg.info.index.column.email']}</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+
+<!--#/* 编辑站内信模板 */#-->
+<div id="dialogMsgTpl" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title tplTitle"></h4>
+                <input class="tplType" value="" type="hidden">
+                <input class="tplInfoId" value="" type="hidden">
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <label class="col-xs-2 control-label">${msg["msg.info.setting.param.label"]}</label>
+                    <div class="col-xs-10 paramarea"></div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 control-label">${msg["msg.info.setting.param.content"]}</label>
+                    <div class="col-sm-8">
+						<textarea name="content" style="width: 100%; height: 200px;"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer ">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button type="button" class="btn btn-primary" id="tplMsgSave" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--#/* 编辑短信模板 */#-->
+<div id="dialogSmsTpl" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title tplTitle"></h4>
+                <input class="tplType" value="" type="hidden">
+                <input class="tplInfoId" value="" type="hidden">
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <label  class="col-xs-2 control-label">${msg["msg.info.setting.param.label"]}</label>
+                    <div  class="col-xs-10 paramarea"></div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 control-label">${msg["msg.info.setting.param.content"]}</label>
+                    <div class="col-sm-8">
+                        <textarea name="content" style="width: 100%; height: 200px;"></textarea>
+                    </div>
+                </div>
+                <!--# if (isNotEmpty(smsConf) && smsConf.hasTpl ) { #-->
+                <div class="row">
+                    <label class="col-sm-2 control-label">${msg["msg.info.setting.smsplatform.select"]}</label>
+                    <div class="col-sm-8">
+                        <select id="smsPlatformTplId" class="form-control" name="smsPlatformTplId" data-parsley-required="true">
+                            <option value="" info-id-value="" selected="selected"></option>
+                            <!--# for (o in smsConf.smsTpls) { #-->
+                            <option value="${o.id}" info-id-value="${o.infoId}">${o.tplId} | ${o.tplName}</option>
+                            <!--# } #-->
+                        </select>
+                    </div>
+                </div>
+                <!--# } #-->
+            </div>
+            <div class="modal-footer ">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button type="button" class="btn btn-primary" id="tplSmsSave" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--#/* 编辑email模板 */#-->
+<div id="dialogEmailTpl" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title tplTitle"></h4>
+                <input class="tplType" value="" type="hidden">
+                <input class="tplInfoId" value="" type="hidden">
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <label  class="col-xs-2 control-label">${msg["msg.info.setting.param.label"]}</label>
+                    <div  class="col-xs-10 paramarea"></div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 control-label">${msg["msg.info.setting.param.content"]}</label>
+                    <div class="col-sm-8">
+                        <textarea  id="uecontent" name="uecontent" style="width: 100%; height: 200px;"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer ">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button type="button" class="btn btn-primary" id="tplEmailSave" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialogEmailSetting" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.config.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.all.js"></script>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/msg/info/data",
+                "type": "post",
+                "data": function (d) {
+                    var form = $(".js-search-form");
+                    d.name = $("input[name='name']", form).val();
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "name", "bSortable": true},
+                {"data": "supportMSG", "bSortable": true},
+                {"data": "supportSMS", "bSortable": true},
+                {"data": "supportEmail", "bSortable": true}
+            ],
+            "columnDefs": [
+                {
+                     "render": function (data, type, row) {
+                         var htmlstr = '';
+                         if(row.disabledMSG){
+                             htmlstr = '...';
+                         }else{
+                             if(row.supportMSG){
+                                 htmlstr = '<input type="checkbox" class ="msginfo '+row.id+'"  value="1" data-infoId="'+row.id+'" data-title="msg" data-num="0"    checked="checked">'+
+                                           '<a class="editTpl" href="javascript:void(0)" data-infoId="'+row.id+'" data-title="msg">编辑模板</a>';
+                             }else{
+                                 htmlstr = '<input type="checkbox" class ="msginfo '+row.id+'"  value="0" data-infoId="'+row.id+'" data-title="msg" data-num="0" >'+
+                                           '<a class="editTpl" href="javascript:void(0)" data-infoId="'+row.id+'" data-title="msg">编辑模板</a>';
+                             }
+                         }
+                         return  htmlstr;
+                     },
+                    "targets": 1
+                },
+                {
+                    "render": function (data, type, row) {
+                        var htmlstr = '';
+                        if(row.disabledSMS){
+                            htmlstr = '...';
+                        }else{
+                            if(row.supportSMS){
+                                htmlstr = '<input type="checkbox" class ="msginfo '+row.id+'"  value="1" data-infoId="'+row.id+'" data-title="sms" data-num="1"    checked="checked">'+
+                                         '<a class="editTpl" href="javascript:void(0)" data-infoId="'+row.id+'" data-title="sms">编辑模板</a>';
+                            }else{
+                                htmlstr = '<input type="checkbox" class ="msginfo '+row.id+'"  value="0" data-infoId="'+row.id+'" data-title="sms" data-num="1" >'+
+                                         '<a class="editTpl" href="javascript:void(0)" data-infoId="'+row.id+'" data-title="sms">编辑模板</a>';
+                            }
+                        }
+                        return  htmlstr;
+                    },
+                    "targets": 2
+                },
+                {
+                    "render": function (data, type, row) {
+                        var htmlstr = '';
+                        if(row.disabledEmail){
+                            htmlstr = '...';
+                        }else{
+                            if(row.supportEmail){
+                                htmlstr = '<input type="checkbox" class ="msginfo '+row.id+'"  value="1" data-infoId="'+row.id+'" data-title="email" data-num="2"   checked="checked">'+
+                                         '<a class="editTpl" href="javascript:void(0)" data-infoId="'+row.id+'" data-title="email">编辑模板</a>';
+                            }else{
+                                htmlstr = '<input type="checkbox" class ="msginfo '+row.id+'"  value="0" data-infoId="'+row.id+'" data-title="email" data-num="2" >'+
+                                         '<a class="editTpl" href="javascript:void(0)" data-infoId="'+row.id+'" data-title="email">编辑模板</a>';
+                            }
+                        }
+                        return  htmlstr;
+                    },
+                    "targets": 3
+                },
+            ]
+        });
+
+        /*datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });*/
+
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+
+        $(".js-search-ok").click(function () {
+            $('.datatable').DataTable().ajax.reload();
+        });
+
+        $(".js-search-reset").click(function () {
+            $(".js-search-form").resetForm();
+            $('.datatable').DataTable().ajax.reload();
+        });
+    }
+
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/msg/info/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#okDel").unbind("click");
+            dialog.find("#okDel").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/platform/msg/info/delete", {ids: ids.toString()}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null,false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("${msg['globals.button.delete.select']}");
+        }
+    }
+
+    <!--#/* 设置项目参数配置信息 */#-->
+    function  fillMsgParam(infoId, containerId){
+        $.post("${base}/platform/msg/info/param/getMsgParam",{'infoId':infoId},function(data){
+            if (data.code == 0) {
+                var obj = data.data;
+                var paramList = obj.paramList;
+                var paramstr = "";
+                if(paramList != null && paramList ){
+                    for(var param in paramList){
+                        paramstr += "<span   id='"+paramList[param].id+"'>"+paramList[param].name+": <b>"+paramList[param].code+"</b></span>&nbsp;&nbsp;";
+                    }
+                    $(".paramarea", '#'+containerId).html(paramstr);
+                }
+            } else {
+                Toast.error(data.msg);
+            }
+        },'json');
+    }
+    <!--#/* 设置模板内容 */#-->
+    function  fillMsgTplInfo(infoId, type, containerId){
+        $.post("${base}/platform/msg/info/tpl/getMsgTplInfo",{'infoId':infoId},function(data){
+            if (data.code == 0) {
+                var jsondata = data.data;
+                $('.tplType', '#'+containerId).val(type);
+                $('.tplInfoId', '#'+containerId).val(jsondata.infoId);
+
+                if(type == 'msg'){
+                    $("textarea[name=content]", '#'+containerId).val(jsondata&&jsondata.tplMSG ? jsondata.tplMSG : '');
+                }else if(type == 'sms'){
+                    $("textarea[name=content]", '#'+containerId).val(jsondata&&jsondata.tplSMS ? jsondata.tplSMS : '');
+                    $("#smsPlatformTplId>option[info-id-value="+jsondata.infoId+"]").prop("selected", true);
+                }else if(type == 'email'){
+                    var temptext =  "";
+                    if (jsondata){
+                        temptext =  jsondata.tplEmail;
+                    }
+                    if(typeof temptext == undefined || temptext == null){
+                        ue.execCommand('cleardoc');
+                    }else{
+                        ue.setContent(temptext);
+                    }
+                }
+            }
+        },'json');
+    }
+
+    var ue;
+
+    $(function () {
+
+        initDatatable();
+
+        setTimeout(function () {
+            ue = new baidu.editor.ui.Editor();
+            ue.render('uecontent');
+        },500);
+
+        <!--#/* 是否支持站内信短信邮件的复选框点击事件处理 */#-->
+        $(document).off('click', '.msginfo').on('click', '.msginfo', function(){
+            var $checkbox = $(this);
+            var flag = $checkbox.is(":checked");
+            var id = $checkbox.attr("data-infoId");
+            var type = $checkbox.attr("data-title");
+
+            $.post("${base}/platform/msg/info/chooseMsgInfo",{'id':id, 'type':type, 'flag':flag},function(data){
+                if (data.code == 0) {
+                    //datatable.ajax.reload(null,false);
+                    Toast.success("${msg['globals.result.success']}");
+                } else {
+                    $checkbox.prop("checked", !flag);
+                    Toast.error(data.msg);
+                }
+            },'json');
+
+        });
+
+        <!--#/* 点击编辑模板事件处理 */#-->
+        $(document).off('click', '.editTpl').on('click','.editTpl',function(){
+            var dialog;
+            var $this = $(this);
+            var infoId  = $this.attr("data-infoId");
+            var type = $this.attr("data-title");
+
+            if(type == 'msg'){
+                dialog = $("#dialogMsgTpl");
+                $('.tplTitle', dialog).text("${msg['msg.info.index.edit.msgtitle']}");
+                $('.tplType', dialog).val(type);
+                $('tplInfoId', dialog).val(infoId);
+            }else if(type == "sms"){
+                dialog = $("#dialogSmsTpl");
+                $('.tplTitle', dialog).text("${msg['msg.info.index.edit.smstitle']}");
+                $('.tplType', dialog).val(type);
+                $('.tplInfoId', dialog).val(infoId);
+            }else if(type == "email"){
+                dialog = $("#dialogEmailTpl");
+                $('.tplTitle', dialog).text("${msg['msg.info.index.edit.emailtitle']}");
+                $('.tplType', dialog).val(type);
+                $('.tplInfoId', dialog).val(infoId);
+            } else {
+                Toast.error("${msg['msg.info.error.unknowntype']}");
+                return false;
+            }
+            fillMsgParam(infoId, dialog.attr("id"));
+            fillMsgTplInfo(infoId, type, dialog.attr("id"));
+            dialog.modal("show");
+        });
+
+        <!--#/* 保存站内信模板 */#-->
+        $('#tplMsgSave').click(function(){
+            var dialog = $("#dialogMsgTpl");
+            var infoId = $(".tplInfoId", dialog).val();
+            var infoType = $(".tplType", dialog).val();
+            var content = $("textarea[name=content]", dialog).val();
+            if(content == ""){
+                Toast.error("${msg['msg.info.error.tplnotempty']}");
+                return false;
+            }
+            $.post('${base}/platform/msg/info/tpl/saveTpl',{'infoId':infoId, 'infoType':infoType, 'uecontent':content},function(data){
+                if (data.code == 0) {
+                    $("#dialogMsgTpl").modal('hide');
+                    Toast.success("${msg['globals.result.success']}");
+                } else {
+                    Toast.error(data.msg);
+                }
+            },'json');
+        });
+
+        <!--#/* 保存短信模板 */#-->
+        $('#tplSmsSave').click(function(){
+            var dialog = $("#dialogSmsTpl");
+            var infoId = $(".tplInfoId", dialog).val();
+            var infoType = $(".tplType", dialog).val();
+            var content = $("textarea[name=content]", dialog).val();
+            var smsPlatformTplId = $("#smsPlatformTplId").val();
+            if(content == ""){
+                Toast.error("${msg['msg.info.error.tplnotempty']}");
+                return false;
+            }
+            $.post('${base}/platform/msg/info/tpl/saveTpl',{'infoId':infoId, 'infoType':infoType, 'uecontent':content, 'smsPlatformTplId':smsPlatformTplId},function(data){
+                if (data.code == 0) {
+                    $("#dialogSmsTpl").modal('hide');
+                    Toast.success("${msg['globals.result.success']}");
+                } else {
+                    Toast.error(data.msg);
+                }
+            },'json');
+        });
+
+        <!--#/* 保存邮件模板 */#-->
+        $('#tplEmailSave').click(function(){
+            var dialog = $("#dialogEmailTpl");
+            var infoId = $(".tplInfoId", dialog).val();
+            var infoType = $(".tplType", dialog).val();
+            var content = ue.getPlainTxt();
+            if($.trim(content) == ""){
+                Toast.error("${msg['msg.info.error.tplnotempty']}");
+                return false;
+            }
+
+            $.post('${base}/platform/msg/info/tpl/saveTpl',{'infoId':infoId, 'infoType':infoType, 'uecontent':content},function(data){
+                if (data.code == 0) {
+                    $("#dialogEmailTpl").modal('hide');
+                    Toast.success("${msg['globals.result.success']}");
+                } else {
+                    Toast.error(data.msg);
+                }
+            },'json');
+        });
+
+        <!--#/* 清空站内信模板 */#-->
+        $("#dialogMsgTpl").on("hidden.bs.modal", function () {
+            $('.tplTitle', this).text("");
+            $('.tplType,.tplInfoId', this).val("");
+            $('.paramarea', this).html("");
+            $("textarea[name=content], this").val("");
+            $(this).removeData("bs.modal");
+        });
+
+        <!--#/* 清空短信模板 */#-->
+        $("#dialogSmsTpl").on("hidden.bs.modal", function () {
+            $('.tplTitle', this).text("");
+            $('.tplType,.tplInfoId', this).val("");
+            $('.paramarea', this).html("");
+            $("textarea[name=content], this").val("");
+            $("#smsPlatformTplId>option[value='']").prop("selected", true);
+            $(this).removeData("bs.modal");
+        });
+
+        <!--#/* 清空email模板 */#-->
+        $("#dialogEmailTpl").on("hidden.bs.modal", function () {
+            $('.tplTitle', this).text("");
+            $('.tplType,.tplInfoId', this).val("");
+            $('.paramarea', this).html("");
+            if(ue){
+                ue.execCommand('cleardoc');
+            }
+            $(this).removeData("bs.modal");
+        });
+
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+
+        <!--#/* 弹出邮件设置窗口 */#-->
+        $('.emailServiceSetting').click(function(){
+            $("#dialogEmailSetting").modal({
+                remote: "${base}/platform/msg/conf/email"
+            });
+        });
+        $("#dialogEmailSetting").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+
+    });
+
+</script>
+<!--#}#-->

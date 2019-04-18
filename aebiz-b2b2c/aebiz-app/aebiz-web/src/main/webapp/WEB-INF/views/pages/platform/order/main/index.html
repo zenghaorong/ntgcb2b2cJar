@@ -1,0 +1,427 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+
+</header>
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <div class="box-tab">
+            <ul class="nav nav-tabs ">
+                <li class="active"><a href="#orderInfo" onclick="orderQuery(1)" data-toggle="tab"> <!--# if(obj.waitDeliveryNum > 0 ) {  #--><span class="badge pull-right" style="background-color: #ff2e1d">${obj.waitDeliveryNum}</span><!--# } #-->待发货&nbsp;</a> </li>
+                <li><a href="#orderInfo" onclick="orderQuery(2)" data-toggle="tab"> <!--# if(obj.waitVerifyNum > 0 ) { #--><span class="badge pull-right" style="background-color: #ff2e1d">${obj.waitVerifyNum}</span><!--# } #-->待审核&nbsp;</a> </li>
+                <li><a href="#orderInfo" onclick="orderQuery(3)" data-toggle="tab"> <!--# if(obj.waitPayNum > 0 ) {  #--><span class="badge pull-right" style="background-color: #ff2e1d">${obj.waitPayNum}</span><!--# } #-->待支付&nbsp;</a> </li>
+                <li><a href="#orderInfo" onclick="orderQuery(4)" data-toggle="tab"> <!--# if(obj.deliveryPayNum > 0 ) {  #--><span class="badge pull-right" style="background-color: #ff2e1d">${obj.deliveryPayNum}</span><!--# } #-->货到付款&nbsp;</a> </li>
+                <li><a href="#orderInfo" onclick="orderQuery(0)"  data-toggle="tab">全部订单</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="orderInfo">
+                    <div class="form-group">
+                        <label class="control-label col-xs-1">订单编号:</label>
+                        <div class="col-xs-2"> <input type="text" name="id"  class="form-control"></div>
+                        <label class="control-label col-xs-1">会员名称:</label>
+                        <div class="col-xs-2"> <input type="text" name="loginname"  class="form-control"></div>
+                        <button type="button" class="btn btn-info"  onclick="search()">查询</button>
+                        <button type="reset" onclick="reset()" class="btn btn-default">清空</button>
+                    </div>
+                    <div id="checkStatus"></div>
+                    <div class="table-responsive no-border"  style="min-height: 500px;">
+                        <table class="table s-table datatable">
+                            <thead>
+                            <tr>
+                                <th width="25%">商品信息</th>
+                                <th width="10%">单价(元)</th>
+                                <th width="6%">数量</th>
+                                <th width="10%">商品总金额</th>
+                                <th width="11%">订单应付金额</th>
+                                <th width="8%">支付方式</th>
+                                <th width="8%">订单来源</th>
+                                <th width="10%">订单状态</th>
+                                <th width="6%">操作</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .col-xs-1{
+        height: 34px;
+        line-height: 34px;
+    }
+    .col-xs-2{
+        width: 150px;
+    }
+    a{
+        cursor: pointer;
+    }
+    .order_imgbx{
+        float: left;
+        width: 82px;
+        height: 82px;
+        border: 1px solid #e5e5e5;
+        margin: 0px 8px;
+        overflow: hidden;
+        -webkit-transition: border 0.3s;
+        transition: border 0.3s;
+    }
+    table .s-input{margin: auto;}
+    table,table.s-table tr td,table tr {border: 1px solid #ddd;text-align: center;vertical-align: middle;}
+
+    .order_table_space{
+        height: 10px;
+        border: none !important;
+        padding: 0;
+    }
+
+    .order_button{
+        margin: 5px 0;
+    }
+</style>
+<script language="JavaScript">
+    var datatable;
+    var status=1;//默认查询待发货订单
+    var loginname="";
+    var id = "";
+    var checkStatus = [
+        {
+            id:1,
+            name: "deliveryStatus",
+            val: 0,
+            desc: "待配货"
+        }, {
+            id:2,
+            name: "deliveryStatus",
+            val: 1,
+            desc: "配货中"
+        }, {
+            id:3,
+            name: "payStatus",
+            val: 1,
+            desc: "待确认收款"
+        },{
+            id:4,
+            name: "deliveryStatus",
+            val: 2,
+            desc: "部分发货"
+        },{
+            id:5,
+            name: "deliveryStatus",
+            val: 3,
+            desc: "待收货"
+        },{
+            id:6,
+            name: "getStatus",
+            val: 1,
+            desc: "待评价"
+        }
+    ];
+    var checkedStatus = [];
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": false,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function (settings) {
+                var api = this.api();
+                var rows = api.rows( {page:'current'} ).nodes();
+                var data = api.rows( {page:'current'} ).data();
+                api.column(0, {page:'current'} ).data().each( function ( group, i ) {
+                    var trView = [];
+                    trView.push('<tr class="order_table_space"><td colspan="9" class="order_table_space"></td></tr>' +
+                        '<tr style="background-color: #F5F5F5;margin-top: 5px;"><th  colspan="9"><div style="float: left;font-weight: normal!important;"><input type="checkbox">&nbsp;&nbsp;'+ moment(parseInt((data[i]["orderAt"])*1000)).format("YYYY-MM-DD HH:mm:ss")+'  |  订单编号: '+data[i]["id"]+'  |  买家名称: '+ data[i]["accountUser"]["loginname"] + ' |  手机号码: '+ data[i]["accountUser"]["mobile"] +'</div></th></tr>');
+
+                    var goodsList = data[i]['goodsList'];
+                    if(goodsList != null){
+                        for(var n= 0;n< goodsList.length;n++){
+                            trView.push('<tr>' +
+                                '<td><div><a target="_blank" href="/front/detail?sku='+ data[i]['goodsList'][n]['sku'] +'" class="order_imgbx"> <img  src="'+ data[i]['goodsList'][n]['imgUrl'] +'" alt="..."></a></div><div><a target="_blank" href="/front/detail?sku='+ data[i]['goodsList'][n]['sku'] +'">'+ data[i]['goodsList'][n]['goodsName']+'&nbsp;&nbsp;&nbsp;&nbsp;'+data[i]['goodsList'][n]['name']+'</a></div></td>' +
+                                '<td>¥' + setPrice(data[i]['goodsList'][n]['salePrice'])  +'</td>' +
+                                '<td>' + data[i]['goodsList'][n]['buyNum']  +'</td>');
+
+                            if(n == 0){
+                                trView.push('<td  rowspan='+goodsList.length+'>' +'<p style="color: #ff4336">¥'+setPrice(data[i]['goodsPayMoney'])+'</p></td>' +
+                                    '<td  rowspan='+goodsList.length+'>' +'<p style="color: #ff4336">¥'+setPrice(data[i]['payMoney'])+'</p>'+'<p>(含运费：¥'+setPrice(data[i]['freightMoney'])+')'+'</p></td>' +
+                                    '<td  rowspan='+goodsList.length+'>' +'<p>'+payTypeRender(data[i]["payType"])+'</p></td>' +
+                                    '<td  rowspan='+goodsList.length+'>' +'<p>'+orderSrcRender(data[i]["orderSrc"])+'</p></td>' +
+                                    '<td rowspan='+goodsList.length+'>' + orderStatusRender(data[i]["orderStatus"],data[i]["payStatus"],data[i]["deliveryStatus"]) + '</td>' +
+                                    '<td rowspan='+goodsList.length+'>' +buttonRender(data[i]) + '</td>');
+                            }
+                            trView.push('</tr>');
+                        }
+                    }
+                    $(rows).eq( i ).replaceWith(trView.join());
+                });
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/order/main/data",
+                "type": "post",
+                "data": function (d) {
+                    if(status != null){
+                        d.status = status;
+                    }
+                    if(id != null && id != ""){
+                        d.id = id.trim();
+                    }
+                    if(loginname != null && loginname != ""){
+                        d.loginname = loginname.trim();
+                    }
+                    if(checkedStatus != null && checkedStatus.length > 0){
+                        d.checkedStatus = JSON.stringify(checkedStatus);
+                    }
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "id", "bSortable": true},
+                {"data": "accountId","sDefaultContent" : ""},
+                {"data": "accountUser.loginname","sDefaultContent" : ""},
+                /*{"data": "storeId", "sDefaultContent" : ""},*/
+                /* {"data": "storeMain.storeName","sDefaultContent" : "", "bSortable": true},*/
+                {"data": "payMoney", "sDefaultContent" : "","bSortable": true},
+                {"data": "payType","sDefaultContent" : "", "bSortable": true},
+                {"data": "orderSrc","sDefaultContent" : "", "bSortable": true},
+                {"data": "orderStatus","sDefaultContent" : "", "bSortable": true},
+                {"data": "payStatus","sDefaultContent" : "", "bSortable": true},
+                {"data": "deliveryStatus","sDefaultContent" : "","bSortable": true}
+                /*{"data": "orderAt","sDefaultContent" : "", "bSortable": true}*/
+            ],
+            "columnDefs": [
+                {
+                    "targets": 8
+                }
+            ]
+        });
+        bindStatus(Number(status));
+        /*datatable.on('click', 'tr', function () {
+         $(this).toggleClass('selected');
+         });*/
+
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    };
+
+    //订单查询
+    function orderQuery(val) {
+        bindStatus(val);
+        status = val;
+        datatable.ajax.reload();
+    }
+
+    //订单状态勾选页面加载
+    function bindStatus(val) {
+        switch (val){
+            case 0:
+                $("#checkStatus").html("<div class='form-group'>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='3'> 待确认收款 </label>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='1'> 待配货 </label>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='2'> 配货中</label>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='4'> 部分发货</label>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='5'> 待收货 </label>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='6'> 待评价</label>" +
+                    "</div>");
+                break;
+            case 1:
+                $("#checkStatus").html("<div class='form-group'>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='1'> 待配货 </label> " +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='2'> 配货中</label>" +
+                    "</div>");
+                break;
+            case 2:
+                $("#checkStatus").html("");
+                break;
+            case 3:
+                $("#checkStatus").html("<div class='form-group'>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='3'> 待确认收款 </label>" +
+                    "</div>");
+                break;
+            case 4:
+                $("#checkStatus").html("<div class='form-group'>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='3'> 待确认收款 </label>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='1'> 待配货 </label>" +
+                    "<label class='checkbox-inline'><input type='checkbox'  value='2'> 配货中</label>" +
+                    "</div>");
+                break;
+        }
+        //$("#checkStatus").find("input[type='checkbox']").prop("checked",false);
+        checkedStatus = [];
+        $("#checkStatus").find("input[type='checkbox']").each(function () {
+            $(this).change(function () {
+                checkedStatus = [];
+                $("#checkStatus").find("input[type='checkbox']:checked").each(function () {
+                    var checkedObj = getCheckStatus($(this).val());
+                    if(checkedObj != null){
+                        checkedStatus.push(checkedObj);
+                    }
+                })
+                datatable.ajax.reload();
+            })
+        })
+    }
+
+    //根据id 获取check的状态
+    function getCheckStatus(id) {
+        for(var i in checkStatus){
+            if(checkStatus[i].id == id){
+                return checkStatus[i];
+            }
+        }
+    }
+
+    //订单查询表单
+    function search() {
+        id = $("input[name='id']").val();
+        loginname = $("input[name='loginname']").val();
+        datatable.ajax.reload();
+    }
+
+    //订单查询条件重置
+    function reset() {
+        id = $("input[name='id']").val("");
+        loginname = $("input[name='loginname']").val("");
+    }
+
+    //支付方式渲染
+    function payTypeRender(data) {
+        var result='';
+        switch (data){
+            case 0:
+                result = "<span>${msg['order.enum.paytype.online']}</span>";
+                break;
+            case 1:
+                result = "<span>${msg['order.enum.paytype.cash']}</span>";
+                break;
+            case 2:
+                result = "<span>${msg['order.enum.paytype.pos']}</span>";
+                break;
+            case 3:
+                result = "<span>${msg['order.enum.paytype.aliqrcode']}</span>";
+                break;
+            case 4:
+                result = "<span>${msg['order.enum.paytype.transfer']}</span>";
+                break;
+            default:
+
+        }
+        return result;
+    }
+
+    //订单来源渲染
+    function orderSrcRender(data) {
+        let result='';
+        switch (data){
+            case 0:
+                result = "<span>${msg['order.enum.source.pc']}</span>";
+                break;
+            case 1:
+                result = "<span>${msg['order.enum.source.wap']}</span>";
+                break;
+            case 2:
+                result = "<span>${msg['order.enum.source.wechat']}</span>";
+                break;
+            case 3:
+                result = "<span>${msg['order.enum.source.ios']}</span>";
+                break;
+            case 4:
+                result = "<span>${msg['order.enum.source.android']}</span>";
+                break;
+            case 5:
+                result = "<span>${msg['order.enum.source.tv']}</span>";
+                break;
+            case 6:
+                result = "<span>${msg['order.enum.source.hand']}</span>";
+                break;
+            default:
+
+        }
+        return result;
+    }
+
+    //订单状态渲染
+    function orderStatusRender(orderStatus,payStatus,deliveryStatus) {
+        var result = "无状态";
+        switch (orderStatus) {
+            case 0:
+                result = "待审核";
+                break;
+            case 1:
+                //如果不是货到付款的方式,则订单有待支付
+                switch (payStatus){
+                    case 0:
+                        result = "待支付";
+                        break;
+                    case 1:
+                        result = "待确认";
+                        break;
+                    case 2:
+                        result = "部分支付";
+                        break;
+                    case 3:
+                        switch (deliveryStatus){
+                            case 0:
+                                result = "待发货";
+                                break;
+                            case 1:
+                                result = "配货中";
+                                break;
+                            case 2:
+                                result = "部分发货";
+                                break;
+                            case 3:
+                                result = "已发货";
+                                break;
+                        }
+                        break;
+                    default:
+                }
+                break;
+            case 2:
+                result = "无效";
+                break;
+            case 3:
+                result = "取消";
+                break;
+            case 4:
+                result = "关闭";
+                break;
+            case 5:
+                result = "完成";
+                break;
+            default:
+        }
+        return result;
+    }
+
+    //按钮动态加载渲染方法
+    function buttonRender(row) {
+        var buttonList = [];
+        buttonList.push('<div class="order_button"><a class="btn btn-primary btn-xs" href="${base}/platform/order/main/detail/' + row.id + '" data-pjax>${msg["globals.button.detail"]}</a></div>');
+        return buttonList.join('');
+    }
+
+
+    $(function () {
+        initDatatable();
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+
+</script>
+<!--#}#-->

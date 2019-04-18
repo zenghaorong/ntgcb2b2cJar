@@ -1,0 +1,443 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<link href="${base!}/assets/common/vendor/city-picker/css/picker.css" rel="stylesheet">
+<link href="${base!}/assets/common/vendor/city-picker/css/main.css" rel="stylesheet">
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/store/apply/main" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+    <div class="pull-right">
+        <div class="btn-group tool-button">
+            <button class="btn btn-primary navbar-btn" type="button" id="save">${msg['globals.button.save']}</button>
+        </div>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/store/apply/main/editDo" method="post">
+                <input name="storeMain.id" type="hidden" value="${storeMain.id}">
+                <div class="box-tab">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#information1" data-toggle="tab">${msg['store.main.column.information']}</a></li>
+                        <li><a href="#company1" data-toggle="tab">${msg['store.company.column.company']}</a></li>
+                        <li><a href="#aduit" data-toggle="tab">${msg['store.apply.main.column.audit']}</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade active in" id="information1">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="storeName" class="col-sm-2 control-label">${msg['store.main.column.storeName']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="storeName" class="form-control" name="storeName" data-parsley-required="true"
+                                               placeholder="${msg['store.main.column.storeName']}" value="${storeMain.storeName}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="classId" class="col-sm-2 control-label">${msg['store.main.column.classId']}</label>
+                                    <div class="col-sm-8">
+                                        <select id="classId" disabled  name="storeMain.classId" class="form-control">
+                                            <option value="">${msg['globals.select.select']}</option>
+                                            ${classOption!}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="levelId" class="col-sm-2 control-label">${msg['store.main.column.levelId']}</label>
+                                    <div class="col-sm-8">
+                                        <select id="levelId" disabled  name="storeMain.levelId" class="form-control">
+                                            <option value="">${msg['globals.select.select']}</option>
+                                            <!--#for(o in levelList){#-->
+                                            <option value="${o.id!}" <!--#if(o.id==storeMain.levelId){#-->selected<!--#}#-->>${o.name!} (${msg['store.level.column.goodsLimit']}：${o.goodsLimit!} ${msg['store.level.column.price']}：${o.price!})</option>
+                                            <!--#}#-->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="typeId" class="col-sm-2 control-label">${msg['store.main.column.typeId']}</label>
+                                    <div class="col-sm-8">
+                                        <!--#for(o in typeList){#-->
+                                        <div class="radio"><label><input type="radio" name="storeMain.typeId" style="min-width: 14px;" value="${o.id!}" <!--# if(o.defaultValue){ #-->checked<!--# } #-->>${o.name!}</label></div>
+                                        <!--#}#-->
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="joininYear" class="col-sm-2 control-label">${msg['store.main.column.joininYear']}</label>
+                                    <div class="col-sm-8">
+                                        <select id="joininYear" disabled  name="storeMain.joininYear" class="form-control">
+                                            <option value="1" <!--#if('1'==storeMain.joininYear){#-->selected<!--#}#-->>1年</option>
+                                            <option value="2" <!--#if('2'==storeMain.joininYear){#-->selected<!--#}#-->>2年</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="store_address" class="col-sm-2 control-label">${msg['store.main.column.address']}</label>
+                                    <div class="col-sm-8">
+                                        <div style="position: relative;">
+                                            <input type="text" readonly id="store_address" data-toggle="city-picker" class="form-control" data-parsley-required="true" placeholder="${msg['store.main.column.address']}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="storeAddress" class="col-sm-2 control-label">${msg['store.main.column.storeAddress']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="storeAddress" class="form-control" name="storeAddress" data-parsley-required="true"
+                                               placeholder="${msg['store.main.column.storeAddress']}" value="${storeMain.storeAddress}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="storeTel" class="col-sm-2 control-label">${msg['store.main.column.storeTel']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="storeTel" class="form-control" name="storeTel" data-parsley-required="true"
+                                               placeholder="${msg['store.main.column.storeTel']}" value="${storeMain.storeTel}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="storePostcode" class="col-sm-2 control-label">${msg['store.main.column.storePostcode']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="storePostcode" class="form-control" name="storePostcode"
+                                               placeholder="${msg['store.main.column.storePostcode']}" value="${storeMain.storePostcode}" >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="company1">
+                            <input name="storeCompany.id" type="hidden" value="${storeCompany.id}">
+                            <div class="col-lg-12">
+                                <!--#if(obj.nendCompanyInfo){#-->
+                                <div class="form-group">
+                                    <label for="companyName" class="col-sm-2 control-label">${msg['store.company.column.companyName']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="companyName" class="form-control" name="storeCompany.companyName" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.companyName']}" value="${storeCompany.companyName}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="company_address" class="col-sm-2 control-label">${msg['store.company.column.companyCountAddress']}</label>
+                                    <div class="col-sm-8">
+                                        <div style="position: relative;">
+                                            <input readonly type="text" id="company_address" data-toggle="city-picker" class="form-control" placeholder="${msg['store.main.column.address']}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="companyAddress" class="col-sm-2 control-label">${msg['store.company.column.companyAddress']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="companyAddress" class="form-control" name="storeCompany.companyAddress" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.companyAddress']}" value="${storeCompany.companyAddress}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="companyPhone" class="col-sm-2 control-label">${msg['store.company.column.companyPhone']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="companyPhone" class="form-control" name="storeCompany.companyPhone" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.companyPhone']}" value="${storeCompany.companyPhone}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactsName" class="col-sm-2 control-label">${msg['store.company.column.contactsName']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="contactsName" class="form-control" name="storeCompany.contactsName" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.contactsName']}" value="${storeCompany.contactsName}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactsPhone" class="col-sm-2 control-label">${msg['store.company.column.contactsPhone']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="contactsPhone" class="form-control" name="storeCompany.contactsPhone" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.contactsPhone']}" value="${storeCompany.contactsPhone}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactsEmail" class="col-sm-2 control-label">${msg['store.company.column.contactsEmail']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="contactsEmail" class="form-control" name="storeCompany.contactsEmail" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.contactsEmail']}" value="${storeCompany.contactsEmail}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="companyEmployeeCount" class="col-sm-2 control-label">${msg['store.company.column.companyEmployeeCount']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="companyEmployeeCount" class="form-control" name="storeCompany.companyEmployeeCount" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.companyEmployeeCount']}" value="${storeCompany.companyEmployeeCount}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="companyRegisteredCapital" class="col-sm-2 control-label">${msg['store.company.column.companyRegisteredCapital']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="companyRegisteredCapital" class="form-control" name="storeCompany.companyRegisteredCapital" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.companyRegisteredCapital']}" value="${storeCompany.companyRegisteredCapital}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="businessLicenceNumber" class="col-sm-2 control-label">${msg['store.company.column.businessLicenceNumber']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="businessLicenceNumber" class="form-control" name="storeCompany.businessLicenceNumber" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.businessLicenceNumber']}" value="${storeCompany.businessLicenceNumber}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="businessLicenceStart" class="col-sm-2 control-label">${msg['store.company.column.businessLicenceStart']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="businessLicenceStart" name="storeCompany.businessLicenceStart" value="${storeCompany.businessLicenceStart}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="businessLicenceEnd" class="col-sm-2 control-label">${msg['store.company.column.businessLicenceEnd']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="businessLicenceEnd" name="storeCompany.businessLicenceEnd" value="${storeCompany.businessLicenceEnd}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="businessSphere" class="col-sm-2 control-label">${msg['store.company.column.businessSphere']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="businessSphere" class="form-control" name="storeCompany.businessSphere" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.businessSphere']}" value="${storeCompany.businessSphere}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="businessLicence_img" class="col-sm-2 control-label">${msg['store.company.column.businessLicenceupImage']}</label>
+                                    <div class="col-sm-8">
+                                        <div id="businessLicence_img" style="padding: 5px;">
+                                            <!--#if(!isEmpty(storeCompany.businessLicenceupImage)){#-->
+                                            <img src='${storeCompany.businessLicenceupImage!}' style='width:150px;'>
+                                            <!--#}#-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="organizationCode" class="col-sm-2 control-label">${msg['store.company.column.organizationCode']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="organizationCode" class="form-control" name="storeCompany.organizationCode" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.organizationCode']}" value="${storeCompany.organizationCode}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="organizationCode_img" class="col-sm-2 control-label">${msg['store.company.column.organizationCodeImage']}</label>
+                                    <div class="col-sm-8">
+                                        <div id="organizationCode_img" style="padding: 5px;">
+                                            <!--#if(!isEmpty(storeCompany.organizationCodeImage)){#-->
+                                            <img src='${storeCompany.organizationCodeImage!}' style='width:150px;'>
+                                            <!--#}#-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="generalTaxpayer_img" class="col-sm-2 control-label">${msg['store.company.column.generalTaxpayerImage']}</label>
+                                    <div class="col-sm-8">
+                                        <div id="generalTaxpayer_img" style="padding: 5px;">
+                                            <!--#if(!isEmpty(storeCompany.generalTaxpayerImage)){#-->
+                                            <img src='${storeCompany.generalTaxpayerImage!}' style='width:150px;'>
+                                            <!--#}#-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="taxRegistrationCertificate" class="col-sm-2 control-label">${msg['store.company.column.taxRegistrationCertificate']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="taxRegistrationCertificate" class="form-control" name="storeCompany.taxRegistrationCertificate" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.taxRegistrationCertificate']}" value="${storeCompany.taxRegistrationCertificate}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="taxpayerId" class="col-sm-2 control-label">${msg['store.company.column.taxpayerId']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="taxpayerId" class="form-control" name="storeCompany.taxpayerId" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.taxpayerId']}" value="${storeCompany.taxpayerId}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="taxRegistrationCertificate_img" class="col-sm-2 control-label">${msg['store.company.column.taxRegistrationCertificateImage']}</label>
+                                    <div class="col-sm-8">
+                                        <div id="taxRegistrationCertificate_img" style="padding: 5px;">
+                                            <!--#if(!isEmpty(storeCompany.taxRegistrationCertificateImage)){#-->
+                                            <img src='${storeCompany.taxRegistrationCertificateImage!}' style='width:150px;'>
+                                            <!--#}#-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--#}#-->
+                                <!--#if(obj.nendBankInfo){#-->
+                                <div class="form-group">
+                                    <label for="bankAccountName" class="col-sm-2 control-label">${msg['store.company.column.bankAccountName']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="bankAccountName" class="form-control" name="storeCompany.bankAccountName" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.bankAccountName']}" value="${storeCompany.bankAccountName}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bankAccountNumber" class="col-sm-2 control-label">${msg['store.company.column.bankAccountNumber']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="bankAccountNumber" class="form-control" name="storeCompany.bankAccountNumber" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.bankAccountNumber']}" value="${storeCompany.bankAccountNumber}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bankName" class="col-sm-2 control-label">${msg['store.company.column.bankName']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="bankName" class="form-control" name="storeCompany.bankName" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.bankName']}" value="${storeCompany.bankName}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bankCode" class="col-sm-2 control-label">${msg['store.company.column.bankCode']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="bankCode" class="form-control" name="storeCompany.bankCode" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.bankCode']}" value="${storeCompany.bankCode}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bankAddress" class="col-sm-2 control-label">${msg['store.company.column.bankAddress']}</label>
+                                    <div class="col-sm-8">
+                                        <div style="position: relative;">
+                                            <input type="text" readonly id="bankAddress" data-toggle="city-picker" class="form-control" name="storeCompany.bankAddress"
+                                                   data-parsley-required="true" placeholder="${msg['store.company.column.bankAddress']}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bankLicence_img" class="col-sm-2 control-label">${msg['store.company.column.bankLicenceImage']}</label>
+                                    <div class="col-sm-8">
+                                        <div id="bankLicence_img" style="padding: 5px;">
+                                            <!--#if(!isEmpty(storeCompany.bankLicenceImage)){#-->
+                                            <img src='${storeCompany.bankLicenceImage!}' style='width:150px;'>
+                                            <!--#}#-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--#}#-->
+                                <!--#if(obj.nendAlipayInfo){#-->
+                                <div class="form-group">
+                                    <label for="alipayName" class="col-sm-2 control-label">${msg['store.company.column.alipayName']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="alipayName" class="form-control" name="storeCompany.alipayName" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.alipayName']}" value="${storeCompany.alipayName}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="alipayAccountNumber" class="col-sm-2 control-label">${msg['store.company.column.alipayAccountNumber']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="alipayAccountNumber" class="form-control" name="storeCompany.alipayAccountNumber" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.alipayAccountNumber']}" value="${storeCompany.alipayAccountNumber}" >
+                                    </div>
+                                </div>
+                                <!--#}#-->
+                                <!--#if(obj.nendWechatInfo){#-->
+                                <div class="form-group">
+                                    <label for="weichatName" class="col-sm-2 control-label">${msg['store.company.column.weichatName']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="weichatName" class="form-control" name="storeCompany.weichatName" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.weichatName']}" value="${storeCompany.weichatName}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="weichatAccountNumber" class="col-sm-2 control-label">${msg['store.company.column.weichatAccountNumber']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" readonly id="weichatAccountNumber" class="form-control" name="storeCompany.weichatAccountNumber" data-parsley-required="true"
+                                               placeholder="${msg['store.company.column.weichatAccountNumber']}" value="${storeCompany.weichatAccountNumber}" >
+                                    </div>
+                                </div>
+                                <!--#}#-->
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="aduit">
+                            <input name="id" type="hidden" value="${storeApplyMain.id}">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="applyNote" class="col-sm-2 control-label">${msg['store.apply.main.column.applyNote']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="applyNote" readonly class="form-control" name="applyNote" data-parsley-required="true"
+                                               placeholder="${msg['store.apply.main.column.applyNote']}" value="${storeApplyMain.applyNote}" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="status" class="col-sm-2 control-label">${msg['store.apply.main.column.status']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="checkbox" id="disabled" name="disabled" class="form-control js-switch-blue">
+                                        <input type="hidden" id="status" name="status" value="2"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="checkNote" class="col-sm-2 control-label">${msg['store.apply.main.column.checkNote']}</label>
+                                    <div class="col-sm-8">
+                                        <textarea id="checkNote" name="checkNote" cols="60" rows="6" data-parsley-required="true"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<script src="${base!}/assets/common/vendor/city-picker/js/data.86.all.js"></script>
+<script src="${base!}/assets/common/vendor/city-picker/js/picker.86.js"></script>
+<script language="JavaScript">
+    $("#disabled").change(function () {
+        if ($("#disabled")[0].checked)
+            $('#status').val(1);
+        else
+            $('#status').val(2);
+    });
+
+    $('#store_address').citypicker({
+        province: '${storeMain.storeProvince}',
+        city: '${storeMain.storeCity}',
+        county: '${storeMain.storeCounty}'
+    });
+
+    $('#company_address').citypicker({
+        province: '${storeCompany.companyProvince}',
+        city: '${storeCompany.companyCity}',
+        county: '${storeCompany.companyCounty}'
+    });
+
+    var bankAddress = '${storeCompany.bankAddress}';
+    if (bankAddress) {
+        var address = bankAddress.split('/');
+        $('#bankAddress').citypicker({
+            province: address[0],
+            city: address[1],
+            county: address[2]
+        });
+    }
+
+
+    $(document).ready(function () {
+        myForm.init();
+        $('#store_address').citypicker('destroy');
+        $('#bankAddress').citypicker('destroy');
+        $('#company_address').citypicker('destroy');
+        //设置店铺分类
+        $('#classId').val("${storeMain.classId}");
+
+
+        $("#save").on("click",function(){
+            $('#editForm').submit();
+        });
+
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<!--#}#-->

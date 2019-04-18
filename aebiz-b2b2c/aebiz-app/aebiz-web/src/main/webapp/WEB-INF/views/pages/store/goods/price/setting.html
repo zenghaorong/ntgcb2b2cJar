@@ -1,0 +1,647 @@
+<!--#
+layout("/layouts/store.html"){
+#-->
+<style>
+    .text-vertical-center {
+        text-align:center;vertical-align:middle;
+    }
+    .input-price {
+        width: 60px;
+    }
+    .price-td-sm {
+        width: 120px;min-width: 100px;
+    }
+    .price-td-sm {
+        text-align:center;vertical-align:middle;
+    }
+</style>
+
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button">
+            <a class="btn btn-primary navbar-btn" href="#" data-toggle="modal" data-target="#dialogStrategy" data-pjax><i class="ti-plus"></i> ${msg["goods.price.btn.add"]}</a>
+            <a class="btn btn-primary navbar-btn" href="${base!}/store/goods/price" data-pjax><i class="ti-angle-left"></i> ${msg['goods.main.btn.back']}</a>
+            <a id="toLink" href="" data-pjax></a>
+        </div>
+        <div class="pull-right">
+            <button class="btn btn-primary navbar-btn js-price-save" >${msg["goods.price.btn.save"]}</button>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="row mb10 mt10">
+            <div class="col-sm-12">
+                <form id="priceForm" role="form" class="form-horizontal parsley-form" data-parsley-validate>
+                    <!-- 货品信息 -->
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">${msg["goods.main.column.name"]}</label>
+                        <div class="col-sm-2">
+                            <span class="text-vertical-center">${obj.goodsMain.name}</span>
+                        </div>
+                        <label class="col-sm-1 control-label">${msg["goods.product.column.name"]}</label>
+                        <div class="col-sm-2">
+                            <span class="text-vertical-center">${obj.name}</span>
+                        </div>
+                        <label class="col-sm-1 control-label">${msg["goods.product.column.sku"]}</label>
+                        <div class="col-sm-2">
+                            <span class="text-vertical-center">${obj.sku}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">${msg["goods.product.column.saleToMemberType"]}</label>
+                        <div class="col-sm-2">
+                            <span class="text-vertical-center">
+                                <!--#
+                                if (obj.saleToMemberType == 0) {
+                                    printf(msg["goods.product.saleToMemberType.select.option0"]);
+                                } else {
+                                    for(mt in memberTypeList){
+                                        if(mt.id == obj.saleToMemberType) {
+                                            print(mt.name);
+                                            break;
+                                        }
+                                    }
+                                }
+                                #-->
+                            </span>
+                        </div>
+                        <label class="col-sm-1 control-label">${msg["goods.product.column.spec"]}</label>
+                        <div class="col-sm-2">
+                            <span class="text-vertical-center">
+                            <!--#
+                            var specGroup = @org.nutz.json.Json.fromJson(obj.spec);
+                            for (g in specGroup!) {
+                                print(g.spec_value_name);
+                            }
+                            #-->
+                            </span>
+                        </div>
+                        <label class="col-sm-1 control-label">${msg["goods.product.column.stock"]}</label>
+                        <div class="col-sm-2">
+                            <span class="text-vertical-center">${obj.stock}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">${msg["goods.product.column.costPrice"]}</label>
+                        <div class="col-sm-2">
+                            <span class="text-vertical-center">${msg["goods.main.unit.money"]}${@money.fenToYuan(obj.costPrice)}</span>
+                        </div>
+                        <label class="col-sm-1 control-label">${msg["goods.product.column.salePrice"]}</label>
+                        <div class="col-sm-2">
+                            <span class="text-vertical-center">${msg["goods.main.unit.money"]}${@money.fenToYuan(obj.salePrice)}</span>
+                        </div>
+                        <label class="col-sm-1 control-label">${msg["goods.product.column.marketPrice"]}</label>
+                        <div class="col-sm-2">
+                            <span class="text-vertical-center">${msg["goods.main.unit.money"]}${@money.fenToYuan(obj.marketPrice)}</span>
+                        </div>
+                    </div>
+                    <div class="table-responsive no-border"  style="min-height: 500px;">
+                        <table class="table table-bordered table-striped mg-t table-condensed dataTable js-price-edit-table" >
+                            <thead>
+                            <tr>
+                                <th>${msg['goods.price.column.saleToAllAera']}</th>
+                                <th>${msg['goods.price.column.saleClient']}</th>
+                                <th>${msg['goods.price.column.saleToMemberType']}</th>
+                                <th>${msg['goods.price.column.salePrice']}</th>
+                                <th class="price-td-sm">${msg['globals.table.column.operation']}</th>
+                            </tr>
+                            </thead>
+                            <tbody class="js-edit-mlvp">
+                            <!--# for(price in priceList) {#-->
+                            <tr class="js-price" >
+                                <td>
+                                    <!--# if (obj.partitionBy == 0) {#-->
+                                    ${price.saleToAllAera ? msg["goods.main.select.saleToAllAera.option.all"]}
+                                    <!--# } else if (obj.partitionBy == 1) {#-->
+                                    ${areaMap[price.saleArea]!}
+                                    <!--# } else if (obj.partitionBy == 2) {#-->
+                                    ${provinceCityMap[price.saleProvince]!}${isNotEmpty(price.saleProvince)?"/"}${provinceCityMap[price.saleCity]!}
+                                    <!--# }#-->
+                                </td>
+                                <td>
+                                    <!--#if(price.saleClient == 0){#-->
+                                    ${msg["goods.enum.saleclient.all"]}
+                                    <!--#} else if(price.saleClient == 1) {#-->
+                                    ${msg["goods.enum.saleclient.pc"]}
+                                    <!--#} else if(price.saleClient == 2) {#-->
+                                    ${msg["goods.enum.saleclient.wap"]}
+                                    <!--#} else if(price.saleClient == 3) {#-->
+                                    ${msg["goods.enum.saleclient.tv"]}
+                                    <!--#}#-->
+                                </td>
+                                <td>${saleToMemberTypeMap[price.saleToMemberType].name!}</td>
+                                <td>
+                                    <div class="form-inline">
+                                        <!--#if(price.saleToMemberType != 0) {
+                                            var arr = [];
+                                            for (lvp in price.priceLevelList!) {
+                                                array.add(arr,{
+                                                    id: lvp.id,
+                                                    priceId: lvp.priceId,
+                                                    memberLevelId: lvp.memberLevelId,
+                                                    memberLevelPrice: @money.fenToYuan(lvp.memberLevelPrice),
+                                                    discount: lvp.discount
+                                                });
+                                            }
+                                        #-->
+                                        <div class="input-group input-group-sm" style="width: 120px">
+                                            <div class="input-group-addon">${msg["goods.main.unit.money"]}</div>
+                                            <input type="text" class="form-control input-price" name="salePrice" value="${@money.fenToYuan(price.salePrice)}" data-price-id="${price.id}" data-lvp-list-val="${json(arr), escape}" data-parsley-required="true" data-parsley-price="true" data-parsley-errors-container="#error_container_salePrice_${price.id}" >
+                                        </div>
+                                        <a class="js-edit-lvp" data-member-type-val="${price.saleToMemberType}" data-price-id="${price.id}" data-lvp-list-val="${json(arr), escape}" style="cursor: pointer;color: #0a5eea">编辑会员价</a>
+                                        <!--#}#-->
+                                    </div>
+                                    <div id="error_container_salePrice_${price.id}"></div>
+                                </td>
+                                <td class="price-td-sm">
+                                    <i class="del fa fa-remove js-price-del" data-price-id="${price.id}" style="cursor:pointer;padding: 5px;" title="删除"></i>
+                                </td>
+                            </tr>
+                            <!--#}#-->
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="dialogStrategy" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">${msg["goods.price.btn.pricepolicy"]}</h4>
+            </div>
+            <div class="modal-body no-p">
+                <form id="strategyForm" role="form" class="form-horizontal parsley-form" data-parsley-validate method="post">
+                    <div class="row mb10 mt10">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label">${msg["goods.price.column.saleToAllAera"]}</label>
+                                <div class="col-xs-8 js-select-area-div">
+                                    <!--# if (obj.partitionBy == 0) {#-->
+                                    <label class="checkbox-inline"><input type="checkbox" name="partitionBy" value="0">${msg["goods.main.select.option.unlimited"]}</label>
+                                    <!--# } else if (obj.partitionBy == 1) {#-->
+                                    <label class="checkbox-inline"><input type="checkbox" name="partitionBy" value="1" checked>${msg["goods.product.select.partitionBy.option.area"]}</label>
+                                    <!--# for (area in obj.areaList!) {#-->
+                                    <label class="checkbox-inline"><input type="checkbox" name="saleToArea" value="${area.code}" >${area.name}</label>
+                                    <!--# }#-->
+                                    <!--# } else if (obj.partitionBy == 2) {#-->
+                                    <button type="button" class="btn btn-default btn-sm js-select-city" data-toggle="modal" data-target="#dialogSelectCity"><i class="fa fa-plus mr5"></i> 选择省市</button>
+                                    <span class="js-selected-city-text"></span>
+                                    <!--# }#-->
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">${msg['goods.price.column.saleClient']}</label>
+                                <div class="col-sm-8">
+                                    <!--# if(obj.goodsMain.saleClientPC) {#-->
+                                    <label class="checkbox-inline"><input type="checkbox" class="" name="saleToClient" value="1" data-strategy-field-type="saleToClient" data-strategy-field-name="${msg['goods.enum.saleclient.pc']}" data-strategy-field-value="1">${msg['goods.enum.saleclient.pc']}</label>
+                                    <!--# }#-->
+                                    <!--# if(obj.goodsMain.saleClientWAP) {#-->
+                                    <label class="checkbox-inline"><input type="checkbox" class="" name="saleToClient" value="2" data-strategy-field-type="saleToClient" data-strategy-field-name="${msg['goods.enum.saleclient.wap']}" data-strategy-field-value="2">${msg['goods.enum.saleclient.wap']}</label>
+                                    <!--# }#-->
+                                    <!--# if(obj.goodsMain.saleClientTV) {#-->
+                                    <label class="checkbox-inline"><input type="checkbox" class="" name="saleToClient" value="3" data-strategy-field-type="saleToClient" data-strategy-field-name="${msg['goods.enum.saleclient.tv']}" data-strategy-field-value="3">${msg['goods.enum.saleclient.tv']}</label>
+                                    <!--# }#-->
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">${msg['goods.price.column.saleToMemberType']}</label>
+                                <div class="col-sm-8">
+                                <!--#if (obj.saleToMemberType == 0) {#-->
+                                    <label class="checkbox-inline"><input type="checkbox" class="" name="saleToMemberType" value="0" data-strategy-field-type="saleToMemberType" data-strategy-field-name="${msg['goods.price.column.saleToMemberType.all']}" >${msg['goods.price.column.saleToMemberType.all']}</label>
+                                    <!--# for (m in memberTypeList) {#-->
+                                    <label class="checkbox-inline"><input type="checkbox" class="" name="saleToMemberType" value="${m.id}" data-strategy-field-type="saleToMemberType" data-strategy-field-name="${m.name}" >${m.name}</label>
+                                    <!--# }#-->
+                                <!--# } else {#-->
+                                    <!--# for (m in memberTypeList) {#-->
+                                    <!--#if (obj.saleToMemberType == m.id) { #-->
+                                    <label class="checkbox-inline"><input type="checkbox" class="" name="saleToMemberType" value="${m.id}" data-strategy-field-type="saleToMemberType" data-strategy-field-name="${m.name}" >${m.name}</label>
+                                    <!--#   break;}#-->
+                                    <!--# }#-->
+                                <!--# }#-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb10 mt10">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">${msg['goods.price.column.salePrice']}</label>
+                                <div class="col-sm-3">
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-addon">${msg["goods.main.unit.money"]}</div>
+                                    <input type="text" class="form-control" name="salePrice" value="${@money.fenToYuan(obj.salePrice)}" data-parsley-required="true" placeholder="${msg['goods.product.column.salePrice']}">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--# for (entry in memberMap) {#-->
+                            <!--##-->
+                            <div class="panel panel-default col-md-10 col-md-offset-1" data-member-type="${entry.key}" style="display: none;padding: 0 0 0 0">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">${saleToMemberTypeMap[parseInt(entry.key)].name!}</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <!--#for (m in entry.value) { #-->
+
+                                    <div class="form-group js-lvp-div" data-mlv-id="${m.id}">
+                                        <label class="col-sm-2 control-label">${m.name}</label>
+                                        <div class="col-sm-3">
+                                            <div class="input-group">
+                                                <div class="input-group-addon">￥</div>
+                                                <input type="text" class="form-control" name="memberLevelPrice" value="${@money.fenToYuan(obj.salePrice)}" data-mlv-id="${m.id}" data-parsley-required="true" data-parsley-price="integer" data-parsley-errors-container="#error_container_memberLevelPrice_${entry.key}_${m.id}">
+                                            </div>
+                                            <div id="error_container_memberLevelPrice_${entry.key}_${m.id}"></div>
+                                        </div>
+                                        <label class="col-sm-2 control-label">${msg['goods.price.column.discount']}</label>
+                                        <div class="col-sm-3">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="discount" value="${m.dis_count}" data-mlv-id="${m.id}" data-parsley-required="true" data-parsley-type="integer" data-parsley-range="[0, 100]" data-parsley-errors-container="#error_container_discount_${entry.key}_${m.id}">
+                                                <div class="input-group-addon">%</div>
+                                            </div>
+                                            <div id="error_container_discount_${entry.key}_${m.id}"></div>
+                                        </div>
+                                    </div>
+
+                                    <!--#
+                                    }#-->
+                                </div>
+                            </div>
+
+                            <!--#}#-->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary js-strategy-ok-btn" data-loadng-text="${msg['goods.price.dialogDetail.btn.ok.loadng']}">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogSelectCity" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg["goods.main.modal.dialogSelectArea.title"]}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeCity" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary" onclick="selectCity()">${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogMemberLevelPrice" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">会员等级价</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal parsley-form">
+                        <!--# for (entry in memberMap) {#-->
+                        <!--##-->
+                        <div class="panel panel-default col-md-10 col-md-offset-1" data-member-type="${entry.key}" data-price-id="" style="display: none;padding: 0 0 0 0">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">${saleToMemberTypeMap[parseInt(entry.key)].name!}</h3>
+                            </div>
+                            <div class="panel-body">
+                                <!--#for (m in entry.value) { #-->
+
+                                <div class="form-group js-lvp-div" data-mlv-id="${m.id}">
+                                    <input type="hidden" name="id"/>
+                                    <input type="hidden" name="priceId"/>
+                                    <input type="hidden" name="memberLevelId"/>
+                                    <label class="col-sm-2 control-label">${m.name}</label>
+                                    <div class="col-sm-3">
+                                        <div class="input-group">
+                                            <div class="input-group-addon">￥</div>
+                                            <input type="text" class="form-control" name="memberLevelPrice" value="${@money.fenToYuan(obj.salePrice)}" data-mlv-id="${m.id}" data-parsley-required="true" data-parsley-price="integer" data-parsley-errors-container="#error_container_memberLevelPrice_${entry.key}_${m.id}">
+                                        </div>
+                                        <div id="error_container_memberLevelPrice_${entry.key}_${m.id}"></div>
+                                    </div>
+                                    <label class="col-sm-2 control-label">${msg['goods.price.column.discount']}</label>
+                                    <div class="col-sm-3">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="discount" value="${m.dis_count}" data-mlv-id="${m.id}" data-parsley-required="true" data-parsley-type="integer" data-parsley-range="[0, 100]" data-parsley-errors-container="#error_container_discount_${entry.key}_${m.id}">
+                                            <div class="input-group-addon">%</div>
+                                        </div>
+                                        <div id="error_container_discount_${entry.key}_${m.id}"></div>
+                                    </div>
+                                </div>
+
+                                <!--#}#-->
+                            </div>
+                        </div>
+
+                        <!--#}#-->
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary js-lvp-save-ok" >保 存</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    $(function () {
+        $("#jsTreeCity").jstree({
+            plugins: ["wholerow", "checkbox", "changed", "json_data"],
+            core: {
+                data: function (node, callback){
+                    $.get("${base}/store/goods/price/${obj.id}/area/tree", function (ret) {
+                        if (ret) {
+                            callback(ret);
+                        }
+                    }, "json");
+                },
+                multiple: true
+            },
+            checkbox: {
+                three_state: true,
+                cascade: 'down'
+            }
+        }).on("select_node.jstree", function (e, data) {
+            var tree = $(this).jstree();
+            if (!tree.is_leaf(data.node)) {
+                tree.open_node(data.node);
+            }
+        });
+
+        $(".js-edit-lvp").click(function () {
+            var $this = $(this);
+            var $dialog = $("#dialogMemberLevelPrice");
+            var lvps = JSON.parse($this.attr("data-lvp-list-val")||"[]");
+            var memberType = $this.attr("data-member-type-val");
+            //初始化
+            $(lvps).each(function () {
+                var lvp = this;
+                $("[data-mlv-id="+lvp.memberLevelId+"].js-lvp-div", $dialog).each(function () {
+                    $("[name=id]:hidden", this).val(lvp.id);
+                    $("[name=priceId]:hidden", this).val(lvp.priceId);
+                    $("[name=memberLevelId]:hidden", this).val(lvp.memberLevelId);
+                    $("[name=memberLevelPrice]", this).val(lvp.memberLevelPrice);
+                    $("[name=discount]", this).val(lvp.discount);
+                });
+            });
+
+            $("[data-member-type]", $dialog).hide();
+            $("[data-member-type="+memberType+"]", $dialog).attr("data-price-id", $this.attr("data-price-id")).show();
+
+            $dialog.modal("show");
+        });
+        $(".js-lvp-save-ok").click(function () {
+            var $dialog = $("#dialogMemberLevelPrice");
+            var $panel = $("[data-member-type]:visible", $dialog);
+            var priceId = $panel.attr("data-price-id");
+            var $price = $(".js-edit-mlvp [data-price-id="+priceId+"]");
+            var lvps = $("[data-mlv-id].js-lvp-div", $panel).map(function () {
+                return {
+                    id: $("[name=id]:hidden", this).val(),
+                    memberLevelId: $("[name=memberLevelId]:hidden", this).val(),
+                    memberLevelPrice: $("[name=memberLevelPrice]", this).val(),
+                    discount: $("[name=discount]", this).val()
+                }
+            }).get();
+            $price.attr("data-lvp-list-val", JSON.stringify(lvps));
+            $price.parents("td:first").find("[name=salePrice]").attr("data-lvp-list-val", JSON.stringify(lvps));
+
+            $(lvps).each(function () {
+                this.memberLevelPrice = parseFloat(this.memberLevelPrice)*100;
+            });
+            $.post("${base!}/store/goods/price/editLevelPriceDo", {memberLevelPrices: JSON.stringify(lvps)}, function (ret) {
+                if (ret.code == 0) {
+                    Toast.success(ret.msg);
+                } else {
+                    Toast.error(ret.msg)
+                }
+
+            });
+            $dialog.modal("hide");
+        });
+
+        /*$(".js-price-edit-table").dataTable({
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            }
+        });*/
+        //区域全选
+        $("[name=saleToAllArea]:checkbox").change(function () {
+            if (this.checked) {
+                $("[name=saleToArea]:checkbox").prop("checked", !this.checked).parent().hide();
+            } else {
+                $("[name=saleToArea]:checkbox").prop("checked", false).parent().show();
+            }
+        });
+        $("[name=saleToArea]:checkbox").change(function () {
+            if ($("[name=saleToArea]:checked").length > 0) {
+                $("[name=saleToAllArea]:checkbox").prop("checked", false);
+            }
+        });
+
+        //销售对象
+        $("[name=saleToMemberType]:checkbox").change(function () {
+            if (this.value=="0" && this.checked) {
+                $("[name=saleToMemberType]:checkbox").prop("checked", true);
+                $("div[data-member-type]").show();
+            }
+        });
+        $("[name=saleToMemberType]:checkbox").change(function () {
+            if (this.checked) {
+                $("div[data-member-type="+this.value+"]").show();
+            } else {
+                $("div[data-member-type="+this.value+"]").hide();
+            }
+        });
+
+        //价格策略确认
+        $(".js-strategy-ok-btn").click(function () {
+
+            $.post("${base!}/store/goods/price/${obj.id}/strategyDo",{strategy:JSON.stringify(getPriceList('${obj.id}', '${obj.sku}', '${obj.partitionBy}'))},function (data) {
+                if (data.code == 0) {
+                    $("#dialogStrategy").on("hidden.bs.modal", function () {
+                        $("#toLink").attr("href", "${base!}/store/goods/price/setting/${obj.id}").trigger("click");
+                    }).modal("hide");
+                    Toast.success(data.msg);
+                } else {
+                    Toast.error(data.msg);
+                }
+            }, "json");
+        });
+
+        //删除会员等级价
+        $(".js-price-del").click(function () {
+            var $tr =$(this).parents("tr:first");
+            $.get("${base!}/store/goods/price/"+$(this).attr("data-price-id")+"/delete", function (data) {
+                if (data.code == 0) {
+                    $tr.remove();
+                    Toast.success(data.msg);
+                } else {
+                    Toast.error(data.msg);
+                }
+            }, "json");
+        });
+
+        //保存价格
+        $(".js-price-save").click(function () {
+            var $form = $("#priceForm");
+            if (!$form.parsley().validate()) {
+                return false;
+            }
+            var prices = $("[name=salePrice]", $form).map(function () {
+                var lvps = JSON.parse($(this).attr("data-lvp-list-val")||"[]");
+                $(lvps).each(function () {
+                    this.memberLevelPrice = parseFloat(this.memberLevelPrice)*100;
+                });
+                return {
+                    id: $(this).attr("data-price-id"),
+                    salePrice: parseFloat(this.value)*100,
+                    priceLevelList: lvps
+                };
+            }).get();
+
+            $.post("${base!}/store/goods/price/editDo", {prices: JSON.stringify(prices)}, function (data) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                } else {
+                    Toast.error(data.msg);
+                }
+            }, "json");
+        });
+    });
+
+    var PriceObj = {};
+    //省市
+    PriceObj.provinceCitys = [];
+    //销售区域选择省市
+    function selectCity() {
+        var tree = $.jstree.reference("#jsTreeCity");
+        var nodes = tree.get_bottom_checked(true);
+        PriceObj.provinceCitys = $(nodes).map(function () {
+            var parentId = tree.get_parent(this);
+            return {
+                province: parentId == "#" ? this.id : parentId,
+                city: parentId == "#" ?  null : this.id
+            };
+        }).get();
+        $(".js-selected-city-text").text("["+PriceObj.provinceCitys.length+" 已选]");
+
+        $("#dialogSelectCity").modal("hide");
+    }
+
+    function getPriceList(productId, sku, partitionBy) {
+        var $form = $("#strategyForm");
+        var areaCodes = $("[name=saleToArea]:checked", $form).map(function () {
+            return parseInt(this.value);
+        }).get();
+        var provinceCitys = PriceObj.provinceCitys;
+        var clients = $("[name=saleToClient]:checked", $form).map(function () {
+            return parseInt(this.value);
+        }).get();
+        var members = $("[name=saleToMemberType][value!='0']:checked", $form).map(function () {
+            return {
+                type: parseInt(this.value),
+                priceLevelList: $("div[data-member-type='"+this.value+"'] .js-lvp-div", $form).map(function () {
+                    return {
+                        memberLevelId: $(this).attr("data-mlv-id"),
+                        memberLevelPrice: parseFloat($("[name=memberLevelPrice]", this).val())*100,
+                        discount: parseFloat($("[name=discount]", this).val())
+                    };
+                }).get()
+            };
+        }).get();
+
+        //会员默认不限
+        if (members.length == 0) {
+            members.push({
+                type: 0,
+                priceLevelList: []
+            });
+        }
+        var salePrice = parseFloat($("[name=salePrice]", $form).val())*100;
+
+        var priceList = [];
+
+        if (partitionBy == '0') {//不限
+            $(clients).each(function () {
+                var client = this;
+                $(members).each(function () {
+                    priceList.push({
+                        productId: productId,
+                        sku: sku,
+                        saleClient: client,
+                        saleToAllAera: true,
+                        saleToMemberType: this.type,
+                        saleArea: null,
+                        saleProvince: null,
+                        saleCity: null,
+                        salePrice: salePrice,
+                        priceLevelList: this.priceLevelList
+                    });
+                })
+            });
+        } else if (partitionBy == '1'){//按片区
+            $(areaCodes).each(function () {
+                var areaCode = this;
+                $(clients).each(function () {
+                    var client = this;
+                    $(members).each(function () {
+                        priceList.push({
+                            productId: productId,
+                            sku: sku,
+                            saleClient: client,
+                            saleToAllAera: false,
+                            saleToMemberType: this.type,
+                            saleArea: areaCode,
+                            saleProvince: null,
+                            saleCity: null,
+                            salePrice: salePrice,
+                            priceLevelList: this.priceLevelList
+                        });
+                    })
+                });
+            });
+        } else if (partitionBy == '2') {//按省市
+            $(provinceCitys).each(function () {
+                var pc = this;
+                $(clients).each(function () {
+                    var client = this;
+                    $(members).each(function () {
+                        priceList.push({
+                            productId: productId,
+                            sku: sku,
+                            saleClient: client,
+                            saleToAllAera: false,
+                            saleToMemberType: this.type,
+                            saleArea: null,
+                            saleProvince: pc.province,
+                            saleCity: pc.city,
+                            salePrice: salePrice,
+                            priceLevelList: this.priceLevelList
+                        });
+                    })
+                });
+            });
+        }
+
+        return priceList;
+    }
+</script>
+<!--#}#-->

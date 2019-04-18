@@ -1,0 +1,38 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">Dec_page__layout</a>
+                        <small>${obj.id}</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>${msg['dec.page.layout.column.layoutName']}</td><td>${obj.layoutName}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['dec.page.layout.column.layoutId']}</td><td>${obj.layoutId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['dec.page.layout.column.resourceKey']}</td><td>${obj.resourceKey}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['dec.page.layout.column.versionType']}</td><td>${obj.versionType}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['dec.page.layout.column.description']}</td><td>${obj.description}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

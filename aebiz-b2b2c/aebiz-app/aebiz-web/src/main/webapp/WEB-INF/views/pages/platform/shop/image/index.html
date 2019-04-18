@@ -1,0 +1,65 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+    <header class="header navbar bg-white shadow">
+        <div class="pull-right">
+            <div class="btn-group tool-button">
+                <button class="btn btn-primary navbar-btn" type="button" id="save">
+                    ${msg['globals.button.save']}</button>
+            </div>
+        </div>
+        <!--<h4><span class="label label-default">${msg['shop.image.label.title']}</span></h4>-->
+    </header>
+    <div class="content-wrap">
+        <div class="wrapper" style="min-height: 500px; height: 100%;">
+            <div class="box-tab">
+                <ul class="nav nav-tabs" id="clientTab" >
+                    <li class="active"><a data-toggle="tab"  lang="imageForm_pc">${msg['shop.image.tab.pc']}</a></li>
+                    <li><a data-toggle="tab"   lang="imageForm_wap">${msg['shop.image.tab.mobile']}</a></li>
+                    <li><a data-toggle="tab"  lang="imageForm_tv">${msg['shop.image.tab.tv']}</a></li>
+                </ul>
+                <div class="tab-content">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<style>
+    li a{
+        cursor: pointer;
+    }
+</style>
+<script language="JavaScript">
+    function clearFile() {
+    }
+    function clearDetailFile() {
+    }
+    var image ={
+        query: function () {
+            $.post("${base}/platform/shop/config/image/data",function (data) {
+                $('.tab-content').html("");
+                $('.tab-content').html(data);
+            })
+        }
+    }
+    $(document).ready(function () {
+        $.ajaxSetup({
+            cache: false //关闭ajax相应的缓存
+        });
+        image.query();//初始化查询
+    });
+
+    $('#clientTab a').click(function (e) {
+        e.preventDefault();
+        var lang =  $(this).attr('lang');
+        $('form[name="imageForm"]').hide();
+        $('#'+lang).show();
+    })
+    
+    $('#save').click(function () {
+        $('form[name="imageForm"]').submit();
+    })
+
+</script>
+<!--#}#-->

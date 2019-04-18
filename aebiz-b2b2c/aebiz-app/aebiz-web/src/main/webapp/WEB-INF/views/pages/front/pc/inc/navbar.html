@@ -1,0 +1,198 @@
+<style>
+    .m-topbar {
+        height: 30px;
+        line-height: 30px;
+        border-top: 1px solid rgb(238, 238, 238);
+        background: rgb(250, 250, 250);
+        border-bottom: 1px solid rgb(238, 238, 238);
+    }
+    .m-components {
+        position: relative;
+    }
+    .g-box {
+        width: 1200px;
+        margin: 0px auto;
+    }
+    .f-fl {
+        float: left;
+    }
+    .f-fr {
+        float: right;
+    }
+    .m-topbar .login-link {
+        color: rgb(102, 102, 102);
+        margin: 0px 5px;
+    }
+    .m-topbar .tb-item {
+        float: left;
+        height: 30px;
+        position: relative;
+        z-index: 999;
+    }
+    li {
+        list-style: none;
+    }
+    .m-topbar .dropdown-toggle {
+        line-height: 30px;
+        cursor: pointer;
+        display: block;
+        color: rgb(102, 102, 102);
+        padding: 0px 13px;
+    }
+    .m-topbar .fa-angle-down {
+        margin-left: 2px;
+        transition: transform 0.3s;
+    }
+    .fa {
+        display: inline-block;
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    ul, ol {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+    .m-topbar .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0px;
+        display: block;
+        visibility: hidden;
+        opacity: 0;
+        float: left;
+        min-width: 100%;
+        font-size: 12px;
+        background-color: rgb(255, 255, 255);
+        background-clip: padding-box;
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 6px;
+        z-index: 900;
+        transform: translateY(-10px);
+        padding: 0px;
+        margin: 0px;
+        list-style: none;
+        border-width: 1px;
+        border-style: solid;
+        border-color: rgb(238, 238, 238);
+        border-image: initial;
+        border-radius: 0px;
+        transition: all 0.3s;
+    }
+    a:hover, a:visited, a:focus {
+        text-decoration: underline;
+        transition: color .2s ease;
+    }
+    a:hover {
+        color: #e6322a;
+    }
+    a {
+        display: inline-block;
+        color: black;
+    }
+    .m-topbar .dropdown-menu li a {
+        display: block;
+        clear: both;
+        font-weight: normal;
+        line-height: 1.42857143;
+        white-space: nowrap;
+        padding: 6px 13px;
+        color: #666;
+    }
+    .m-topbar .dropdown-menu li a:hover, .m-topbar .dropdown-menu li a:focus {
+        color: #eb5e58;
+        background-color: #fff;
+    }
+    .m-topbar .dropdown-toggle {
+        line-height: 30px;
+        padding: 0 13px;
+        cursor: pointer;
+        display: block;
+        color: #666;
+    }
+    .m-topbar .dropdown-toggle li a:hover, .m-topbar .dropdown-toggle li a:focus {
+        color: #eb5e58;
+        background-color: #fff; }
+    .m-topbar .tb-item:hover, .m-topbar .tb-item.open {
+        z-index: 1000; }
+    .m-topbar .tb-item:hover .dropdown-toggle, .m-topbar .tb-item.open .dropdown-toggle {
+        border-left: 1px solid #eee;
+        border-right: 1px solid #eee;
+        padding: 0 12px;
+        background: #fff;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15); }
+    .m-topbar .tb-item:hover s, .m-topbar .tb-item.open s {
+        position: absolute;
+        width: 100%;
+        border-left: 1px solid #eee;
+        border-right: 1px solid #eee;
+        height: 5px;
+        background: #fff;
+        bottom: -1px;
+        z-index: 1001;
+        box-sizing: border-box; }
+    .m-topbar .tb-item:hover .dropdown-menu, .m-topbar .tb-item.open .dropdown-menu {
+        visibility: visible;
+        opacity: 1;
+        -webkit-transform: translatey(0px);
+        transform: translatey(0px);
+        display: block; }
+    .m-topbar .tb-item:hover .fa-mobile, .m-topbar .tb-item.open .fa-mobile {
+        animation: ringing 2.0s 1 ease 0.5s;
+        transform-origin: 50% 0; }
+    .m-topbar .tb-item:hover .fa-angle-down, .m-topbar .tb-item.open .fa-angle-down {
+        transform: rotate(180deg); }
+    .m-topbar .tb-item {
+        float: left;
+        height: 30px;
+        position: relative;
+        z-index: 999;
+    }
+    .m-topbar .dropdown-menu li a {
+        display: block;
+        clear: both;
+        font-weight: normal;
+        line-height: 1.42857143;
+        white-space: nowrap;
+        padding: 6px 13px;
+        color: #666;
+    }
+    .m-topbar .fa-angle-down {
+        margin-left: 2px;
+        transition: transform 0.3s;
+    }
+</style>
+<div class="site-nav_new">
+    <div id="top_comm" class="m-topbar m-components">
+        <div class="m-comsloading" id="top_comm_comsloading"></div>
+        <div class="g-box">
+            <div class="f-fl">
+	        <span id="isLogin" style="padding-left:20px">您好，欢迎来到<em id="top_comm_em_platName"></em>！
+	            <a id="top_comm_a_nickname" href=""></a>&nbsp;
+	            <a id="top_comm_a_logout" href="javascript:void(0)" >退出</a>
+		        <a id="top_comm_a_login" class="login-link" href="">请登录</a>
+		        <a id="top_comm_a_register" class="login-link" href="">免费注册</a>
+	        </span>
+            </div><!-- End .header-top-left -->
+            <ul class="f-fr" style="padding-right:30px">
+                <li class="tb-item" id="isOrder">
+                    <a id="top_comm_a_myorder" class="login-link" href="">我的订单</a>
+                </li>
+                <li class="tb-item tb-item-active"><a id="$_top_compId_a_index" class="login-link" href="/">商城首页</a></li>
+                <li class="tb-item">
+                    <span class="dropdown-toggle" data-toggle="dropdown">收藏夹 <i class="fa fa-angle-down"></i></span>
+                    <s></s>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a id="top_comm_a_favproduct" href="">收藏的商品</a></li>
+                        <li><a id="top_comm_a_favstore"  href="">收藏的店铺</a></li>
+                    </ul>
+                </li>
+                <li class="tb-item"><a id="top_comm_a_store" class="login-link login-link10" href="">商家中心</a></li>
+                <li class="tb-item"><a id="top_comm_a_toapply" class="login-link login-link10" href="">商家入驻</a></li>
+                <li class="tb-item"><a id="top_comm_a_helpcenter" class="login-link login-link10" href="">帮助中心</a></li>
+            </ul><!-- End .header-top-right -->
+        </div><!-- End .container -->
+    </div>
+</div>

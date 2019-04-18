@@ -1,0 +1,140 @@
+<!--#
+layout("/layouts/store.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/store/cms/review" id="goBack" data-pjax><i class="ti-angle-left"></i>返回</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/store/cms/review/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="storeId" class="col-sm-2 control-label">商城ID</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="storeId" class="form-control" name="storeId" data-parsley-required="true"
+                                       placeholder="商城ID" value="${obj.storeId}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cmsType" class="col-sm-2 control-label">内容类型 1黏土教程 2视频专区</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="cmsType" class="form-control" name="cmsType" data-parsley-required="true"
+                                       placeholder="内容类型 1黏土教程 2视频专区" value="${obj.cmsType}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cmsId" class="col-sm-2 control-label">内容ID</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="cmsId" class="form-control" name="cmsId" data-parsley-required="true"
+                                       placeholder="内容ID" value="${obj.cmsId}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="reviewId" class="col-sm-2 control-label">回复父级编号</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="reviewId" class="form-control" name="reviewId" data-parsley-required="true"
+                                       placeholder="回复父级编号" value="${obj.reviewId}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="type" class="col-sm-2 control-label">类型 1评论 2回复</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="type" class="form-control" name="type" data-parsley-required="true"
+                                       placeholder="类型 1评论 2回复" value="${obj.type}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="content" class="col-sm-2 control-label">评论回复内容</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="content" class="form-control" name="content" data-parsley-required="true"
+                                       placeholder="评论回复内容" value="${obj.content}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="loveNum" class="col-sm-2 control-label">评论点赞数</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="loveNum" class="form-control" name="loveNum" data-parsley-required="true"
+                                       placeholder="评论点赞数" value="${obj.loveNum}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="reviewOpName" class="col-sm-2 control-label">评论人名称</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="reviewOpName" class="form-control" name="reviewOpName" data-parsley-required="true"
+                                       placeholder="评论人名称" value="${obj.reviewOpName}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="reviewOpId" class="col-sm-2 control-label">评论人编号</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="reviewOpId" class="form-control" name="reviewOpId" data-parsley-required="true"
+                                       placeholder="评论人编号" value="${obj.reviewOpId}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="reviewFatherName" class="col-sm-2 control-label">回复父级发布人名称</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="reviewFatherName" class="form-control" name="reviewFatherName" data-parsley-required="true"
+                                       placeholder="回复父级发布人名称" value="${obj.reviewFatherName}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="reviewFatherId" class="col-sm-2 control-label">回复父级发布人编号</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="reviewFatherId" class="form-control" name="reviewFatherId" data-parsley-required="true"
+                                       placeholder="回复父级发布人编号" value="${obj.reviewFatherId}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="isStore" class="col-sm-2 control-label">是否为官方 1是 2不是</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="isStore" class="form-control" name="isStore" data-parsley-required="true"
+                                       placeholder="是否为官方 1是 2不是" value="${obj.isStore}" >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="正在提交...">提 交</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<script language="JavaScript">
+    $(document).ready(function () {
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<!--#}#-->

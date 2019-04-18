@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="background: #f9f9f9;">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>茗流汇-会员注册</title>
+    <!-- core -->
+    <link href="/assets/front/pc/member/styles/qwui_base.css" rel="stylesheet">
+    <!-- page -->
+    <link href="/assets/front/pc/member/styles/qwui_ui.css" rel="stylesheet">
+    <link href="http://at.alicdn.com/t/font_sf7ns49m251m7vi.css" rel="stylesheet">
+    
+    <!--[if lt IE 9]>
+      <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="/assets/front/pc/member/vendor/jquery/jquery.min.js"></script>
+	<script src="${base!}/assets/common/vendor/layer3/layer.js"></script>
+	<script src="/assets/front/pc/member/scripts/register.js"></script>
+
+	<script src="${base!}/assets/platform/vendor/bootstrap/js/bootstrap.js"></script>
+	<link rel="stylesheet" href="${base!}/assets/platform/vendor/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" href="${base!}/assets/platform/vendor/bootstrap/css/bootstrap-theme.css">
+	<link rel="stylesheet" href="${base!}/assets/front/pc/member/styles/register.css">
+	<style>
+		.pass{background-color: #e7dbdb}
+	</style>
+</head>
+<body>
+<!-- body -->
+<div class="m-bd">
+	<div class="m-register-main">
+		<div class="mrm-hd">
+			<div class="logo"><a href="/"><img src="/assets/front/pc/member/images/logo-g.png"/></a></div>
+			<div class="action">已有账号？ 请<a href="${base!}/member/login">登录</a></div>
+		</div>
+		<div class="mrm-bd">
+			<div class="tit">注册茗流荟会员</div>
+			<form action="${base!}/member/register/doRegister" method="post" onsubmit="return check();" id="registerForm">
+				<ul>
+					<li class="input">
+						<div class="row">
+							<div class="col-md-3"><span class="red_flag"></span>登录名</div>
+							<div class="col-md-8">
+								<input type="text" placeholder="请输入登录名" name="loginname" id="loginname"/>
+							</div>
+							<div class="col-md-1">
+								<span class="" aria-hidden="true"></span>
+							</div>
+						</div>
+					</li>
+					<li class="info">
+						<div class="row">
+							<div class="col-md-12">
+								<span class="" aria-hidden="true"></span>
+								<span id="checkLoginNameInfo"></span>
+							</div>
+						</div>
+					</li>
+
+					<li class="input">
+						<div class="row">
+							<div class="col-md-3"><span class="red_flag"></span>设置密码</div>
+							<div class="col-md-8">
+								<input type="password" placeholder="请输入密码" name="password" id="inputPassword1"/>
+							</div>
+							<div class="col-md-1">
+								<span class="" aria-hidden="true"></span>
+								<!--<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>-->
+							</div>
+						</div>
+					</li>
+					<input type="hidden" name="passwordStrength" id="passwordStrength" value="">
+					<div class="u-risk">
+						<span class="pass " id="pass1">弱</span><!--low-->
+						<span class="pass " id="pass2">中</span><!--mid-->
+						<span class="pass " id="pass3">强</span><!--hig-->
+					</div>
+					<li class="info">
+						<div class="row">
+							<div class="col-md-12">
+								<span class="" aria-hidden="true"></span>
+								<span id="checkPassword1" style="color:red;"></span>
+							</div>
+						</div>
+					</li>
+					<li class="input">
+						<div class="row">
+							<div class="col-md-3"><span class="red_flag"></span>确认密码</div>
+							<div class="col-md-8">
+								<input type="password" placeholder="请输入确认密码" width="100%" id="inputPassword2"/>
+							</div>
+							<div class="col-md-1">
+								<span class="" aria-hidden="true"></span>
+								<!--<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>-->
+							</div>
+						</div>
+					</li>
+					<li class="info">
+						<div class="row">
+							<div class="col-md-12">
+								<span class="" aria-hidden="true"></span>
+								<span id="checkPassword2" style="color:red"></span>
+							</div>
+						</div>
+					</li>
+					<li class="input">
+						<div class="row">
+							<div class="col-md-3" style="padding-left: 0px !important;">
+								<select id="select" name="mobileArea">
+									<option value="中国(+86)">中国(+86)</option>
+									<option value="中国台湾地区(+886)">中国台湾地区(+866)</option>
+									<option value="中国香港(+852)">中国香港(+852)</option>
+								</select>
+							</div>
+							<div class="col-md-8">
+								<input type="text" placeholder="请输入手机号码" width="100%" name="mobile" id="phone"/>
+							</div>
+							<div class="col-md-1">
+								<span class="" aria-hidden="true"></span>
+							</div>
+						</div>
+					</li>
+					<li class="info">
+						<div class="row">
+							<div class="col-md-12">
+								<span class="" aria-hidden="true"></span>
+								<span id="checkPhoneInfo" style="color:red"></span>
+							</div>
+						</div>
+					</li>
+
+					<li class="input">
+						<div class="row">
+							<div class="col-md-3"><span class="red_flag"></span>验证码</div>
+							<div class="col-md-5">
+								<input type="text" name="verifyCode" id="code" value="" placeholder="图片验证码" />
+							</div>
+							<div class="col-md-4" style="padding-left: 15px !important;">
+								<a><img src="${base!}/member/register/captcha" id="codeImg" title="点击更换验证码"/></a>
+							</div>
+						</div>
+					</li>
+					<li class="info">
+						<div class="row">
+							<div class="col-md-12">
+								<span class="" aria-hidden="true"></span>
+								<span id="checkCodeInfo"></span>
+							</div>
+						</div>
+					</li>
+					<li class="input">
+						<div class="row">
+							<div class="col-md-3"><span class="red_flag"></span>手机验证码<input type="hidden" value="0" id="mobileValue"></div>
+							<div class="col-md-5">
+								<input type="text" name="mobileVerifyCode" id="mobileCode" value="" placeholder="手机验证码" />
+							</div>
+							<div class="col-md-4" style="line-height:53px;height:53px;text-align: center;">
+								<a id="getMobileCaptcha">获取手机验证码</a>
+								<span id="count"></span>
+							</div>
+						</div>
+					</li>
+					<li class="info">
+						<div class="row">
+							<div class="col-md-12">
+								<span class="" aria-hidden="true"></span>
+								<span id="checkmobileCodeInfo" style="color:red"></span>
+							</div>
+						</div>
+					</li>
+					<li class="info" style="margin-top: 10px !important;">
+						<div class="row">
+							<div class="col-md-12">
+								<input type="checkbox" class="agreement" style="float: left">
+								<p class="notice" style="float: left;height: 20px !important;padding: 0">阅读并同意遵守茗流荟<a class="userAgreement">用户协议</a>和<a class="privacy">隐私政策</a></p>
+							</div>
+						</div>
+					</li>
+					<li class="info" style="height: 50px !important;">
+						<div class="row"  style="height: 50px !important;">
+							<div class="col-md-12"  style="height: 50px !important;">
+								<input class="submit" type="button" style="background-color:#adadad" value="立即注册"/>
+							</div>
+						</div>
+					</li>
+					<li class="info">
+						<div class="row">
+							<div class="col-md-12">
+								${error!}
+							</div>
+						</div>
+					</li>
+				</ul>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!--用户协议弹层-->
+<div id="agreement" class="m-layer-pop">
+	<div class="bd">
+		${shopConfig.agreement}
+	</div>
+</div>
+<!-- end -->
+
+<!--隐私政策弹层-->
+<div id="privacy" class="m-layer-pop">
+	<div class="bd">
+		${shopConfig.secret}
+	</div>
+</div>
+<!-- end -->
+
+<!-- end -->
+<div class="register-fd">
+	全网数商公司版权所有 © 1997-2017   食品经营许可证：JY13301080111719
+</div>
+</body>
+</html>

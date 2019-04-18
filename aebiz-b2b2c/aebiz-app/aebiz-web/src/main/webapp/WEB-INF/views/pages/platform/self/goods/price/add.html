@@ -1,0 +1,228 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/self/goods/price" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/goods/product/addDo" method="post">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="mallId" class="col-sm-2 control-label">${msg['goods.product.column.mallId']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="mallId" class="form-control" name="mallId" data-parsley-required="true" placeholder="${msg['goods.product.column.mallId']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="storeId" class="col-sm-2 control-label">${msg['goods.product.column.storeId']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="storeId" class="form-control" name="storeId" data-parsley-required="true" placeholder="${msg['goods.product.column.storeId']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="goodsId" class="col-sm-2 control-label">${msg['goods.product.column.goodsId']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="goodsId" class="form-control" name="goodsId" data-parsley-required="true" placeholder="${msg['goods.product.column.goodsId']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sku" class="col-sm-2 control-label">${msg['goods.product.column.sku']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="sku" class="form-control" name="sku" data-parsley-required="true" placeholder="${msg['goods.product.column.sku']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">${msg['goods.product.column.name']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="name" class="form-control" name="name" data-parsley-required="true" placeholder="${msg['goods.product.column.name']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="spec" class="col-sm-2 control-label">${msg['goods.product.column.spec']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="spec" class="form-control" name="spec" data-parsley-required="true" placeholder="${msg['goods.product.column.spec']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="costPrice" class="col-sm-2 control-label">${msg['goods.product.column.costPrice']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="costPrice" class="form-control" name="costPrice" data-parsley-required="true" placeholder="${msg['goods.product.column.costPrice']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="salePrice" class="col-sm-2 control-label">${msg['goods.product.column.salePrice']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="salePrice" class="form-control" name="salePrice" data-parsley-required="true" placeholder="${msg['goods.product.column.salePrice']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="hiddenSalePrice" class="col-sm-2 control-label">${msg['goods.product.column.hiddenSalePrice']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="hiddenSalePrice" class="form-control" name="hiddenSalePrice" data-parsley-required="true" placeholder="${msg['goods.product.column.hiddenSalePrice']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="marketPrice" class="col-sm-2 control-label">${msg['goods.product.column.marketPrice']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="marketPrice" class="form-control" name="marketPrice" data-parsley-required="true" placeholder="${msg['goods.product.column.marketPrice']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="weight" class="col-sm-2 control-label">${msg['goods.product.column.weight']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="weight" class="form-control" name="weight" data-parsley-required="true" placeholder="${msg['goods.product.column.weight']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="length" class="col-sm-2 control-label">${msg['goods.product.column.length']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="length" class="form-control" name="length" data-parsley-required="true" placeholder="${msg['goods.product.column.length']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="width" class="col-sm-2 control-label">${msg['goods.product.column.width']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="width" class="form-control" name="width" data-parsley-required="true" placeholder="${msg['goods.product.column.width']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="height" class="col-sm-2 control-label">${msg['goods.product.column.height']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="height" class="form-control" name="height" data-parsley-required="true" placeholder="${msg['goods.product.column.height']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="stock" class="col-sm-2 control-label">${msg['goods.product.column.stock']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="stock" class="form-control" name="stock" data-parsley-required="true" placeholder="${msg['goods.product.column.stock']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="stockFreeze" class="col-sm-2 control-label">${msg['goods.product.column.stockFreeze']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="stockFreeze" class="form-control" name="stockFreeze" data-parsley-required="true" placeholder="${msg['goods.product.column.stockFreeze']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="buyMin" class="col-sm-2 control-label">${msg['goods.product.column.buyMin']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="buyMin" class="form-control" name="buyMin" data-parsley-required="true" placeholder="${msg['goods.product.column.buyMin']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="buyMax" class="col-sm-2 control-label">${msg['goods.product.column.buyMax']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="buyMax" class="form-control" name="buyMax" data-parsley-required="true" placeholder="${msg['goods.product.column.buyMax']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sale" class="col-sm-2 control-label">${msg['goods.product.column.sale']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="sale" class="form-control" name="sale" data-parsley-required="true" placeholder="${msg['goods.product.column.sale']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="defaultValue" class="col-sm-2 control-label">${msg['goods.product.column.defaultValue']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="defaultValue" class="form-control" name="defaultValue" data-parsley-required="true" placeholder="${msg['goods.product.column.defaultValue']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="saleNumAll" class="col-sm-2 control-label">${msg['goods.product.column.saleNumAll']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="saleNumAll" class="form-control" name="saleNumAll" data-parsley-required="true" placeholder="${msg['goods.product.column.saleNumAll']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="saleNumMonth" class="col-sm-2 control-label">${msg['goods.product.column.saleNumMonth']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="saleNumMonth" class="form-control" name="saleNumMonth" data-parsley-required="true" placeholder="${msg['goods.product.column.saleNumMonth']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="productVersion" class="col-sm-2 control-label">${msg['goods.product.column.productVersion']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="productVersion" class="form-control" name="productVersion" data-parsley-required="true" placeholder="${msg['goods.product.column.productVersion']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="orderVerify" class="col-sm-2 control-label">${msg['goods.product.column.orderVerify']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="orderVerify" class="form-control" name="orderVerify" data-parsley-required="true" placeholder="${msg['goods.product.column.orderVerify']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="online" class="col-sm-2 control-label">${msg['goods.product.column.online']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="online" class="form-control" name="online" data-parsley-required="true" placeholder="${msg['goods.product.column.online']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="saleToMemberType" class="col-sm-2 control-label">${msg['goods.product.column.saleToMemberType']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="saleToMemberType" class="form-control" name="saleToMemberType" data-parsley-required="true" placeholder="${msg['goods.product.column.saleToMemberType']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="deliveryTime" class="col-sm-2 control-label">${msg['goods.product.column.deliveryTime']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="deliveryTime" class="form-control" name="deliveryTime" data-parsley-required="true" placeholder="${msg['goods.product.column.deliveryTime']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="serializable" class="col-sm-2 control-label">${msg['goods.product.column.serializable']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="serializable" class="form-control" name="serializable" data-parsley-required="true" placeholder="${msg['goods.product.column.serializable']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="location" class="col-sm-2 control-label">${msg['goods.product.column.location']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="location" class="form-control" name="location" data-parsley-required="true" placeholder="${msg['goods.product.column.location']}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+<script language="JavaScript">
+    $(document).ready(function () {
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    form.resetForm();
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<!--#}#-->
+
+

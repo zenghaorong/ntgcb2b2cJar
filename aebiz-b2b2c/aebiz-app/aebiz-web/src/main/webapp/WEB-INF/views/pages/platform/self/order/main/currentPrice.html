@@ -1,0 +1,309 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/self/order/main" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+    <div class="pull-right">
+        <div class="btn-group tool-button">
+            <button class="btn btn-primary navbar-btn" type="button" id="currentPrice">现价恢复</button>
+        </div>
+    </div>
+</header>
+<script src="${base!}/assets/common/vendor/city-picker/js/data.86.all.js" type="text/javascript"></script>
+<script src="${base!}/assets/common/vendor/city-picker/js/picker.86.js" type="text/javascript"></script>
+<div class="content-wrap bg-white">
+    <div class="wrapper" style="min-height:500px;top:50px">
+        <form id="currentPriceForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+              action="${base}/platform/self/order/main/currentPriceRecover" method="post">
+            <div class="panel-body">
+                <div style="padding: 5px 0px" > 订单编号:<span> ${obj.id}</span> &nbsp;&nbsp;&nbsp; &nbsp;
+                    <span>${@com.aebiz.app.order.modules.models.em.OrderStatusEnum.getValue(obj.orderStatus)}</span>&nbsp; &nbsp;
+                    <span>${@com.aebiz.app.order.modules.models.em.OrderPayStatusEnum.getValue(obj.payStatus)}</span>&nbsp; &nbsp;
+                    <span>${@com.aebiz.app.order.modules.models.em.OrderDeliveryStatusEnum.getValue(obj.deliveryStatus)}</span>&nbsp; &nbsp;
+                    <span>${@com.aebiz.app.order.modules.models.em.OrderFeedStatusEnum.getValue(obj.feedStatus)}</span>&nbsp; &nbsp;
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">基本信息</h3>
+                    </div>
+                    <input type="hidden" name="id" value="${obj.id}">
+                    <div class="panel-body">
+                        <div class="col-md-10 col-md-offset-1">
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                订单编号:   <span>${obj.id}</span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                会员账号:   <span>${obj.accountId}</span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                下单时间:   <span><!--#if(!isEmpty(obj.orderAt)){#-->${@date.getDate(obj.orderAt)} <!--#}#--></span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                付款状态:   <span>${@com.aebiz.app.order.modules.models.em.OrderPayStatusEnum.getValue(obj.payStatus)}</span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                支付时间:   <span><!--#if(!isEmpty(obj.payAt)){#-->${@date.getDate(obj.payAt)} <!--#}#--></span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                商品数量:   <span>${@orderGoods.size()}</span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                订单来源:   <span>${@com.aebiz.app.order.modules.models.em.OrderSourceEnum.getValue(obj.orderSrc)}</span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                商品重量:   <span>${obj.goodsWeight}</span>
+                            </div>
+                            <!-- <div class="col-md-6" style="padding: 5px 0px">
+                                 会员上级:   <span>李四</span>
+                             </div>
+                             <div class="col-md-6" style="padding: 5px 0px">
+                                 归属员工:   <span>无</span>
+                             </div>-->
+                            <!-- <div class="col-md-6" style="padding: 5px 0px">
+                                 参与活动:   <span>双11促销</span>
+                             </div>-->
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                订单备注:   <span>${obj.mark}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">支付信息</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-10 col-md-offset-1">
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                支付方式:   <span>${@com.aebiz.app.order.modules.models.em.OrderPayTypeEnum.getValue(obj.payType)}</span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                订单优惠:   <span>￥${obj.freeMoney}</span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                商品总价:   <span>￥${obj.goodsMoney}</span>
+                            </div>
+                            <!--TODO 优惠券金和积分以后再考虑 -->
+                            <!-- <div class="col-md-6" style="padding: 5px 0px">
+                                 已用优惠券:   <span>无</span>
+                             </div>
+                             <div class="col-md-6" style="padding: 5px 0px">
+                                 订单折扣:   <span>￥0.00</span>
+                             </div>
+                             <div class="col-md-6" style="padding: 5px 0px">
+                                 优惠券折扣:   <span>￥0.00</span>
+                             </div>
+                             <div class="col-md-6" style="padding: 5px 0px">
+                                 会员卡折扣:   <span>￥0.00</span>
+                             </div>
+                             <div class="col-md-6" style="padding: 5px 0px">
+                                 积分支付:   <span>￥0.00（消耗0积分）</span>
+                             </div>-->
+                            <!--TODO 账户余额表中设计到了？-->
+                            <!-- <div class="col-md-6" style="padding: 5px 0px">
+                                 账户余额支付:   <span>￥4288.00</span>
+                             </div>
+                             <div class="col-md-6" style="padding: 5px 0px">
+                                 返利金额支付:   <span>￥0.00</span>
+                             </div>-->
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                配送费用:   <span>￥${obj.freightMoney}</span>
+                            </div>
+                            <!--<div class="col-md-6" style="padding: 5px 0px">-->
+                            <!--线下支付:   <span>￥0.00</span>-->
+                            <!--</div>-->
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                实付现金:   <span>￥${obj.payMoney}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">收货信息</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-10 col-md-offset-1">
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                收件人:   <span>${obj.deliveryName}</span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                配送状态:   <span>${@com.aebiz.app.order.modules.models.em.OrderDeliveryStatusEnum.getValue(obj.deliveryStatus)}</span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                手机号码:   <span>${obj.deliveryMobile}</span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                物流单号:   <span>暂无</span> <a>查看物流</a>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                固定电话:   <span>${obj.deliveryPhone}</span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                物流公司:   <span>暂无</span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                收货地址:   <span>${@area.getNameByCode(obj.deliveryProvince)} ${@area.getNameByCode(obj.deliveryCity)} ${@area.getNameByCode(obj.deliveryCounty)} ${obj.deliveryAddress}</span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                发货时间:   <span><!--#if(!isEmpty(obj.deliveryAt)){#-->${@date.getDate(obj.deliveryAt)} <!--#}#--></span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                邮编:   <span>${obj.deliveryPostcode}</span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                收货时间:   <span><!--#if(!isEmpty(obj.getAt)){#-->${@date.getDate(obj.getAt)} <!--#}#--></span>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px 0px">
+                                买家留言:   <span>${obj.note}</span>
+                            </div>
+                            <!--todo 需要考虑自动收货-->
+                            <!--<div class="col-md-6" style="padding: 5px 0px">
+                                自动收货时间:   <span>无</span>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">订单信息</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive ">
+                            <table class="table">
+                                <caption>订单明细</caption>
+                                <thead>
+                                <tr>
+                                    <th>商品</th>
+                                    <th>单价</th>
+                                    <th>数量</th>
+                                    <th>发货数量</th>
+                                    <th>优惠</th>
+                                    <th>配送费</th>
+                                    <th>应付总金额</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!--#for(o in orderGoods ){  #-->
+                                <tr style="border-bottom: 1px solid #dfe6ec;">
+                                    <td>${o.goodsName} ${o.name}</td>
+                                    <td>￥${o.buyPrice}</td>
+                                    <td>${o.buyNum}</td>
+                                    <td>${o.sendNum}</td>
+                                    <td>￥${o.freeMoney}</td>
+                                    <!--# if(oLP.first ){ #-->    <!--border-bottom: 1px solid #dfe6ec;-->
+                                    <td rowspan="${@orderGoods.size()}" style="text-align: center;border: 1px solid #dfe6ec;vertical-align: middle;">￥${obj.freightMoney}</td>
+                                    <td rowspan="${@orderGoods.size()}" style="text-align: center;border: 1px solid #dfe6ec;vertical-align: middle;">￥${obj.payMoney}</td>
+                                    <!--# }#-->
+                                </tr>
+                                <!--#}#-->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-responsive ">
+                            <table class="table">
+                                <caption>订单现价明细</caption>
+                                <thead>
+                                <tr>
+                                    <th>商品</th>
+                                    <th>单价</th>
+                                    <th>数量</th>
+                                    <th>发货数量</th>
+                                    <th>优惠</th>
+                                    <th>配送费</th>
+                                    <th>应付总金额</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!--#for(o in newOrderGoodsList ){  #-->
+                                <tr style="border-bottom: 1px solid #dfe6ec;">
+                                    <td>${o.goodsName} ${o.name}</td>
+                                    <td>￥${o.buyPrice}</td>
+                                    <td>${o.buyNum}</td>
+                                    <td>${o.sendNum}</td>
+                                    <td>￥${o.freeMoney}</td>
+                                    <!--# if(oLP.first ){ #-->    <!--border-bottom: 1px solid #dfe6ec;-->
+                                    <td rowspan="${@orderGoods.size()}" style="text-align: center;border: 1px solid #dfe6ec;vertical-align: middle;">￥${obj.freightMoney}</td>
+                                    <td rowspan="${@orderGoods.size()}" style="text-align: center;border: 1px solid #dfe6ec;vertical-align: middle;">￥${obj.payMoney}</td>
+                                    <!--# }#-->
+                                </tr>
+                                <!--#}#-->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">订单日志</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive ">
+                            <table class="table">
+                                <caption></caption>
+                                <thead>
+                                <tr>
+                                    <th>操作时间</th>
+                                    <th>操作人</th>
+                                    <th>操作类型</th>
+                                    <th>操作内容</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!--#for(log in orderLogList){  #-->
+                                <tr style="border-bottom: 1px solid #dfe6ec;">
+                                    <td><!--#if(!isEmpty(log.opAt)){#-->${@date.getDate(log.opAt)} <!--#}#--></td>
+                                    <td>${log.opBy}</td>
+                                    <td>${@com.aebiz.app.order.modules.models.em.OrderLogBehaviorEnum.getValue(log.behavior)}</td>
+                                    <td>${log.note}</td>
+                                </tr>
+                                <!--#}#-->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-1">订单日志</label>
+                            <div class="col-sm-8">
+                                <textarea class="form-control" rows="3">现价恢复订单</textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<style>
+
+</style>
+<script>
+    $(document).ready(function () {
+        $('#currentPriceForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    form.resetForm();
+                    setTimeout(function () {
+                        $.pjax({ url: '${base}/platform/self/order/main', container: '#container' })
+                    },1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+
+    $("#currentPrice").on("click",function () {
+        $('#currentPriceForm').submit();
+    })
+
+</script>
+<!--#}#-->

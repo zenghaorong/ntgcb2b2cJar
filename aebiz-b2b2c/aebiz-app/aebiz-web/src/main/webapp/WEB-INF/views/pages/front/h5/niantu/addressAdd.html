@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>收货地址</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!--标准mui.css-->
+    <link rel="stylesheet" href="${base!}/assets/front/h5/css/mui.min.css" />
+    <link rel="stylesheet" href="${base!}/assets/front/h5/css/hryc.css" />
+    <!--App自定义的css-->
+    <!--<link rel="stylesheet" type="text/css" href="../css/app.css"/>-->
+    <style>
+        .mui-table-view .mui-media-object {
+            line-height: 42px;
+            max-width: 145px;
+            height: 100px;
+        }
+        .jiage-text{
+            font-size: 18px;
+            color: red;
+            margin-right:10px ;
+        }
+        [v-cloak]{
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+
+<header class="mui-bar mui-bar-nav top-color">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+    <h1 class="mui-title" style="color: white;">
+        添加收货地址
+    </h1>
+</header>
+
+<div class="mui-card" style="margin-top: 60px;" id="vue">
+    <form class="mui-input-group">
+        <div class="mui-input-row">
+            <label>姓名</label>
+            <input v-model="name"  type="text" placeholder="请输入姓名">
+        </div>
+        <div class="mui-input-row">
+            <label>手机号</label>
+            <input v-model="mobile" type="text" class="mui-input-clear" placeholder="请输入手机号">
+        </div>
+
+    </form>
+    <div class="mui-input-row" style="margin: 10px 5px;">
+        <textarea id="textarea" v-model="address" rows="5" placeholder="请输入收货地址"></textarea>
+    </div>
+    <div style="width: 300px;margin: 0 auto;">
+        <button type="button" v-on:click="add" class="mui-btn mui-btn-primary mui-btn-block">保存</button>
+    </div>
+
+</div>
+
+
+
+
+<script type="text/javascript" src="${base!}/assets/front/h5/js/mui.js" ></script>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/vue.js" ></script>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/jquery-2.0.0.min.js" ></script>
+<script type="text/javascript" src="${base!}/assets/decorate/pc/decoratecommon/js/layer/mobile/layer.js" ></script>
+<script type="application/javascript">
+    mui.init({
+        swipeBack:true //启用右滑关闭功能
+    });
+
+    var vue = new Vue({
+        el: '#vue',
+        data: {
+            name: '',
+            mobile:'',
+            address:''
+        },
+        created:function () {   //实例初始化创建完成执行
+
+            // this.getvideoList()     //调用自身方法
+
+        },
+        methods:{              //定义封装方法
+            //保存收货地址
+            add:function () {
+                var self = this;
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/address/addAddress.html",
+                    dataType:"JSON",
+                    data:{
+                        name:self.name,
+                        mobile:self.mobile,
+                        address:self.address
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            var d = data.data;
+                            window.location.href='${base!}/open/h5/address/goAddress.html';
+                        } else {
+
+                        }
+                    }
+                });
+
+            }
+        },
+        watch:{     //监听器
+            // carModel:function () {
+            //     this.getProvince();
+            // }
+        }
+
+    })
+
+</script>
+</body>
+</html>

@@ -1,0 +1,1566 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+
+<style>
+    .div-img-album{
+        list-style-type: none;
+        margin: 2px;
+        height: 118px;
+        float: left;
+    }
+    .divImg{
+        float: left;
+        margin: 2px;
+        padding: 2px;
+        height:108px;
+        width:100px;
+        border: 1px solid #dcdcdc;
+        cursor: pointer;
+    }
+    .divImgD{
+        float: left;
+        margin: 2px;
+        padding: 2px;
+        height:108px;
+        width:100px;
+        border: 1px solid red;
+        cursor: pointer;
+    }
+    .line-height-sm{
+        height: 30px;
+    }
+    .goods-search-class {
+        width: 30%;min-width: 160px;
+    }
+    .goods-area-label{
+        float:left;margin:3px 1px 2px 1px;
+    }
+</style>
+
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.config.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.all.min.js"></script>
+
+<header class="header navbar bg-white shadow">
+    <div class="pull-right">
+        <div class="btn-group tool-button">
+            <!--# if(needCheck) { #-->
+            <button class="btn btn-primary navbar-btn js-goods-btn-submit-audit" type="button" >保存并提交审核</button>
+            <!--# } else { #-->
+            <button class="btn btn-primary navbar-btn js-goods-btn-publish" type="button" > 发布</button>
+            <!--# }#-->
+            <button class="btn btn-primary navbar-btn js-goods-btn-save-to-drafts" type="button" > 保存草稿</button>
+            <button class="btn btn-primary navbar-btn js-goods-btn-preview" type="button" > 预览</button>
+            <a id="doLink" href="${base!}/platform/self/goods/publish/add" data-pjax></a>
+        </div>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate action="${base!}/platform/self/goods/publish/addDo" method="post">
+            <input type="hidden" name="id" id="id" value="">
+            <input type="hidden" name="status" id="status" value="">
+            <input type="hidden" name="isSubmit" id="isSubmit" value="0">
+            <input type="hidden" name="subType" id="subType" value="">
+            <div class="box-tab ">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#base" data-toggle="tab">${msg['goods.main.tab.base']}</a></li>
+                    <li class=""><a href="#goods_info" data-toggle="tab">${msg['goods.main.tab.info']}</a></li>
+                    <li class="" id="goods_params_tab" style="display: none"><a href="#goods_params" data-toggle="tab">${msg['goods.main.tab.spec']}</a></li>
+                    <li class="" id="goods_props_tab" style="display: none"><a href="#goods_props" data-toggle="tab">${msg['goods.main.tab.prop']}</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="base">
+                        <div class="row mb10">
+                            <div class="col-lg-12">
+                                <div class="form-group has-feedback">
+                                    <label class="col-sm-2 control-label"><span style="color: red">*</span>${msg['goods.main.column.classId']}</label>
+                                    <div class="col-sm-3">
+                                        <input type="hidden" name="classId" value="">
+                                        <input type="text" class="form-control" id="classId" name="tmp_classId" readonly value="" data-parsley-required="true" data-toggle="modal" data-target="#dialogSelectClass" style="cursor: pointer;" placeholder="${msg['goods.main.tip.selectplease']}${msg['goods.main.column.classId']}"/>
+                                    </div>
+                                    <label class="col-sm-1 control-label"><span style="color: red">*</span>${msg['goods.main.column.frontClassId']}</label>
+                                    <div class="col-sm-4">
+                                        <input type="hidden" id="front_classes" name="front_classes" value="">
+                                        <input type="text" class="form-control" id="frontClassId" name="tmp_frontClassId" readonly value="" data-parsley-required="true" data-toggle="modal" data-target="#dialogSelectFrontClass" style="cursor: pointer;" placeholder="${msg['goods.main.tip.selectplease']}${msg['goods.main.column.frontClassId']}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">${msg['goods.main.column.typeId']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="hidden" name="typeId">
+                                        <select id="typeId" name="typeId" class="form-control" disabled>
+                                            <option value="">${msg['goods.main.select.typeId.option.default']}</option>
+                                            <!--#for(o in typeList){#-->
+                                            <option value="${o.id!}">${o.name!}</option>
+                                            <!--#}#-->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">${msg['goods.main.column.brandId']}</label>
+                                    <div class="col-sm-8">
+                                        <select id="brandId" name="brandId" class="form-control" >
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="name" class="col-sm-2 control-label"><span style="color: red">*</span>${msg["goods.main.column.name"]}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="name" class="form-control" name="name" data-parsley-required="true" data-parsley-maxlength="150" placeholder="${msg['goods.main.column.name']}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="title" class="col-sm-2 control-label">${msg["goods.main.column.title"]}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="title" class="form-control" name="title" data-parsley-maxlength="150" placeholder="${msg['goods.main.column.title']}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="keywords" class="col-sm-2 control-label">SEO关键字</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="keywords" class="tokenfield form-control" name="keywords" data-parsley-maxlength="150" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">${msg['goods.main.column.tags']}</label>
+                                    <div class="col-sm-8" align="left">
+                                        <!--# for (o in tagList) { #-->
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="tag" value="${o.id}">${o.name}
+                                            <!--#if(isNotEmpty(o.imgurl)){#--><img src="${o.imgurl!}" style="width: 15px;height: 15px;"><!--#}#-->
+                                        </label>
+                                        <!--# } #-->
+                                    </div>
+                                </div>
+                                <div class="form-group" style="display: none">
+                                    <label class="col-sm-2 control-label">${msg['goods.main.column.imgList']}</label>
+                                    <div class="col-sm-8">
+                                        <div id="div_imgList_queue"></div>
+                                        <div>
+                                            <input id="file_upload_imgList" name="file_upload_imgList" type="file" multiple="false">
+                                        </div>
+                                        <div id="div_imgList_img" style="padding: 5px;"></div>
+                                        <input type="hidden" id="imgList" name="imgList" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label"><span style="color: red">*</span>${msg['goods.main.column.unit']}</label>
+                                    <div class="col-sm-8">
+                                        <select id="unit" name="unit" class="form-control" data-parsley-required="true">
+                                            <option value="">${msg['goods.main.select.unit.option.default']}</option>
+                                            <!--# for (o in unitDictList) { #-->
+                                            <option value="${o.code}">${o.name}</option>
+                                            <!--# } #-->
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" id="div_spec" style="display: none">
+                                    <label class="col-sm-2 control-label">${msg["goods.product.column.spec"]}</label>
+                                    <div class="col-sm-8" align="left">
+                                        <button id="specBtn" type="button" class="btn btn-default"><i class="fa fa-plus mr5"></i>${msg["goods.main.btn.specBtn"]}</button>
+                                    </div>
+                                </div>
+
+                                <!-- spec product begin -->
+                                <div id="sp_new" style="display: none"></div>
+                                <!-- spec product end -->
+
+                                <!-- product begin -->
+                                <div id="sp" class="js-goods-product-div">
+                                    <div class="form-group">
+                                        <label for="weight" class="col-sm-2 control-label"><span style="color: red">*</span>${msg['goods.product.column.weight']}</label>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <input type="text" id="weight" class="form-control input-sm" name="weight" data-parsley-type="number" data-parsley-required="true" placeholder="${msg['goods.product.column.weight']}">
+                                                <span class="input-group-addon" style="min-width: 46px;">${msg["goods.main.unit.weight"]}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="length" class="col-sm-2 control-label">${msg['goods.product.column.length']}</label>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <input type="text" id="length" class="form-control input-sm" name="length" data-parsley-type="number" placeholder="${msg['goods.product.column.length']}">
+                                                <span class="input-group-addon">${msg["goods.main.unit.length"]}</span>
+                                            </div>
+                                        </div>
+                                        <label for="width" class="col-sm-1 control-label">${msg['goods.product.column.width']}</label>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <input type="text" id="width" class="form-control input-sm" name="width" data-parsley-type="number" placeholder="${msg['goods.product.column.width']}">
+                                                <span class="input-group-addon">${msg["goods.main.unit.length"]}</span>
+                                            </div>
+                                        </div>
+                                        <label for="height" class="col-sm-1 control-label">${msg['goods.product.column.height']}</label>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <input type="text" id="height" class="form-control input-sm" name="height" data-parsley-type="number" placeholder="${msg['goods.product.column.height']}">
+                                                <span class="input-group-addon">${msg["goods.main.unit.length"]}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sku" class="col-sm-2 control-label">${msg["goods.product.column.sku"]}</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" id="sku" value="" class="form-control input-sm" name="sku" data-parsley-type="alphanum" placeholder="${msg['goods.main.placeholder.sku']}" >
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="costPrice" class="col-sm-2 control-label">${msg["goods.product.column.costPrice"]}</label>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">${msg["goods.main.unit.money"]}</span>
+                                                <input type="text" id="costPrice" class="form-control input-sm" name="costPrice" data-parsley-price="true" placeholder="${msg["goods.product.column.costPrice"]}">
+                                            </div>
+                                        </div>
+                                        <label for="salePrice" class="col-sm-1 control-label"><span style="color: red">*</span>${msg["goods.product.column.salePrice"]}</label>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">${msg["goods.main.unit.money"]}</span>
+                                                <input type="text" id="salePrice" class="form-control input-sm" name="salePrice" data-parsley-price="true" data-parsley-required="true" placeholder="${msg["goods.product.column.salePrice"]}">
+                                            </div>
+                                        </div>
+                                        <label for="marketPrice" class="col-sm-1 control-label">${msg["goods.product.column.marketPrice"]}</label>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">${msg["goods.main.unit.money"]}</span>
+                                                <input type="text" id="marketPrice" class="form-control input-sm" name="marketPrice" data-parsley-price="true" placeholder="${msg["goods.product.column.marketPrice"]}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="stock" class="col-sm-2 control-label"><span style="color: red">*</span>${msg["goods.product.column.stock"]}</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="stock" class="form-control input-sm" name="stock" value="0" data-parsley-type="integer" data-parsley-min="0" data-parsley-required="true" placeholder="${msg['goods.main.placeholder.defult']}0">
+                                        </div>
+                                        <label for="buyMin" class="col-sm-1 control-label">${msg["goods.product.column.buyMin"]}</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="buyMin" class="form-control input-sm" value="1" name="buyMin" data-parsley-type="integer" data-parsley-min="0" placeholder="${msg['goods.main.placeholder.defult']}1">
+                                        </div>
+                                        <label for="buyMax" class="col-sm-1 control-label">${msg["goods.product.column.buyMax"]}</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="buyMax" class="form-control input-sm" value="100"  name="buyMax" data-parsley-type="integer" data-parsley-min="0" placeholder="${msg['goods.main.placeholder.defult']}100">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">${msg['goods.product.column.partitionBy']}</label>
+                                        <div class="col-sm-8" align="left">
+                                            <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" value="0" checked>${msg["goods.main.select.option.unlimited"]}</label>
+                                            <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" value="1" >${msg["goods.product.select.partitionBy.option.area"]}</label>
+                                            <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" value="2" >${msg["goods.product.select.partitionBy.option.city"]}</label>
+
+                                            <div class="js-goods-select-area" style="display: none">
+                                                <button type="button" class="btn btn-default btn-sm " data-toggle="modal" data-target="#dialogSelectArea"><i class="fa fa-plus mr5"></i>${msg["goods.product.btn.selectArea"]}</button>
+                                                <input type="hidden" name="areaCodes" value="">
+                                                <div class="js-goods-area"></div>
+                                            </div>
+                                            <div class="js-goods-select-province-city" style="display: none">
+                                                <button type="button" class="btn btn-default btn-sm " data-toggle="modal" data-target="#dialogSelectCity"><i class="fa fa-plus mr5"></i>${msg["goods.product.btn.selectCity"]}</button>
+                                                <input type="hidden" name="areaProvinceCitys" value="">
+                                                <div class="js-goods-province-city"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">${msg['goods.product.column.saleToMemberType']}</label>
+                                        <div class="col-sm-8" align="left">
+                                            <label class="checkbox-inline" ><input type="checkbox" name="saleToMemberType" value="0" checked/>${msg["goods.main.select.option.unlimited"]}</label>
+                                            <!--#for(o in memberTypeList){#-->
+                                            <label class="checkbox-inline" ><input type="checkbox" name="saleToMemberType" value="${o.id!}" />${o.name!}</label>
+                                            <!--#}#-->
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">${msg["goods.product.column.deliveryTime"]}</label>
+                                        <div class="col-sm-8" align="left">
+                                            <label class="radio-inline">
+                                                <input type="radio" name="deliveryTime" value="0" checked >${msg["goods.product.deliveryTime.select.option0"]}
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="deliveryTime" value="1">${msg["goods.product.deliveryTime.select.option1"]}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">${msg["goods.product.column.orderVerify"]}</label>
+                                        <div class="col-sm-1 switcha">
+                                            <div class="mr15">
+                                                <input type="checkbox" id="orderVerify" name="orderVerify" class="js-switch-blue" >
+                                            </div>
+                                        </div>
+                                        <label class="col-sm-2 control-label">${msg["goods.product.column.serializable"]}</label>
+                                        <div class="col-sm-1 switcha">
+                                            <div class="mr15">
+                                                <input type="checkbox" id="serializable" name="serializable" class="js-switch-blue" >
+                                            </div>
+                                        </div>
+                                        <label class="col-sm-2 control-label">${msg["goods.product.column.enabled"]}</label>
+                                        <div class="col-sm-1 switcha">
+                                            <div class="mr15">
+                                                <input type="checkbox" id="enabled" name="enabled" class="js-switch-blue" >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- product end -->
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">${msg['goods.main.column.recommend']}</label>
+                                    <div class="col-sm-1 switcha">
+                                        <div class="mr15">
+                                            <input type="hidden" name="recommend" value="0" />
+                                            <input type="checkbox" id="recommend" class="js-switch-blue" />
+                                        </div>
+                                    </div>
+                                    <label class="col-sm-2 control-label">${msg['goods.main.column.saleZero']}</label>
+                                    <div class="col-sm-1 switcha">
+                                        <div class="mr15">
+                                            <input type="checkbox" id="saleZero" name="saleZero" class="js-switch-blue" >
+                                        </div>
+                                    </div>
+                                    <label class="col-sm-2 control-label">${msg["goods.product.column.hiddenSalePrice"]}</label>
+                                    <div class="col-sm-1 switcha">
+                                        <div class="mr15">
+                                            <input type="checkbox" id="hiddenSalePrice" name="hiddenSalePrice" class="js-switch-blue" >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">${msg['goods.main.column.stockOffType']}</label>
+                                    <div class="col-sm-8" align="left">
+                                        <label class="radio-inline" ><input type="radio" id="stockOffType0" name="stockOffType" value="0" checked />${msg['goods.enum.stockofftype.pay']}</label>
+                                        <label class="radio-inline" ><input type="radio" id="stockOffType1" name="stockOffType" value="1" />${msg['goods.enum.stockofftype.order']}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">${msg["goods.main.column.saleTimeBy"]}</label>
+                                    <div class="col-sm-8 form-inline line-height-sm" align="left">
+                                        <label class="radio-inline line-height-sm" ><input type="radio" name="saleTimeBy" value="0" checked />${msg['goods.main.select.saleTimeBy.option.now']}</label>
+                                        <label class="radio-inline line-height-sm" ><input type="radio" name="saleTimeBy" value="1" />${msg['goods.main.select.saleTimeBy.option.donothing']}</label>
+                                        <label class="radio-inline line-height-sm" ><input type="radio" name="saleTimeBy" value="2" />${msg['goods.main.select.saleTimeBy.option.time']}</label>
+                                        <div class="input-group date form_datetime js-goods-saleat" style="display: none;width:260px;padding-right: 16px;" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="saleAt">
+                                            <input type="text" size="16" readonly class="form-control input-sm" value="${@date.getDateTime()}" >
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                        </div>
+                                        <input type="hidden" id="autoSale" name="tmp_autoSale" value="" />
+                                        <input type="hidden" id="saleAt" name="tmp_saleAt" value="${@date.getDateTime()}" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">${msg["goods.main.column.offsaleTime"]}</label>
+                                    <div class="col-sm-8 form-inline line-height-sm" align="left">
+                                        <label class="radio-inline line-height-sm" ><input type="radio" name="autoOff" value="0" checked />${msg["goods.main.select.option.unlimited"]}</label>
+                                        <label class="radio-inline line-height-sm" ><input type="radio" name="autoOff" value="1" />${msg["goods.main.column.autoOff"]}</label>
+                                        <div class="input-group date form_datetime js-goods-offat" style="display:none;width:260px;padding-right: 16px;" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="offAt">
+                                            <input type="text" size="16" readonly class="form-control input-sm" value="${@date.getDateTime()}" data-parsley-required="true">
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                        </div>
+                                        <input type="hidden" id="offAt" name="tmp_offAt" value="${@date.getDateTime()}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--#/* 商品描述 */#-->
+                    <div class="tab-pane fade" id="goods_info">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">${msg['goods.main.column.saleClientPC']}</label>
+                            <div class="col-sm-8 switcha">
+                                <div class="mr15">
+                                    <input type="checkbox" id="saleClientPC" name="saleClientPC" class="js-switch-blue" checked>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">${msg["goods.main.info.pc.album"]}</label>
+                            <div class="col-sm-8">
+                                <div id="queue_album_pc"></div>
+                                <div>
+                                    <input id="file_upload_album_pc" name="file_upload_album_pc" type="file" multiple="true">
+                                </div>
+                                <div id="div_img_album_pc" class="div-img-album"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pcNote" class="col-sm-2 control-label">${msg["goods.main.info.pc.note"]}</label>
+                            <div class="col-sm-8">
+                                <textarea id="pcNote" name="pcNote" style="width:100%;height:200px;"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="saleClientWAP" class="col-sm-2 control-label">${msg['goods.main.column.saleClientWAP']}</label>
+                            <div class="col-sm-8 switcha">
+                                <div class="mr15">
+                                    <input type="checkbox" id="saleClientWAP" name="saleClientWAP" class="js-switch-blue" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">${msg["goods.main.info.wap.album"]}</label>
+                            <div class="col-sm-8">
+                                <div id="queue_album_wap"></div>
+                                <div>
+                                    <input id="file_upload_album_wap" name="file_upload_album_wap" type="file" multiple="true">
+                                </div>
+                                <div id="div_img_album_wap" class="div-img-album"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="wapNote" class="col-sm-2 control-label">${msg["goods.main.info.wap.note"]}</label>
+                            <div class="col-sm-8">
+                                <textarea id="wapNote" name="wapNote" style="width:100%;height:200px;"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="saleClientTV" class="col-sm-2 control-label">${msg['goods.main.column.saleClientTV']}</label>
+                            <div class="col-sm-8 switcha">
+                                <div class="mr15">
+                                    <input type="checkbox" id="saleClientTV" name="saleClientTV" class="js-switch-blue" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">${msg["goods.main.info.tv.album"]}</label>
+                            <div class="col-sm-8">
+                                <div id="queue_album_tv"></div>
+                                <div>
+                                    <input id="file_upload_album_tv" name="file_upload_album_tv" type="file" multiple="true">
+                                </div>
+                                <div id="div_img_album_tv" class="div-img-album"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tvNote" class="col-sm-2 control-label">${msg["goods.main.info.tv.note"]}</label>
+                            <div class="col-sm-8">
+                                <textarea id="tvNote" name="tvNote" style="width:100%;height:200px;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--#/* 详细参数 */#-->
+                    <div class="tab-pane fade" id="goods_params"></div>
+
+                    <!--#/* 扩展属性 */#-->
+                    <div class="tab-pane fade" id="goods_props"></div>
+
+                </div>
+            </div>
+
+            <div class="col-lg-3"></div>
+
+            <input id="hasSpec" name="hasSpec" type="hidden" value="0">
+            <input id="images" name="images" type="hidden" value="[]">
+            <input id="tags" name="tags" type="hidden" value="[]">
+            <input id="spec_values" name="spec" type="hidden" value="[]">
+            <input id="prop_values" name="prop" type="hidden" value="[]">
+            <input id="param_values" name="param" type="hidden" value="[]">
+            <input id="products" name="products" type="hidden" value="[]">
+        </form>
+
+    </div>
+</div>
+
+<div id="dialogSelectClass" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <div class="modal-title input-group goods-search-class">
+                    <input type="text" class="form-control input-sm js-search-class-input" placeholder="${msg['goods.main.column.classId']}" />
+                    <span class="input-group-btn "><button class="btn btn-default input-sm js-search-class" type="button"><span class="ti-search"></span></button></span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeClass" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary" onclick="selectClass()">${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogSelectFrontClass" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <div class="modal-title input-group goods-search-class">
+                    <input type="text" class="form-control input-sm js-search-class-input" placeholder="${msg['goods.main.column.frontClassId']}" />
+                    <span class="input-group-btn "><button class="btn btn-default input-sm js-search-class" type="button"><span class="ti-search"></span></button></span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeFrontClass" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary" onclick="selectFrontClass()">${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogSelectArea" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg["goods.main.modal.dialogSelectArea.title"]}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12" align="left">
+                        <!--# for (area in areaList!) {#-->
+                        <label class="checkbox-inline"><input type="checkbox" name="saleToArea" value="${area.code}" >${area.name}</label>
+                        <!--# }#-->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary" onclick="selectArea()">${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogSelectCity" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg["goods.main.modal.dialogSelectCity.title"]}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeCity" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary" onclick="selectCity()">${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="specHtml"></div>
+
+<script type="text/javascript">
+
+    var pcUE, wapUE, tvUE;
+    var frontClassTo = false;
+    var classTo = false;
+    $(function(){
+
+        myForm.init();
+        setTimeout(function () {
+            pcUE = new baidu.editor.ui.Editor();
+            pcUE.render('pcNote');
+            wapUE = new baidu.editor.ui.Editor();
+            wapUE.render("wapNote");
+            tvUE = new baidu.editor.ui.Editor();
+            tvUE.render("tvNote");
+        }, 500);
+
+        $("#brandId").select2({
+            language: "${lang!'zh-CN'}"
+        });
+
+        //初始化开关颜色
+        $(".js-switch-blue:checked").siblings(".switchery").css({
+            "box-shadow": "rgb(21, 130, 220) 0px 0px 0px 15px inset",
+            "border-color": "rgb(21, 130, 220)",
+            "background-color": "rgb(21, 130, 220)",
+            "transition": "border 0.4s, box-shadow 0.4s, background-color 1.2s"
+        });
+
+        //销售区域
+        $("[name=partitionBy]:checkbox").change(function () {
+            switch (this.value) {
+                case '0': { //销售区域(不限)
+                    if (this.checked) {
+                        $("[name=partitionBy]:checkbox").not(this).prop("checked", false);
+                        $(".js-goods-select-area,.js-goods-select-province-city").hide();
+                    }
+                };break;
+                case '1': { //销售区域(按片区)
+                    if (this.checked) {
+                        $("[name=partitionBy]:checkbox").not(this).prop("checked", false);
+                        $(".js-goods-select-area").show();
+                        $(".js-goods-select-province-city").hide();
+                    } else {
+                        $("[name=partitionBy][value='0']:checkbox").prop("checked", true);
+                        $(".js-goods-select-area,.js-goods-select-province-city").hide();
+                    }
+                };break;
+                case '2': { //销售区域(按省市)
+                    if (this.checked) {
+                        $("[name=partitionBy]:checkbox").not(this).prop("checked", false);
+                        $(".js-goods-select-province-city").show();
+                        $(".js-goods-select-area").hide();
+                    }else {
+                        $("[name=partitionBy][value='0']:checkbox").prop("checked", true);
+                        $(".js-goods-select-area,.js-goods-select-province-city").hide();
+                    }
+                };break;
+            }
+
+        });
+
+        //销售对象
+        $("[name=saleToMemberType]:checkbox").change(function () {
+            if (this.value == '0') {
+                if (this.checked) {
+                    $("[name=saleToMemberType][value!='0']:checkbox").prop("checked", false);
+                }
+            } else {
+                $("[name=saleToMemberType][value='0']:checkbox").prop("checked", false);
+            }
+        });
+
+        //上架时间
+        $("input[name=saleTimeBy]:radio").click(function () {
+            if (this.checked && this.value == '2') {//定时上架
+                $("#autoSale").val("1");
+                $(".js-goods-saleat").show();
+            } else {
+                $("#autoSale").val("0");
+                $(".js-goods-saleat").hide();
+            }
+        });
+
+        //定时下架
+        $("[name=autoOff]:radio").click(function () {
+            if (this.value == '1' && this.checked) {
+                $(".js-goods-offat").show();
+            } else {
+                $(".js-goods-offat").hide();
+            }
+        });
+
+        $('.form_datetime').datetimepicker({
+            language:  '${lang!}',
+            format:'yyyy-mm-dd hh:ii:ss',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1
+        });
+
+        $("#keywords").tokenfield();
+        $("#keywords-tokenfield").blur(function () {
+            var tokensList = $('#keywords').tokenfield('getTokensList');
+            if (tokensList == "" || (this.value != "" && (tokensList+",").indexOf(this.value+",") < 0)) {
+                $("#keywords").tokenfield('createToken', this.value);
+            }
+            this.value = "";
+        });
+
+        initTreeView();
+        initFrontClassTreeView();
+
+        initAreaTreeView();
+
+        $("#typeId").on("change",function(){
+            getType(this.value);
+        });
+
+        $("#recommend").change(function () {
+            $("input[name=recommend]:hidden").val(this.checked ? "1" : "0");
+        });
+
+        $("input[name=saleToAllAera]").click(function () {
+            if(this.value == 0){
+                $("#selectAreaBtn").show();
+            } else {
+                $("#selectAreaBtn").hide();
+            }
+        });
+
+        $("#selectAreaBtn").click(function(){
+            $("#dialogSelectCity").modal("show");
+        });
+
+        //开启规格
+        $("#specBtn").click(function () {
+            $("#specHtml").load("${base!}/platform/self/goods/publish/type/" + $("#typeId").val() + "/spec/" + $("#sku").val(), function (response, status, xhr) {
+                $("#dialogSpec").modal("show");
+            });
+        });
+
+        //商品主图上传插件初始化
+        $('#file_upload_imgList').uploadifive({
+            'auto': true,
+            'multi': false,
+            'width': '100%',
+            'height': '35',
+            'buttonText': "${msg['goods.main.tip.selectplease']}${msg['goods.main.column.imgList']}",
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024,
+            'queueSizeLimit': 1,
+            'formData': {},
+            'queueID': 'div_imgList_queue',
+            'removeCompleted':true,
+            'removeTimeout':0,
+            'uploadScript': '${base}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    $("#div_imgList_img").html("<img src='" + data.data + "' style='width:150px;height:95px;'><i style=\"cursor: pointer\" class=\"fa fa-close\" onclick=\"$('#imgList').val('');$('#div_imgList_img').empty();\"></i>");
+                    $("#imgList").val(data.data);
+                } else {
+                    clearImgListFile();
+                    Toast.error(data.msg);
+                }
+            },
+            'onDrop': function (file, fileDropCount) {
+                //clearImgListFile();
+            },
+            'onClearQueue': function (queue) {
+                //clearImgListFile();
+            },
+            'onCancel': function () {
+                //clearImgListFile();
+            },
+            'onSelect':function () {
+                if($("#div_imgList_img").children().size() >= 1){
+                    Toast.warning("${msg['goods.main.tip.selectimagessizestart'] + '1' + msg['goods.main.tip.selectimagessizeend']}");
+                }
+            }
+        });
+        //商品相册图上传插件初始化
+        $('#file_upload_album_pc').uploadifive(initAlbumOptions("pc"));
+        $('#file_upload_album_wap').uploadifive(initAlbumOptions("wap"));
+        $('#file_upload_album_tv').uploadifive(initAlbumOptions("tv"));
+
+        //保存草稿
+        $(".js-goods-btn-save-to-drafts").click(function(){
+
+            fillForm();
+
+            //验证：货品
+            if ($("#hasSpec").val() == "0") {//非规格货品
+                var $productDiv = $("#sp");
+                var values = getAreaList($productDiv);
+                if (!$("[name='partitionBy'][value=0]", $productDiv).is(":checked") && values.length == 0) {
+                    Toast.warning("${msg['goods.product.tip.selectSaleArea']}");
+                    return false;
+                }
+            } else {
+                var products = $("#products").val();
+                if (products == "" || products == "[]") {
+                    Toast.warning("${msg['goods.product.tip.addSpecProduct']}");
+                    return false;
+                }
+            }
+            $("[data-parsley-required]").attr("data-parsley-required", "false");
+
+            //防止重复提交
+            if($("#isSubmit").val()=="1"){
+                Toast.error("${msg['goods.main.tip.noduplicatesubmit']}");
+            }else{
+                $("#status").val("1");
+                $("#subType").val("draft");
+                $('#addForm').submit();
+            }
+        });
+        //预览
+        $(".js-goods-btn-preview").click(function () {
+
+        });
+        <!--# if(needCheck) { #-->
+        //提交审核
+        $(".js-goods-btn-submit-audit").click(function () {
+
+            fillForm();
+
+            if (!$("#addForm").parsley().validate()) {
+                return false;
+            }
+
+            if (!checkForm()) {
+                return false;
+            }
+
+            //防止重复提交
+            if($("#isSubmit").val()=="1"){
+                Toast.error("${msg['goods.main.tip.noduplicatesubmit']}");
+            }else{
+                $("#status").val("5");
+                $("#subType").val("publish");
+                $('#addForm').submit();
+            }
+        });
+        <!--# } else {#-->
+        $(".js-goods-btn-submit-audit").hide();
+        //发布
+        $(".js-goods-btn-publish").click(function(){
+
+            fillForm();
+
+            if (!$("#addForm").parsley().validate()) {
+                return false;
+            }
+
+            if (!checkForm()) {
+                return false;
+            }
+
+            //防止重复提交
+            if($("#isSubmit").val()=="1"){
+                Toast.error("${msg['goods.main.tip.noduplicatesubmit']}");
+            }else{
+                $("#status").val(getStatusOnPublish());
+                $("#subType").val("publish");
+                $('#addForm').submit();
+            }
+        });
+        <!--# }#-->
+
+        //验证错误信息显示位置设置
+        $(".parsley-form").parsley({
+            errorsContainer: function (parsleyField) {
+                var inputGroup = parsleyField.$element.parents("div:first.input-group");
+                if (inputGroup.length > 0) {
+                    return inputGroup.parent();
+                }
+                return parsleyField.$element.parents(".form-control:first").children("div:last");
+            }
+        });
+
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+                $("#isSubmit").val("1");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    if ($("#subType").val() == "draft") {
+                        $("#doLink").attr("href", "${base!}/platform/self/goods/list/edit/"+data.data).trigger("click");
+                    } else {
+                        $("#doLink").attr("href", "${base!}/platform/self/goods/publish/add").trigger("click");
+                    }
+                } else {
+                    Toast.error(data.msg);
+                }
+                $("#isSubmit").val("0");
+                form.find("button:submit").button("reset");
+            },
+            error:function () {
+                $("#subType").val("");
+                $("#isSubmit").val("0");
+                $("[data-parsley-required]").attr("data-parsley-required", "true");
+            }
+        });
+    });
+
+    //初始化分类树
+    function initTreeView() {
+        var $dialog = $("#dialogSelectClass");
+        $("#jsTreeClass").jstree({
+            plugins: ["wholerow", "json_data", "search"],
+            core: {
+                data: function (node, callback) {
+                    $.get("${base}/platform/self/goods/list/class/tree", function (ret) {
+                        var classes = [];
+                        if (ret) {
+                            for (var i = 0; i < ret.length; i++) {
+                                classes.push({
+                                    id: ret[i].id,
+                                    text: ret[i].name,
+                                    parent: ret[i].parentId == "" ? "#" : ret[i].parentId,
+                                    state:{
+                                        disabled: ret[i].disabled,
+                                    }
+                                })
+                            }
+                        }
+                        callback(classes);
+                    }, "json");
+                },
+                multiple: false
+            }
+        }).on("dblclick.jstree", function (event) {
+            var tree = $(this).jstree();
+            var node = tree.get_selected(true);
+            if (node.length && tree.is_leaf(node)) {
+                selectClass();
+            }
+        }).on("select_node.jstree", function (e, data) {
+            var tree = $(this).jstree();
+            if (tree.is_parent(data.node)) {
+                tree.deselect_node(data.node);
+                if (data.node.state.opened) {
+                    tree.close_node(data.node);
+                } else {
+                    tree.open_node(data.node);
+                }
+            }
+        });
+
+        $('.js-search-class-input', $dialog).keyup(function () {
+            if(classTo) {
+                clearTimeout(classTo);
+            }
+            classTo = setTimeout(function () {
+                var text = $.trim($('.js-search-class-input', $dialog).val());
+                if (text != "") {
+                    $('#jsTreeClass').jstree(true).search(text);
+                }
+            }, 250);
+        });
+        $(".js-search-class", $dialog).click(function () {
+            var text = $.trim($(".js-search-class-input", $dialog).val());
+            if (text != "") {
+                $('#jsTreeClass').jstree(true).search(text);
+            }
+        });
+        $("#dialogSelectClass").on("hidden.bs.modal", function () {
+            $(".js-search-class-input", this).val("");
+            var tree = $('#jsTreeClass').jstree(true);
+            if (tree) {
+                tree.clear_search();
+            }
+        });
+    }
+
+    //初始化前台分类树
+    function initFrontClassTreeView() {
+        var $dialog = $("#dialogSelectFrontClass");
+        $("#jsTreeFrontClass").jstree({
+            plugins: ["wholerow", "json_data", "checkbox", "search"],
+            core: {
+                data: function (node, callback) {
+                    $.get("${base}/platform/self/goods/publish/frontclass/tree", function (ret) {
+                        var classes = [];
+                        if (ret) {
+                            for (var i = 0; i < ret.length; i++) {
+                                classes.push({
+                                    id: ret[i].id,
+                                    text: ret[i].name,
+                                    parent: ret[i].parentId == "" ? "#" : ret[i].parentId,
+                                    state:{
+                                        disabled: ret[i].disabled,
+                                    }
+                                })
+                            }
+                        }
+                        callback(classes);
+                    }, "json");
+                },
+                multiple: true
+            }
+        }).on("dblclick.jstree", function (event) {
+            var tree = $(this).jstree();
+            var node = tree.get_selected(true);
+            if (node.length && tree.is_leaf(node)) {
+               selectFrontClass();
+            }
+        }).on("select_node.jstree", function (e, data) {
+            var tree = $(this).jstree();
+            if (tree.is_parent(data.node)) {
+                tree.open_node(data.node);
+            }
+        });
+
+        $('.js-search-class-input', $dialog).keyup(function () {
+            if(frontClassTo) {
+                clearTimeout(frontClassTo);
+            }
+            frontClassTo = setTimeout(function () {
+                var text = $.trim($('.js-search-class-input', $dialog).val());
+                if (text != "") {
+                    $('#jsTreeFrontClass').jstree(true).search(text);
+                }
+            }, 250);
+        });
+        $(".js-search-class", $dialog).click(function () {
+            var text = $.trim($(".js-search-class-input", $dialog).val());
+            if (text != "") {
+                $('#jsTreeFrontClass').jstree(true).search(text);
+            }
+        });
+        $("#dialogSelectFrontClass").on("hidden.bs.modal", function () {
+            $(".js-search-class-input", this).val("");
+            var tree = $('#jsTreeFrontClass').jstree(true);
+            if (tree) {
+                tree.clear_search();
+            }
+        });
+    }
+
+    //初始化销售区域树
+    function initAreaTreeView() {
+        $("#jsTreeCity").jstree({
+            plugins: ["wholerow", "checkbox", "changed", "json_data"],
+            core: {
+                data: function (node, callback){
+                    $.get("${base!}/platform/self/goods/publish/area/tree", function (ret) {
+                        if (ret) {
+                            var areas = $(ret).map(function () {
+                                this["state"] = {disabled: this.parent === "#", opened: this.parent === "#"};
+                                return this;
+                            }).get();
+                            callback(areas);
+                        }
+                    }, "json");
+                },
+                multiple: true
+            },
+            checkbox: {
+                three_state: true,
+                cascade: 'down'
+            }
+        }).on("select_node.jstree", function (e, data) {
+            var tree = $(this).jstree();
+            if (!tree.is_leaf(data.node)) {
+                tree.open_node(data.node);
+            }
+        });
+    }
+
+    //商品分类选择事件处理
+    function selectClass() {
+        var tree = $.jstree.reference("#jsTreeClass");
+        var nodes = tree.get_bottom_selected(true);
+        if (nodes.length == 0) {
+            Toast.warning("${msg['goods.main.tip.selectplease']+msg['goods.main.column.classId']}");
+            return false;
+        }
+        var id = nodes[0].id;
+        $("#classId").val(tree.get_path(nodes[0], "/"));
+        $("#classId").parsley().reset();
+        $("#addForm input[name='classId']").val(id);
+        $("#dialogSelectClass").modal("hide");
+        $("#brandId").children().remove();
+        $.get("${base!}/platform/self/goods/publish/class/" + id, function (ret) {
+            if(ret.code==0){
+                var type =  ret.data.goodsType;
+                $("input[name=typeId]:hidden").val("");
+                if(type){
+                    $("input[name=typeId]:hidden").val($("#typeId option[value='"+type.id+"']").prop("selected", true).val());
+                    if(type.hasBrand){
+                        getBrand(type.id);
+                    }
+                    if(type.hasProp){
+                        $("#goods_props_tab").show();
+                        getProps(type.id);
+                    }else{
+                        $("#goods_props_tab").hide();
+                    }
+                    if(type.hasParam){
+                        $("#goods_params_tab").show();
+                        getParam(type.id);
+                    }else{
+                        $("#goods_params_tab").hide();
+                    }
+                    if(type.hasSpec){
+                        $("#div_spec").show();
+                        $("#hasSpec").val("1");
+                        $(".js-goods-product-div").hide();
+                    }else{
+                        $("#div_spec").hide();
+                        $("#hasSpec").val("0");
+                        $(".js-goods-product-div").show();
+                    }
+                }else {
+                    $("#typeId").val("");
+                }
+            }else{
+                Toast.error(data.msg);
+            }
+        }, "json");
+    }
+
+    //前台商品分类选择事件处理
+    function selectFrontClass() {
+        var tree = $.jstree.reference("#jsTreeFrontClass");
+        var nodes = tree.get_bottom_selected(true);
+        var ids = $(nodes).map(function () {
+            return {id: this.id};
+        }).get();
+        var text = $(nodes).map(function () {
+            return tree.get_path(this, "/");
+        }).get().join(",");
+        $("#frontClassId").val(text);
+        $("#frontClassId").parsley().reset();
+        $("#front_classes").val(JSON.stringify(ids));
+        $("#dialogSelectFrontClass").modal("hide");
+    }
+
+    //销售区域选择片区
+    function selectArea() {
+        var $diolog = $("#dialogSelectArea");
+        var $cks = $diolog.find(":checked");
+        var areas = $cks.map(function () {
+            return {
+                partitionBy: 1,
+                area: this.value,
+            };
+        }).get();
+        if (areas.length == 0) {
+            Toast.warning("${msg['goods.product.tip.selectArea']}");
+            return false;
+        }
+        var areasText = $cks.map(function () {
+            return '<span class="label label-default goods-area-label" >'+$(this).parent().text()+"</span>";
+        }).get().join("");
+        $("input[name='areaCodes']:hidden").val(JSON.stringify(areas));
+        $(".js-goods-area").html(areasText);
+        $diolog.modal("hide");
+    }
+
+    //销售区域选择省市
+    function selectCity() {
+        var tree = $.jstree.reference("#jsTreeCity");
+        var nodes = tree.get_bottom_checked(true);
+        var areas = [];
+        var areasText = [];
+        $(nodes).each(function () {
+            var parentId = tree.get_parent(this);
+            var arr = [];
+            if (parentId == "86") {
+                arr.push(tree.get_text(this));
+            } else {
+                var province = tree.get_text(tree.get_node(parentId));
+                arr.push(province);
+                arr.push(tree.get_text(this));
+            }
+            var obj = {
+                partitionBy: 2,
+                province: parentId == "86" ? this.id : parentId,
+                city: parentId == "86" ?  null : this.id
+            };
+            areasText.push('<span class="label label-default goods-area-label" >'+arr.join("/")+'</span>');
+            areas.push(obj);
+        });
+        if (areas.length == 0) {
+            Toast.warning("${msg['goods.product.tip.selectCity']}");
+            return false;
+        }
+        $("input[name='areaProvinceCitys']:hidden").val(JSON.stringify(areas));
+        $(".js-goods-province-city").html(areasText.join(""));
+        $("#dialogSelectCity").modal("hide");
+    }
+
+    //根据商品类型ID获取并设置商品类型
+    function getType(id) {
+        if(id == ''){
+            $("#goods_props_tab").hide();
+            $("#goods_params_tab").hide();
+            $("#div_spec").hide();
+            $("#goods_props").empty();
+            $("#sp_new").hide().empty();
+            $("#sp").show();
+            $("#hasSpec").val("0");
+            $("#products").val('[]');
+            $("#spec_values").val('[]');
+            $("#param_values").val('[]');
+            $("#prop_values").val('[]');
+            $("#brandId").find("option").remove();
+        }else {
+            getBrand(id);
+            $.get("${base!}/platform/self/goods/type/" + id, function (ret) {
+                if(ret.code == 0){
+                    $("#sp_new").hide().empty();
+                    $("#sp").show();
+                    $("#hasSpec").val("0");
+                    $("#products").val('[]');
+                    $("#spec_values").val('[]');
+                    $("#param_values").val('[]');
+                    $("#prop_values").val('[]');
+                    if(ret.data.hasProp){
+                        $("#goods_props_tab").show();
+                        getProps(ret.data.id);
+                    }else{
+                        $("#goods_props_tab").hide();
+                    }
+                    if(ret.data.hasParam){
+                        $("#goods_params_tab").show();
+                        getParam(ret.data.id);
+                    }else{
+                        $("#goods_params_tab").hide();
+                    }
+                    if(ret.data.hasSpec){
+                        $("#hasSpec").val("1");
+                        $("#div_spec").show();
+                    }else{
+                        $("#hasSpec").val("0");
+                        $("#div_spec").hide();
+                    }
+                }else{
+                    Toast.error(ret.msg);
+                }
+            }, "json");
+        }
+    }
+
+    //根据商品类型ID获取并设置扩展属性
+    function getProps(id){
+        $.get("${base!}/platform/self/goods/publish/type/" + id + "/props", function (ret) {
+            if(ret.code == 0){
+                var str = '';
+                $.each(ret.data,function(i, prop){
+                    if(prop.type == 'select'){
+                        str += '<div class="form-group">';
+                        str += '<label class="col-sm-2 control-label" data-id="' + prop.id + '">' + prop.name + '</label>';
+                        str += '<div class="col-sm-8">';
+                        str += '<select class="form-control" >';
+                        str += '<option value=""></option>';
+                        $.each(prop.propsValues, function(j,value){
+                            str += '<option value="'+ value.id + '">' + value.name + '</option>';
+                        });
+                        str += '</select>';
+                        str += '</div>';
+                        str += '</div>';
+                    }else {
+                        str += '<div class="form-group">';
+                        str += '<label class="col-sm-2 control-label" data-id="' + prop.id + '">' + prop.name + '</label>';
+                        str += '<div class="col-sm-8">';
+                        str += '<input class="form-control" />';
+                        str += '</div>';
+                        str += '</div>';
+                    }
+                });
+                $("#goods_props").html(str);
+            }else {
+                $("#goods_props").empty();
+            }
+        }, "json");
+    }
+
+    //根据商品类型ID获取并设置详细参数
+    function getParam(id){
+        $.get("${base!}/platform/self/goods/publish/type/" + id + "/params", function (ret) {
+            if(ret.code == 0){
+                var str = '';
+                $.each(ret.data,function(i, param){
+                    str += '<div class="form-group">';
+                    str += '<label class="col-sm-3 control-label" data-id="' + param.id + '">' + param.name + '</label>';
+                    $.each(param.params, function(j, k) {
+                        str += '<div class="col-sm-12" style="margin-left:6%; padding-bottom:5px;"><div class="col-sm-10 input-group"><span class="input-group-btn"><button class="btn" style="width:120px;" type="button" data-id="' + k.id + '">' + k.name + '</button>';
+                        str += '</span><input type="text" class="form-control" placeholder="'+ k.name+'"></div></div>';
+                    });
+                    str += '</div>';
+
+                });
+                $("#goods_params").html(str);
+            }else {
+                $("#goods_params").empty();
+            }
+        }, "json");
+    }
+
+    //根据商品类型ID获取并设置商品品牌
+    function getBrand(id){
+        $.get("${base!}/platform/self/goods/publish/type/" + id + "/brands", function (ret) {
+            if(ret.code == 0){
+                var options = '';
+                options += '<option value=""></option>';
+                $.each(ret.data,function(i, brand){
+                    options += '<option value="' + brand.brandId + '">' + brand.brand.name + '</option>';
+                });
+                $("#brandId").html(options);
+            }
+        }, "json");
+    }
+
+    function setAlbumImg(id){
+        $("#"+id).toggleClass("divImg divImgD").siblings().removeClass("divImgD").addClass("divImg");
+    }
+
+    function delAlbumImg(id){
+        var $album_item = $("#"+id);
+        if ($album_item.hasClass("divImgD")) {
+            $album_item.siblings(":first").toggleClass("divImg divImgD");
+        }
+        $album_item.remove();
+    }
+
+    /**
+     * 不同类型的相册图存入数组
+     * @param containerId 相册图容器ID
+     * @param albumType 相册类型(all, pc, wap, tv)
+     * @param images 接收数组
+     */
+    function pushAlbumImages(albumType, images){
+        $("div", "#div_img_album_" + albumType).each(function(index){
+            var img = {};
+            var id = $("img", this).attr("data-id");
+            if (id) {
+                img.id = id;
+            }
+
+            var goodsId = $("img", this).attr("data-goods-id");
+            if (goodsId) {
+                img.goodsId = goodsId;
+            }
+
+            if (albumType == "all") {
+                img.saleClient = 0;
+            } else if (albumType == "pc") {
+                img.saleClient = 1;
+            } else if (albumType == "wap") {
+                img.saleClient = 2;
+            } else if (albumType == "tv") {
+                img.saleClient = 3;
+            }
+
+            img.imgAlbum = $("img", this).attr("src");
+            img.defaultValue = $(this).hasClass("divImgD");
+            img.location = index;
+
+            images.push(img);
+        });
+    }
+
+    /**
+     * 初始化相册
+     * @param typeName (all, pc, wap, tv)
+     * @returns
+     */
+    function initAlbumOptions(typeName) {
+        var queueId = "queue_album_" + typeName;
+        var fileuploadId = "file_upload_album_" + typeName;
+        var imgDivIdPrefix = "div_album_item_" + typeName + "_";
+        var albumContainer = document.getElementById("div_img_album_" + typeName);
+        var sort = Sortable.create(albumContainer);
+        var imgIndex = $(albumContainer).children().size();
+        return {
+            'auto': true,
+            'multi': true,
+            'width': '100%',
+            'height': '35',
+            'buttonText': "${msg['goods.main.tip.selectplease']}${msg['goods.main.btn.album']}",
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024,
+            'queueSizeLimit': 5,
+            'removeCompleted':true,
+            'removeTimeout':0,
+            'formData': {},
+            'queueID': queueId,
+            'uploadScript': '${base!}/open/file/upload/image?type='+typeName,
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    var c = "divImg";
+                    imgIndex++;
+                    if(imgIndex == 1){
+                        c = "divImgD";
+                    }
+                    var imgDivId = imgDivIdPrefix + imgIndex;
+                    $(albumContainer).append("<div id='"+imgDivId+"' class='"+c+"'>" +
+                        "<img  onclick=\"setAlbumImg('"+imgDivId+"')\" src='" + data.data+ "' style='width:100px;height: 80px;margin-bottom: 1px;'><br>" +
+                        "<i style='float: right;padding-top: 4px;' class='fa fa-close' onclick=\"delAlbumImg('"+imgDivId+"')\"></i></div>");
+                    sort.destroy();
+                    sort = Sortable.create(albumContainer);
+                    $("#"+queueId).empty();
+                } else {
+                    Toast.error(data.msg);
+                }
+            },
+            'onSelect' : function(queue) {
+                if($(albumContainer).children().length >= 5){
+                    Toast.warning("${msg['goods.main.tip.selectimagessizestart'] + '5' + msg['goods.main.tip.selectimagessizeend']}");
+                    $("#" + fileuploadId).uploadifive('cancel', $('.uploadifive-queue-item').first().data('file'));
+                }
+            }
+        };
+    }
+
+    function clearImgListFile() {
+        $("#div_imgList_img").empty();
+        $("#div_imgList_queue").empty();
+        $("#imgList").val("");
+    }
+
+    //获取销售区域列表
+    function getAreaList(selector) {
+        var partitionBy = $("[name='partitionBy']:checked", selector).val();
+        if (partitionBy == '1') {//按片区
+            return JSON.parse($("input[name='areaCodes']:hidden", selector).val()||"[]");
+        } else if (partitionBy == '2') {//按省市
+            return JSON.parse($("input[name='areaProvinceCitys']:hidden", selector).val()||"[]");
+        }
+        return [];
+    }
+
+    function fillForm() {
+
+        //塞值：标签
+        var tags = $("[name='tag']:checked").map(function () {
+            return {id: this.value};
+        }).get();
+        $("#tags").val(JSON.stringify(tags));
+
+        // 塞值：货品
+        if ($("#hasSpec").val() == "0") {//非规格货品
+            var products = [];
+            var spec = "";
+            var name = $("#name").val();
+            var $productDiv = $("#sp");
+            var weight = $("input[name='weight']", $productDiv).val();
+            var length = $("input[name='length']", $productDiv).val();
+            var width = $("input[name='width']", $productDiv).val();
+            var height = $("input[name='height']", $productDiv).val();
+            var sku = $("input[name='sku']", $productDiv).val()||"";
+            var stock = $("input[name='stock']", $productDiv).val();
+            var buyMin = $("input[name='buyMin']", $productDiv).val()||0;
+            var buyMax = $("input[name='buyMax']", $productDiv).val()||100;
+            var salePrice = $("input[name='salePrice']", $productDiv).val();
+            var costPrice = $("input[name='costPrice']", $productDiv).val();
+            var marketPrice = $("input[name='marketPrice']", $productDiv).val();
+            var saleToAllAera = $("input[name='saleToAllAera']", $productDiv).is(":checked");
+            var partitionBy = $("input[name='partitionBy']:checked", $productDiv).val();
+            var areaList = getAreaList($productDiv);
+            var saleToMemberType = $("input[name='saleToMemberType']:checked", $productDiv).val()||0;
+            var memberTypeList = $("[name='saleToMemberType'][value!='0']:checked", $productDiv).map(function () {return {id: this.value};}).get();
+            var deliveryTime = $("input[name='deliveryTime']:checked", $productDiv).val();
+            var serializable = $("input[name='serializable']", $productDiv).is(":checked");
+            var orderVerify = $("input[name='orderVerify']", $productDiv).is(":checked");
+            var enabled = $("input[name='enabled']", $productDiv).is(":checked");
+            var defaultValue = true;
+            products.push({
+                'spec': spec,
+                'name': name,
+                'weight': weight,
+                'length': length,
+                'width': width,
+                'height': height,
+                'sku': sku,
+                'stock': stock,
+                'buyMin': buyMin,
+                'buyMax': buyMax,
+                'salePrice': parseFloat(salePrice) * 100,
+                'costPrice': parseFloat(costPrice) * 100,
+                'marketPrice': parseFloat(marketPrice) * 100,
+                'saleToAllAera': saleToAllAera,
+                'partitionBy': partitionBy,
+                'areaList': areaList,
+                'saleToMemberType': saleToMemberType,
+                'memberTypeList': memberTypeList,
+                'deliveryTime': deliveryTime,
+                'serializable': serializable,
+                'orderVerify': orderVerify,
+                'enabled': enabled,
+                'defaultValue': defaultValue
+            });
+            $("#products").val(JSON.stringify(products));
+        } else {//规格货品
+            //去除被隐藏输入校验
+            $("#sp [data-parsley-type]:hidden,[data-parsley-min]:hidden,[data-parsley-price]:hidden,[data-parsley-required]:hidden").removeAttr("data-parsley-type data-parsley-min data-parsley-price data-parsley-required");
+        }
+
+        //塞值：扩展属性
+        var props = [];
+        $("#goods_props").find(".form-group").each(function(){
+            var obj = { };
+            obj.id = $("label", this).attr("data-id");
+            obj.name = $("label", this).text();
+            obj.value = $("select", this).val()||$("input", this).val()||"";
+            obj.text = $("select>option:selected", this).text()||$("input", this).val()||"";
+            props.push(obj);
+        });
+        $("#prop_values").val(JSON.stringify(props));
+
+        //塞值：详细参数
+        var params = [];
+        $("#goods_params").find(".form-group").each(function(){
+            var group = [];
+            var obj = { };
+            obj.id = $("label", this).attr("data-id");
+            obj.name = $("label", this).text();
+            $(".col-sm-12", this).each(function(){
+                var o ={ };
+                o.id = $(".btn", this).attr("data-id");
+                o.name= $(".btn", this).text();
+                o.value= $("input", this).val();
+                group.push(o);
+            });
+            obj.value = group;
+            params.push(obj);
+        });
+        $("#param_values").val(JSON.stringify(params));
+
+        //塞值：商品相册图
+        var images = [];
+        pushAlbumImages("pc", images);
+        pushAlbumImages("wap", images);
+        pushAlbumImages("tv", images);
+        $("#images").val(JSON.stringify(images));
+    }
+
+    function checkForm() {
+        //验证：货品
+        if ($("#hasSpec").val() == "0") {//非规格货品
+            var $productDiv = $("#sp");
+            var values = getAreaList($productDiv);
+            if (!$("[name='partitionBy'][value=0]", $productDiv).is(":checked") && values.length == 0) {
+                Toast.warning("${msg['goods.product.tip.selectSaleArea']}");
+                return false;
+            }
+        } else {
+            var products = $("#products").val();
+            if (products == "" || products == "[]") {
+                Toast.warning("${msg['goods.product.tip.addSpecProduct']}");
+                return false;
+            }
+        }
+
+        //验证：相应终端相册图必填
+        if ($("#saleClientPC").is(":checked") && $.trim($("#div_img_album_pc").html()) === "") {
+            Toast.error("${msg['goods.main.tip.pcalbumrequired']}");
+            return false;
+        }
+        if ($("#saleClientWAP").is(":checked") && $.trim($("#div_img_album_wap").html()) === "") {
+            Toast.error("${msg['goods.main.tip.wapalbumrequired']}");
+            return false;
+        }
+        if ($("#saleClientTV").is(":checked") && $.trim($("#div_img_album_tv").html()) === "") {
+            Toast.error("${msg['goods.main.tip.tvalbumrequired']}");
+            return false;
+        }
+        return true;
+    }
+    
+    function getStatusOnPublish() {
+        var saleTimeBy = $("[name=saleTimeBy]:checked").val();
+        var val = 2;
+        switch (saleTimeBy) {
+            case '0': val = 3;break;
+            case '1': val = 2;break;
+            case '2': val = 2;
+        }
+        return val;
+    }
+
+</script>
+
+
+<!--#}#-->

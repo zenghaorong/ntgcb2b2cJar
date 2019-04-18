@@ -1,0 +1,46 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<!doctype html>
+<html>
+<style>
+</style>
+	<body>
+		<div class="box-tab">
+			<input hidden="hidden" type="text" id="templateUuid" value="${id}">
+			<ul class="nav nav-tabs">
+				<li class="active"><a href="#" data-toggle="tab">页面管理</a></li>
+				<li><a href="#" data-toggle="tab">皮肤设置</a></li>
+				<li><a href="#" data-toggle="tab" data-pjax>源文件管理</a></li>
+			</ul>
+			<div id="manage">
+				
+			</div>
+		</div>
+	
+	<script>
+		var templateUuid = $("#templateUuid").val();
+		
+		$(document).ready(function() {
+            $("#manage").load("${base!}/platform/dec/templates/pages/${id}");
+        })
+		$(".nav-tabs li").click(function(){
+			$(this).addClass("active").siblings().removeClass("active");
+			
+			if ($(this).index() == 0) {
+                $("#manage").load("${base!}/platform/dec/templates/pages/${id}");
+			} else if($(this).index() == 1) {
+				$("#manage").load("${base!}/platform/dec/templates/style/toChooseList/${id}");
+			} else {
+				$("#manage").load("${base!}/platform/dec/templates/files/templateFileResource/${id}");
+			}
+		})
+		$(function () {
+            $("#dialogDetail").on("hidden.bs.modal", function () {
+                $(this).removeData("bs.modal");
+            });
+        })
+	</script>
+	</body>
+</html>
+<!--#}#-->

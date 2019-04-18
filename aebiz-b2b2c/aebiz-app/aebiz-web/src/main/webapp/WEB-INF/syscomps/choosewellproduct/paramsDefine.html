@@ -1,0 +1,698 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+	<style type="text/css">
+
+		.mb_0{margin-bottom:0;}
+		.tab-content .p_nopadding,.p_nopadding{padding-left:0;padding-right:0;}
+		.p_left{float:left;padding:0 10px;line-height:34px;}
+		.p_right{float:right;}
+		.p_background{background:#f1f1f1;overflow:hidden;padding:15px 0;}
+		.p_btn{display:inline-block;background:#2D2D2D;line-height:34px;padding:0 15px;color:#fff;}
+		.p_bj_bt{padding-top:20px;}
+		.p_bj_bt b{color:#e51400;font-weight:lighter;}
+		.p_bj_bt li.active b{color:#fff;}
+
+		.module-con .p_bj_list{background:#fff;overflow:hidden;margin-bottom:-15px;padding:0;clear:both;}
+		.p_bj_list dl{width:100%;overflow:hidden;padding:10px 2%;border-bottom:1px solid #ddd}
+		.p_bj_list dl:hover{background:#fffecf;}
+		.p_bj_list dt{width:50px;height:50px;float:left;margin-right:15px;}
+		.p_bj_list dt img{width:50px;height:50px;}
+		.p_bj_list dd{float:left;width:70%;line-height:22px;padding-top:5px;}
+		.p_bj_list dd p{height:22px;overflow:hidden;}
+		.p_bj_list dd.operation{float:right;width:20%;}
+		.p_bj_list dd.operation a,.p_bj_list dd.operation span{margin-right:10px;}
+
+		.r-control-label{
+			color: black;
+		}
+
+	</style>
+
+
+
+
+</head>
+<body>
+
+
+
+
+<div class="tab-content">
+	<div class="tab-pane active" id="zhaopaineirong">
+		<form class="form-horizontal"
+			  action="/hotProductComp/toParamsDesign" id="myform"
+			  method="post">
+			<div class="tab-content p_nopadding">
+				<div class="tab-pane" id="shangchuannew">
+					<div class="form-group">
+						<label class="col-xs-2 col-sm-2 control-label">宝贝分类：</label>
+						<div class="col-xs-10 col-sm-3 p_nopadding"></div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-2 col-sm-2 control-label">关键字：</label>
+						<div class="col-xs-10 col-sm-3 p_nopadding">
+							<input type="text" id="searchKey2" name="searchKey2"
+								   value="${searchKey2!}" class="form-control">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-2 col-sm-2 control-label">价格范围：</label>
+						<div class="col-xs-10 col-sm-1 p_nopadding">
+							<input type="text" id="startPrice2" name="startPrice2"
+								   value="${startPrice2 !}" class="form-control">
+						</div>
+						<div class="p_left">-</div>
+						<div class="col-xs-10 col-sm-1 p_nopadding">
+							<input type="text" id="endPrice2" name="endPrice2"
+								   value="${endPrice2 !}" class="form-control">
+						</div>
+						<div class="p_left">元</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-2 col-sm-2 control-label">宝贝数量：</label>
+						<div class="col-xs-10 col-sm-3 p_nopadding">
+							<select id="param_productnumber" name="param_productnumber" class="form-control">
+								<option>4</option>
+								<option>5</option>
+								<option>6</option>
+								<option>8</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="tab-content" id="placeselect">
+
+
+				<div class="col-sm-12">
+
+					<div class="form-group">
+
+						<label class="col-sm-3 control-label">是否异步加载</label>
+						<div class="col-sm-3">
+							<label class="radio-inline">
+								<input type="radio" name="needAsyncInit" value="true"
+									   placeholder="" checked="checked">是
+							</label>
+
+							<label class="radio-inline">
+
+								<input
+										type="radio" name="needAsyncInit" value="false" placeholder="">否
+							</label>
+						</div>
+
+					</div>
+
+
+					<div class="form-group">
+						<label for="loginname" class="col-sm-3 control-label">标签名字</label>
+						<div class="col-sm-3">
+							<input type="text" id="lableName" class="form-control"
+								   name="lableName" placeholder="">
+
+						</div>
+
+
+					</div>
+
+
+					<div class="form-group">
+						<label for="loginname" class="col-sm-3 control-label">登录主题</label>
+						<div class="col-sm-3">
+							<input type="text" id="topic" class="form-control"
+								   name="topic" placeholder="login">
+
+						</div>
+
+
+					</div>
+
+
+					<div class="form-group">
+						<label for="loginname" class="col-sm-3 control-label">商品详情链接</label>
+						<div class="col-sm-3">
+							<input type="text" id="productUrl" class="form-control"
+								   name="productUrl" placeholder="链接地址">
+
+						</div>
+					</div>
+
+
+
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label">推荐数量：</label>
+						<div class="col-sm-3">
+							<select id="productnumber" name="productnumber"
+									value="${productnumber !}" class="form-control">
+								<option>4</option>
+								<option>5</option>
+								<option>6</option>
+								<option>7</option>
+								<option>8</option>
+							</select>
+						</div>
+					</div>
+
+
+
+
+
+				</div>
+
+
+				<input type="hidden" id="param_inProductUuids"
+					   name="param_inProductUuids" value="${param_inProductUuids !}" />
+
+
+
+				<input type="hidden" id="nowPage" name="nowPage"
+					   value="${nowPage !}" /> <input type="hidden" id="pageShow"
+													  name="pageShow" value="${pageShow !}" />
+
+
+
+
+
+
+
+				<div class="col-sm-12">
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#p_list" data-toggle="tab">${inproductuuids!}全部</a></li>
+						<li><a href="#p_list2" data-toggle="tab">已推荐（<b
+								id="recommendNum">0</b>）
+						</a></li>
+					</ul>
+				</div>
+
+
+
+
+				<div class="tab-pane active" id="p_list">
+
+
+					<div class="tab-content p_bj_list ">
+
+
+						<form class="form-horizontal">
+
+
+
+							<div id="showSearchProduct">
+
+
+
+
+
+								<br>
+
+								<div class="form-group">
+									<label class="col-sm-3 control-label r-control-label">商品分类</label>
+
+									<div class="col-sm-3 p_nopadding mr_10">
+
+										<select name="categoryUuid"
+												class="form-control p_nopadding mr_10">
+											<option value="">所有分类</option>
+											<!--# for(cid in prodList){
+    #-->
+											<option value="${cid.categoryUuid}">${cid.categoryName}</option>
+											<!--#
+                                            }#-->
+										</select>
+
+
+									</div>
+
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label r-control-label">价格范围</label>
+									<div class="col-sm-3 p_nopadding">
+										<input type="text" name="startPrice" value="${startPrice !}"
+											   class="form-control">
+									</div>
+
+									<div class="p_left">-</div>
+									<div class="col-sm-3 p_nopadding mr_10">
+										<input type="text" name="endPrice" value="${ endPrice!}"
+											   class="form-control">
+									</div>
+
+								</div>
+								<div class="form-group">
+
+									<label class="col-sm-3 control-label r-control-label">关键字</label>
+									<div class="col-sm-3 p_nopadding mr_10">
+										<input type="text" size="40" name="searchKey"
+											   class="form-control" placeholder="关键字" value="${searchKey!}">
+									</div>
+
+									<button type="button" class="btn btn-primary"
+											onclick="javascript:showSearchProduct('1','5')">查询</button>
+								</div>
+
+								<br>
+
+								<div id="productModelHtml" style="display: none;">
+
+
+									<dl id="2edc9c5c40d44ed3b893a0e87dc71995222">
+										<dt>
+											<a href="#"><img height="20" width="20"
+															 src="http://www.tclo2o.cn/dev1/0/000/001/0000001643.fid"></a>
+										</dt>
+										<dd>
+											<p>
+												<a href="#">TCL XQB50-1678NS 5公斤 全自动波轮洗衣机 模式可调（浅灰色）</a>
+											</p>
+											<span>￥749.0</span>
+										</dd>
+										<dd id="sp_recommend_2edc9c5c40d44ed3b893a0e87dc719952222"
+											class="operation">
+
+											<a
+													href="javascript:recommend('2edc9c5c40d44ed3b893a0e87dc71995222')">推荐</a>
+
+										</dd>
+									</dl>
+
+
+								</div>
+
+
+
+
+
+
+
+
+								<div id="productPage">
+
+
+
+								</div>
+
+
+
+
+
+							</div>
+
+						</form>
+
+					</div>
+
+					<div id="pagelayui"></div>
+
+
+				</div>
+
+
+				<div class="tab-pane p_bj_list" id="p_list2"></div>
+
+
+			</div>
+
+		</form>
+
+	</div>
+
+
+</div>
+
+</div>
+
+</body>
+
+
+<script type="text/javascript">
+    var arrayrecommend = new Array();
+
+    function recommend(productUuid) {
+
+        var dlhtml = $("#" + productUuid).clone();
+
+        dlhtml.attr("id", productUuid + productUuid)
+
+        dlhtml.find("a").last().text("取消推荐");
+        dlhtml.find("a").last().attr("href", "javascript:cancelRecommend('" + productUuid + "')")
+
+        $("#p_list2").append(dlhtml);
+
+        var recommendUuids = $('#param_inProductUuids').val();
+
+        var sp_recommend = '<span>已推荐</span><a href="javascript:cancelRecommend(\'' + productUuid + '\')">取消推荐</a><input type="hidden" name="recommendUuid" value="' + productUuid + '" />';
+        $('#sp_recommend_' + productUuid).html(sp_recommend);
+
+        arrayrecommend.push(productUuid);
+
+        recommendUuids += "," + productUuid;
+
+        $('#param_inProductUuids').val(recommendUuids);
+
+        addNum();
+    }
+
+    function cancelRecommend(productUuid) {
+        var sp_recommend = '<a href="javascript:recommend(\'' + productUuid + '\')">推荐</a>';
+        $('#sp_recommend_' + productUuid).html(sp_recommend);
+        $('input[name="recommendUuid"][value="' + productUuid + '"]').remove();
+        var recommendUuids = $("#param_inProductUuids").val();
+
+        var showUuids = "";
+        var uuidsArr = recommendUuids.split(",");
+        for (var i = 0; i < uuidsArr.length; i++) {
+            if (uuidsArr[i] != productUuid) {
+                showUuids += uuidsArr[i] + ",";
+            }
+        }
+
+        var arrayrecommend = recommendUuids.split(",")
+
+        for (var i = 0; i < arrayrecommend.length; i++) {
+            if (arrayrecommend[i] == productUuid) {
+                arrayrecommend.splice(i, 1);
+            }
+        }
+
+        showUuids = showUuids.substring(0, showUuids.length - 1);
+        $('input[name="param_inProductUuids"]').val(showUuids);
+        $('#param_inproductuuids').val(arrayrecommend.toString());
+
+        $("#" + productUuid + productUuid).remove();
+
+        reduceNum();
+    }
+
+    function addNum() {
+        var num = Number($('#recommendNum').text());
+        num = num + 1;
+        $('#recommendNum').text(num);
+    }
+
+    function loadData(totalNum, pageShow) {
+        layui.use(['laypage', 'layer'],
+            function() {
+                var laypage = layui.laypage,
+                    layer = layui.layer;
+                var pages = Math.ceil(totalNum / pageShow);
+                if (pages < 1) {
+                    pages = 1;
+                }
+
+                var uri = window.location.href;
+                var reg = new RegExp("(^|&)nowPage=([^&]*)");
+                var r = uri.match(reg);
+                if (!$.isEmptyObject(r)) {
+                    var curr = r[2];
+                }
+
+                laypage({
+                    cont: $("#pagelayui"),
+                    pages: pages //总页数
+                    ,
+                    groups: 5 //连续显示分页数
+                    ,
+                    curr: curr,
+                    jump: function(obj, first) {
+
+                        if (!first) {
+
+                            //点击下一页的时候不需要从新计算totalNum
+                            showSearchProduct2(obj.curr, "5");
+
+                        }
+
+                    }
+                });
+            })
+    }
+
+    function showSearchProduct2(nowPage, pageShow) {
+
+        $("#pageShow").val(pageShow);
+        $("#nowPage").val(nowPage);
+
+        var categoryUuid = $("select[name='categoryUuid']").val();
+        var startPrice = $("input[name='startPrice']").val();
+        var endPrice = $("input[name='endPrice']").val();
+        var searchKey = $("input[name='searchKey']").val();
+        var param_inProductUuids = $("input[name='param_inProductUuids']").val();
+
+        var data = {
+            "nowPage": nowPage,
+            "pageShow": pageShow,
+            "categoryUuid": categoryUuid,
+            "searchKey": searchKey,
+            "startPrice": startPrice,
+            "endPrice": endPrice,
+            "param_inProductUuids": param_inProductUuids
+        };
+
+        $.ajax({
+            type: "GET",
+            url: ContextPath + "/chooseWellProductComp/getPageData",
+            data: data,
+            dataType: "json",
+            async: false,
+            success: function(data) {
+                data=eval("("+data+")");
+                var uuid = data.param_inProductUuids;
+
+                $("#productPage").html("");
+
+                $.each(data.rows,
+                    function(index, colum) {
+
+                        var oneHtml = $("#productModelHtml").children().clone();
+
+                        oneHtml.attr("id", colum.productUuid);
+
+                        oneHtml.find("img").attr("src", colum.imgsrc);
+                        oneHtml.find("span").text(colum.price);
+                        oneHtml.find("dd").eq(1).attr("id", "sp_recommend_" + colum.productUuid);
+
+                        oneHtml.find("a").eq(1).text(colum.name);
+
+                        if (data.param_inProductUuids.indexOf(colum.productUuid) > 0) {
+
+
+
+                            oneHtml.find("a").eq(2).text("取消推荐");
+
+                            oneHtml.find("a").eq(2).attr("href", "javascript:cancelRecommend('" + colum.productUuid + "')");
+
+
+                        } else {
+
+                            oneHtml.find("a").eq(2).text("推荐");
+
+                            oneHtml.find("a").eq(2).attr("href", "javascript:recommend('" + colum.productUuid + "')");
+                        }
+
+                        $("#productPage").append(oneHtml[0].outerHTML);
+
+                    })
+
+            }
+
+        })
+
+    }
+
+    //列表展示
+    function showSearchProduct(nowPage, pageShow) {
+
+        $("#pageShow").val(pageShow);
+        $("#nowPage").val(nowPage);
+
+        var categoryUuid = $("select[name='categoryUuid']").val();
+        var startPrice = $("input[name='startPrice']").val();
+        var endPrice = $("input[name='endPrice']").val();
+        var searchKey = $("input[name='searchKey']").val();
+        var param_inProductUuids = $("input[name='param_inProductUuids']").val();
+
+        var data = {
+            "nowPage": nowPage,
+            "pageShow": pageShow,
+            "categoryUuid": categoryUuid,
+            "searchKey": searchKey,
+            "startPrice": startPrice,
+            "endPrice": endPrice,
+            "param_inProductUuids": param_inProductUuids
+        };
+
+        $.ajax({
+            type: "GET",
+            url: ContextPath + "/chooseWellProductComp/getPageData",
+            data: data,
+            dataType: "json",
+            async: false,
+            success: function(data) {
+                data=eval("("+data+")");
+                var uuids = data.param_inProductUuids;
+
+                var totalNum = data.totalNum;
+
+                var pageShow = "5";
+
+                loadData(totalNum, pageShow);
+
+                $("#productPage").html("");
+
+                $.each(data.rows,
+                    function(index, colum) {
+
+                        var oneHtml = $("#productModelHtml").children().clone();
+
+                        oneHtml.attr("id", colum.productUuid);
+
+                        oneHtml.find("img").attr("src", colum.imgsrc);
+                        oneHtml.find("span").text(colum.price);
+                        oneHtml.find("dd").eq(1).attr("id", "sp_recommend_" + colum.productUuid);
+
+                        oneHtml.find("a").eq(1).text(colum.name)
+
+                        if (uuids.indexOf(colum.productUuid) > 0) {
+
+                            oneHtml.find("a").eq(2).text("取消推荐");
+
+                            oneHtml.find("a").eq(2).attr("href", "javascript:cancelRecommend('" + colum.productUuid + "')");
+                        }
+
+                        else {
+                            oneHtml.find("a").eq(2).text("推荐");
+
+                            oneHtml.find("a").eq(2).attr("href", "javascript:recommend('" + colum.productUuid + "')");
+
+                        }
+
+                        $("#productPage").append(oneHtml[0].outerHTML);
+
+                    })
+
+            }
+
+        })
+
+    }
+
+    function reduceNum() {
+        var num = Number($('#recommendNum').text());
+        num = num - 1;
+        $('#recommendNum').text(num);
+    }
+
+    $(document).ready(function() {
+
+        showSearchProduct("1", "5");
+
+        $('input[name="recommendType"]').click(function() {
+            if ($("input[name='recommendType']:checked").val() == "1") {
+                $("#shangchuannew").hide();
+                $("#placeselect").show();
+                $("#placeselect").css("active");
+                $("#mypselect").show();
+
+                $("#param_recommendtype").val("1");
+            } else {
+                $("#shangchuannew").show();
+                $("#mypselect").hide();
+                $("#shangchuannew").addClass("active");
+                $("#placeselect").hide();
+                $("#param_recommendtype").val("2");
+            }
+        });
+
+        $("#p_list2").click(function() {
+            $("#p_background").show();
+        })
+    });
+
+    //获取属性配置JSON
+    var pageJson = ${webPageModelJsonStr};
+
+    //构建属性配置
+    var componentsParam = {
+        initParamData: function(pageJson) { //初始化渲染属性配置
+            if (typeof(pageJson) == "string") {
+                pageJson = JSON.parse(pageJson);
+            }
+
+            if (pageJson.lableName) {
+                $("#lableName").val(pageJson.lableName);
+            }
+
+            if (pageJson.param_inProductUuids) {
+                $("#param_inProductUuids").val(pageJson.param_inProductUuids);
+            }
+            if (pageJson.needAsyncInit) {
+                $("input[name='needAsyncInit'][value=" + pageJson.needAsyncInit + "]").attr("checked", true);
+            }
+            if (pageJson.productUrl) {
+                $("#productUrl").val(pageJson.productUrl);
+            }
+            if (pageJson.topic) {
+                $("#topic").val(pageJson.topic);
+            }
+            if (pageJson.haveTakeHtml) {
+
+                var html = unescape(pageJson.haveTakeHtml);
+
+                var uuids = pageJson.param_inProductUuids;
+
+                var num = uuids.split(",").length - 1;
+                $('#recommendNum').text(num);
+                $("#p_list2").html(html);
+            }
+
+        },
+        saveParamData: function() { //返回属性配置JSON
+            var needAsyncInit = $("input[name='needAsyncInit']:checked").val();
+
+            var haveTakeHtml = $("#p_list2").html();
+            var productUrl = $("#productUrl").val();
+            var topic = $("#topic").val();
+
+            haveTakeHtml = escape(haveTakeHtml);
+
+            var pageJson = {
+                compId: 'recommendproduct',
+                "lableName": $("#lableName").val(),
+                "param_inProductUuids": $("#param_inProductUuids").val(),
+
+                "needAsyncInit": needAsyncInit,
+                "haveTakeHtml": haveTakeHtml,
+                "productUrl": productUrl,
+                "topic":topic
+
+            };
+
+            return pageJson;
+        },
+
+        showParamData: function() {
+            var paramData = [];
+            var labelName = {
+                type: 'text',
+                target: 'lablename',
+                value: $("#lableName").val()
+            }
+
+            paramData.push(labelName);
+
+            return paramData;
+        }
+    }
+
+    componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+
+</script>
+</html>

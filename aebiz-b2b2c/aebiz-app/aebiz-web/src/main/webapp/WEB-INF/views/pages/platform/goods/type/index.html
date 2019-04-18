@@ -1,0 +1,240 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<style>
+    .tool-search-line{
+        padding-top: 8px;
+    }
+    .search-input {
+        width: 30%;min-width: 120px;
+    }
+    .form-group {margin-right: 18px;}
+</style>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button tool-search-line">
+        <form class="form-inline js-search-form" id="search_form">
+            <div class="form-group">
+                <label class="control-label">${msg['goods.type.column.name']}：</label>
+                <input type="text" class="form-control search-input" name="name">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary js-search-ok">${msg['globals.button.search']}</button>
+                <button type="button" class="btn btn-default js-search-reset">${msg['globals.button.reset']}</button>
+            </div>
+        </form>
+    </div>
+    <div class="btn-group tool-button pull-right">
+        <a class="btn btn-primary navbar-btn" id="add"><i class="ti-plus"></i>${msg['goods.type.column.addType']} </a>
+        <a id="link" href="" data-pjax></a>
+        <!--<button class="btn btn-danger navbar-btn" onclick="delCheck()"><i class="ti-close"></i> ${msg['globals.button.delete.more']}</button>-->
+    </div>
+</header>
+<div class=panel-body style="padding-top: 50px;">
+    <div class="table-responsive no-border" style="min-height: 600px;">
+        <table class="table table-bordered table-striped mg-t datatable">
+            <thead>
+            <tr>
+                <th>${msg['goods.type.column.name']}</th>
+                <th>${msg['goods.type.column.commodityNature']}</th>
+                <th>${msg['goods.type.column.operation']}</th>
+        </table>
+    </div>
+</div>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}<br/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="ok" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="typeHtml"></div>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base!}/platform/goods/type/data",
+                "type": "post",
+                "data": function (d) {
+                    var form = $(".js-search-form");
+                    d.name = $("input[name='name']", form).val();
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "name", "bSortable": true},
+                {"data": "physical", "bSortable": true}
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return '实体商品';
+                        }
+                        return '虚拟商品';
+                    },
+                    "targets": 1
+                },
+                {
+                    "render": function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                                '<li><a href="javascript:;" onclick="edit(\'' + row.id + '\')">${msg['goods.type.column.update']}</a></li>' +
+                                '<li><a href="javascript:;" onclick="del(\'' + row.id + '\')">${msg['goods.type.column.delete']}</a></li>' +
+                                '</ul></div>';
+                    },
+                    "targets": 2
+                }
+            ]
+        });
+
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+
+        $(".js-search-ok").click(function () {
+            $('.datatable').DataTable().ajax.reload();
+        });
+
+        $(".js-search-reset").click(function () {
+            $(".js-search-form").resetForm();
+            $('.datatable').DataTable().ajax.reload();
+        });
+    }
+
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#ok").unbind("click");
+        dialog.find("#ok").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base!}/platform/goods/type/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null, false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                //重置按钮状态，关闭提示框
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+
+    /*
+    不允许批量删除 gaoen 2017-4-1 11:07:42
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#ok").unbind("click");
+            dialog.find("#ok").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base!}/platform/goods/type/delete", {ids: ids}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null, false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("请先选择要删除的项！");
+        }
+    }*/
+
+    function next(id){
+        $("#typeHtml").load("${base!}/platform/goods/type/next/"+id, function (response, status, xhr) {
+            $("#typeDialog").modal("show");
+            $("#nextOK").on("click",function(){
+                $("#typeDialog").unbind("hidden.bs.modal").on("hidden.bs.modal", function () {
+                    //hide.bs.modal      hide方法调用之后立即触发该事件
+                    //hidden.bs.modal    此事件在模态框被隐藏
+                    $("#link").attr("href", "${base!}/platform/goods/type/add?id="+id+
+                            "&physical="+$('input:radio[name=physical]:checked').val()+
+                            "&hasSpec="+$('input:radio[name=hasSpec]:checked').val()+
+                            "&hasProp="+$('input:radio[name=hasProp]:checked').val()+
+                            "&hasParam="+$('input:radio[name=hasParam]:checked').val()+
+                            "&hasTab="+$('input:radio[name=hasTab]:checked').val()+
+                            "&hasBrand="+$('input:radio[name=hasBrand]:checked').val()
+                    ).trigger("click");
+                    console.log($("#link").attr("href"));
+
+                });
+
+                $("#typeDialog").modal("hide");
+            });
+        });
+    }
+
+    function edit(id){
+        $("#typeHtml").load("${base!}/platform/goods/type/next/"+id, function (response, status, xhr) {
+            $("#typeDialog").modal("show");
+            $("#nextOK").on("click",function(){
+                $("#typeDialog").unbind("hidden.bs.modal").on("hidden.bs.modal", function () {
+                    //hide.bs.modal      hide方法调用之后立即触发该事件
+                    //hidden.bs.modal    此事件在模态框被隐藏
+                    $("#link").attr("href", "${base!}/platform/goods/type/edit/"+id+
+                            "?physical="+$('input:radio[name=physical]:checked').val()+
+                            "&hasSpec="+$('input:radio[name=hasSpec]:checked').val()+
+                            "&hasProp="+$('input:radio[name=hasProp]:checked').val()+
+                            "&hasParam="+$('input:radio[name=hasParam]:checked').val()+
+                            "&hasTab="+$('input:radio[name=hasTab]:checked').val()+
+                            "&hasBrand="+$('input:radio[name=hasBrand]:checked').val()
+                    ).trigger("click");
+                });
+                $("#typeDialog").modal("hide");
+            });
+        });
+    }
+
+    $(function () {
+        $("#add").on("click", function () {
+            next(0);
+        });
+        initDatatable();
+    });
+</script>
+<!--#}#-->

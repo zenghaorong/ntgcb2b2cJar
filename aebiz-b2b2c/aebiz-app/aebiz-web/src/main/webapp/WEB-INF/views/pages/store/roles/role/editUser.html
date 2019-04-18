@@ -1,0 +1,105 @@
+<!--#
+layout("/layouts/store.html"){
+#-->
+
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button">
+            <a class="btn btn-primary navbar-btn" href="${base}/store/roles/role" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+            <a class="btn btn-primary navbar-btn" href="${base}/store/roles/role/selectUser" data-toggle="modal" data-target="#dialogUserSelect"><i class="ti-plus"></i> ${msg['sys.role.column.adduser']}[${obj.name!}]${msg['sys.role.column.role']}</a>
+            <button class="btn btn-danger navbar-btn" onclick="delCheck()"><i class="ti-close"></i>${msg['sys.role.column.form']}  [${obj.name!}]${msg['sys.role.column.deleteuserrole']}</button>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border">
+            <input id="roleid" type="hidden" value="${obj.id!}">
+            <table id="mydata" class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                <tr>
+                    <th>${msg['account.info.column.nickname']}</th>
+                    <th>${msg['account.info.column.name']}</th>
+                    <th>${msg['account.info.column.sex']}</th>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogUserSelect" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content" style="width: 700px;">
+
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('#mydata').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang!}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/store/roles/role/userData",
+                "type": "post",
+                "data": function (d) {
+                    d.roleid = $('#roleid').val();
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "nickname", "bSortable": true},
+                {"data": "name", "bSortable": true},
+                {"data": "sex", "bSortable": true},
+            ],
+            "columnDefs": [
+                {
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+    function delCheck(){
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            $.post("${base}/store/roles/role/delUser", {menuIds: ids.toString(),roleid: $('#roleid').val()}, function (data) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    datatable.ajax.reload();
+                } else {
+                    Toast.error(data.msg);
+                }
+            }, "json");
+        }else{
+            Toast.warning("请先选择用户！");
+        }
+    }
+    $(document).ready(function () {
+        initDatatable();
+        $("#dialogUserSelect").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+
+</script>
+
+<!--#}#-->

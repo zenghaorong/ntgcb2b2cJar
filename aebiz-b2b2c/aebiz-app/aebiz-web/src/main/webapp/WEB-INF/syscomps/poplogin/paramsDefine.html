@@ -1,0 +1,154 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title></title>
+</head>
+<body>
+<form class="form-horizontal">
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">是否异步加载</label>
+		<div class="col-sm-3">
+			<input type="radio" id="yesAsync"  name="needAsyncInit" value="true">是
+			<input type="radio" id="noAsync"  name="needAsyncInit" value="false">否
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">忘记密码</label>
+		<div class="col-sm-3">
+			<input type="text" id="a_forgetPwdName" name="a_forgetPwdName" class="form-control" value="忘记密码"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">忘记密码URL</label>
+		<div class="col-sm-3">
+			<input type="text" id="a_forgetPwdUrl"  name="a_forgetPwdUrl" class="form-control" value="/customerfindpwd/toFindPwdStep1" />
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">注册</label>
+		<div class="col-sm-3">
+			<input type="text" id="a_regName" name="a_regName" class="form-control" value="注册"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">注册URL</label>
+		<div class="col-sm-3">
+			<input type="text" id="a_regUrl" name="a_regUrl"  class="form-control" value="/customerregist/toRegister"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">订阅登录主题</label>
+		<div class="col-sm-3">
+			<input type="text" id="subTopic" name="subTopic"  class="form-control" value=""/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label  class="col-sm-3 control-label">发布登录成功主题</label>
+		<div class="col-sm-3">
+			<input type="text" id="pubTopic" name="pubTopic"  class="form-control" value=""/>
+		</div>
+	</div>
+</form>
+
+
+<script type="text/javascript">
+//获取属性配置JSON
+var pageJson = ${webPageModelJsonStr};
+
+//构建属性配置
+var componentsParam = {
+		initParamData:function(paramJson){ //初始化渲染属性配置
+			if(typeof(paramJson) == "string"){
+				paramJson = JSON.parse(paramJson);
+			}
+		    if(paramJson.needAsyncInit == "true"){
+		    	$("#yesAsync").attr("checked","checked");
+		    }else{
+		    	$("#noAsync").attr("checked","checked");
+		    }
+		    
+		    if(paramJson.a_forgetPwdName != null && paramJson.a_forgetPwdName != ""){
+		    	$("#a_forgetPwdName").val(paramJson.a_forgetPwdName);
+		    }
+		    if(paramJson.a_forgetPwdUrl != null && paramJson.a_forgetPwdUrl != ""){
+		    	$("#a_forgetPwdUrl").val(paramJson.a_forgetPwdUrl);
+		    }
+		    if(paramJson.a_regName != null && paramJson.a_regName != ""){
+		    	$("#a_regName").val(paramJson.a_regName);
+		    }
+		    if(paramJson.a_regUrl != null && paramJson.a_regUrl != ""){
+		    	$("#a_regUrl").val(paramJson.a_regUrl);
+		    }
+		    if(paramJson.subTopic != null && paramJson.subTopic != ""){
+		    	$("#subTopic").val(paramJson.subTopic);
+		    }
+		    if(paramJson.pubTopic != null && paramJson.pubTopic != ""){
+		    	$("#pubTopic").val(paramJson.pubTopic);
+		    }
+		},
+		saveParamData:function(){ //返回属性配置JSON
+			var needAsyncInit = $("input[name='needAsyncInit']:checked").val();
+		    if(needAsyncInit == null){
+		    	alert("请选择是否异步加载！");
+		    	return false;
+		    }
+		    var a_forgetPwdName = $("#a_forgetPwdName").val();
+		    var a_forgetPwdUrl = $("#a_forgetPwdUrl").val();
+		    var a_regName = $("#a_regName").val();
+		    var a_regUrl = $("#a_regUrl").val();
+		    var subTopic = $("#subTopic").val();
+		    var pubTopic = $("#pubTopic").val();
+	        var paramJson = {
+	        		needAsyncInit:needAsyncInit,
+	        		a_forgetPwdName:a_forgetPwdName,
+	        		a_forgetPwdUrl:a_forgetPwdUrl,
+	        		a_regName:a_regName,
+	        		a_regUrl:a_regUrl,
+	        		subTopic:subTopic,
+	        		pubTopic:pubTopic
+	        };
+	        var err = this.validateData(paramJson);
+            if(!err.success){
+                return err;
+            }
+	        return paramJson;
+		},
+		showParamData:function(){
+			var paramData = [];
+			var a_forgetPwdName = {type:'html',target:'a_forgetpwd',value:$("#a_forgetPwdName").val()};
+			var a_forgetPwdUrl = {type:'href',target:'a_forgetpwd',value:$("#a_forgetPwdUrl").val()};
+    		var a_regName = {type:'html',target:'a_reg',value:$("#a_regName").val()};
+    		var a_regUrl = {type:'href',target:'a_reg',value:$("#a_regUrl").val()};
+			
+    		paramData.push(a_forgetPwdName);
+			paramData.push(a_forgetPwdUrl);
+			paramData.push(a_regName);
+			paramData.push(a_regUrl);
+			return paramData;
+		},
+        validateData:function(paramJson){
+            var err={
+                success:true,
+                msg:""
+            }
+            var msg=[];
+            msg = decoration.base.validateSpecial(msg,paramJson.a_forgetPwdName,"忘记密码包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.a_regName,"免费注册包含特殊字符，请重新输入！<br>");
+            if(msg.length>0){
+                err.success = false;
+                err.msg=msg.join("");
+            }
+            return err;
+        }
+}
+
+componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+</script>
+</body>
+</html>

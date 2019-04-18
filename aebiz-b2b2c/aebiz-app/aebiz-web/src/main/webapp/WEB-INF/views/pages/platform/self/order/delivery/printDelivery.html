@@ -1,0 +1,114 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base!}/platform/self/order/delivery" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+    <div class="pull-right">
+        <div class="btn-group tool-button">
+            <button class="btn btn-primary navbar-btn" type="button" data-toggle="modal" data-target="#dialogPrint" >打印</button>
+        </div>
+    </div>
+</header>
+<div class="content-wrap bg-white">
+    <div class="wrapper" style="vertical-align:middle;min-height:500px;top:50px">
+        <input type="hidden" name="id" value="${obj.id}">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="col-md-6" style="padding: 5px 0px">
+                客户名称:   <span>${accountUser.accountInfo.nickname!}</span>
+            </div>
+            <div class="col-md-6" style="padding: 5px 0px">
+                联系人:   <span>${accountUser.accountInfo.name!}</span>
+            </div>
+            <div class="col-md-6" style="padding: 5px 0px">
+                手机号:   <span>${accountUser.mobile!}</span>
+            </div>
+            <div class="col-md-6" style="padding: 5px 0px">
+                收货人:   <span>${obj.deliveryName!}</span>
+            </div>
+            <div class="col-md-6" style="padding: 5px 0px">
+                联系电话:   <span>${obj.deliveryMobile!}</span>
+            </div>
+            <div class="col-md-6" style="padding: 5px 0px">
+                收货地址:   <span>${obj.deliveryProvince!}${obj.deliveryCity!}${obj.deliveryCounty!}${obj.deliveryAddress!}</span>
+            </div>
+        </div>
+
+        <!--#  for(var order in orderList){ #-->
+        <div class="col-md-10 col-md-offset-1">
+            <div class="table-responsive">
+                <table class="table s-table">
+                    <caption>订单号: ${order.id}   下单时间：<!--#if(!isEmpty(order.orderAt)){#-->${@date.getDate(order.orderAt)} <!--#}#-->
+                    </caption>
+                    <thead>
+                    <tr>
+                        <th>商品名称</th>
+                        <th>商品规格</th>
+                        <th>数量</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--#for(o in order.goodsList ){  var noSendNum = o.buyNum - o.sendNum; #-->
+                    <tr style="border-bottom: 1px solid #dfe6ec;">
+                        <td>${o.goodsName} ${o.name}</td>
+                        <td><!--# if(isNotEmpty(o.spec)){
+                                                        var specGroup = @org.nutz.json.Json.fromJson(o.spec);
+                                                        for (g in specGroup) {
+                                                            print(g.spec_name + ":" + g.spec_value_name);
+                                                            if (!gLP.last) print(" * ");
+                                                        }
+                                                    }
+                                                #-->
+                        </td>
+                        <td>${o.sendNum} </td>
+                    </tr>
+                    <!--#}#-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--#  } #-->
+    </div>
+</div>
+
+<!--确认打印配货单 【确认】-->
+<div class="modal fade" id="dialogPrint" tabindex="-1" role="dialog" aria-labelledby="dialogPrintModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="dialogPrintModalLabel">打印确认</h4>
+            </div>
+            <div class="modal-body">
+                <span>您确认要打印配货单吗？</span><br>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="print"  data-dismiss="modal">确认</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<style>
+    table .s-input{margin: auto;}
+    table,table.s-table tr td,table tr th{border: 1px solid #ddd;text-align: center;vertical-align: middle;}
+</style>
+<script>
+    $("#dialogPrint").on("click",function () {
+        var id = $("input[name='id']").val();
+        if(id != null && id != ""){
+            $.post("${base!}/platform/self/order/delivery/confirmPrintDelivery",{"id":id},function (data) {
+                if(data.code == 0){
+                    Toast.success(data.msg)
+                    setTimeout(function () {
+                        $.pjax({ url: '${base!}/platform/self/order/delivery', container: '#container' })
+                    },1000);
+                }else{
+                    Toast.error(data.msg);
+                }
+            })
+        }
+    })
+</script>
+<!--#}#-->

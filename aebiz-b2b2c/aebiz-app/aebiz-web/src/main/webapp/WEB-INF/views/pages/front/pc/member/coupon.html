@@ -1,0 +1,489 @@
+<!--#
+include("/pages/front/pc/member/inc/header.html"){}
+#-->
+
+<div class="m-bd">
+	<div class="g-center f-push-30-t">
+		<!--#
+		include("/pages/front/pc/member/inc/left.html"){}
+		#-->
+		<div class="ps-main f-fl">
+			<div class="coupon-hd">优惠劵</div>
+			<div class="m-coupon-wrap f-push-20-t">
+				<div class="coupon-tab">
+					<ul class="f-cb">
+						<li class="active" data-label><a href="#" id="usableData">可使用<span id="usable">(${count1})</span></a></li>
+						<li data-label><a href="#" id="usedData">已使用<span id="used">(${count2})</span></a></li>
+						<li data-label><a href="#" id="overdueData">已过期<span id="overdue">(${count3})</span></a></li>
+					</ul>
+				</div>
+				<!--可使用-->
+				<div class="coupon-list f-dn" style="display: block;">
+					<ul class="f-cb mcl-row" id="usableCoupon"></ul>
+					<div class="f-tac" style="display: none">
+						<div class="u-page-l f-cb">
+							<a class="perv disable" id="prev"><上一页</a>
+							<ul class="f-cb" id="pageCoupon">
+
+							</ul>
+							<a class="next" id="nextPage">下一页></a>
+						</div>
+					</div>
+
+				</div>
+				<!--已使用-->
+				<div class="coupon-list used">
+					<ul class="f-cb mcl-row"  id="usedCoupon"></ul>
+					<div class="f-tac" style="display: none">
+						<div class="u-page-l f-cb">
+							<a class="perv disable" id="prev2"><上一页</a>
+							<ul class="f-cb" id="pageUsedCoupon">
+
+							</ul>
+							<a class="next" id="nextPage2">下一页></a>
+						</div>
+					</div>
+				</div>
+
+				<!--过期-->
+				<div class="coupon-list overdue">
+					<ul class="f-cb mcl-row" id="overdueCoupon"></ul>
+					<div class="f-tac" style="display: none">
+						<div class="u-page-l f-cb">
+							<a class="perv disable"  id="prev3"><上一页</a>
+							<ul class="f-cb"  id="pageOverdueCoupon">
+
+							</ul>
+							<a class="next" id="nextPage3">下一页></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+<!-- end -->
+<!--#
+	include("/pages/front/pc/member/inc/tail.html"){}
+#-->
+<script src="${base!}/assets/front/pc/member/scripts/coupon.js"></script>
+<!--删除优惠劵弹层-->
+<div id="coupon-delete" class="m-layer-pop"><div class="info"><i class="iconfont icon-wenhao"></i>确定要删除该优惠券吗？</div></div>
+<input type="hidden" value="" id="usableId">
+<input type="hidden" id="page" value="1">
+<input type="hidden" id="status" value="1">
+<input type="hidden" id="totlePage" value="">
+<input type="hidden" id="records" value="">
+
+</body>
+</html>
+
+<script>
+
+
+    $(function(){
+        //设置个人中心左侧 对应的菜单为选中状态
+        $("#member_left li a[href|='/member/coupon']").parent("li").addClass("active").siblings("li").removeClass("active");
+
+        var page = 1;
+        var rows = 8;
+        var status = 0;
+        selectCoupon(page,rows,status);
+
+        //删除
+        $(document).on("click",".layui-layer-btn0",function(){
+            var cpage = $("#page").val()
+            var cstatus = $("#status").val()
+            var records = $("#records").val()
+            if(cpage!=1 && records%rows==1){
+                cpage=cpage-1;
+            }
+            $.ajax({
+                type:"POST",
+                url:"/member/coupon/memberCouponDelete/"+$("#usableId").val(),
+                dataType:"JSON",
+                success:function(data){
+                    if (data.code == 0) {
+                        layer.msg(data.msg, {
+                            icon: 6,offset: '250px',time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            selectCoupon(cpage,rows,cstatus);
+                        });
+                    } else {
+                        layer.msg(data.msg, {
+                            icon: 5,offset: '250px',time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            selectCoupon(cpage,rows,cstatus);
+                        });
+                    }
+                }
+            });
+        });
+        $("#usableData").click(function () {
+            selectCoupon(1,rows,0);
+        });
+        $(document).on("click","#pageCoupon li",function(){
+            page = $(this).text()
+            var totlePage = $("#totlePage").val();
+            if(parseInt(page)==1){
+                $("#prev").addClass("disable")
+                $("#nextPage").removeClass("disable")
+            }else if(parseInt(page)==parseInt(totlePage)){
+                $("#prev").removeClass("disable")
+                $("#nextPage").addClass("disable")
+            }else {
+                $("#prev").removeClass("disable")
+                $("#nextPage").removeClass("disable")
+            }
+            selectCoupon(page,rows,0);
+        });
+
+        $(document).on("click","#prev",function(){
+            page=parseInt($("#pageCoupon .active").text());
+            var totlePage = $("#totlePage").val();
+            if(page==2){
+                $("#prev").addClass("disable")
+            }
+            if(page==parseInt(totlePage)){
+                $("#nextPage").removeClass("disable")
+            }
+            if(page==1){
+                layer.msg("没有上一页了", {
+                    icon: 5,offset: '250px',time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                }, function(){  });
+                $("#prev").addClass("disable")
+                return ;
+            }
+            selectCoupon((page-1),rows,0);
+        });
+
+        $(document).on("click","#nextPage",function(){
+            page = parseInt($("#pageCoupon .active").text());//1
+            var totlePage = $("#totlePage").val();
+            if(page==1){
+                $("#prev").removeClass("disable")
+            }
+            if(page==parseInt(totlePage)-1){
+                $("#nextPage").addClass("disable")
+            }
+            if(page==parseInt(totlePage)){
+                $("#nextPage").addClass("disable")
+                layer.msg("没有下一页了", {
+                    icon: 5,offset: '250px',time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                }, function(){
+
+				});
+                return ;
+            }
+            selectCoupon((page+1),rows,0);
+        });
+
+		//2
+        $("#usedData").click(function () {
+            selectCoupon(1,rows,1);
+        });
+        $(document).on("click","#pageUsedCoupon li",function(){
+            page = $(this).text()
+            var totlePage = $("#totlePage").val();
+			if(parseInt(page)==1){
+                $("#prev2").addClass("disable")
+                $("#nextPage2").removeClass("disable")
+			}else if(parseInt(page)==parseInt(totlePage)){
+                $("#prev2").removeClass("disable")
+                $("#nextPage2").addClass("disable")
+			}else {
+                $("#prev2").removeClass("disable")
+                $("#nextPage2").removeClass("disable")
+			}
+            selectCoupon(page,rows,1);
+        });
+
+        $(document).on("click","#prev2",function(){
+            page=parseInt($("#pageUsedCoupon .active").text());
+            var totlePage = $("#totlePage").val();
+            if(page==2){
+                $("#prev2").addClass("disable")
+            }
+            if(page==parseInt(totlePage)){
+                $("#nextPage2").removeClass("disable")
+            }
+            if(page==1){
+                layer.msg("没有上一页了", {
+                    icon: 5,offset: '250px',time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                }, function(){  });
+                $("#prev2").addClass("disable")
+                return ;
+            }
+            selectCoupon((page-1),rows,1);
+        });
+
+        $(document).on("click","#nextPage2",function(){
+            page = parseInt($("#pageUsedCoupon .active").text());//1
+            var totlePage = $("#totlePage").val();
+            if(page==1){
+                $("#prev2").removeClass("disable")
+            }
+            if(page==parseInt(totlePage)-1){
+                $("#nextPage2").addClass("disable")
+            }
+            if(page==parseInt(totlePage)){
+                layer.msg("没有下一页了", {
+                    icon: 5,offset: '250px',time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                }, function(){  });
+                return ;
+            }
+            selectCoupon((page+1),rows,1);
+        });
+        //3
+        $("#overdueData").click(function () {
+
+
+            selectCoupon(1,rows,2);
+        });
+
+        $(document).on("click","#pageOverdueCoupon li",function(){
+            page = $(this).text()
+            var totlePage = $("#totlePage").val();
+            if(parseInt(page)==1){
+                $("#prev3").addClass("disable")
+                $("#nextPage3").removeClass("disable")
+            }else if(parseInt(page)==parseInt(totlePage)){
+                $("#prev3").removeClass("disable")
+                $("#nextPage3").addClass("disable")
+            }else {
+                $("#prev3").removeClass("disable")
+                $("#nextPage3").removeClass("disable")
+            }
+            selectCoupon(page,rows,2);
+        });
+
+        $(document).on("click","#prev3",function(){
+            page=parseInt($("#pageOverdueCoupon .active").text());
+            var totlePage = $("#totlePage").val();
+            if(page==2){
+                $("#prev3").addClass("disable")
+            }
+            if(page==parseInt(totlePage)){
+                $("#nextPage3").removeClass("disable")
+            }
+            if(page==1){
+                layer.msg("没有上一页了", {
+                    icon: 5,offset: '250px',time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                }, function(){  });
+                $("#prev3").addClass("disable")
+                return ;
+            }
+            selectCoupon((page-1),rows,2);
+        });
+
+        $(document).on("click","#nextPage3",function(){
+            page = parseInt($("#pageOverdueCoupon .active").text());//1
+            var totlePage = $("#totlePage").val();
+            if(page==1){
+                $("#prev3").removeClass("disable")
+            }
+            if(page==parseInt(totlePage)-1){
+                $("#nextPage3").addClass("disable")
+            }
+            if(page==parseInt(totlePage)){
+                layer.msg("没有下一页了", {
+                    icon: 5,offset: '250px',time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                }, function(){  });
+                return ;
+            }
+            selectCoupon((page+1),rows,2);
+        });
+    });
+
+    function getTime(time) {
+        var date = new Date(time*1000);
+        Y = date.getFullYear() + '.';
+        M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '.';
+        D = date.getDate();
+        return Y+M+D;
+    }
+
+    function getCouponPrice(action_condition) {
+        if (action_condition) {
+            var ac = JSON.parse(action_condition);
+            if (ac.tpl_sale_sol_subfixed && ac.tpl_sale_sol_subfixed.total_amount) {
+                return ac.tpl_sale_sol_subfixed.total_amount/100;
+			}
+        }
+        return 0;
+    }
+
+    function selectCoupon(page,rows,status) {
+        $("#page").val(page)
+        $("#status").val(status)
+        $.ajax({
+            type:"POST",
+            url:"/member/coupon/data?page="+page+"&rows="+rows+"&status="+status,
+            dataType:"JSON",
+            success:function(data){
+//                alert(JSON.stringify(data))
+                $("#records").val(data.records)
+				if(parseInt(status)==0){
+                    if(parseInt(data.records)==0){
+                        $("#usableCoupon").html("<div class='coupon-blank'><img src='${base!}/assets/front/pc/member/images/coupon-blank.png'/> <p class='info'>嗷~您暂时还没有优惠券哟~</p> </div>");
+                        $("#usable").html("(0)");
+                        $("#pageCoupon").parent().parent().hide();
+                    }else {
+                        var pageStr = "";
+                        for(var i=0;i<parseInt(data.totalPage);i++){
+                            if(parseInt(data.page)==(i+1)){
+                                pageStr+="<li class='active' data-label><a>"+(i+1)+"</a></li>";
+                            }else{
+                                pageStr+="<li data-label><a>"+(i+1)+"</a></li>";
+                            }
+                        }
+                        if(parseInt(data.totalPage)==1){
+                            $("#pageCoupon").parent().parent().hide();
+                        }else{
+                            $("#pageCoupon").parent().parent().show();
+						}
+
+                        var listStr = "";
+                        for(var i=0;i<parseInt(data.count);i++){
+                            var timestamp = Date.parse(new Date())/1000;
+                            var endtimestr = "";
+                            if(parseInt(data.rowList[i].endat)-parseInt(timestamp)<259200){//还剩3天
+                                endtimestr= " will-disable";
+							}else{
+                                endtimestr = "";
+							}
+                            listStr+="<li class=\"cp-item" +endtimestr+
+								"\" id='"+data.rowList[i].id+"'>" +
+                                "    <div class=\"hd\">\n" +
+                                "        <a class=\"iconfont icon-delete1\"></a>" +
+                                "        <div class=\"money\">￥<span>"+getCouponPrice(data.rowList[i].action_solution)+"</span></div>" +
+                                "        <div class=\"rule\">"+data.rowList[i].scname+"</div>" +
+                                "        <p class=\"time\">"+getTime(data.rowList[i].sartat)+"-"+getTime(data.rowList[i].endat)+"</p>" +
+                                "    </div>" +
+                                "    <div class=\"bd\">" +
+                                "        <p>券编号：<span>"+data.rowList[i].code+"</span></p>" +
+                                "       <p>店铺：<span>"+data.rowList[i].storename+"</span></p>" +
+                                "    </div>" +
+                                "    <div class=\"fd\">" +
+//                                "        <a class=\"button\">立即使用</a>" +
+                                "    </div>" +
+                                "</li>";
+                        }
+                        $("#usableCoupon").html(listStr);
+                        if(typeof(data.records)=="undefined"){
+                            $("#usable").html("(0)");
+                        }else{
+                            $("#usable").html("("+data.records+")");
+                            $("#couponCountId").html(data.records);
+                        }
+                        $("#pageCoupon").html(pageStr);
+                        $("#totlePage").val(data.totalPage);
+                    }
+				}else if(parseInt(status)==1){//查询已使用优惠券
+                    if(parseInt(data.records)==0){
+                        $("#usedCoupon").html("<div class='coupon-blank'><img src='${base!}/assets/front/pc/member/images/coupon-blank.png'/> <p class='info'>嗷~您暂时还没有已用优惠券哟~</p> </div>");
+                        $("#used").html("(0)");
+                        $("#pageUsedCoupon").parent().parent().hide();
+                    }else {
+                        var pageStr = "";
+                        for(var i=0;i<parseInt(data.totalPage);i++){
+                            if(parseInt(data.page)==(i+1)){
+                                pageStr+="<li class='active' data-label><a>"+(i+1)+"</a></li>";
+                            }else{
+                                pageStr+="<li data-label><a>"+(i+1)+"</a></li>";
+                            }
+                        }
+                        if(parseInt(data.totalPage)==1){
+                            $("#pageUsedCoupon").parent().parent().hide();
+                        }else{
+                            $("#pageUsedCoupon").parent().parent().show();
+						}
+                        var listStr = "";
+                        for(var i=0;i<parseInt(data.count);i++){
+                            listStr+="<li class=\"cp-item\" id='"+data.rowList[i].id+"'>" +
+                                "    <div class=\"hd\">\n" +
+                                "        <a class=\"iconfont icon-delete1\"></a>" +
+                                "        <div class=\"money\">￥<span>"+getCouponPrice(data.rowList[i].action_solution)+"</span></div>" +
+                                "        <div class=\"rule\">"+data.rowList[i].scname+"</div>" +
+                                "        <p class=\"time\">"+getTime(data.rowList[i].sartat)+"-"+getTime(data.rowList[i].endat)+"</p>" +
+                                "    </div>" +
+                                "    <div class=\"bd\">" +
+                                "        <p>券编号：<span>"+data.rowList[i].code+"</span></p>" +
+                                "        <p>店铺：<span>"+data.rowList[i].storename+"</span></p>" +
+                                "    </div>" +
+                                "    <div class=\"fd\">" +
+//                                "        <a class=\"button\">立即使用</a>" +
+                                "    </div>" +
+                                "</li>";
+                        }
+                        $("#usedCoupon").html(listStr);
+                        if(typeof(data.records)=="undefined"){
+                            $("#used").html("(0)");
+                        }else{
+                            $("#used").html("("+data.records+")");
+                        }
+                        $("#pageUsedCoupon").html(pageStr);
+                        $("#totlePage").val(data.totalPage);
+                    }
+				}else if(parseInt(status)==2){//查询已过期优惠券
+                    if(parseInt(data.records)==0){
+                        $("#overdueCoupon").html("<div class='coupon-blank'><img src='${base!}/assets/front/pc/member/images/coupon-blank.png'/> <p class='info'>嗷~您暂时还没有过期优惠券哟~</p> </div>");
+                        $("#overdue").html("(0)");
+                        $("#pageOverdueCoupon").parent().parent().hide();
+                    }else {
+                        var pageStr = "";
+                        for(var i=0;i<parseInt(data.totalPage);i++){
+                            if(parseInt(data.page)==(i+1)){
+                                pageStr+="<li class='active' data-label><a>"+(i+1)+"</a></li>";
+                            }else{
+                                pageStr+="<li data-label><a>"+(i+1)+"</a></li>";
+                            }
+                        }
+                        if(parseInt(data.totalPage)==1){
+                            $("#pageOverdueCoupon").parent().parent().hide();
+                        }else{
+                            $("#pageOverdueCoupon").parent().parent().show();
+						}
+                        var listStr = "";
+                        for(var i=0;i<parseInt(data.count);i++){
+                            listStr+="<li class=\"cp-item\" id='"+data.rowList[i].id+"'>" +
+                                "    <div class=\"hd\">\n" +
+                                "        <a class=\"iconfont icon-delete1\"></a>" +
+                                "        <div class=\"money\">￥<span>"+getCouponPrice(data.rowList[i].action_solution)+"</span></div>" +
+                                "        <div class=\"rule\">"+data.rowList[i].scname+"</div>" +
+                                "        <p class=\"time\">"+getTime(data.rowList[i].sartat)+"-"+getTime(data.rowList[i].endat)+"</p>" +
+                                "    </div>" +
+                                "    <div class=\"bd\">" +
+                                "        <p>券编号：<span>"+data.rowList[i].code+"</span></p>" +
+                                "        <p>店铺：<span>"+data.rowList[i].storename+"</span></p>" +
+                                "    </div>" +
+                                "    <div class=\"fd\">" +
+//                                "        <a class=\"button\">立即使用</a>" +
+                                "    </div>" +
+                                "</li>";
+                        }
+                        $("#overdueCoupon").html(listStr);
+                        if(typeof(data.records)=="undefined"){
+                            $("#overdue").html("(0)");
+                        }else{
+                            $("#overdue").html("("+data.records+")");
+                        }
+                        $("#pageOverdueCoupon").html(pageStr);
+                        $("#totlePage").val(data.totalPage);
+                    }
+				}
+
+
+                $(".icon-delete1").click(function () {
+                    setTimeout(function () {
+                        $('.layui-layer').css("top","100px");
+                    },10);
+                    var id = $(this).parent().parent().attr("id");
+                    $("#usableId").val(id);
+                });
+            }
+        });
+    }
+</script>
+

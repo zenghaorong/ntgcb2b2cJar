@@ -1,0 +1,393 @@
+<!--#
+include("/pages/front/pc/member/inc/header.html"){}
+#-->
+
+<div class="m-bd">
+    <div class="g-center f-push-30-t">
+        <!--#
+            include("/pages/front/pc/member/inc/left.html"){}
+        #-->
+        <script src="${base!}/assets/front/pc/member/scripts/center.js"></script>
+        <div class="ps-main f-fl js-center-main">
+            <div class="u-branch g-center">
+                <i class="iconfont icon-wode"></i>个人中心
+            </div>
+            <div class="f-cb">
+                <div class="m-fl-1 f-cb js-center-personal">
+                    <div class="f1-left f-fl">
+                        <img src="${isNotEmpty(personal.photo) ? personal.photo : '/assets/front/pc/member/images/headPortrait/default.png'}" style="width: 100px;height: 100px;"/>
+                        <div class="name">${personal.name!}</div>
+                    </div>
+                    <div class="f1-right f-fl">
+                        <div class="vip">${personal.levelName!}</div>
+                        <div>账户安全:
+
+                            <!--# if(personal.security < 50){ #-->
+                            <div class="speed red"><span style="width: ${personal.security}%;"></span></div>低
+                            <!--# }else  #-->
+                            <!--# if(personal.security < 80){ #-->
+                            <div class="speed orange"><span style="width: ${personal.security}%;"></span></div>中
+                            <!--# } #-->
+                            <!--# if(personal.security >= 80){ #-->
+                            <div class="speed green"><span style="width: ${personal.security}%;"></span></div>高
+                            <!--# } #-->
+                        </div>
+                        <div><a href="/member/coupon">我的优惠券 ></a></div>
+                        <div><a href="/member/address">我的收货地址 ></a></div>
+                    </div>
+                </div>
+                <div class="m-fl-2 f-fr js-center-order">
+                    <ul class="f-cb">
+                        <li data-label class="noPay active" data-status="0" >待付款（${order.waitPay.num!}）</li>
+                        <li data-label data-status="1" class="noTake">待收货（${order.waitTake.num!}）</li>
+                        <li data-label data-status="2" class="noFeed">待评价（${order.waitComment.num!}）</li>
+                    </ul>
+                    <!--#if (isNotEmpty(order.waitPay.order)) {#-->
+                    <div class="bd f-cb js-wait-pay-content">
+                        <div class="hd f-push-20">
+                            <span class="time f-push-20-l">${@date.getDate(order.waitPay.order.orderAt)}</span>
+                            <span class="code f-push-40-l">订单编号：${order.waitPay.order.id!}</span>
+                            <span class="way f-push-40-l">${@com.aebiz.app.order.modules.models.em.OrderPayTypeEnum.getValue(order.waitPay.order.payType)}</span>
+                        </div>
+                        <img style="cursor:pointer" onclick="toGoodsDetail('${order.waitPay.product.orderProduct.sku!}');" class="f-fl f-push-40-l" src="${order.waitPay.product.orderProduct.imgUrl!}" width="80" height="80"/>
+                        <div class="info f-fl">
+                            ${order.waitPay.product.orderProduct.storeMain.storeName!}
+                        </div>
+                        <div class="operation f-fl">
+                            ￥${@money.fenToYuan(order.waitPay.order.goodsPayMoney!0)}<br /><a href="${base!}/member/order/count/${order.waitPay.order.id}" class="r-btn goPay">立即付款</a><br /><a href="/member/order">查看更多></a>
+                        </div>
+                    </div>
+                    <!--#} else {#-->
+                    <div class="u-fl-blank js-wait-pay-content">
+                        <i class="iconfont icon-tubiaozhizuomoban"></i>
+                        <p>好久没在茗流汇买东西了，快去逛逛吧~</p>
+                    </div>
+                    <!--#}#-->
+                    <!--#if (isNotEmpty(order.waitTake.order)) {#-->
+                    <div class="bd f-cb js-wait-take-content" style="display: none">
+                        <div class="hd f-push-20">
+                            <span class="time f-push-20-l">${@date.getDate(order.waitTake.order.orderAt)}</span>
+                            <span class="code f-push-40-l">订单编号：${order.waitTake.order.id!}</span>
+                            <span class="way f-push-40-l">${@com.aebiz.app.order.modules.models.em.OrderPayTypeEnum.getValue(order.waitTake.order.payType)}</span>
+                        </div>
+                        <img style="cursor:pointer" onclick="toGoodsDetail('${order.waitTake.product.orderProduct.sku!}');" class="f-fl f-push-40-l" src="${order.waitTake.product.orderProduct.imgUrl!}" width="80" height="80"/>
+                        <div class="info f-fl">
+                            ${order.waitTake.product.orderProduct.storeMain.storeName!}
+                        </div>
+                        <div class="operation f-fl">
+                            ￥${@money.fenToYuan(order.waitTake.order.goodsPayMoney!0)}<br /><span class="r-btn receipt" data-val="${order.waitTake.order.id!}">立即收货</span><br /><a href="/member/order">查看更多></a>
+                        </div>
+                    </div>
+                    <!--#} else {#-->
+                    <div class="u-fl-blank js-wait-take-content" style="display: none">
+                        <i class="iconfont icon-tubiaozhizuomoban"></i>
+                        <p>好久没在茗流汇买东西了，快去逛逛吧~</p>
+                    </div>
+                    <!--#}#-->
+                    <!--#if (isNotEmpty(order.waitComment.order)) {#-->
+                    <div class="bd f-cb js-wait-comment-content" style="display: none">
+                        <div class="hd f-push-20">
+                            <span class="time f-push-20-l">${@date.getDate(order.waitComment.order.orderAt)}</span>
+                            <span class="code f-push-40-l">订单编号：${order.waitComment.order.id!}</span>
+                            <span class="way f-push-40-l">${@com.aebiz.app.order.modules.models.em.OrderPayTypeEnum.getValue(order.waitComment.order.payType)}</span>
+                        </div>
+                        <img style="cursor:pointer" onclick="toGoodsDetail('${order.waitComment.product.orderProduct.sku!}');" class="f-fl f-push-40-l" src="${order.waitComment.product.orderProduct.imgUrl!}" width="80" height="80"/>
+                        <div class="info f-fl">
+                            ${order.waitComment.product.orderProduct.storeMain.storeName!}
+                        </div>
+                        <div class="operation f-fl">
+                            ￥${@money.fenToYuan(order.waitComment.order.goodsPayMoney!0)}<br /><span class="r-btn">立即评价</span><br /><a href="/member/order">查看更多></a>
+                        </div>
+                    </div>
+                    <!--#} else {#-->
+                    <div class="u-fl-blank js-wait-comment-content" style="display: none">
+                        <i class="iconfont icon-tubiaozhizuomoban"></i>
+                        <p>好久没在茗流汇买东西了，快去逛逛吧~</p>
+                    </div>
+                    <!--#}#-->
+                </div>
+            </div>
+            <div class="m-li-2 f-cb">
+                <div class="m-fl-3 f-fl js-center-shouhou">
+                    <div class="centerTit"><i class="iconfont icon-tuikuanshouhou"></i>我的售后</div>
+                    <!--#if (isNotEmpty(afterSale) && isNotEmpty(afterSale.afterSaleState)) {
+                            select(afterSale.afterSaleState){
+                                case 0: {//等待卖家处理
+                    #-->
+                    <div class="bd"><br />
+                        <h3><i class="iconfont icon-shouhou"></i>等待卖家处理</h3>
+                        <div class="r-btn">知道了</div>
+                    </div>
+                    <!--#
+                                }
+                                case 1: {//卖家超时未处理
+                    #-->
+                    <div class="bd"><br />
+                        <h3><i class="iconfont icon-shouhou"></i>卖家超时未处理</h3>
+                        <div class="r-btn">知道了</div>
+                    </div>
+                    <!--#
+                                }
+                                case 2: {//不同意
+                    #-->
+                    <div class="bd"><br />
+                        <h3><i class="iconfont icon-shouhou"></i>不同意</h3>
+                        <div class="r-btn">知道了</div>
+                    </div>
+                    <!--#
+                                }
+                                case 3: {//待财务审核
+                    #-->
+                    <div class="bd"><br />
+                        <h3><i class="iconfont icon-shouhou"></i>待财务审核</h3>
+                        <div class="r-btn">知道了</div>
+                    </div>
+                    <!--#
+                                }
+                                case 4: {//等待买家寄回
+                    #-->
+                    <div class="bd"><br />
+                        <h3><i class="iconfont icon-shouhou"></i>等待买家寄回</h3>
+                        <div class="r-btn">知道了</div>
+                    </div>
+                    <!--#
+                                }
+                                case 5: {//财务审核不通过
+                    #-->
+                    <div class="bd"><br />
+                        <h3><i class="iconfont icon-shouhou"></i>财务审核不通过</h3>
+                        <div class="r-btn">知道了</div>
+                    </div>
+                    <!--#
+                                }
+                                case 6: {//待买家填写账号（如线下转账）
+                    #-->
+                    <div class="bd"><br />
+                        <h3><i class="iconfont icon-shouhou"></i>待买家填写账号（如线下转账）</h3>
+                        <div class="r-btn">知道了</div>
+                    </div>
+                    <!--#
+                                }
+                                case 7: {//财务确认(待退款)
+                    #-->
+                    <div class="bd"><br />
+                        <h3><i class="iconfont icon-shouhou"></i>财务确认(待退款)</h3>
+                        <div class="r-btn">知道了</div>
+                    </div>
+                    <!--#
+                                }
+                                case 8: {//买家已发货
+                    #-->
+                    <div class="bd"><br />
+                        <h3><i class="iconfont icon-shouhou"></i>买家已发货</h3>
+                        <div class="r-btn">知道了</div>
+                    </div>
+                    <!--#
+                                }
+                                case 9: {//卖家收到货不同意，验货不通过
+                    #-->
+                    <div class="bd"><br />
+                        <h3><i class="iconfont icon-shouhou"></i>卖家收到货不同意，验货不通过</h3>
+                        <div class="r-btn">知道了</div>
+                    </div>
+                    <!--#
+                                }
+                                case 10: {//售后成功(已退款)
+                    #-->
+                    <div class="bd"><br />
+                        <h3><i class="iconfont icon-shouhou"></i>退款成功</h3>
+                        <p>退款成功时间:${@date.getDate(afterSaleRefundment.refundTime)}</p>
+                        <p>退款金额:￥${@money.fenToYuan(afterSale.returnMoney)}</p>
+                        <div class="r-btn">知道了</div>
+                    </div>
+                    <!--#
+                                }
+                                case 11: {//售后关闭
+                    #-->
+                    <div class="bd"><br />
+                        <h3><i class="iconfont icon-shouhou"></i>售后关闭</h3>
+                        <div class="r-btn">知道了</div>
+                    </div>
+                    <!--#
+                                }
+                                case 12: {//售后已取消
+                    #-->
+                    <div class="bd"><br />
+                        <h3><i class="iconfont icon-shouhou"></i>售后已取消</h3>
+                        <div class="r-btn">知道了</div>
+                    </div>
+                    <!--#
+                                }
+                     }
+                    #-->
+
+                    <!--#} else {#-->
+                    <div class="u-fl-blank">
+                        <i class="iconfont icon-shouhou"></i>
+                        <p>您还没有申请售后~</p>
+                    </div>
+                    <!--#}#-->
+                </div>
+                <div class="m-fl-4 f-fr js-center-gouwuche">
+                    <div class="centerTit"><i class="iconfont icon-gouwucheman"></i>我的购物车<a href="/goods/cart" class="f-fr more">查看更多 ></a></div>
+                    <!--#if(isNotEmpty(carts)){#-->
+                    <div class="bd">
+                        <ul>
+                            <!--#for (cart in carts) {#-->
+                            <li class="f-cb">
+                                <img style="cursor: pointer;" onclick="toGoodsDetail('${cart.goodsProduct.sku!}');" class="f-fl" src="${cart.imgurl}" width="80" height="80"/>
+                                <div class="info f-fl">
+                                    <a href="/goods/detail?sku=${cart.goodsProduct.sku!}" target="_blank">
+                                        ${cart.goodsMain.name!} ${cart.goodsProduct.name!}
+                                    </a>
+                                </div>
+                                <div class="price f-fl">
+                                    ¥<span>${@money.fenToYuan(cart.price!)}</span>
+                                </div>
+                            </li>
+                            <!--#}#-->
+                        </ul>
+                    </div>
+                    <!--#} else {#-->
+                    <div class="u-fl-blank">
+                        <i class="iconfont icon-gouwuche2"></i>
+                        <p>您的购物车里啥都没有，去逛逛吧~</p>
+                    </div>
+                    <!--#}#-->
+                </div>
+            </div>
+            <div class="m-li-3 f-cb">
+                <div class="m-fl-5 f-fl js-center-shoucangshangpin">
+                    <div class="centerTit f-pdg-30-r"><i class="iconfont icon-jian"></i>我收藏的商品<a href="/member/collection" class="f-fr more">查看更多 ></a></div>
+                    <!--#if(isNotEmpty(goodsFavorites)){#-->
+                    <div class="bd">
+                        <div class="picScroll-left centerScroll">
+                            <a class="next iconfont icon-xiayiye"></a>
+                            <a class="prev iconfont icon-shangyiye"></a>
+                            <div class="bd">
+                                <ul class="picList">
+                                    <!--#for (favor in goodsFavorites) {#-->
+                                    <li>
+                                        <div class="pic"><a href="/goods/detail?sku=${favor.sku!}" target="_blank"><img src="${favor.img!}"></a></div>
+                                        <div class="title"><a href="/goods/detail?sku=${favor.sku!}" target="_blank">${favor.productName!}</a></div>
+                                    </li>
+                                    <!--#}#-->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!--#} else {#-->
+                    <div class="u-fl-blank">
+                        <i class="iconfont icon-care"></i>
+                        <p>您还没有收藏商品，快去收藏自己喜欢的商品吧~~</p>
+                    </div>
+                    <!--#}#-->
+                </div>
+                <div class="m-fl-6 f-fl f-pdg-30-l js-center-shoucangdianpu">
+                    <div class="centerTit"><i class="iconfont icon-active"></i>我收藏的店铺<a href="/member/collection?status='1'" class="f-fr more">查看更多 ></a></div>
+                    <!--#if(isNotEmpty(storeFavorites)){#-->
+                    <div class="bd">
+                        <div class="picScroll-left centerScroll">
+                            <a class="next iconfont icon-xiayiye"></a>
+                            <a class="prev iconfont icon-shangyiye"></a>
+                            <div class="bd">
+                                <ul class="picList">
+                                    <!--#for (favor in storeFavorites) {#-->
+                                    <li>
+                                        <div class="pic"><a href="" target="_blank"><img src="${favor.log!}"></a></div>
+                                        <div class="title"><a href="" target="_blank">${favor.storeName!}</a></div>
+                                    </li>
+                                    <!--#}#-->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!--#} else {#-->
+                    <div class="u-fl-blank">
+                        <i class="iconfont icon-guanzhu"></i>
+                        <p>您还没有收藏店铺，快去收藏自己喜欢的店铺吧~~</p>
+                    </div>
+                    <!--#}#-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="totlePage" value="">
+<!--确认收货-->
+<div id="ly-receipt" class="m-layer-pop"><div class="info"><i class="iconfont icon-jinggao orange" style="font-size: 30px;"></i>&nbsp;确认收货?</div></div>
+<!--#
+			include("/pages/front/pc/member/inc/tail.html"){}
+		#-->
+<!-- end -->
+<script language="JavaScript">
+    $(document).ready(function () {
+        //个人中心 js-center-personal
+        //订单 js-center-order
+        $(".js-center-order li").click(function () {
+            var status = $(this).data('status');
+            switch (status) {
+                case 0: {
+                    $(".js-wait-pay-content").show();
+                    $(".js-wait-take-content,.js-wait-comment-content").hide();
+                    break;
+                }
+                case 1: {
+                    $(".js-wait-take-content").show();
+                    $(".js-wait-pay-content,.js-wait-comment-content").hide();
+                    break;
+                }
+                case 2: {
+                    $(".js-wait-comment-content").show();
+                    $(".js-wait-take-content,.js-wait-pay-content").hide();
+                    break;
+                }
+                default:
+            }
+        });
+        //售后 js-center-shouhou
+        //购物车 js-center-gouwuche
+        //商品收藏 js-center-shoucangshangpin
+        //店铺收藏 js-center-shoucangdianpu
+    });
+
+    //跳转到商品详情页面
+    function toGoodsDetail(sku) {
+        //window.location.href = "/goods/detail?sku="+sku;
+        window.open("/goods/detail?sku="+sku);
+    }
+
+
+    //确认收货
+    $(document).on("click",".receipt",function(){
+        var orderId = $(this).attr("data-val");
+        layer.open({
+            type: 1,
+            content: $('#ly-receipt'),
+            offset: '200px',
+            area: '560px',
+            title: ['提示', 'font-size:18px;color:#ba9963;font-weight:600'],
+            btn: ['确认收到', '暂时没有'],
+            yes: function(index, layero){
+                $.post("/member/order/takeDelivery",{"orderId":orderId},function (result) {
+                    layer.close(index);
+                    if(result.code == 0){
+                        var num=parseInt($(".noTake").attr("data-status"));
+                        $(".noTake").html("待收货（"+(num-1)+"）")
+                        $(".js-wait-take-content").addClass("u-fl-blank");
+                        $(".js-wait-take-content").html('<i class="iconfont icon-tubiaozhizuomoban"></i><p>好久没在茗流汇买东西了，快去逛逛吧~</p>');
+                    }
+                })
+            },
+            btn2:function (index, layero) {
+                layer.close(index);
+            },
+            shadeClose: true,
+            btnAlign: 'c',
+            scrollbar: false,
+        });
+
+    })
+
+
+</script>

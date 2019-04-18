@@ -1,0 +1,268 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<style>
+    .tool-search-line{
+        padding-top: 8px;
+    }
+    .search-input {
+        width: 30%;min-width: 120px;
+    }
+    .form-group {margin-right: 18px;}
+</style>
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button tool-search-line">
+            <form class="form-inline js-search-form" id="search_form">
+                <div class="form-group">
+                    <label class="control-label">${msg['shop.payment.column.code']}：</label>
+                    <input type="text" class="form-control search-input" name="code">
+                </div>
+                <div class="form-group">
+                    <label class="control-label">${msg['shop.payment.column.name']}：</label>
+                    <input type="text" class="form-control search-input" name="name">
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary js-search-ok">${msg['globals.button.search']}</button>
+                    <button type="button" class="btn btn-default js-search-reset">${msg['globals.button.reset']}</button>
+                </div>
+            </form>
+        </div>
+        <div class="btn-group tool-button pull-right">
+            <!--# if(@shiro.hasRole("sysadmin")){#-->
+            <a id="add" class="btn btn-primary navbar-btn" href="${base}/platform/shop/payment/add" data-pjax><i class="ti-plus"></i> ${msg['globals.button.add']}</a>
+            <!--#}#-->
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border"  style="min-height: 500px;">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                    <tr>
+                        <th>${msg['shop.payment.column.code']}</th>
+                        <th>${msg['shop.payment.column.name']}</th>
+                        <th>${msg['shop.payment.column.online']}</th>
+                        <th hidden="hidden">${msg['shop.payment.column.note']}</th>
+                        <th hidden="hidden">${msg['shop.payment.column.url']}</th>
+                        <th hidden="hidden">${msg['shop.payment.column.info']}</th>
+                        <th>${msg['shop.payment.column.imgurl']}</th>
+                        <th>${msg['shop.payment.column.disabled']}</th>
+                        <th>${msg['shop.payment.column.location']}</th>
+                        <th>${msg['globals.table.column.operation']}</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/shop/payment/data",
+                "type": "post",
+                "data": function (d) {
+                    var form = $(".js-search-form");
+                    d.code = $("input[name='code']", form).val();
+                    d.name = $("input[name='name']", form).val();
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                    {"data": "code", "bSortable": true},
+                    {"data": "name", "bSortable": true},
+                    {"data": "online", "bSortable": true},
+                 /*   {"data": "note", "bSortable": false},*/
+                 /*   {"data": "url", "bSortable": true},*/
+                 /*   {"data": "info", "bSortable": true},*/
+                    {"data": "imgurl", "bSortable": true},
+                    {"data": "disabled", "bSortable": true},
+                    {"data": "location", "bSortable": true},
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        if (false!=row.disabled) {
+                            return '<i id="disable_' + row.id + '" class="fa fa-circle text-success ml5"></i>';
+                        } else {
+                            return '<i id="disable_' + row.id + '" class="fa fa-circle text-danger ml5"></i>';
+                        }
+                    },
+                    "targets": 4
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (false!=row.online) {
+                            return '<p id="online' + row.id + '">否</p>';
+                        } else {
+                            return '<p id="online' + row.id + '">是</p>';
+                        }
+                    },
+                    "targets": 2
+                },
+                {
+                    "render": function (data, type, row) {
+                        $('#location'+row.id+'').editable();
+                        return  '<a class="location" href="#"  id="location'+row.id+'" data-url="${base}/platform/shop/payment/location" data-type="text" data-pk="'+row.id+'" data-title="${msg["shop.logistics.column.sortfiled"]}" class="editable editable-click" data-original-title="" title="" style="background-color: rgba(0, 0, 0, 0);">'+data+'</a>';
+
+                    },
+                    "targets": 5
+                },
+                {
+                    "render": function (data, type, row) {
+                        return  '<image height="40px" width="100px" id="imgurl'+row.id+'" src="'+data+'"></image>';
+
+                    },
+                    "targets": 3
+                },
+                {
+                    "render": function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                                '<li><a href="${base}/platform/shop/payment/setting/'+row.id+'" data-toggle="modal" data-target="#dialogDetail">${msg["shop.payment.column.preparation"]}</a></li>' +
+                                '<li><a href="${base}/platform/shop/payment/edit/' + row.id + '" data-pjax>${msg["globals.button.update"]}</a></li>' +
+                                '<li class="divider"></li>' +
+                            '<li><a href="javascript:;" onclick="enable(\'' + row.id + '\')">${msg["shop.payment.column.enable"]}</a></li>'+
+                            '<li><a href="javascript:;" onclick="disable(\'' + row.id + '\')">${msg["shop.payment.column.disabl"]}</a></li>'+
+                                '<li><a href="javascript:;" onclick="del(\'' + row.id + '\')">${msg["globals.button.delete"]}</a></li>' +
+                                '</ul></div>';
+                    },
+                    "targets": 6
+                }
+            ]
+        });
+      /*  datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });*/
+
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+
+        $(".js-search-ok").click(function () {
+            $('.datatable').DataTable().ajax.reload();
+        });
+
+        $(".js-search-reset").click(function () {
+            $(".js-search-form").resetForm();
+            $('.datatable').DataTable().ajax.reload();
+        });
+    }
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/shop/payment/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+    function enable(id) {
+        $.post("${base}/platform/shop/payment/disable/" + id, {}, function (data) {
+            console.log(data);
+            if (data.code == 0) {
+                $("#disable_"+id).attr("class", "fa fa-circle text-success ml5");
+                Toast.success(data.msg);
+            } else {
+                Toast.error(data.msg);
+            }
+        }, "json");
+    }
+
+    function disable(id) {
+        $.post("${base}/platform/shop/payment/enable/" + id, {}, function (data) {
+            if (data.code == 0) {
+                $("#disable_"+id).attr("class", "fa fa-circle text-danger ml5");
+                Toast.success(data.msg);
+            } else {
+                Toast.error(data.msg);
+            }
+        }, "json");
+    }
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#okDel").unbind("click");
+            dialog.find("#okDel").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/platform/shop/payment/delete", {ids: ids.toString()}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null,false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("${msg['globals.button.delete.select']}");
+        }
+    }
+    $(function () {
+        initDatatable();
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+</script>
+<!--#}#-->

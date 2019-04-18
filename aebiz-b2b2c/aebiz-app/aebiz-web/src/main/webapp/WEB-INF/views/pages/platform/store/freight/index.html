@@ -1,0 +1,161 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.config.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.all.js"></script>
+<header class="header navbar bg-white shadow">
+    <div class="pull-right">
+        <div class="btn-group tool-button">
+            <button class="btn btn-primary navbar-btn" type="button">
+                <a href="${base!}/platform/store/freight/add" style="color: white">
+                    新增模板</a></button>
+        </div>
+    </div>
+</header>
+<div class="content-wrap">
+    <div class="wrapper" style="min-height: 500px; height: 100%;">
+        <div class="box-tab">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#singleFreightModel" data-toggle="tab">运费模板列表</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="singleFreightModel">
+                    <!--# for (o in template!) { var index = 0;#-->
+                    <table class="col-lg-12 table table-bordered" id="${o.id}">
+                        <tr>
+                            <th colspan="8"><span>${o.templateName}</span><span style="float: right">
+
+                                    <!--# if (o.enabled==true){#-->
+                                       <span style="color:red">默认模板&nbsp;|</span>
+                                        <!--# }else{#-->
+                                      <span style="color: #0000cc"><a href="${base!}/platform/store/freight/enabled/${o.id}">设为默认模板</a>&nbsp;|</span>
+                                        <!--# }#-->
+                                   &nbsp;<a href="${base!}/platform/store/freight/edit/${o.id}"
+                                                       style="color: #0e78c5">编辑</a>&nbsp;|&nbsp;<a style="color: #0e78c5" href="javascript:void(0)"
+                                        onclick="del('${o.id}',this)" >删除</a></span></th>
+                        </tr>
+                        <tr>
+                            <td><label>默认规则</label></td>
+                            <td>计费方式:<label>
+                            <!--# if (o.billingType=="1"){#-->按件数<!--#}else if (o.billingType=="2"){#-->按重量<!--#}else{#-->按体积<!--#}#--></label></td>
+                            <td><!--# if (o.billingType=="1"){#-->首件<!--#}else if (o.billingType=="2"){#-->首重<!--#}else{#-->首体积<!--#}#--><label>
+                           ${o.defaultUnit}</label><!--# if (o.billingType=="1"){#-->(件)<!--#}else if (o.billingType=="2"){#-->(g)<!--#}else{#-->(cm³)<!--#}#--></td>
+                            <td>首费<label>${@money.fenToYuan(o.defautAffix)}</label>（元）</td>
+                            <td><!--# if (o.billingType=="1"){#-->续件<!--#}else if (o.billingType=="2"){#-->续重<!--#}else{#-->续体积<!--#}#--><label>${o.addUnit}</label>
+                                <!--# if (o.billingType=="1"){#-->(件)<!--#}else if (o.billingType=="2"){#-->(g)<!--#}else{#-->(cm³)<!--#}#--></td>
+                            <td colspan="3">续费<label>
+                                ${@money.fenToYuan(o.addCost)}</label>（元）</td>
+                        </tr>
+                        <tr>
+                            <td>片区名称</td>
+                            <td>分类名称</td>
+                            <td>物流公司</td>
+                            <td>计费方式</td>
+                            <td>首</td>
+                            <td>首费</td>
+                            <td>续</td>
+                            <td>续费</td>
+                        </tr>
+                        <!--# for (T in templateRules!) {  #-->
+                        <!--# if (T.templateId==o.id){#-->
+                        <tr>
+                            <td><!--# if (""!=T.areaName){#-->
+                                ${T.areaName}
+                                <!--# }else{#-->
+                                不限
+                                <!--# }#-->
+                            </td>
+                            <td>
+                                <!--# if (""!=T.goodsName){#-->
+                                ${T.goodsName}
+                                <!--# }else{#-->
+                                不限
+                                <!--# }#-->
+                            </td>
+                            <td>
+                                <!--# if (""!=T.logisticsName){#-->
+                                ${T.logisticsName}
+                                <!--# }else{#-->
+                                不限
+                                <!--# }#-->
+                            </td>
+                            <!--# if (T.valuationType=="1"){#-->
+                            <td>按件数</td>
+                            <!--# }if (T.valuationType=="2"){#-->
+                            <td>按重量</td>
+                            <!--# }if (T.valuationType=="3"){#-->
+                            <td>按体积</td>
+                            <!--# }#-->
+                            <td>${T.firstUnit}</td>
+                            <td>${@money.fenToYuan(T.firstCost)}</td>
+                            <td>${T.continueUnit}</td>
+                            <td>${@money.fenToYuan(T.continueCost)}</td>
+                        </tr>
+                        <!--# index++;} #-->
+                        <!--# } #-->
+                    <!--# if(index == 0){ #-->
+                        <tr>
+                            <td colspan="8" style="text-align: center">(规则为空)</td>
+                        </tr>
+                    <!--#  index++;} #-->
+
+                    </table>
+                    <!--#  }#-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 删除 -->
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">删除模板</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        确认删除？
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"> 取消</button>
+                <button id="ok" type="button" class="btn btn-primary" data-loading-text="${msg['sys.dict.deleting']}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    function del(id, obj) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#ok").unbind("click");
+        dialog.find("#ok").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/store/freight/delete/" + id, {}, function (data) {
+                //重置按钮状态，关闭提示框
+                dialog.modal("hide");
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    //从表格中移除此行
+                    $(obj).parent()
+                        .parent()
+                        .parent()
+                        .parent().parent().hide()
+
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+            }, "json");
+        });
+    }
+</script>
+<!--#}#-->

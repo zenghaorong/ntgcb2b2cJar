@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html class="ie8"> <![endif]-->
+<!--[if IE 9]> <html class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html class="signin no-js" lang="${lang!}"><!--<![endif]-->
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <title>b2b2c 申请入驻</title>
+    <meta name="description" content="aebiz b2b2c 申请入驻">
+    <link rel="stylesheet" href="${base!}/assets/platform/vendor/stepy/jquery.stepy.css">
+    <link rel="stylesheet" href="${base!}/assets/platform/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${base!}/assets/platform/styles/font-awesome.css">
+    <link rel="stylesheet" href="${base!}/assets/platform/styles/themify-icons.css">
+    <link rel="stylesheet" href="${base!}/assets/platform/styles/animate.css">
+    <link rel="stylesheet" href="${base!}/assets/platform/styles/skins/palette.css">
+    <link rel="stylesheet" href="${base!}/assets/platform/styles/main.css">
+    <link rel="stylesheet" href="${base!}/assets/platform/styles/panel.css">
+    <link rel="stylesheet" href="${base!}/assets/platform/vendor/jstree/themes/default/style.min.css">
+    <link rel="stylesheet" href="${base!}/assets/platform/vendor/treetable/jquery.treetable.css">
+    <link rel="stylesheet" href="${base!}/assets/platform/vendor/datatables/css/dataTables.bootstrap.css">
+    <link rel="stylesheet" href="${base!}/assets/platform/vendor/chosen/chosen.min.css">
+    <link rel="stylesheet" href="${base!}/assets/platform/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" href="${base!}/assets/platform/vendor/x-editable/bootstrap3-editable/css/bootstrap-editable.css">
+    <!--[if lt IE 9]>
+    <script src="${base!}/assets/platform/scripts/html5shiv.js"></script>
+    <script src="${base!}/assets/platform/scripts/respond.min.js"></script>
+    <script src="${base!}/assets/platform/scripts/json.js"></script>
+    <![endif]-->
+    <!--# if(@shiro.getPrincipalProperty('loginTheme')!=null){ #-->
+    <link rel="stylesheet" href="${base!}/assets/platform/styles/skins/${@shiro.getPrincipalProperty('loginTheme')}" id="skin">
+    <!--# }else{ #-->
+    <link rel="stylesheet" href="${base!}/assets/platform/styles/skins/palette.css" id="skin">
+    <!--# } #-->
+    <script src="${base!}/assets/platform/vendor/jquery/jquery.min.js"></script>
+
+   <!-- <link rel="stylesheet" href="${base!}/assets/store/css/global.css">
+    <link rel="stylesheet" href="${base!}/assets/store/css/login.css">-->
+
+    <link href="${base!}/assets/common/vendor/city-picker/css/picker.css" rel="stylesheet">
+    <link href="${base!}/assets/common/vendor/city-picker/css/main.css" rel="stylesheet">
+
+    <!-- Favicon and Apple Icons -->
+    <link rel="icon" type="image/png" href="${base!}/assets/store/img/icon.png">
+
+    <!--[if IE 7]>
+    <link rel="stylesheet" href="${base!}/assets/store/css/font-awesome-ie7.min.css">
+    <![endif]-->
+    <!--[if lt IE 9]>
+    <script src="${base!}/assets/store/js/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript">
+        var base = '${base!}';
+    </script>
+</head>
+<body class="bg_f5">
+<!-- 头部 bar star -->
+<div class="header-top">
+    <div class="container">
+        <div class="fl">
+            <a class="y_sc" href="#"><b></b>收藏全网</a>
+            您好，欢迎来到全网商城！ <a href="#" class="y_mlr5">请登录</a> <a href="#" class="y_mlr5">免费注册</a>
+        </div><!-- End .header-top-left -->
+        <ul class="fr">
+            <li class="y_headrli"><a href="#" class="y_plr10">我的订单</a></li>
+            <li class="y_headrli">
+                <span data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-mobile"></i> 手机全网 <i class="fa fa-angle-down"></i></span>
+                <s></s>
+                <div role="menu" class="dropdown-menu">
+                    <img width="150" src="${base!}/assets/store/images/aebiz/y_wx.jpg">
+                    <p class="y_smewm">扫一扫，有惊喜！</p>
+                </div>
+            </li>
+            <li class="y_headrli">
+                <span data-toggle="dropdown" class="dropdown-toggle">收藏夹 <i class="fa fa-angle-down"></i></span>
+                <s></s>
+                <ul role="menu" class="dropdown-menu">
+                    <li><a href="#">收藏的商品</a></li>
+                    <li><a href="#">收藏的店铺</a></li>
+                </ul>
+            </li>
+            <li class="y_headrli">
+                <span data-toggle="dropdown" class="dropdown-toggle">商家支持 <i class="fa fa-angle-down"></i></span>
+                <s></s>
+                <div role="menu" class="dropdown-menu y_stodrop">
+                    <dl class="y_topdropdl">
+                        <dt>商家</dt>
+                        <dd><a href="#">商家中心</a></dd>
+                        <dd><a href="#">商家入驻</a></dd>
+                        <dd><a href="#">商家工具</a></dd>
+                        <dd><a href="#">商家规则</a></dd>
+                    </dl>
+                    <p class="y_topline"></p>
+                    <dl class="y_topdropdl">
+                        <dt>帮助</dt>
+                        <dd><a href="#">帮助中心</a></dd>
+                    </dl>
+                </div>
+            </li>
+            <li class="y_headrli"><a href="#" class="y_plr10">会员俱乐部</a></li>
+            <li class="y_headrli">
+                <span data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-th-list"></i> 网站导航 <i class="fa fa-angle-down"></i></span>
+                <s></s>
+                <div role="menu" class="dropdown-menu y_wzdhdrop">
+                    <p class="y_drophot"><a href="#">月饼</a><a href="#">秋装</a><a href="#">团购</a><a href="#">母婴</a><a href="#">0元乐购</a></p>
+                    <p class="y_topline"></p>
+                    <dl>
+                        <dt>购物</dt>
+                        <dd><a href="#">服饰</a></dd>
+                        <dd><a href="#">图书</a></dd>
+                        <dd><a href="#">办公直通车</a></dd>
+                        <dd><a href="#">视频购物</a></dd>
+                        <dd><a href="#">品牌街</a></dd>
+                        <dd><a href="#">礼品卡</a></dd>
+                        <dd><a href="#">电子书</a></dd>
+                    </dl>
+                    <p class="y_topline"></p>
+                    <dl>
+                        <dt>生活</dt>
+                        <dd><a href="#">商旅</a></dd>
+                        <dd><a href="#">保险</a></dd>
+                        <dd><a href="#">彩票</a></dd>
+                        <dd><a href="#">水电煤</a></dd>
+                        <dd><a href="#">游戏</a></dd>
+                        <dd><a href="#">PPTV下载</a></dd>
+                    </dl>
+                    <p class="y_topline"></p>
+                    <dl>
+                        <dt>服务</dt>
+                        <dd><a href="#">应用商店</a></dd>
+                        <dd><a href="#">全网云</a></dd>
+                        <dd><a href="#">社区</a></dd>
+                        <dd><a href="#">客户端</a></dd>
+                        <dd><a href="#">对公销售</a></dd>
+                        <dd><a href="#">会员联盟</a></dd>
+                        <dd><a href="#">商家入驻</a></dd>
+                    </dl>
+                    <p class="y_topline"></p>
+                    <p>服务热线：<span class="f_color1">400-6060-980</span></p>
+                </div>
+            </li>
+        </ul><!-- End .header-top-right -->
+    </div><!-- End .container -->
+</div>
+<!-- 头部bar end -->
+<!-- 头部 header star -->
+<div class="header-container">
+    <div class="container">
+        <h1 class="y_logo">
+            <a title="aebiz" href="#"><img src="${base!}/assets/store/img/adimg/logo.png"></a>
+        </h1>
+        <div class="w_page-title">
+            <h2>店铺入驻</h2>
+        </div>
+    </div>
+</div>
+<div class="content-wrap">
+    <div class="wrapper">
+        <div class="row mb15">
+            <div class="col-lg-12">
+                <form id="addStoreForm" class="form-horizontal stepy parsley-form" data-parsley-validate action="${base}/store/join/addDo"  method="post">
+                    <fieldset title="${msg['store.main.column.firststep']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;">
+                        <legend>${msg['store.main.column.firststep.agreement']}</legend>
+                        <div class="form-group no-b">
+                        <p>使用本公司服务所须遵守的条款和条件。
+                            <br>
+                            <br>1.用户资格
+                            <br>本公司的服务仅向适用法律下能够签订具有法律约束力的合同的个人提供并仅由其使用。在不限制前述规定的前提下，本公司的服务不向18周岁以下或被临时或无限期中止的用户提供。如您不合资格，请勿使用本公司的服务。此外，您的帐户（包括信用评价）和用户名不得向其他方转让或出售。另外，本公司保留根据其意愿中止或终止您的帐户的权利。
+                            <br>
+                            <br>2.您的资料（包括但不限于所添加的任何商品）不得：
+                            <br>*具有欺诈性、虚假、不准确或具误导性；
+                            <br>*侵犯任何第三方著作权、专利权、商标权、商业秘密或其他专有权利或发表权或隐私权；
+                            <br>*违反任何适用的法律或法规（包括但不限于有关出口管制、消费者保护、不正当竞争、刑法、反歧视或贸易惯例/公平贸易法律的法律或法规）；
+                            <br>*有侮辱或者诽谤他人，侵害他人合法权益的内容；
+                            <br>*有淫秽、色情、赌博、暴力、凶杀、恐怖或者教唆犯罪的内容；
+                            <br>*包含可能破坏、改变、删除、不利影响、秘密截取、未经授权而接触或征用任何系统、数据或个人资料的任何病毒、特洛依木马、蠕虫、定时炸弹、删除蝇、复活节彩蛋、间谍软件或其他电脑程序；
+                            <br>
+                            <br>3.违约
+                            <br>如发生以下情形，本公司可能限制您的活动、立即删除您的商品、向本公司社区发出有关您的行为的警告、发出警告通知、暂时中止、无限期地中止或终止您的用户资格及拒绝向您提供服务：
+                            <br>(a)您违反本协议或纳入本协议的文件；
+                            <br>(b)本公司无法核证或验证您向本公司提供的任何资料；
+                            <br>(c)本公司相信您的行为可能对您、本公司用户或本公司造成损失或法律责任。
+                            <br>
+                            <br>4.责任限制
+                            <br>本公司、本公司的关联公司和相关实体或本公司的供应商在任何情况下均不就因本公司的网站、本公司的服务或本协议而产生或与之有关的利润损失或任何特别、间接或后果性的损害（无论以何种方式产生，包括疏忽）承担任何责任。您同意您就您自身行为之合法性单独承担责任。您同意，本公司和本公司的所有关联公司和相关实体对本公司用户的行为的合法性及产生的任何结果不承担责任。
+                            <br>
+                            <br>5.无代理关系
+                            <br>用户和本公司是独立的合同方，本协议无意建立也没有创立任何代理、合伙、合营、雇员与雇主或特许经营关系。本公司也不对任何用户及其网上交易行为做出明示或默许的推荐、承诺或担保。
+                            <br>
+                            <br>6.一般规定
+                            <br>本协议在所有方面均受中华人民共和国法律管辖。本协议的规定是可分割的，如本协议任何规定被裁定为无效或不可执行，该规定可被删除而其余条款应予以执行。
+                        </p>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1">
+                                <input id="apply_agreement" type="checkbox" name="apply_agreement" validate="true" style="-webkit-appearance: checkbox;min-width: 280px;">
+                            </div>
+                            <label for="apply_agreement" class="col-sm-2 control-label">${msg['store.main.column.agreement']}</label>
+                        </div>
+                    </fieldset>
+                    <fieldset title="${msg['store.main.column.secondstep']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;">
+                        <legend>${msg['store.main.column.secondstep.company']}</legend>
+                        <div class="form-group">
+                            <label for="companyName" class="col-sm-2 control-label">${msg['store.company.column.companyName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="companyName" class="form-control" name="storeCompany.companyName" data-parsley-required="true" placeholder="${msg['store.company.column.companyName']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="company_address" class="col-sm-2 control-label">${msg['store.company.column.companyCountAddress']}</label>
+                            <div class="col-sm-8">
+                                <div style="position: relative;">
+                                    <input readonly type="text" id="company_address" data-toggle="city-picker" placeholder="${msg['store.main.column.address']}">
+                                    <input type="hidden" id="companyProvince"  name="storeCompany.companyProvince" value="">
+                                    <input type="hidden" id="companyCity"  name="storeCompany.companyCity" value="">
+                                    <input type="hidden" id="companyCounty"  name="storeCompany.companyCounty" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="companyAddress" class="col-sm-2 control-label">${msg['store.company.column.companyAddress']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="companyAddress" class="form-control" name="storeCompany.companyAddress" data-parsley-required="true" placeholder="${msg['store.company.column.companyAddress']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="companyPhone" class="col-sm-2 control-label">${msg['store.company.column.companyPhone']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="companyPhone" class="form-control" name="companyPhone" data-parsley-required="true" placeholder="${msg['store.company.column.companyPhone']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactsName" class="col-sm-2 control-label">${msg['store.company.column.contactsName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="contactsName" class="form-control" name="storeCompany.contactsName" data-parsley-required="true" placeholder="${msg['store.company.column.contactsName']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactsPhone" class="col-sm-2 control-label">${msg['store.company.column.contactsPhone']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="contactsPhone" class="form-control" name="storeCompany.contactsPhone" data-parsley-required="true" placeholder="${msg['store.company.column.contactsPhone']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactsEmail" class="col-sm-2 control-label">${msg['store.company.column.contactsEmail']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="contactsEmail" class="form-control" name="contactsEmail" data-parsley-required="true" data-parsley-type="email" placeholder="${msg['store.company.column.contactsEmail']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="companyEmployeeCount" class="col-sm-2 control-label">${msg['store.company.column.companyEmployeeCount']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="companyEmployeeCount" class="form-control" name="storeCompany.companyEmployeeCount" data-parsley-required="true" placeholder="${msg['store.company.column.companyEmployeeCount']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="companyRegisteredCapital" class="col-sm-2 control-label">${msg['store.company.column.companyRegisteredCapital']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="companyRegisteredCapital" class="form-control" name="storeCompany.companyRegisteredCapital" data-parsley-required="true" placeholder="${msg['store.company.column.companyRegisteredCapital']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="businessLicenceNumber" class="col-sm-2 control-label">${msg['store.company.column.businessLicenceNumber']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="businessLicenceNumber" class="form-control" name="businessLicenceNumber" data-parsley-required="true" data-parsley-type="number" placeholder="${msg['store.company.column.businessLicenceNumber']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="businessLicenceStart" class="col-sm-2 control-label">${msg['store.company.column.businessLicenceStart']}</label>
+                            <div class="col-sm-8">
+                                <div class="input-group date form_datetime " style="width:150px;float:left;padding-left: 5px;padding-right: 5px" id="businessLicenceStart"
+                                     data-date-format="dd MM yyyy" data-link-field="businessLicenceStart">
+                                    <input type="text" id="beginDayPick" size="16" readonly="" class="form-control" value=""
+                                           data-parsley-required="true">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                </div>
+                                <input type="hidden" name="storeCompany.businessLicenceStart" value="2017-02-03">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="businessLicenceEnd" class="col-sm-2 control-label">${msg['store.company.column.businessLicenceEnd']}</label>
+                            <div class="col-sm-8">
+                                <div class="input-group date form_datetime " style="width:150px;float:left;padding-left: 5px;padding-right: 5px"id="businessLicenceEnd"
+                                     data-date-format="dd MM yyyy" data-link-field="businessLicenceEnd">
+                                    <input type="text" id="endDayPick" size="16" readonly="" class="form-control" value=""
+                                           data-parsley-required="true">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                </div>
+                                <input type="hidden" name="storeCompany.businessLicenceEnd" value="2017-02-03">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="businessSphere" class="col-sm-2 control-label">${msg['store.company.column.businessSphere']}</label>
+                            <div class="col-sm-4">
+                                <textarea id="businessSphere" class="form-control" name="storeCompany.businessSphere" placeholder="${msg['store.company.column.businessSphere']}"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="businessLicenceupImage" class="col-sm-2 control-label">${msg['store.company.column.businessLicenceupImage']}</label>
+                            <div class="col-sm-8">
+                                <div id="businessLicence_queue"></div>
+                                <div>
+                                    <input id="businessLicence_upload" name="businessLicence_upload" type="file"
+                                           multiple="false">
+                                </div>
+                                <div id="businessLicence_img" style="padding: 5px;"></div>
+                                <input type="hidden" id="businessLicenceupImage" name="storeCompany.businessLicenceupImage" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="organizationCode" class="col-sm-2 control-label">${msg['store.company.column.organizationCode']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="organizationCode" class="form-control" name="storeCompany.organizationCode" data-parsley-required="true" data-parsley-type="number" placeholder="${msg['store.company.column.organizationCode']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="organizationCodeImage" class="col-sm-2 control-label">${msg['store.company.column.organizationCodeImage']}</label>
+                            <div class="col-sm-8">
+                                <div id="organizationCode_queue"></div>
+                                <div>
+                                    <input id="organizationCode_upload" name="organizationCode_upload" type="file"
+                                           multiple="false">
+                                </div>
+                                <div id="organizationCode_img" style="padding: 5px;"></div>
+                                <input type="hidden" id="organizationCodeImage" name="storeCompany.organizationCodeImage" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="generalTaxpayerImage" class="col-sm-2 control-label">${msg['store.company.column.generalTaxpayerImage']}</label>
+                            <div class="col-sm-8">
+                                <div id="generalTaxpayer_queue"></div>
+                                <div>
+                                    <input id="generalTaxpayer_upload" name="generalTaxpayer_upload" type="file"
+                                           multiple="false">
+                                </div>
+                                <div id="generalTaxpayer_img" style="padding: 5px;"></div>
+                                <input type="hidden" id="generalTaxpayerImage" name="storeCompany.generalTaxpayerImage" value="">
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset title="${msg['store.main.column.thirdstep']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;">
+                        <legend>${msg['store.main.column.thirdstep.bank']}</legend>
+                        <div class="form-group">
+                            <label for="bankAccountName" class="col-sm-2 control-label">${msg['store.company.column.bankAccountName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="bankAccountName" class="form-control" name="storeCompany.bankAccountName" data-parsley-required="true" placeholder="${msg['store.company.column.bankAccountName']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bankAccountNumber" class="col-sm-2 control-label">${msg['store.company.column.bankAccountNumber']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="bankAccountNumber" class="form-control" name="storeCompany.bankAccountNumber" data-parsley-required="true" data-parsley-type="number" placeholder="${msg['store.company.column.bankAccountNumber']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bankName" class="col-sm-2 control-label">${msg['store.company.column.bankName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="bankName" class="form-control" name="storeCompany.bankName" data-parsley-required="true" placeholder="${msg['store.company.column.bankName']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bankCode" class="col-sm-2 control-label">${msg['store.company.column.bankCode']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="bankCode" class="form-control" name="storeCompany.bankCode" data-parsley-required="true" placeholder="${msg['store.company.column.bankCode']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bankAddress" class="col-sm-2 control-label">${msg['store.company.column.bankAddress']}</label>
+                            <div class="col-sm-8">
+                                <div style="position: relative;">
+                                    <input type="text" readonly id="bankAddress" data-toggle="city-picker" name="storeCompany.bankAddress" data-parsley-required="true" placeholder="${msg['store.company.column.bankAddress']}">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bankLicenceImage" class="col-sm-2 control-label">${msg['store.company.column.bankLicenceImage']}</label>
+                            <div class="col-sm-8">
+                                <div id="bankLicence_queue"></div>
+                                <div>
+                                    <input id="bankLicence_upload" name="bankLicence_upload" type="file"
+                                           multiple="false">
+                                </div>
+                                <div id="bankLicence_img" style="padding: 5px;"></div>
+                                <input type="hidden" id="bankLicenceImage" name="storeCompany.bankLicenceImage" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="alipayName" class="col-sm-2 control-label">${msg['store.company.column.alipayName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="alipayName" class="form-control" name="storeCompany.alipayName" data-parsley-required="true" placeholder="${msg['store.company.column.alipayName']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="alipayAccountNumber" class="col-sm-2 control-label">${msg['store.company.column.alipayAccountNumber']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="alipayAccountNumber" class="form-control" name="storeCompany.alipayAccountNumber" data-parsley-required="true" placeholder="${msg['store.company.column.alipayAccountNumber']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="weichatName" class="col-sm-2 control-label">${msg['store.company.column.weichatName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="weichatName" class="form-control" name="storeCompany.weichatName" data-parsley-required="true" placeholder="${msg['store.company.column.weichatName']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="weichatAccountNumber" class="col-sm-2 control-label">${msg['store.company.column.weichatAccountNumber']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="weichatAccountNumber" class="form-control" name="storeCompany.weichatAccountNumber" data-parsley-required="true" placeholder="${msg['store.company.column.weichatAccountNumber']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="taxRegistrationCertificate" class="col-sm-2 control-label">${msg['store.company.column.taxRegistrationCertificate']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="taxRegistrationCertificate" class="form-control" name="storeCompany.taxRegistrationCertificate" data-parsley-required="true" placeholder="${msg['store.company.column.taxRegistrationCertificate']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="taxpayerId" class="col-sm-2 control-label">${msg['store.company.column.taxpayerId']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="taxpayerId" class="form-control" name="storeCompany.taxpayerId" data-parsley-required="true" placeholder="${msg['store.company.column.taxpayerId']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="taxRegistrationCertificateImage" class="col-sm-2 control-label">${msg['store.company.column.taxRegistrationCertificateImage']}</label>
+                            <div class="col-sm-8">
+                                <div id="taxRegistrationCertificate_queue"></div>
+                                <div>
+                                    <input id="taxRegistrationCertificate_upload" name="taxRegistrationCertificate_upload" type="file"
+                                           multiple="false">
+                                </div>
+                                <div id="taxRegistrationCertificate_img" style="padding: 5px;"></div>
+                                <input type="hidden" id="taxRegistrationCertificateImage" name="storeCompany.taxRegistrationCertificateImage" value="">
+                            </div>
+                        </div>
+
+                    </fieldset>
+                    <fieldset title="${msg['store.main.column.fourstep']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;">
+                        <legend>${msg['store.main.column.fourstep.store']}</legend>
+                        <div class="form-group">
+                            <label for="storeName" class="col-sm-2 control-label">${msg['store.main.column.storeName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="storeName" class="form-control" name="storeMain.storeName" data-parsley-required="true" placeholder="${msg['store.main.column.storeName']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="store_address" class="col-sm-2 control-label">${msg['store.main.column.address']}</label>
+                            <div class="col-sm-8">
+                                <div style="position: relative;">
+                                    <input type="text" readonly id="store_address" data-toggle="city-picker" class="form-control" data-parsley-required="true" placeholder="${msg['store.main.column.address']}">
+                                    <input type="hidden" id="storeProvince"  name="storeMain.storeProvince" value="">
+                                    <input type="hidden" id="storeCity"  name="storeMain.storeCity" value="">
+                                    <input type="hidden" id="storeCounty"  name="storeMain.storeCounty" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="storeAddress" class="col-sm-2 control-label">${msg['store.main.column.storeAddress']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="storeAddress" class="form-control" name="storeMain.storeAddress" data-parsley-required="true" placeholder="${msg['store.main.column.storeAddress']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="storeTel" class="col-sm-2 control-label">${msg['store.main.column.storeTel']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="storeTel" class="form-control" name="storeMain.storeTel" data-parsley-required="true" data-parsley-type="number" placeholder="${msg['store.main.column.storeTel']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="storePostcode" class="col-sm-2 control-label">${msg['store.main.column.storePostcode']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="storePostcode" class="form-control" name="storeMain.storePostcode"  data-parsley-type="number" placeholder="${msg['store.main.column.storePostcode']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="classId" class="col-sm-2 control-label">${msg['store.main.column.classId']}</label>
+                            <div class="col-sm-8">
+                                <select id="classId" name="storeMain.classId" class="form-control" data-parsley-required="true">
+                                    <option value="" >${msg['globals.select.select']}</option>
+                                    ${classOption!}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="levelId" class="col-sm-2 control-label">${msg['store.main.column.levelId']}</label>
+                            <div class="col-sm-8">
+                                <select id="levelId" name="storeMain.levelId" class="form-control" data-parsley-required="true">
+                                    <option value="">${msg['globals.select.select']}</option>
+                                    <!--#for(o in levelList){#-->
+                                    <option value="${o.id!}" >${o.name!} (${msg['store.level.column.goodsLimit']}：${o.goodsLimit!} ${msg['store.level.column.price']}：${o.price!})</option>
+                                    <!--#}#-->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="typeId" class="col-sm-2 control-label">${msg['store.main.column.typeId']}</label>
+                            <div class="col-sm-8">
+                                <!--#for(o in typeList){#-->
+                                <div class="radio"><label><input id="typeId" type="radio" style="-webkit-appearance: radio; min-width: auto;" name="storeMain.typeId" data-parsley-required="true" style="min-width: 14px;" value="${o.id!}" <!--# if(o.defaultValue){ #-->checked<!--# } #-->></label>${o.name!}</div>
+                                <!--#}#-->
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="logo" class="col-sm-2 control-label">${msg['store.main.column.logo']}</label>
+
+                            <div class="col-sm-8">
+                                <div id="queue"></div>
+                                <div>
+                                    <input id="file_upload" name="file_upload" type="file"
+                                           multiple="false">
+                                </div>
+                                <div id="img" style="padding: 5px;"></div>
+                                <input type="hidden" id="logo" name="logo" value="">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">${msg['goods.class']}</label>
+                            <div class="col-sm-8">
+                                <button type="button" class="btn btn-primary"
+                                        data-toggle="modal" data-target="#dialogSelectParentUnit">
+                                    <i class="ti-plus"></i>${msg['goods.class.select']}
+                                </button>
+                            </div>
+                            <input id="ids" type="hidden" name="ids" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="joininYear" class="col-sm-2 control-label">${msg['store.main.column.joininYear']}</label>
+                            <div class="col-sm-8">
+                                <select id="joininYear" name="storeMain.joininYear" class="form-control" data-parsley-required="true">
+                                    <option value="1">1年</option>
+                                    <option value="2">2年</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+                   <!-- <fieldset title="${msg['store.main.column.fivestep']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;">
+                        <legend>${msg['store.main.column.fivestep.storeopen']}</legend>
+                    </fieldset>-->
+                    <button  id="complete" class="stepy-finish btn btn-primary pull-right" data-loading-text="${msg['store.main.column.nowsubmit']}">${msg['store.main.column.complete']}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 选择商品分类 -->
+<div id="dialogSelectParentUnit" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['goods.class.select']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeParentUnit" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['goods.class.cancel.select']}</button>
+                <button type="button" class="btn btn-primary"
+                        onclick="selectGoodsCLass()">${msg['goods.class.column.enter']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--script-->
+<script src="${base!}/assets/platform/vendor/modernizr.js"></script>
+<script src="${base!}/assets/platform/scripts/jquery.pjax.js"></script>
+<script src="${base!}/assets/platform/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="${base!}/assets/platform/vendor/jquery.form/jquery.form.js"></script>
+<script src="${base!}/assets/platform/vendor/sortable/js/sortable.min.js"></script>
+<script src="${base!}/assets/platform/vendor/nestable/jquery.nestable.js"></script>
+<script src="${base!}/assets/platform/vendor/iCheck/icheck.js"></script>
+<script src="${base!}/assets/platform/vendor/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="${base!}/assets/platform/vendor/jquery.easing/jquery.easing.min.js"></script>
+<script src="${base!}/assets/platform/vendor/appear/jquery.appear.js"></script>
+<script src="${base!}/assets/platform/vendor/fastclick.js"></script>
+<script src="${base!}/assets/platform/vendor/jquery-countTo/jquery.countTo.js"></script>
+<script src="${base!}/assets/platform/scripts/toast.js"></script>
+<script src="${base!}/assets/platform/vendor/chosen/chosen.jquery.min.js"></script>
+<script src="${base!}/assets/platform/vendor/treetable/jquery.treetable.js"></script>
+<script src="${base!}/assets/platform/vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="${base!}/assets/platform/vendor/datatables/js/dataTables.bootstrap.js"></script>
+<script src="${base!}/assets/platform/vendor/jstree/jstree.min.js"></script>
+<script src="${base!}/assets/platform/vendor/switchery/switchery.min.js"></script>
+
+<script src="${base!}/assets/platform/vendor/stepy/jquery.stepy.js"></script>
+<script src="${base!}/assets/platform/vendor/stepy/jquery.stepy.min.js"></script>
+<script src="${base!}/assets/platform/vendor/jquery-validation/jquery.validate.min.js"></script>
+<script src="${base!}/assets/platform/vendor/iCheck/icheck.min.js"></script>
+<script src="${base!}/assets/platform/vendor/chosen/chosen.jquery.min.js"></script>
+<script src="${base!}/assets/platform/vendor/uploadifive/jquery.uploadifive.min.js"></script>
+
+<script src="${base!}/assets/platform/vendor/bootstrap-datepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="${base!}/assets/platform/vendor/bootstrap-datepicker/js/bootstrap-datetimepicker.fr.js"></script>
+
+<script src="${base!}/assets/platform/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<script src="${base!}/assets/platform/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.${lang!}.min.js"></script>
+<script src="${base!}/assets/platform/vendor/sortable/js/sortable.min.js"></script>
+<script src="${base!}/assets/platform/vendor/sparkline/jquery.sparkline.min.js"></script>
+<script src="${base!}/assets/platform/vendor/x-editable/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<script src="${base!}/assets/platform/vendor/jquery.placeholder.js"></script>
+<script src="${base!}/assets/platform/vendor/moment/moment.min.js"></script>
+<script src="${base!}/assets/platform/vendor/moment/locale/${lang!}.js"></script>
+<script src="${base!}/assets/platform/vendor/parsleyjs/parsley.min.js"></script>
+<script src="${base!}/assets/platform/vendor/parsleyjs/locale/${lang!}.js"></script>
+<script src="${base!}/assets/platform/scripts/form.js"></script>
+<script src="${base!}/assets/platform/scripts/offscreen.js"></script>
+<script src="${base!}/assets/store/scripts/main.js"></script>
+<script src="${base!}/assets/platform/scripts/page.js"></script>
+<script src="${base!}/assets/platform/scripts/date.js"></script>
+
+<script src="${base!}/assets/common/vendor/city-picker/js/data.86.all.js"></script>
+<script src="${base!}/assets/common/vendor/city-picker/js/picker.86.js"></script>
+<script language="JavaScript">
+    function initTreeView() {
+        $("#jsTreeParentUnit").jstree({
+            plugins: ["checkbox", "json_data"],
+            core: {
+                data: {
+                    dataType: "json",
+                    url: function (node) {
+                        return node.id === "#" ? "${base!}/store/join/tree" : "${base!}/store/join/tree?pid=" + node.id
+                    }
+                },
+                multiple: true
+            }
+        });
+        var $dialog = $("#dialogSelectParentUnit");
+        $dialog.on('hide.bs.modal', function () {
+            var tree = $("#jsTreeParentUnit").jstree(true);
+            tree.deselect_all();
+            tree.close_all();
+        }).on('show.bs.modal', function () {
+            var ids =$("#ids").val().split(",");
+            if (ids) {
+                $("#jsTreeParentUnit").jstree(true).select_node(ids);
+            }
+        });
+    }
+
+    //选择商品分类
+    function selectGoodsCLass() {
+        var tree = $.jstree.reference("#jsTreeParentUnit");
+        var node = tree.get_selected(true);
+        if (node.length > 0) {
+            var ids = [];
+            $.each(node, function (i, n) {
+                ids.push(n.id);
+            });
+            $("#ids").val(ids);
+        }
+        $("#dialogSelectParentUnit").modal("hide");
+    }
+    function businessLicence_clearFile() {
+        $("#businessLicenceup_img").html("");
+        $("#businessLicenceup_queue").html("");
+        $("#businessLicenceupImage").val("");
+    }
+    function organizationCode_clearFile() {
+        $("#organizationCode_img").html("");
+        $("#organizationCode_queue").html("");
+        $("#organizationCodeImage").val("");
+    }
+    function generalTaxpayer_clearFile() {
+        $("#generalTaxpayer_img").html("");
+        $("#generalTaxpayer_queue").html("");
+        $("#generalTaxpayerImage").val("");
+    }
+    function taxRegistrationCertificate_clearFile() {
+        $("#taxRegistrationCertificate_img").html("");
+        $("#taxRegistrationCertificate_queue").html("");
+        $("#taxRegistrationCertificateImage").val("");
+    }
+    function bankLicence_clearFile() {
+        $("#bankLicence_img").html("");
+        $("#bankLicence_queue").html("");
+        $("#bankLicenceImage").val("");
+    }
+    $("#complete").on("click",function(){
+        if ($('#store_address').data('citypicker')) {
+            var store_address = $('#store_address').data('citypicker').getVal().split('/');
+            $('#storeProvince').val(store_address[0]);
+            $('#storeCity').val(store_address[1]);
+            $('#storeCounty').val(store_address[2]);
+        }
+
+        if ($('#company_address').data('citypicker')) {
+            var company_address = $('#company_address').data('citypicker').getVal().split('/');
+            $('#companyProvince').val(company_address[0]);
+            $('#companyCity').val(company_address[1]);
+            $('#companyCounty').val(company_address[2]);
+        }
+
+        //$('#addStoreForm').submit();
+    });
+    $(function () {
+        initTreeView();
+        $(".stepy").stepy({
+            backLabel: "${msg['store.main.column.upstep']}",
+            nextLabel: "${msg['store.main.column.nextstep']}",
+            errorImage: true,
+            block: true,
+            validate: true,
+            legend: false,
+            select: function (idx) {
+
+                if (idx == 2) {
+                 }
+            }, finish: function(index) {
+
+            }
+        });
+        $(".stepy").validate({
+            errorPlacement: function (error) {
+                $(".stepy .stepy-errors").append(error)
+            },
+            rules: {
+                "apply_agreement": "required"
+            },
+            messages: {
+                "apply_agreement": {
+                    required: "请同意以上协议"
+                }
+            }
+        });
+        //表单ajax提交
+        $("#addStoreForm").ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+                if (form.attr("isSubmit") == undefined) {//与stepy结合使用时，要避免二次提交的问题
+                    form.attr("isSubmit", true);
+                } else {
+                    form.removeAttr("isSubmit");
+                    return false;
+                }
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success("店铺开通成功！");
+                    form.resetForm();
+                    $("#menuIds").val("");
+                    //回到第一个step
+                    window.location.href = "${base!}/store/home";
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+        myForm.init();
+
+        $('#businessLicenceStart').datepicker({
+            minView: "month", //选择日期后，不会再跳转去选择时分秒
+            format: "yyyy-mm-dd", //选择日期后，文本框显示的日期格式
+            language: 'zh-CN', //汉化
+            autoclose: true //选择日期后自动关闭
+//            language:  'zh-CN',
+//            minView: 2,
+//            format:'yyyy-mm-dd',
+//            weekStart: 1,
+//            todayBtn:  1,
+//            autoclose: 1,
+//            todayHighlight: 1,
+//            startView: 2,
+//            forceParse: 0,
+//            showMeridian: 1
+        }).on('changeDate',function(e){
+            var startTime = e.date;
+            $('#businessLicenceEnd').datepicker('setStartDate',startTime);
+            //$("#businessLicenceEnd").datepicker('clearDates');
+        });
+        $('#businessLicenceEnd').datepicker({
+            minView: "month", //选择日期后，不会再跳转去选择时分秒
+            format: "yyyy-mm-dd", //选择日期后，文本框显示的日期格式
+            language: 'zh-CN', //汉化
+            autoclose: true //选择日期后自动关闭
+//            language:  'zh-CN',
+//            minView: 2,
+//            format:'yyyy-mm-dd',
+//            weekStart: 1,
+//            todayBtn:  1,
+//            autoclose: 1,
+//            todayHighlight: 1,
+//            startView: 2,
+//            forceParse: 0,
+//            showMeridian: 1
+        }).on('changeDate',function(e){
+            var endTime = e.date;
+            $('#businessLicenceStart').datepicker('setEndDate',endTime);
+        });
+
+        $('#businessLicence_upload').uploadifive({
+            'auto': true,
+            'multi': false,
+            'width': '100%',
+            'height': '35',
+            'buttonText': '${msg["store.company.column.businessLicenceupImage"]}',
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024,
+            'queueSizeLimit': 1,
+            'formData': {},
+            'queueID': 'businessLicence_queue',
+            'uploadScript': '${base}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    $("#businessLicence_img").html("<img src='" + data.data + "' style='width:150px;height:95px;'>");
+                    $("#businessLicenceupImage").val(data.data);
+                } else {
+                    businessLicence_clearFile();
+                    Toast.error(data.msg);
+                }
+            },
+            'onDrop': function (file, fileDropCount) {
+                businessLicence_clearFile();
+            },
+            'onClearQueue': function (queue) {
+                businessLicence_clearFile();
+            },
+            'onCancel': function () {
+                businessLicence_clearFile();
+            }
+        });
+
+        $('#organizationCode_upload').uploadifive({
+            'auto': true,
+            'multi': false,
+            'width': '100%',
+            'height': '35',
+            'buttonText': '${msg["store.company.column.organizationCodeImage"]}',
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024,
+            'queueSizeLimit': 1,
+            'formData': {},
+            'queueID': 'organizationCode_queue',
+            'uploadScript': '${base}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    $("#organizationCode_img").html("<img src='" + data.data + "' style='width:150px;height:95px;'>");
+                    $("#organizationCodeImage").val(data.data);
+                } else {
+                    organizationCode_clearFile();
+                    Toast.error(data.msg);
+                }
+            },
+            'onDrop': function (file, fileDropCount) {
+                organizationCode_clearFile();
+            },
+            'onClearQueue': function (queue) {
+                organizationCode_clearFile();
+            },
+            'onCancel': function () {
+                organizationCode_clearFile();
+            }
+        });
+        $('#generalTaxpayer_upload').uploadifive({
+            'auto': true,
+            'multi': false,
+            'width': '100%',
+            'height': '35',
+            'buttonText': '${msg["store.company.column.generalTaxpayerImage"]}',
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024,
+            'queueSizeLimit': 1,
+            'formData': {},
+            'queueID': 'generalTaxpayer_queue',
+            'uploadScript': '${base}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    $("#generalTaxpayer_img").html("<img src='" + data.data + "' style='width:150px;height:95px;'>");
+                    $("#generalTaxpayerImage").val(data.data);
+                } else {
+                    generalTaxpayer_clearFile();
+                    Toast.error(data.msg);
+                }
+            },
+            'onDrop': function (file, fileDropCount) {
+                generalTaxpayer_clearFile();
+            },
+            'onClearQueue': function (queue) {
+                generalTaxpayer_clearFile();
+            },
+            'onCancel': function () {
+                generalTaxpayer_clearFile();
+            }
+        });
+
+        $('#taxRegistrationCertificate_upload').uploadifive({
+            'auto': true,
+            'multi': false,
+            'width': '100%',
+            'height': '35',
+            'buttonText': '${msg["store.company.column.taxRegistrationCertificateImage"]}',
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024,
+            'queueSizeLimit': 1,
+            'formData': {},
+            'queueID': 'taxRegistrationCertificate_queue',
+            'uploadScript': '${base}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    $("#taxRegistrationCertificate_img").html("<img src='" + data.data + "' style='width:150px;height:95px;'>");
+                    $("#taxRegistrationCertificateImage").val(data.data);
+                } else {
+                    taxRegistrationCertificate_clearFile();
+                    Toast.error(data.msg);
+                }
+            },
+            'onDrop': function (file, fileDropCount) {
+                taxRegistrationCertificate_clearFile();
+            },
+            'onClearQueue': function (queue) {
+                taxRegistrationCertificate_clearFile();
+            },
+            'onCancel': function () {
+                taxRegistrationCertificate_clearFile();
+            }
+        });
+
+        $('#bankLicence_upload').uploadifive({
+            'auto': true,
+            'multi': false,
+            'width': '100%',
+            'height': '35',
+            'buttonText': '${msg["store.company.column.bankLicenceImage"]}',
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024,
+            'queueSizeLimit': 1,
+            'formData': {},
+            'queueID': 'bankLicence_queue',
+            'uploadScript': '${base}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    $("#bankLicence_img").html("<img src='" + data.data + "' style='width:150px;height:95px;'>");
+                    $("#bankLicenceImage").val(data.data);
+                } else {
+                    bankLicence_clearFile();
+                    Toast.error(data.msg);
+                }
+            },
+            'onDrop': function (file, fileDropCount) {
+                bankLicence_clearFile();
+            },
+            'onClearQueue': function (queue) {
+                bankLicence_clearFile();
+            },
+            'onCancel': function () {
+                bankLicence_clearFile();
+            }
+        });
+
+        $('#file_upload').uploadifive({
+            'auto' : true,
+            'multi' : false,
+            'width' : '100%',
+            'height' : '35',
+            'buttonText' : '${msg["cms.site.column.selectpicture"]}',
+            'fileType' : 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit' : 1024,
+            'queueSizeLimit' : 1,
+            'formData' : {},
+            'queueID' : 'queue',
+            'removeCompleted':true,
+            'removeTimeout':0,
+            'uploadScript' : '${base}/open/file/upload/image',
+            'onUploadComplete' : function(file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    $("#img")
+                        .html(
+                            "<img src='" + data.data + "' style='width:150px;'>");
+                    $("#logo").val(
+                        data.data);
+                } else {
+                    Toast.error(data.msg);
+                }
+            },
+            'onDrop' : function(file,fileDropCount) {
+
+            },
+            'onClearQueue' : function(queue) {
+
+            },
+            'onCancel' : function() {
+
+            }
+        });
+    });
+
+    function complete() {
+        $('#addStoreForm').submit();
+    }
+</script>
+
+

@@ -1,0 +1,1352 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<style>
+    .div-img-album{
+        list-style-type: none;
+        margin: 2px;
+        height: 118px;
+        float: left;
+    }
+    .divImg{
+        float: left;
+        margin: 2px;
+        padding: 2px;
+        height:108px;
+        width:100px;
+        border: 1px solid #dcdcdc;
+        cursor: pointer;
+    }
+    .divImgD{
+        float: left;
+        margin: 2px;
+        padding: 2px;
+        height:108px;
+        width:100px;
+        border: 1px solid red;
+        cursor: pointer;
+    }
+    /*.product-price-sm{
+        width: 80px;
+        min-width: 75px;
+    }
+    .product-price-xs{
+        width: 15px;
+        min-width: 13px;
+    }*/
+    .line-height-sm{
+        height: 30px;
+    }
+    .goods-area-label{
+        float:left;margin:3px 1px 2px 1px;
+    }
+    .goods-area-label-del {
+        cursor: pointer;
+        font-family: 'themify';
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        position: relative;
+        font-size: 10px;
+        margin-left: 10px;
+    }
+    .product-number-input{
+        height: 22px;width: 90px;padding: 0 2px;
+    }
+    .product-sku-input{
+        height: 22px;width: 100px;padding: 0 2px;
+    }
+</style>
+
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base!}/platform/self/goods/list/${type!}" data-pjax><i class="ti-angle-left"></i> ${msg['goods.main.btn.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <form id="addForm" role="form" class="form-horizontal" method="post">
+            <input type="hidden" name="id" id="id" value="${obj.id!}">
+            <input type="hidden" name="storeId" id="storeId" value="${obj.storeId!}">
+            <input type="hidden" name="status" id="status" value="">
+            <input type="hidden" name="isSubmit" id="isSubmit" value="0">
+            <input type="hidden" name="subType" id="subType" value="">
+            <div class="box-tab ">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#base" data-toggle="tab">${msg['goods.main.tab.base']}</a></li>
+                    <li class=""><a href="#goods_info" data-toggle="tab">${msg['goods.main.tab.info']}</a></li>
+                    <li id="goods_params_tab" class="" style="${ !isEmpty(obj.goodsType) && obj.goodsType.hasParam ? 'display:block' : 'display:none'}" ><a href="#goods_params" data-toggle="tab">${msg['goods.main.tab.spec']}</a></li>
+                    <li id="goods_props_tab" class="" style="${ !isEmpty(obj.goodsType) && obj.goodsType.hasProp ? 'display:block' : 'display:none'}" ><a href="#goods_props" data-toggle="tab">${msg['goods.main.tab.prop']}</a></li>
+                </ul>
+                <div class="tab-content text-center">
+                    <div class="tab-pane fade active in" id="base">
+                        <div class="row mb10">
+                            <div class="col-lg-12">
+                                <div class="form-group has-feedback">
+                                    <label class="col-sm-2 control-label">${msg['goods.main.column.classId']}</label>
+                                    <div class="col-sm-3">
+                                        <input type="hidden" name="classId" value="${isNotEmpty(obj.goodsClass) ? obj.goodsClass.id}" />
+                                        <input type="text" class="form-control" id="classId" readonly value="${isNotEmpty(obj.goodsClass) ? obj.goodsClass.name}" data-parsley-required="true"/>
+                                    </div>
+                                    <label class="col-sm-1 control-label">${msg['goods.main.column.frontClassId']}</label>
+                                    <div class="col-sm-4">
+                                        <input type="hidden" name="front_classes" value="<!--#for(sgc in obj.storeGoodsClassList){#-->${sgc.id}${!sgcLP.last ? ','}<!--#}#-->">
+                                        <input type="text" class="form-control" id="frontClassId" name="tmp_frontClassId" readonly value="<!--#for(sgc in obj.storeGoodsClassList){#-->${sgc.name}${!sgcLP.last ? ','}<!--#}#-->"  />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="typeId" class="col-sm-2 control-label">${msg['goods.main.column.typeId']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="hidden" name="typeId" value="${obj.typeId}">
+                                        <select id="typeId" name="typeId" class="form-control" data-live-search="true" disabled>
+                                            <option value="">${msg['goods.main.select.typeId.option.default']}</option>
+                                            <!--#for(o in typeList){#-->
+                                            <option value="${o.id!}" <!--#if(obj.typeId==o.id){#-->selected<!--#}#-->>${o.name!}</option>
+                                            <!--#}#-->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="brandId" class="col-sm-2 control-label">${msg['goods.main.column.brandId']}</label>
+                                    <div class="col-sm-8">
+                                        <select id="brandId" name="brandId" class="form-control" disabled>
+                                            <!--#for(o in brandList){#-->
+                                            <option value="${o.id!}" <!--#if(obj.brandId == o.id){#-->selected<!--#}#-->>${o.name!}</option>
+                                            <!--#}#-->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="name" class="col-sm-2 control-label">${msg["goods.main.column.name"]}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="name" class="form-control" name="name" readonly value="${obj.name!}"  data-parsley-maxlength="150">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="title" class="col-sm-2 control-label">${msg["goods.main.column.title"]}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="title" name="title" readonly value="${obj.title!}" data-parsley-maxlength="150" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="keywords" class="col-sm-2 control-label">${msg['goods.main.column.keywords']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="keywords" class="form-control" name="keywords" readonly value="${obj.keywords!}" data-parsley-maxlength="150" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">${msg['goods.main.column.tags']}</label>
+                                    <div class="col-sm-8" align="left">
+                                        <!--# for (o in tagList) { #-->
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" id="tagCheckbox${oLP.index}" name="tagList[${oLP.index-1}].id" disabled value="${o.id}" <!--# for (t in obj.tagList) {  if (t.id == o.id) {#-->checked<!--#break;}}#--> >${o.name}
+                                            <!--#if(isNotEmpty(o.imgurl)){#--><img src="${o.imgurl!}" style="width: 15px;height: 15px;"><!--#}#-->
+                                        </label>
+                                        <!--# } #-->
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="display: none">
+                                    <label for="imgList" class="col-sm-2 control-label">${msg['goods.main.column.imgList']}</label>
+                                    <div class="col-sm-8">
+                                        <div id="div_imgList_queue"></div>
+                                        <div>
+                                            <input id="file_upload_imgList" name="file_upload_imgList" type="file" multiple="false">
+                                        </div>
+                                        <div id="div_imgList_img" style="padding: 5px;">
+                                            <!--#if(!isEmpty(obj.imgList)){#-->
+                                            <img src='${obj.imgList!}' style='width:150px;'>
+                                            <i style="cursor: pointer" class="fa fa-close" onclick="$('#imgList').val('');$('#div_imgList_img').empty();"></i>
+                                            <!--#}#-->
+                                        </div>
+                                        <input type="hidden" id="imgList" name="imgList"  value="${obj.imgList!}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">${msg['goods.main.column.unit']}</label>
+                                    <div class="col-sm-8">
+                                        <select id="unit" name="unit" class="form-control" data-parsley-required="true" disabled>
+                                            <option value="">${msg['goods.main.select.unit.option.default']}</option>
+                                            <!--# for (o in unitDictList) { #-->
+                                            <option value="${o.code}" ${obj.unit == o.code ? "selected"}>${o.name}</option>
+                                            <!--# } #-->
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div id="sp_new" style="${obj.hasSpec ? 'display:block' : 'display:none'}" >
+                                    <!--#if(obj.hasSpec){#-->
+                                    <div class="form-group" id="div_spec_new">
+                                        <label class="col-sm-2 control-label">${msg["goods.product.column.spec"]}</label>
+                                        <div class="col-sm-8">
+                                            <button id="specEditBtn" class="btn btn-primary" style="float: left;" type="button">${msg['goods.main.btn.specViewBtn']}</button>
+                                            <div id="div_spec_groups" style="float: left;text-align: left;">${msg["goods.main.div.spec.words0"]}${@productsList.size()}${msg["goods.main.div.spec.words1"]}[
+                                                <!--#for(o in productsList){
+                                                    var specGroup = @org.nutz.json.Json.fromJson(o.spec);
+                                                    for (g in specGroup) {
+                                                        print(g.spec_value_name);
+                                                    }
+                                                    if (!oLP.last) print(" | ");
+                                                }#-->
+                                                ]
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--#}#-->
+                                </div>
+
+                                <div id="sp" <!--# if (obj.hasSpec){ #-->style="display:none;"<!--# }else{ #-->style="display:block;"<!--# } #--> >
+                                <div class="form-group">
+                                    <label for="weight" class="col-sm-2 control-label">${msg['goods.product.column.weight']}</label>
+                                    <div class="col-sm-2">
+                                        <div class="input-group">
+                                            <input type="hidden" name="productId" value="${productsList[0].id!}"/>
+                                            <input type="text" id="weight" class="form-control input-sm" name="weight" readonly value="${productsList[0].weight!}" data-parsley-type="integer" data-parsley-min="0" data-parsley-required="true" >
+                                            <span class="input-group-addon">${msg["goods.main.unit.length"]}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="length" class="col-sm-2 control-label">${msg['goods.product.column.length']}</label>
+                                    <div class="col-sm-2">
+                                        <div class="input-group">
+                                            <input type="text" id="length" class="form-control input-sm" name="length" readonly value="${productsList[0].length!}" data-parsley-type="integer" data-parsley-min="0" data-parsley-required="true" >
+                                            <span class="input-group-addon">${msg["goods.main.unit.length"]}</span>
+                                        </div>
+                                    </div>
+                                    <label for="width" class="col-sm-1 control-label">${msg['goods.product.column.width']}</label>
+                                    <div class="col-sm-2">
+                                        <div class="input-group">
+                                            <input type="text" id="width" class="form-control input-sm" name="width" readonly value="${productsList[0].width!}" data-parsley-type="integer" data-parsley-min="0" data-parsley-required="true" >
+                                            <span class="input-group-addon">${msg["goods.main.unit.length"]}</span>
+                                        </div>
+                                    </div>
+                                    <label for="height" class="col-sm-1 control-label">${msg['goods.product.column.height']}</label>
+                                    <div class="col-sm-2">
+                                        <div class="input-group">
+                                            <input type="text" id="height" class="form-control input-sm" name="height" readonly value="${productsList[0].height!}" data-parsley-type="integer" data-parsley-min="0" data-parsley-required="true" >
+                                            <span class="input-group-addon">${msg["goods.main.unit.length"]}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sku" class="col-sm-2 control-label">${msg["goods.product.column.sku"]}</label>
+                                    <div class="col-sm-8">
+                                        <input type="hidden" name="productId" value="${productsList[0].id}">
+                                        <input type="text" id="sku" value="${productsList[0].sku!}" class="form-control" readonly name="sku" data-parsley-type="alphanum" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="costPrice" class="col-sm-2 control-label">${msg["goods.product.column.costPrice"]}</label>
+                                    <div class="col-sm-2">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">${msg["goods.main.unit.money"]}</span>
+                                            <input type="text" class="form-control input-sm" name="costPrice" id="costPrice" readonly value="${@money.fenToYuan(productsList[0].costPrice)}" data-parsley-price="true" >
+                                        </div>
+                                    </div>
+                                    <label for="salePrice" class="col-sm-1 control-label"><span style="color: red">*</span>${msg["goods.product.column.salePrice"]}</label>
+                                    <div class="col-sm-2">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">${msg["goods.main.unit.money"]}</span>
+                                            <input type="text" class="form-control input-sm" name="salePrice" id="salePrice" readonly value="${@money.fenToYuan(productsList[0].salePrice)}" data-parsley-price="true" data-parsley-required="true" >
+                                        </div>
+                                    </div>
+                                    <label for="marketPrice" class="col-sm-1 control-label">${msg["goods.product.column.marketPrice"]}</label>
+                                    <div class="col-sm-2">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">${msg["goods.main.unit.money"]}</span>
+                                            <input type="text" class="form-control input-sm" name="marketPrice" id="marketPrice" readonly value="${@money.fenToYuan(productsList[0].marketPrice)}" >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="stock" class="col-sm-2 control-label">${msg["goods.product.column.stock"]}</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="stock" value="${productsList[0].stock!}" class="form-control" name="stock" readonly data-parsley-type="integer" data-parsley-min="0" data-parsley-required="true" >
+                                    </div>
+                                    <label for="buyMin" class="col-sm-1 control-label">${msg["goods.product.column.buyMin"]}</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="buyMin" class="form-control" value="${productsList[0].buyMin!}" name="buyMin" readonly data-parsley-type="integer" data-parsley-min="0" >
+                                    </div>
+                                    <label for="buyMax" class="col-sm-1 control-label">${msg["goods.product.column.buyMax"]}</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="buyMax" class="form-control" value="${productsList[0].buyMax!}" name="buyMax" readonly data-parsley-type="integer" data-parsley-min="0" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">${msg['goods.product.column.partitionBy']}</label>
+                                    <div class="col-sm-8" align="left">
+                                        <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" value="0" disabled ${productsList[0].partitionBy == 0 ? 'checked'} >${msg["goods.main.select.option.unlimited"]}</label>
+                                        <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" value="1" disabled ${productsList[0].partitionBy == 1 ? 'checked'} >${msg["goods.product.select.partitionBy.option.area"]}</label>
+                                        <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" value="2" disabled ${productsList[0].partitionBy == 2 ? 'checked'} >${msg["goods.product.select.partitionBy.option.city"]}</label>
+                                        <div class="js-goods-select-area" ${productsList[0].partitionBy != 1 ? 'style="display: none"'}>
+                                        <button type="button" class="btn btn-default btn-sm " style="display: none" data-toggle="modal" data-target="#dialogSelectArea"><i class="fa fa-plus mr5"></i>${msg["goods.product.btn.selectArea"]}</button>
+                                        <!--#{
+                                            var areas = "[";
+                                            var areaText = "";
+                                            if (productsList[0].partitionBy == 1) {
+                                                for (area in productsList[0].areaList) {
+                                                    areas = areas + strutil.format("'{\"id\":\"'{0}\",\"productId\":\"{1}\",\"partitionBy\":{2},\"area\":\"{3}\"'}", area.id, area.productId, area.partitionBy, area.area);
+                                                    areaText = areaText + "<span class=\"label label-default goods-area-label\" >"+areaMap[area.area]+"</span>";
+                                                    if(!areaLP.last) areas =  areas + ",";
+                                                }
+                                            }
+                                            areas =  areas + "]";
+                                        #-->
+                                        <input type="hidden" name="areaCodes" value="${areas, escape}">
+                                        <div class="js-goods-area">${areaText}</div>
+                                        <!--#}#-->
+                                    </div>
+                                    <div class="js-goods-select-province-city" ${productsList[0].partitionBy != 2 ? 'style="display: none"'}>
+                                    <button type="button" class="btn btn-default btn-sm " style="display: none" data-toggle="modal" data-target="#dialogSelectCity"><i class="fa fa-plus mr5"></i>${msg["goods.product.btn.selectCity"]}</button>
+                                    <!--#{
+                                        var areas = "[";
+                                        var areaText = "";
+                                        if (productsList[0].partitionBy == 2) {
+                                            for (area in productsList[0].areaList) {
+                                                areas = areas + strutil.format("'{\"id\":\"'{0}\",\"productId\":\"{1}\",\"partitionBy\":{2},\"province\":\"{3}\",\"city\":\"{4}\"'}", area.id, area.productId, area.partitionBy, area.province, area.city);
+                                                areaText = areaText + strutil.format("<span class=\"label label-default goods-area-label\" >{0}/{1}</span>", provinceCityMap[area.province], provinceCityMap[area.city]);
+                                                if(!areaLP.last) areas =  areas + ",";
+                                            }
+                                        }
+                                        areas =  areas + "]";
+                                    #-->
+                                    <input type="hidden" name="areaProvinceCitys" value="${areas, escape}" />
+                                    <div class="js-goods-province-city">${areaText}</div>
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">${msg['goods.product.column.saleToMemberType']}</label>
+                            <div class="col-sm-8" align="left">
+                                <label class="checkbox-inline" ><input type="checkbox" name="saleToMemberType" disabled value="0" ${productsList[0].saleToMemberType == 0 ? 'checked'}/>${msg["goods.main.select.option.unlimited"]}</label>
+                                <!--#for(o in memberTypeList){#-->
+                                <label class="checkbox-inline" ><input type="checkbox" name="saleToMemberType" disabled value="${o.id!}" <!--#for(m in productsList[0].memberTypeList!){ if(o.id==m.id){print('checked');break;}}#-->/>${o.name!}</label>
+                                <!--#}#-->
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">${msg["goods.product.column.deliveryTime"]}</label>
+                            <div class="col-sm-8" align="left">
+                                <label class="radio-inline" >
+                                    <input type="radio" name="deliveryTime" value="0" disabled ${productsList[0].deliveryTime == 0 ? "checked"} >${msg["goods.product.deliveryTime.select.option0"]}
+                                </label>
+                                <label class="radio-inline" >
+                                    <input type="radio" name="deliveryTime" value="1" disabled ${productsList[0].deliveryTime == 1 ? "checked"}>${msg["goods.product.deliveryTime.select.option1"]}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">${msg["goods.product.column.orderVerify"]}</label>
+                            <div class="col-sm-1 switcha">
+                                <div class="mr15">
+                                    <input type="checkbox" id="orderVerify" name="orderVerify" readonly <!--#if(productsList[0].orderVerify){#-->checked<!--#}#--> class="js-switch-blue" >
+                                </div>
+                            </div>
+                            <label class="col-sm-2 control-label">${msg["goods.product.column.serializable"]}</label>
+                            <div class="col-sm-1 switcha">
+                                <div class="mr15">
+                                    <input type="checkbox" id="serializable" name="serializable" readonly <!--#if(productsList[0].serializable){#-->checked<!--#}#--> class="js-switch-blue" >
+                                </div>
+                            </div>
+                            <label class="col-sm-2 control-label">${msg["goods.product.column.enabled"]}</label>
+                            <div class="col-sm-1 switcha">
+                                <div class="mr15">
+                                    <input type="checkbox" id="enabled" name="enabled" readonly <!--#if(productsList[0].enabled){#-->checked<!--#}#--> class="js-switch-blue" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="div_spec" style="display: none">
+                            <label class="col-sm-2 control-label">${msg["goods.product.column.spec"]}</label>
+                            <div class="col-sm-8">
+                                <button id="specBtn" class="btn btn-primary" style="float: left;" type="button">${msg["goods.product.btn.setspec"]}</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- product end -->
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">${msg['goods.main.column.recommend']}</label>
+                        <div class="col-sm-1 switcha">
+                            <div class="mr15">
+                                <input type="hidden" name="recommend" value="${obj.recommend}" />
+                                <input type="checkbox" id="recommend"  class="js-switch-blue" readonly <!--#if(obj.recommend == 1){#-->checked<!--#}#--> />
+                            </div>
+                        </div>
+                        <label class="col-sm-2 control-label">${msg['goods.main.column.saleZero']}</label>
+                        <div class="col-sm-1 switcha">
+                            <div class="mr15">
+                                <input type="checkbox" id="saleZero" name="saleZero" class="js-switch-blue" readonly <!--#if(obj.saleZero){#-->checked<!--#}#--> />
+                            </div>
+                        </div>
+                        <label class="col-sm-2 control-label">${msg["goods.product.column.hiddenSalePrice"]}</label>
+                        <div class="col-sm-1 switcha">
+                            <div class="mr15">
+                                <input type="checkbox" id="hiddenSalePrice" name="hiddenSalePrice" class="js-switch-blue" readonly <!--#if(obj.hiddenSalePrice){#-->checked<!--#}#--> />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">${msg['goods.main.column.stockOffType']}</label>
+                        <div class="col-sm-8" align="left">
+                            <label class="radio-inline" ><input type="radio" id="stockOffType0" name="stockOffType" disabled value="0" <!--#if(obj.stockOffType == 0){#-->checked<!--#}#--> />${msg['goods.enum.stockofftype.pay']}</label>
+                            <label class="radio-inline" ><input type="radio" id="stockOffType1" name="stockOffType" disabled value="1" <!--#if(obj.stockOffType == 1){#-->checked<!--#}#--> />${msg['goods.enum.stockofftype.order']}</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">${msg["goods.main.column.saleTimeBy"]}</label>
+                        <div class="col-sm-8 form-inline line-height-sm" align="left">
+                            <label class="radio-inline line-height-sm" ><input type="radio" name="saleTimeBy" disabled value="0" ${obj.saleTimeBy == 0 ? 'checked'} />${msg['goods.main.select.saleTimeBy.option.now']}</label>
+                            <label class="radio-inline line-height-sm" ><input type="radio" name="saleTimeBy" disabled value="1" ${obj.saleTimeBy == 1 ? 'checked'} />${msg['goods.main.select.saleTimeBy.option.donothing']}</label>
+                            <label class="radio-inline line-height-sm" ><input type="radio" name="saleTimeBy" disabled value="2" ${obj.saleTimeBy == 2 ? 'checked'} />${msg['goods.main.select.saleTimeBy.option.time']}</label>
+                            <div class="input-group date form_datetime js-goods-saleat" style="${obj.saleTimeBy != 2 ? 'display: none;'}width:260px;padding-right: 16px;" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="saleAt">
+                                <input type="text" size="16" readonly class="form-control input-sm" value="${@date.getDate(obj.saleAt)}" >
+                            </div>
+                            <input type="hidden" id="autoSale" name="tmp_autoSale" value="" />
+                            <input type="hidden" id="saleAt" name="tmp_saleAt" value="${@date.getDate(obj.saleAt)}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">${msg["goods.main.column.offsaleTime"]}</label>
+                        <div class="col-sm-8 form-inline line-height-sm" align="left">
+                            <label class="radio-inline line-height-sm" ><input type="radio" name="autoOff" disabled value="0" ${!obj.autoOff ? 'checked'} />${msg["goods.main.select.option.unlimited"]}</label>
+                            <label class="radio-inline line-height-sm" ><input type="radio" name="autoOff" disabled value="1" ${obj.autoOff ? 'checked'} />${msg["goods.main.column.autoOff"]}</label>
+                            <div class="input-group date form_datetime js-goods-offat" style="${!obj.autoOff ? 'display: none;'}width:260px;padding-right: 16px;" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="offAt">
+                                <input type="text" size="16" readonly class="form-control input-sm" value="${@date.getDate(obj.offAt)}" data-parsley-required="true">
+                            </div>
+                            <input type="hidden" id="offAt" name="tmp_offAt" value="${@date.getDate(obj.offAt)}" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+    </div>
+
+    <div class="tab-pane fade" id="goods_info">
+
+        <div class="form-group">
+            <label for="saleClientPC" class="col-sm-2 control-label">${msg['goods.main.column.saleClientPC']}</label>
+            <div class="col-sm-8 switcha">
+                <div class="mr15">
+                    <input type="checkbox" id="saleClientPC" name="saleClientPC" readonly <!--#if(obj.saleClientPC){#-->checked<!--#}#--> class="js-switch-blue" >
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">${msg["goods.main.info.pc.album"]}</label>
+            <div class="col-sm-8">
+                <div id="queue_album_pc"></div>
+                <div id="div_img_album_pc"  class="div-img-album">
+                    <!--#
+                    if (!isEmpty(obj.imageList)){
+                        var i = 0;
+                        for(o in obj.imageList){
+                            if (o.saleClient != 1) continue;
+                            i++;
+                            var c = "divImg";
+                            if(o.defaultValue){
+                                c = "divImgD";
+                            }
+                    #-->
+                    <div id='div_album_item_pc_${i}' class='${c}'>
+                        <img src='${o.imgAlbum!}' data-id="${o.id!}" data-goods-id="${obj.id!}" style='width:100px;height: 80px;margin-bottom: 1px;'><br>
+                    </div>
+                    <!--#}}#-->
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="pcNote" class="col-sm-2 control-label">${msg["goods.main.info.pc.note"]}</label>
+            <div class="col-sm-8">
+                <textarea id="pcNote" name="pcNote" style="width:100%;height:200px;">${obj.pcNote!}</textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="saleClientWAP" class="col-sm-2 control-label">${msg['goods.main.column.saleClientWAP']}</label>
+            <div class="col-sm-8 switcha">
+                <div class="mr15">
+                    <input type="checkbox" id="saleClientWAP" name="saleClientWAP" readonly <!--#if(obj.saleClientWAP){#-->checked<!--#}#--> class="js-switch-blue" >
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">${msg["goods.main.info.wap.album"]}</label>
+            <div class="col-sm-8">
+                <div id="queue_album_wap"></div>
+                <div id="div_img_album_wap"  class="div-img-album">
+                    <!--#
+                    if (!isEmpty(obj.imageList)){
+                        var i = 0;
+                        for(o in obj.imageList){
+                            if (o.saleClient != 2) continue;
+                            i++;
+                            var c = "divImg";
+                            if(o.defaultValue){
+                                c = "divImgD";
+                            }
+                    #-->
+                    <div id='div_album_item_wap_${i}' class='${c}'>
+                        <img src='${o.imgAlbum!}' data-id="${o.id!}" data-goods-id="${obj.id!}" style='width:100px;height: 80px;margin-bottom: 1px;'><br>
+                    </div>
+                    <!--#}}#-->
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="wapNote" class="col-sm-2 control-label">${msg["goods.main.info.wap.note"]}</label>
+            <div class="col-sm-8">
+                <textarea id="wapNote" name="wapNote" style="width:100%;height:200px;">${obj.tvNote!}</textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="saleClientTV" class="col-sm-2 control-label">${msg['goods.main.column.saleClientTV']}</label>
+            <div class="col-sm-8 switcha">
+                <div class="mr15">
+                    <input type="checkbox" id="saleClientTV" name="saleClientTV" readonly <!--#if(obj.saleClientTV){#-->checked<!--#}#--> class="js-switch-blue" >
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">${msg["goods.main.info.tv.album"]}</label>
+            <div class="col-sm-8">
+                <div id="queue_album_tv"></div>
+                <div id="div_img_album_tv"  class="div-img-album">
+                    <!--#
+                    if (!isEmpty(obj.imageList)){
+                        var i = 0;
+                        for(o in obj.imageList){
+                            if (o.saleClient != 3) continue;
+                            i++;
+                            var c = "divImg";
+                            if(o.defaultValue){
+                                c = "divImgD";
+                            }
+                    #-->
+                    <div id='div_album_item_tv_${i}' class='${c}'>
+                        <img src='${o.imgAlbum!}' data-id="${o.id!}" data-goods-id="${obj.id!}" style='width:100px;height: 80px;margin-bottom: 1px;'><br>
+                    </div>
+                    <!--#}}#-->
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="tvNote" class="col-sm-2 control-label">${msg["goods.main.info.tv.note"]}</label>
+            <div class="col-sm-8">
+                <textarea id="tvNote" name="tvNote" style="width:100%;height:200px;">${obj.tvNote!}</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="goods_params">
+        <!--#for(paramg in typeParamgList){#-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label" data-id="${paramg.id!}">${paramg.name!}</label>
+            <!--#for(p in paramg.params){#-->
+            <div class="col-sm-12 " style="margin-left:6%;padding-bottom:5px;">
+                <div class="col-sm-10 input-group">
+                    <span class="input-group-btn">
+                    <button class="btn" style="width:120px;" type="button" data-id="${p.id!}">${p.name!}</button>
+                    </span>
+                    <input type="text" class="form-control" readonly >
+                </div>
+            </div>
+            <!--#}#-->
+        </div>
+        <!--#}#-->
+        <script>
+            $(function(){
+                //初始化商品参数
+                var param = ${obj.param!"[]"};
+                $.each(param, function(i,o){
+                    var name = o.name;
+                    $.each(o.value, function(j, k){
+                        $("#goods_params").find(".form-group").each(function(r,t){
+                            var self = $(this);
+                            if($(this).find(".control-label").html()== o.name){
+                                self.find(".input-group").each(function(n,m){
+                                    var obj=$(this);
+                                    if(obj.find("button").html()== k.name){
+                                        obj.find("input").val(k.value);
+                                    }
+                                });
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+    </div>
+    <div class="tab-pane fade" id="goods_props">
+        <!--#for(prop in typePropList){
+        if(prop.type == 'select') {
+        #-->
+        <div class="form-group">
+            <label class="col-sm-2 control-label" data-id="${prop.id!}">${prop.name!}</label>
+            <div class="col-sm-8">
+                <select class="form-control" disabled>
+                    <option value="" ></option>
+                    <!--#for(value in prop.propsValues){
+                    #-->
+                    <option value="${value.id!}">${value.name!}</option>
+                    <!--#
+                    }#-->
+                </select>
+            </div>
+        </div>
+        <!--#
+        }else{
+        #-->
+        <div class="form-group">
+            <label class="col-sm-2 control-label" data-id="${prop.id!}">${prop.name!}</label>
+            <div class="col-sm-8">
+                <input class="form-control" value="" readonly/>
+            </div>
+        </div>
+        <!--#
+
+        }#-->
+
+        <!--#}#-->
+        <script>
+            $(function(){
+                //初始化商品扩展属性
+                var prop = ${obj.prop!"[]"};
+                $.each(prop, function(i, o){
+                    $("#goods_props").find(".form-group").each(function(j, k){
+                        var self = $(this);
+                        if(self.find(".control-label").attr("data-id")== o.id){
+                            self.find("input").val(o.value);
+                            self.find("select>option[value='"+o.value+"']").prop("selected", true);
+                        }
+                    });
+                });
+            });
+        </script>
+    </div>
+
+</div>
+<div class="col-lg-3"></div>
+<input id="hasSpec" name="hasSpec" type="hidden" value="${obj.hasSpec ? 1 : 0}">
+<input id="products" name="products" type="hidden" value="">
+<input id="images" name="images" type="hidden" value="">
+<input id="spec_values" name="spec_values" type="hidden" value="[]">
+<input id="prop_values" name="prop_values" type="hidden" value="[]">
+<input id="param_values" name="param_values" type="hidden" value="[]">
+</form>
+</div>
+</div>
+
+<div id="dialogSelectClass" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg["goods.main.btn.classId.select"]}${msg["goods.main.column.classId"]}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeClass" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["goods.main.btn.close"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogSelectFrontClass" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg["goods.main.btn.select"]}${msg["goods.main.column.frontClassId"]}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeFrontClass" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["goods.main.btn.close"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogSelectArea" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg["goods.main.modal.dialogSelectArea.title"]}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12" align="left">
+                        <!--# for (area in areaList!) {#-->
+                        <label class="checkbox-inline"><input type="checkbox" name="saleToArea" disabled  value="${area.code}" >${area.name}</label>
+                        <!--# }#-->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["goods.main.btn.close"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogSelectCity" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg["goods.main.modal.dialogSelectCity.title"]}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeCity" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["goods.main.btn.close"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="specHtml">
+    <!--#if(obj.hasSpec){#-->
+    <div id="dialogSpec" class="modal fade" tabindex="-2" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="display: none;">
+        <div class="modal-dialog" style="width: 1200px;">
+            <div class="modal-content" style="width: 100%;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">${msg["goods.main.modal.dialogSpec.title"]}</h4>
+                </div>
+                <div class="modal-body" style="min-height: 300px;">
+                    <form id="productForm" class="form-horizontal parsley-form" data-validate="parsley">
+                        <div class="row">
+                            <div class="col-xs-12" style="float: left">
+                                <!--#for(o in specList){ #-->
+                                <div class="form-group spec" data-spec-name="${o.name!}" data-spec-type="${o.type!}" data-spec-id="${o.id!}">
+                                    <label class="col-xs-1 control-label checkbox-inline line-height-sm"><strong>${o.name!}:</strong></label>
+                                    <div class="col-xs-11">
+                                        <div class="form-inline">
+                                            <!--# for(v in o.specValues){ #-->
+                                            <label class="checkbox-inline js-spec-val">
+                                                <input type="checkbox" id="s${v.id!}" name="specValue${o.id!}" disabled value="${v.id!}" title="${v.spec_value!}" />${v.spec_value!}
+                                                <!--#if(!isEmpty(v.spec_picurl)){#--><img src="${v.spec_picurl!}" style="width: 12px;height: 12px;"><!--#}#-->
+                                            </label>
+                                            <!--# } #-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--# }#-->
+                            </div>
+                            <div class="col-xs-12 table-responsive no-border">
+                                <table id="plist" class="table table-bordered table-striped table-condensed" style="min-width:2000px;overflow-x: auto">
+                                    <thead>
+                                    <tr>
+                                        <th>${msg["goods.product.column.specvalue"]}</th>
+                                        <th>${msg["goods.product.column.sku"]}</th>
+                                        <th class="product-sku-input">${msg["goods.product.column.stock"]}</th>
+                                        <th class="numeric">${msg["goods.product.column.buyMin"]}</th>
+                                        <th class="numeric">${msg["goods.product.column.buyMax"]}</th>
+                                        <th class="numeric">${msg["goods.product.column.weight"]}(g)</th>
+                                        <th class="numeric">${msg["goods.product.column.length"]}(${msg["goods.main.unit.length"]})</th>
+                                        <th class="numeric">${msg["goods.product.column.width"]}(${msg["goods.main.unit.length"]})</th>
+                                        <th class="numeric">${msg["goods.product.column.height"]}(${msg["goods.main.unit.length"]})</th>
+                                        <th class="product-price-sm">${msg["goods.product.column.costPrice"]}(${msg["goods.main.unit.money"]})</th>
+                                        <th class="product-price-sm">${msg["goods.product.column.salePrice"]}(${msg["goods.main.unit.money"]})</th>
+                                        <th class="product-price-sm">${msg["goods.product.column.marketPrice"]}(${msg["goods.main.unit.money"]})</th>
+                                        <th class="numeric">${msg["goods.product.column.partitionBy"]}</th>
+                                        <th class="numeric">${msg['goods.product.column.saleToMemberType']}</th>
+                                        <th class="numeric">${msg["goods.product.column.deliveryTime"]}</th>
+                                        <th class="product-price-xs">${msg["goods.product.column.serializable"]}</th>
+                                        <th class="product-price-xs">${msg["goods.product.column.orderVerify"]}</th>
+                                        <th class="product-price-xs">${msg['goods.product.column.enabled']}</th>
+                                        <th class="product-price-xs">${msg["goods.product.column.defaultValue"]}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!--# for(o in productsList){ #-->
+                                    <tr><td><!--#
+                                            var specGroup = @org.nutz.json.Json.fromJson(o.spec);
+                                            for (g in specGroup) {
+                                                print(g.spec_value_name);
+                                            }
+                                            #-->
+                                        <input name="productId" type="hidden" value="${o.id!}"><input name="spec" type="hidden" value="${o.spec!, escape}">
+                                    </td>
+                                        <td><input name="sku" readonly type="text" class="form-control product-sku-input" value="${o.sku!}" data-parsley-type="alphanum" ></td>
+                                        <td><input name="stock" readonly type="text" value="${o.stock}" class="form-control product-number-input" data-parsley-type="integer" data-parsley-min="0" ></td>
+                                        <td><input name="buyMin" readonly type="text" value="${o.buyMin}" class="form-control product-number-input" data-parsley-type="integer" data-parsley-min="0" ></td>
+                                        <td><input name="buyMax" readonly type="text" value="${o.buyMax}" class="form-control product-number-input" data-parsley-type="integer" data-parsley-min="0" ></td>
+                                        <td><input name='weight' readonly type='text' value='${o.weight}' class='form-control product-number-input' data-parsley-type='integer' data-parsley-min='0' ></td>
+                                        <td><input name='length' readonly type='text' value='${o.length}' class='form-control product-number-input' data-parsley-type='integer' data-parsley-min='0'></td>
+                                        <td><input name='width' readonly type='text' value='${o.width}' class='form-control product-number-input' data-parsley-type='integer' data-parsley-min='0' ></td>
+                                        <td><input name='height' readonly type='text' value='${o.height}' class='form-control product-number-input' data-parsley-type='integer' data-parsley-min='0' ></td>
+                                        <td><input name="costPrice" readonly value="${@money.fenToYuan(o.costPrice)}" type="text" class="form-control product-number-input" data-parsley-price="true" ></td>
+                                        <td><input name="salePrice" readonly value="${@money.fenToYuan(o.salePrice)}" type="text" class="form-control product-number-input" data-parsley-price="true" ></td>
+                                        <td><input name="marketPrice" readonly value="${@money.fenToYuan(o.marketPrice)}" type="text" class="form-control product-number-input" data-parsley-price="true" ></td>
+                                        <td>
+                                            <div class="js-product-area" align="left" >
+                                                <!--#{
+                                                    var areas = "[";
+                                                    var areaText = "";
+                                                    if (o.partitionBy == 1) {
+                                                        for (area in o.areaList) {
+                                                            if (area.partitionBy != 1) continue;
+                                                            areas = areas + strutil.format("'{\"id\":\"'{0}\",\"productId\":\"{1}\",\"partitionBy\":{2},\"area\":\"{3}\"'}", area.id, area.productId, area.partitionBy, area.area!);
+                                                            areaText = areaText + "<span class=\"label label-default goods-area-label\" >"+areaMap[area.area]+"</span>";
+                                                            if(!areaLP.last) areas =  areas + ",";
+                                                        }
+                                                    } else if (o.partitionBy == 2) {
+                                                        for (area in o.areaList) {
+                                                            if (area.partitionBy != 2) continue;
+                                                            areas = areas + strutil.format("'{\"id\":\"'{0}\",\"productId\":\"{1}\",\"partitionBy\":{2},\"province\":\"{3}\",\"city\":\"{4}\"'}", area.id, area.productId, area.partitionBy, area.province!, area.city!);
+                                                            areaText = areaText + "<span class=\"label label-default goods-area-label\" >"+provinceCityMap[area.province]+ (area.city!="null" ? "/")+provinceCityMap[area.city]+"</span>";
+                                                            if(!areaLP.last) areas =  areas + ",";
+                                                        }
+                                                    }
+                                                    areas =  areas + "]";
+                                                    areas = "{\"partitionBy\":"+o.partitionBy+",\"values\":"+areas+"}";
+                                                #-->
+                                                <input type="hidden" class="js-product-area-values" name="areaCodes" value="${areas, escape}"/>
+                                                <label class="checkbox-inline line-height-sm"><input type="checkbox" name="saleToAreaBy" disabled value="0" checked>${msg["goods.main.select.option.unlimited"]}</label>
+                                                <span class="js-product-area-span"></span>
+                                                <button type="button" class="btn btn-default btn-xs js-product-area-set" >${msg['goods.main.btn.view']}</button>
+                                                <!--#}#-->
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="js-product-member" align="left" >
+                                                <!--#{
+                                                    var members = "[";
+                                                    for (m in o.memberTypeList!) {
+                                                        members = members + strutil.format("'{\"id\":'{0}'}", m.id);
+                                                        if(!mLP.last) members =  members + ",";
+                                                    }
+                                                    members = members + "]";
+                                                #-->
+                                                <input type="hidden" class="js-product-member-values" name="members" value="${members, escape}"/>
+                                                <label class="checkbox-inline" ><input type="checkbox" name="saleToMemberType" disabled value="0" checked/>${msg["goods.main.select.option.unlimited"]}</label>
+                                                <span class="js-product-member-span"></span>
+                                                <button type="button" class="btn btn-default btn-xs js-product-member-set" >${msg['goods.main.btn.view']}</button>
+                                                <!--#}#-->
+                                            </div>
+                                        </td>
+                                        <td><select name='deliveryTime' disabled>
+                                            <option value="0" <!--#if(o.deliveryTime == 0){#-->selected<!--#}#-->>${msg["goods.product.deliveryTime.select.option0"]}</option>
+                                            <option value="1" <!--#if(o.deliveryTime == 1){#-->selected<!--#}#-->>${msg["goods.product.deliveryTime.select.option1"]}</option>
+                                        </select>
+                                        </td>
+                                        <td><input name='serializable' disabled type='checkbox' <!--#if(o.serializable){#-->checked<!--#}#-->></td>
+                                        <td><input name='orderVerify' disabled type='checkbox'<!--#if(o.orderVerify){#-->checked<!--#}#-->></td>
+                                        <td><input name='enabled' disabled type='checkbox'<!--#if(o.enabled){#-->checked<!--#}#-->></td>
+                                        <td><input name="defaultValue" disabled type="radio" <!--#if(o.defaultValue){#-->checked<!--#}#--> ></td>
+                                        </tr>
+                                    <!--#}#-->
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">${msg["goods.main.btn.close"]}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="dialogSpecSelectArea" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <div class="modal-title">
+                        <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" disabled value="0">${msg["goods.main.select.option.unlimited"]}</label>
+                        <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" disabled value="1" checked>${msg["goods.product.select.partitionBy.option.area"]}</label>
+                        <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" disabled value="2" >${msg["goods.product.select.partitionBy.option.city"]}</label>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12 js-select-area-div" align="left">
+                            <!--# for (area in areaList!) {#-->
+                            <label class="checkbox-inline"><input type="checkbox" name="saleToArea" value="${area.code}" >${area.name}</label>
+                            <!--# }#-->
+                        </div>
+                        <div class="col-xs-12 js-select-area-city-div" align="left">
+                            <div id="jsTreeSpecCity" class="demo"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">${msg["goods.main.btn.close"]}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="dialogSpecSelectMember" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <div class="modal-title">
+                        ${msg["goods.main.modal.dialogSpecSelectMember.title"]}
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12" align="left">
+                            <label class="checkbox-inline" ><input type="checkbox" name="saleToMemberType" disabled value="0" checked/>${msg["goods.main.select.option.unlimited"]}</label>
+                            <!--#for(o in memberTypeList){#-->
+                            <label class="checkbox-inline" ><input type="checkbox" name="saleToMemberType" disabled value="${o.id!}" />${o.name!}</label>
+                            <!--#}#-->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">${msg["goods.main.btn.close"]}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="js-product-area-hidden" align="left" style="display: none">
+        <input type="hidden" class="js-product-area-values" name="areaCodes" value='{"partitionBy":0,"values":[]}'/>
+        <label class="checkbox-inline line-height-sm"><input type="checkbox" name="saleToAreaBy" disabled value="0" checked>${msg["goods.main.select.option.unlimited"]}</label>
+        <span class="js-product-area-span"></span>
+        <button type="button" class="btn btn-default btn-xs js-product-area-set" >${msg['goods.main.btn.view']}</button>
+    </div>
+    <div class="js-product-member-hidden" align="left" style="display: none">
+        <input type="hidden" class="js-product-member-values" name="members" value='[]'/>
+        <label class="checkbox-inline" ><input type="checkbox" name="saleToMemberType" disabled value="0" checked/>${msg["goods.main.select.option.unlimited"]}</label>
+        <span class="js-product-member-span"></span>
+        <button type="button" class="btn btn-default btn-xs js-product-member-set" >${msg['goods.main.btn.view']}</button>
+    </div>
+    <script language="JavaScript">
+
+        $(document).ready(function () {
+
+            //先初始化规格区域选择树
+            initSpecAreaTreeView();
+
+            //初始化商品设置的规格选项及规格图片
+            var spec = ${obj.spec!"[]"};//[[{},],]
+            initSpecOptions(spec);
+
+            var $set;//设置区域按钮对象
+            $("#plist .js-product-area-set").click(function () {
+                $set = $(this);
+                var $dialog = $("#dialogSpecSelectArea");
+                $dialog.on('show.bs.modal', function () {
+                    var values = $set.siblings(".js-product-area-values").val();
+                    if ($.trim(values) != "") {
+                        var obj = JSON.parse(values);
+                        if (obj.partitionBy == 0) {//不限时默认按片区显示
+                            $(".js-select-area-div,.js-select-area-city-div", $dialog).hide();
+                            $("[name='partitionBy'][value='0']:checkbox", $dialog).prop("checked", true);
+                        }
+                        if (obj.partitionBy == 1) {//按片区
+                            $(".js-select-area-div", $dialog).show();
+                            $(".js-select-area-city-div", $dialog).hide();
+                            $("[name='partitionBy'][value='1']:checkbox", $dialog).prop("checked", true);
+                            $("[name='partitionBy'][value!='1']:checkbox", $dialog).prop("checked", false);
+                            $(obj.values).each(function () {
+                                $("[name=saleToArea][value='"+this.area+"']:checkbox", $dialog).prop("checked", true);
+                            });
+                        } else if (obj.partitionBy == 2) {//按省市
+                            $(".js-select-area-div", $dialog).hide();
+                            $(".js-select-area-city-div", $dialog).show();
+                            $("[name='partitionBy'][value='2']:checkbox", $dialog).prop("checked", true);
+                            $("[name='partitionBy'][value!='2']:checkbox", $dialog).prop("checked", false);
+                            var cityValues = $(obj.values).map(function () {
+                                return this.city == "null" ? this.province : this.city;
+                            }).get();
+                            $("#jsTreeSpecCity").jstree(true).select_node(cityValues);
+                        }
+                    }
+                });
+                $dialog.on('hide.bs.modal', function () {
+                    var tree = $("#jsTreeSpecCity").jstree(true);
+                    tree.deselect_all();
+                    tree.close_all();
+                    tree.open_node(tree.get_node(".jstree-container-ul li"));
+                    $("[name='partitionBy'][value='0']:checkbox,[name='partitionBy'][value='2']:checkbox", $dialog).prop("checked", false);
+                    $("[name='partitionBy'][value='1']:checkbox", $dialog).prop("checked", true);
+                    $("[name=saleToArea]:checkbox", $dialog).prop("checked", false);
+                    $(".js-select-area-div").show();
+
+                });
+                $dialog.modal("show");
+            });
+            $("#plist .js-product-member-set").click(function () {
+                var $dialog = $("#dialogSpecSelectMember");
+                $set = $(this);
+                $dialog.on('show.bs.modal', function () {
+                    var values = $set.siblings(".js-product-member-values").val();
+                    if ($.trim(values) != "") {
+                        var obj = JSON.parse(values);
+                        $(obj).each(function () {
+                            $("[name=saleToMemberType][value='"+this.id+"']").prop("checked", true);
+                        })
+                        $("[name=saleToMemberType][value='0']").prop("checked", $("[name=saleToMemberType][value!='0']:checked").length == 0);
+                    }
+                });
+                $dialog.on('hide.bs.modal', function () {
+                    $("[name=saleToMemberType][value='0']", $dialog).prop("checked", true);
+                    $("[name=saleToMemberType][value!='0']", $dialog).prop("checked", false);
+                });
+                $dialog.modal("show");
+            });
+        });
+
+        //初始化销售区域树
+        function initSpecAreaTreeView() {
+            $("#jsTreeSpecCity").jstree({
+                plugins: ["wholerow", "checkbox", "changed", "json_data"],
+                core: {
+                    data: function (node, callback){
+                        $.get("${base!}/platform/self/goods/publish/area/tree", function (ret) {
+                            if (ret) {
+                                var areas = $(ret).map(function () {
+                                    this["state"] = {disabled: this.parent === "#", opened: this.parent === "#"};
+                                    return this;
+                                }).get();
+                                callback(areas);
+                            }
+                        }, "json");
+                    },
+                    multiple: true
+                },
+                checkbox: {
+                    three_state: true,
+                    cascade: 'down'
+                }
+            }).on("loaded.jstree", function () {
+                initProduct();
+            });
+        }
+
+        function initSpecOptions(specs) {
+            //初始化货品规格
+            $.each(specs, function (i, ss) {
+                $.each(ss, function (j, s) {
+                    if(s.spec_value_imgurl){
+                        $("#s_img"+s.spec_value_id).html('<img class="specImg" src="'+s.spec_value_imgurl+'" style="height: 30px;width: 30px;">');
+                    }
+                    $("#s"+s.spec_value_id).prop('checked',true);
+                });
+            });
+        }
+
+        function initProduct() {
+            $("table#plist tbody>tr").each(function () {
+                //销售区域
+                var areas = JSON.parse($(".js-product-area-values", this).val());
+                var partitionBy = areas.partitionBy;
+                var areasText = "";
+                if (partitionBy == "0") {//不限
+                    $("[name=saleToAreaBy][value='0']:checkbox", this).prop("checked", true).parent().show();
+                    $(".js-product-area-span,.js-product-area-set", this).hide();
+                } else if (partitionBy == "1") {//按片区
+                    areasText = $(areas.values).map(function () {
+                        return $("#dialogSpecSelectArea [name=saleToArea][value='"+this.area+"']").parent().text();
+                    }).get().join(",");
+                    $(".js-product-area-span", this).attr("title", areasText).html("区域["+areas.values.length+" 已选]").show();
+                    $("[name=saleToAreaBy][value='0']:checkbox", this).prop("checked", false).parent().hide();
+                } else if (partitionBy == "2") {//按省市
+                    var tree = $("#jsTreeSpecCity").jstree(true);
+                    areasText = $(areas.values).map(function () {
+                        var arr = [];
+                        arr.push(tree.get_text(tree.get_node(this.province)));
+                        arr.push(tree.get_text(tree.get_node(this.city)));
+                        return arr.join("/");
+                    }).get().join(",");
+                    $(".js-product-area-span", this).attr("title", areasText).html("省市["+areas.values.length+" 已选]").show();
+                    $("[name=saleToAreaBy][value='0']:checkbox", this).prop("checked", false).parent().hide();
+                }
+                //销售对象
+                var members = JSON.parse($(".js-product-member-values", this).val());
+                var membersText = $(members).map(function () {
+                    $("#dialogSpecSelectMember [name=saleToMemberType][value='"+ this.id +"']").parent().text();
+                }).get().join(",");
+                $(".js-product-member-span", this).attr("title", membersText).html("会员["+members.length+" 已选]");
+                if (members.length == 0 || members[0].id == 0) {
+                    $("[name=saleToMemberType][value='0']:checkbox", this).prop("checked", true).parent().show();
+                    $(".js-product-member-span,.js-product-member-set", this).hide();
+                } else {
+                    $("[name=saleToMemberType][value='0']:checkbox", this).prop("checked", false).parent().hide();
+                    $(".js-product-member-span,.js-product-member-set", this).show();
+                }
+            });
+        }
+
+        function isSpecGroupEqual(src, target) {
+
+            var srcArr = $(src).map(function () {
+                return this.spec_id +","+ this.spec_value_id;
+            }).get();
+            var targetArr = $(target).map(function () {
+                return this.spec_id +","+ this.spec_value_id;
+            }).get();
+            srcArr.sort();
+            targetArr.sort();
+
+            return srcArr.join(",") == targetArr.join(",");
+        }
+
+    </script>
+    <!--#}#-->
+</div>
+
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.config.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.all.min.js"></script>
+
+<script language="JavaScript">
+
+    var pcUE, wapUE, tvUE;
+    $(document).ready(function () {
+
+        myForm.init();
+        //初始化开关颜色
+        $(".js-switch-blue:checked").siblings(".switchery").css({
+            "box-shadow": "rgb(21, 130, 220) 0px 0px 0px 15px inset",
+            "border-color": "rgb(21, 130, 220)",
+            "background-color": "rgb(21, 130, 220)",
+            "transition": "border 0.4s, box-shadow 0.4s, background-color 1.2s"
+        });
+
+        initTreeView();
+        initFrontClassTreeView();
+        initAreaTreeView();
+
+        setTimeout(function () {
+            pcUE = new baidu.editor.ui.Editor({readonly:true,});
+            wapUE = new baidu.editor.ui.Editor({readonly:true,});
+            tvUE = new baidu.editor.ui.Editor({readonly:true,});
+            pcUE.render('pcNote');
+            wapUE.render("wapNote");
+            tvUE.render("tvNote");
+        }, 500);
+
+        $("#selectAreaBtn").click(function(){
+            $("#dialogSelectCity").modal("show");
+        });
+
+        $("#specBtn").on("click",function(){
+            $("#specHtml").load("${base!}/platform/self/goods/publish/type/"+$("#typeId").val()+ "/spec/" + $("#sku").val(), function (response, status, xhr) {
+                $("#dialogSpec").modal("show");
+            });
+        });
+
+        <!--#if(obj.hasSpec){#-->
+
+        $("#specEditBtn").click(function(){
+            $("#dialogSpec").modal("show");
+        });
+
+        //end spec
+        <!--#}#-->
+
+        //预览
+        $(".js-goods-btn-preview").click(function () {
+
+        });
+    });
+
+    function initTreeView() {
+        $("#jsTreeClass").jstree({
+            plugins: ["wholerow", "json_data"],
+            core: {
+                data: function (node, callback) {
+                    $.get("${base}/platform/self/goods/list/class/tree", function (ret) {
+                        var classes = [];
+                        if (ret) {
+                            classes = $(ret).map(function () {
+                                return {
+                                    id: this.id,
+                                    text: this.name,
+                                    parent: this.parentId == "" ? "#" : this.parentId,
+                                }
+                            }).get();
+                        }
+                        callback(classes);
+                    }, "json");
+                },
+                multiple: false
+            }
+        }).on("loaded.jstree", function () {
+            initClassNameText();
+        });
+    }
+    //初始化前台分类树
+    function initFrontClassTreeView() {
+        $("#jsTreeFrontClass").jstree({
+            plugins: ["wholerow", "json_data","checkbox"],
+            core: {
+                data: function (node, callback) {
+                    $.get("${base}/platform/self/goods/publish/frontclass/tree", function (ret) {
+                        var classes = [];
+                        if (ret) {
+                            classes = $(ret).map(function () {
+                                return {
+                                    id: this.id,
+                                    text: this.name,
+                                    parent: this.parentId == "" ? "#" : this.parentId
+                                };
+                            }).get();
+                        }
+                        callback(classes);
+                    }, "json");
+                },
+                multiple: true
+            }
+        }).on("loaded.jstree", function () {
+            initFrontClassNameText();
+        });
+    }
+
+    function initAreaTreeView() {
+        var values = $(JSON.parse($("input[name=areaProvinceCitys]:hidden").val())).map(function () {
+            return this.city;
+        }).get().join(",");
+        values = ',' + values + ',';
+        $("#jsTreeCity").jstree({
+            plugins: ["wholerow", "checkbox", "changed", "json_data"],
+            core: {
+                data: function (node, callback){
+                    $.get("${base}/platform/self/goods/publish/area/tree", function (ret) {
+                        var areas = [];
+                        if (ret) {
+                            var selected = true;
+                            for (var i = 0; i < ret.length; i++) {
+                                selected = values.indexOf(","+ret[i].id+",") >= 0;
+                                ret[i].state = {disabled: true, opened: selected, checked: selected, selected: selected};
+                                areas.push(ret[i]);
+                            }
+                        }
+                        callback(areas);
+                    }, "json");
+                },
+                multiple: true
+            },
+            checkbox: {
+                three_state: true,
+                cascade: 'down'
+            }
+        }).on("select_node.jstree", function (e, data) {
+            var tree = $(this).jstree();
+            if (!tree.is_leaf(data.node)) {
+                tree.open_node(data.node);
+            }
+        });
+    }
+    function initClassNameText() {
+        var tree = $("#jsTreeClass").jstree(true);
+        var classId = $("[name=classId]:hidden").val();
+        if (!tree.get_node(classId)) return false;
+        $("#classId").val(tree.get_path(tree.get_node(classId), "/"));
+    }
+    function initFrontClassNameText() {
+        var tree = $("#jsTreeFrontClass").jstree(true);
+        var ids = $("[name='front_classes']").val();
+        var node = {};
+        var exist = true;
+        var text = $(ids.split(",")).map(function () {
+            node = tree.get_node(this);
+            if (node) {
+                return tree.get_path(tree.get_node(this), "/");
+            } else {
+                exist = false;
+                return true;
+            }
+        }).get().join(",");
+        if (exist) {
+            $("#frontClassId").val(text);
+        }
+    }
+
+    function getProps(id){
+        $.get("${base!}/platform/self/goods/publish/type/" + id + "/props", function (ret) {
+            if(ret.code == 0){
+                var str = '';
+                $.each(ret.data,function(i, prop){
+                    if(prop.type == 'select'){
+                        str += '<div class="form-group">';
+                        str += '<label class="col-sm-2 control-label" data-id="' + prop.id + '">' + prop.name + '</label>';
+                        str += '<div class="col-sm-8">';
+                        str += '<select class="form-control" >';
+                        str += '<option value=""></option>';
+                        $.each(prop.propsValues, function(j,value){
+                            str += '<option value="'+ value.id + '">' + value.name + '</option>';
+                        });
+                        str += '</select>';
+                        str += '</div>';
+                        str += '</div>';
+                    }else {
+                        str += '<div class="form-group">';
+                        str += '<label class="col-sm-2 control-label" data-id="' + prop.id + '">' + prop.name + '</label>';
+                        str += '<div class="col-sm-8">';
+                        str += '<input class="form-control" />';
+                        str += '</div>';
+                        str += '</div>';
+                    }
+                });
+                $("#goods_props").html(str);
+            }else {
+                $("#goods_props").empty();
+            }
+        }, "json");
+    }
+
+    function getParam(id){
+        $.get("${base!}/platform/self/goods/publish/type/" + id + "/params", function (ret) {
+            if(ret.code == 0){
+                var str = '';
+                $.each(ret.data,function(i, param){
+                    str += '<div class="form-group">';
+                    str += '<label class="col-sm-3 control-label" data-id="' + param.id + '">' + param.name + '</label>';
+                    $.each(param.params, function(j, k) {
+                        str += '<div class="col-sm-12" style="padding-bottom:5px;"><div class="col-sm-10 input-group"><span class="input-group-btn"><button class="btn" style="width:120px;" type="button" data-id="' + k.id + '">' + k.name + '</button>';
+                        str += '</span><input type="text" class="form-control" ></div></div>';
+                    });
+                    str += '</div>';
+
+                });
+                $("#goods_params").html(str);
+            }else {
+                $("#goods_params").empty();
+            }
+        }, "json");
+    }
+
+    function getBrand(id){
+        $.get("${base!}/platform/self/goods/publish/type/" + id + "/brands", function (ret) {
+            if(ret.code == 0){
+                var options = '';
+                options += '<option value=""></option>';
+                $.each(ret.data,function(i, brand){
+                    options += '<option value="' + brand.brandId + '">' + brand.brand.name + '</option>';
+                });
+                $("#brandId").html(options);
+            }
+        }, "json");
+    }
+
+</script>
+
+
+<!--#}#-->

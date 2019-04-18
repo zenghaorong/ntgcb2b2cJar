@@ -1,0 +1,40 @@
+<div class="bd">
+    <div class="m-order-list">
+        <table class="f-push-10 f-push-10-t">
+            <tr class="list_hd">
+                <td width="397" class="f-tal f-pdg-20-l">服务单信息</td>
+                <td width="220">退款明细</td>
+                <td width="120">售后原因</td>
+                <td width="150">退款状态</td>
+                <td width="60">操作</td>
+            </tr>
+        </table>
+        <!--# var orderAfterDetail; var orderGoods; var goodsMain;  for(var o in obj.data){
+            orderAfterDetail = o.orderAfterDetail; orderGoods = orderAfterDetail.orderGoods; goodsMain = orderAfterDetail.goodsMain;   #-->
+        <table>
+            <tr>
+                <th colspan="5" class="list_hd">
+                    <span class="orderId">售后单号：${o.id}</span>
+                    <span class="code">订单号：${o.orderId}</span>
+                    <span class="time f-push-50-l">申请时间：${@date.getDate(o.applyTime)}</span>
+                    <span class="iconfont icon-delete"></span>
+                </th>
+            </tr>
+            <tr>
+                <td width="397">
+                    <div class="good-info f-cb">
+                        <div class="pic"><a href=""><img src="${orderGoods.imgUrl!}"/></a></div>
+                        <a href="" class="info">${orderAfterDetail.orderGoods.goodsName} ${orderAfterDetail.orderGoods.name}</a>
+                    </div>
+                </td>
+                <td width="220" class="f-tal f-pdg-30-l">退款金额：<span class="mark"><!--#if(o.returnMoney != null){#-->￥${@money.fenToYuan(o.returnMoney)}<!--#}#--></span><br /><br /></td>
+                <td width="120">${o.returnReason!}</td>
+                <td width="150"><span class="green">${@com.aebiz.app.order.modules.models.em.OrderAfterStateEnum.getValue(o.afterSaleState)}</span><!--<br />预计最晚到账<br />1-15个工作日--></td>
+                <td width="60"><a href="${base!}/member/orderAfter/detail/${o.id}" class="more">查看</a></td>
+            </tr>
+        </table>
+        <!--#}#-->
+    </div>
+</div>
+<!--##-->
+<input type="hidden" name="pageTotal" value="${pageTotal}">

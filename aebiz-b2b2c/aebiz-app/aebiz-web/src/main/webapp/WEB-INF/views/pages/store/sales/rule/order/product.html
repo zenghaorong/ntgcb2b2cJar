@@ -1,0 +1,112 @@
+<style>
+    .product-modal-content{width: 99%}
+</style>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="product_modal_label">${msg['goods.price.dialogDetail.title']}</h4>
+</div>
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="col-xs-12 product-modal-content js-product-modal-content" ></div>
+            <section class="panel panel-primary no-b">
+                <div class=panel-body >
+                    <div class="table-responsive no-border"  style="min-height: 300px;">
+                        <table class="table table-bordered table-striped mg-t js-products-datatable" id="products_datetable">
+                            <thead>
+                            <tr>
+                                <th>${msg['goods.main.column.name']}</th>
+                                <th>${msg['goods.product.column.sku']}</th>
+                                <th>${msg['goods.product.column.name']}</th>
+                                <th>${msg['goods.product.column.costPrice']}</th>
+                                <th>${msg['goods.product.column.salePrice']}</th>
+                                <th>${msg['goods.product.column.marketPrice']}</th>
+                                <th>${msg['goods.product.column.stock']}</th>
+                                <th>${msg['goods.product.column.saleToMemberType']}</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+    <button type="button" class="btn btn-primary js-dialog-sel-product">${msg["goods.class.column.enter"]}</button>
+</div>
+<script language="JavaScript">
+    $(function () {
+        productsDatatable = $('.js-products-datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".js-product-modal-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".js-product-modal-content"));
+            },
+            "ajax": {
+                "url": "${base}/store/sales/rule/order/product/data",
+                "type": "post",
+                "data": function (d) {
+
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {
+                    "data": "goods.name", "bSortable": true,
+                    "render": function (data, type, row) {
+                        return row.goodsName;
+                    },
+                },
+                {"data": "sku", "bSortable": true},
+                {"data": "name", "bSortable": true},
+                {
+                    "data": "costPrice", "bSortable": true,
+                    "render": function (data, type, row) {
+                        return setPrice(row.costPrice);
+                    },
+                },
+                {
+                    "data": "salePrice", "bSortable": true,
+                    "render": function (data, type, row) {
+                        return setPrice(row.salePrice);
+                    },
+                },
+                {
+                    "data": "marketPrice", "bSortable": true,
+                    "render": function (data, type, row) {
+                        return setPrice(row.marketPrice);
+                    },
+                },
+                {"data": "stock", "bSortable": true},
+                {
+                    "data": "saleToMemberType", "bSortable": true,
+                    "render": function (data, type, row) {
+                        if (row.saleToMemberType == "0") return '${msg["goods.product.saleToMemberType.select.option0"]}';
+                        <!--#for(o in memberTypeList!){#-->
+                        if(row.saleToMemberType == "${o.id!}" ) return '${o.name!}';
+                        <!--#}#-->
+                        return '';
+                    },
+                },
+            ],
+        });
+        productsDatatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            productsDatatable.ajax.reload();
+        });
+    });
+</script>

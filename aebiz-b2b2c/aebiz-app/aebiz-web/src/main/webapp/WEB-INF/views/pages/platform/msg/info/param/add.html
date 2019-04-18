@@ -1,0 +1,102 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/msg/info/param" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/msg/info/param/addDo" method="post">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <!--<div class="form-group">
+                            <label for="infoId" class="col-sm-2 control-label">${msg['msg.info.param.column.infoId']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="infoId" class="form-control" name="infoId" data-parsley-required="true" placeholder="${msg['msg.info.param.column.infoId']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="infoName" class="col-sm-2 control-label">${msg['msg.info.param.column.infoName']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="infoName" class="form-control" name="infoName" data-parsley-required="true" placeholder="${msg['msg.info.param.column.infoName']}">
+                            </div>
+                        </div>-->
+                        <div class="form-group">
+                            <label  class="col-sm-2 control-label">${msg['msg.info.param.column.infoName']}</label>
+                            <div class="col-sm-8">
+                                <select class="selectpicker changeoption" data-parsley-required="true">
+                                    <option value="">--请选择--</option>
+                                    <!--# for(o in msglist){ #-->
+                                      <option value="${o.id}">${o.name}</option>
+                                    <!--# }#-->
+                                </select>
+                            </div>
+                        </div>
+
+                        <input type="hidden" value="" name="infoName" id="infoName">
+                        <input type="hidden" value="" name="infoId" id="infoId">
+
+                        <div class="form-group">
+                            <label for="code" class="col-sm-2 control-label">${msg['msg.info.param.column.code']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="code" class="form-control" name="code" data-parsley-required="true" placeholder="${msg['msg.info.param.column.code']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">${msg['msg.info.param.column.name']}</label>
+                            <div class="col-sm-8">
+                            <input type="text" id="name" class="form-control" name="name" data-parsley-required="true" placeholder="${msg['msg.info.param.column.name']}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+<script language="JavaScript">
+    $(document).ready(function () {
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    form.resetForm();
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+        $(document).on('change','.changeoption',function(){
+            var  infoName =  $('.changeoption').find("option:selected").text();
+            var  infoId = $('.changeoption').find("option:selected").val();
+            console.log('infoName='+infoName+',infoId='+infoId);
+            $("#infoId").val(infoId);
+            $("#infoName").val(infoName);
+        })
+
+
+    });
+</script>
+<!--#}#-->
+
+

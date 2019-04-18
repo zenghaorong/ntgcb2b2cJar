@@ -1,0 +1,308 @@
+<!--#
+layout("/layouts/store.html"){
+#-->
+<style>
+    .rule-group-cnd,.rule-group-act{
+        margin: 5px 5px 5px 15px; padding: 5px;display: none;
+    }
+    .rule-cnd-def ul{
+        list-style-type:none
+    }
+    .rule-cnd-def ul li{
+        padding: 5px;
+    }
+    .cnd-panel{
+        overflow-x:auto; white-space:nowrap;
+    }
+    .cnd-del{
+        cursor:pointer;padding: 5px;
+    }
+
+    .rule-price-input-sm{
+        width: 60px;
+    }
+    .rule-input-sm{
+        width: 50px;
+    }
+    .member-lvs{
+        display: inline-block
+    }
+    .member-lv-inline {
+        position: relative;
+        display: inline-block;
+        padding-top: 7px;
+        padding-left: 1px;
+        margin-bottom: 0;
+        font-weight: 400;
+        vertical-align: middle;
+    }
+    .rule-input-rate{
+        width: 100px;min-width: 80px;
+    }
+    .rule-input-price{
+        width: 120px;min-width: 100px;
+    }
+    .rule-input-number{
+        width: 60px;min-width: 40px;
+    }
+</style>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/store/sales/coupon" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+    <div class="pull-right">
+        <div class="btn-group tool-button">
+            <!--<button class="btn btn-primary navbar-btn js-to-check" data-loading-text="${msg['globals.button.submit.tip']}" >保存并提交审核</button>-->
+            <button class="btn btn-primary navbar-btn js-save" data-loading-text="${msg['globals.button.submit.tip']}" > ${msg['globals.button.save']}</button>
+            <a id="doLink" href="${base}/store/sales/coupon/add" data-pjax></a>
+        </div>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate action="${base}/store/sales/coupon/addDo" method="post">
+                <input type="hidden" name="checkStatus" value="2"/>
+                <!--<div class="box-tab ">-->
+                    <!--<ul class="nav nav-tabs">-->
+                        <!--<li class="active"><a href="#base" data-toggle="tab">优惠券</a></li>-->
+                        <!--<li class="" id="rule_order_tab" ><a href="#rule_order" data-toggle="tab">规则</a></li>-->
+                    <!--</ul>-->
+                    <div class="tab-content">
+                        <!--优惠券-->
+                        <div class="tab-pane fade active in" id="base">
+                            <div class="row mb10 mt10">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label for="name" class="col-sm-2 control-label">${msg['sales.coupon.column.name']}</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="name" class="form-control" name="name" data-parsley-required="true" placeholder="${msg['sales.coupon.column.name']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="codeprefix" class="col-sm-2 control-label">${msg['sales.coupon.column.codeprefix']}</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="codeprefix" class="form-control" name="codeprefix" data-parsley-required="true" placeholder="${msg['sales.coupon.column.codeprefix']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">${msg['sales.coupon.column.type']}</label>
+                                        <div class="col-sm-8 radio">
+                                            <div class="form-inline">
+                                                <label><input type="radio" class="radioType" name="type" value="1" checked>订单满减优惠劵</label><span>（此类优惠券，顾客当订单金额达到配置金额是便可用优惠劵抵扣。）</span>
+                                            </div>
+                                            <div class="form-inline">
+                                                <label><input type="radio" class="radioType" name="type" value="2" >订单免运费优惠券</label><span>（当购买商品数量达到配置的数量时，则进行免运费。）</span>
+                                            </div>
+                                            <div class="form-inline">
+                                                <label><input type="radio" class="radioType" name="type" value="3" >订单打折优惠券</label><span>（当购买商品数量达到配置时，可使用此劵的折扣额）</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--获取方式-->
+                                    <!--<div class="form-group">-->
+                                    <!--<label class="col-sm-2 control-label">${msg['sales.coupon.column.send_type']}</label>-->
+                                    <!--<div class="col-sm-8 form-inline radio">-->
+                                    <!--<label><input type="radio" class="" name="send_type" value="receive" checked>领取(店铺领取或通过code领取)</label>-->
+                                    <!--<label><input type="radio" class="" name="send_type" value="score">积分兑换</label>-->
+                                    <!--<input type="text" id="score" class="form-control input-sm" style="display: none" name="score" value="" data-parsley-required="true" placeholder="${msg['sales.coupon.column.score']}">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">${msg['sales.coupon.column.enabled']}</label>
+                                        <div class="col-sm-1 switcha">
+                                            <div class="mr15">
+                                                <input type="hidden" name="disabled" value="0"/>
+                                                <input type="checkbox" name="enabled" class="js-switch-blue" checked >
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--是否排他-->
+                                    <!--<div class="form-group">-->
+                                    <!--<label class="col-sm-2 control-label">${msg['sales.rule.order.column.limit_other']}</label>-->
+                                    <!--<div class="col-sm-8">-->
+                                    <!--<label class="radio-inline"><input type="radio" class="" name="salesRuleOrder.limit_other" value="1" checked>是</label>-->
+                                    <!--<label class="radio-inline"><input type="radio" class="" name="salesRuleOrder.limit_other" value="0" >否</label>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <div class="form-group">
+                                        <label for="salesRuleOrder_limit_priority" class="col-sm-2 control-label">${msg['sales.rule.order.column.limit_priority']}</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="salesRuleOrder_limit_priority" class="form-control" name="salesRuleOrder.limit_priority" data-parsley-required="true" data-parsley-range="[0, 99]" placeholder="0-99整数,值越大越优先">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="limit_num" class="col-sm-2 control-label">${msg['sales.coupon.column.limit_num']}</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="limit_num" class="form-control" name="limit_num" data-parsley-required="true" placeholder="用户可领取最多张数">
+                                        </div>
+                                    </div>
+                                    <!--规则描述-->
+                                    <!--<div class="form-group">-->
+                                        <!--<label for="salesRuleOrder_note" class="col-sm-2 control-label">${msg['sales.rule.order.column.note']}</label>-->
+                                        <!--<div class="col-sm-8">-->
+                                            <!--<textarea class="form-control" name="salesRuleOrder.note" id="salesRuleOrder_note" data-parsley-required="true" placeholder="${msg['sales.rule.order.column.note']}"></textarea>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">有效期</label>
+                                        <div class="col-sm-8 form-inline">
+                                            <div class="input-group date js-start-time " style="min-width:260px;" data-date="1979-09-16T05:25:07Z" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-field="salesRuleOrder_sartAt">
+                                                <input type="text" size="16" readonly class="form-control" value="${@date.getDateTime()}" data-parsley-required="true" placeholder="${msg['sales.rule.order.column.sartAt']}">
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                            </div>
+                                            <input type="hidden" id="salesRuleOrder_sartAt" name="startTime" value="${@date.getDateTime()}" />
+                                            <span>至</span>
+                                            <div class="input-group date js-end-time " style="min-width:260px;" data-date="1979-09-16T05:25:07Z" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-field="salesRuleOrder_endAt">
+                                                <input type="text" size="16" readonly class="form-control" value="${@date.getDateTime()}" data-parsley-required="true" placeholder="${msg['sales.rule.order.column.endAt']}">
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                            </div>
+                                            <input type="hidden" id="salesRuleOrder_endAt" name="endTime" value="${@date.getDateTime()}" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="deductibleAmountFor">
+                                        <label for="deductibleAmount" class="col-sm-2 control-label">满减抵扣的金额</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="deductibleAmount" class="form-control" name="deductibleAmount"  placeholder="满减抵扣的金额">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="conditionAmountFor">
+                                        <label for="conditionAmount" class="col-sm-2 control-label">条件金额</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="conditionAmount" class="form-control" name="conditionAmount"  placeholder="订单满多少 条件金额">
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="display: none;" id="productQuantityRuleFor">
+                                        <label for="productQuantityRule" class="col-sm-2 control-label">条件商品数</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="productQuantityRule" class="form-control" name="productQuantityRule"  placeholder="优惠条件商品数">
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="display: none;" id="discountFor">
+                                        <label for="productQuantityRule" class="col-sm-2 control-label">优惠劵折扣额</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="discount" class="form-control" name="discount"  placeholder="优惠劵折扣额">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!--</div>-->
+            </form>
+        </section>
+    </div>
+</div>
+
+<script type="application/javascript">
+
+    $(document).ready(function () {
+
+        //保存
+        $(".js-save").click(function () {
+            $('#addForm').submit();
+
+        });
+
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    window.location.href="${base}/store/sales/coupon";
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+
+
+
+        //form表单基础效果
+        myForm.init();
+
+        $('.js-start-time').datetimepicker({
+            language:  "${lang!'zh-CN'}",
+            format:'yyyy-mm-dd hh:ii:ss',
+            pickerPosition: 'bottom-left',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1,
+            endDate: new Date("${@date.getDate()}")
+        }).on("changeDate", function (e) {
+            $('.js-end-time').datetimepicker('setStartDate', e.date);
+        });
+
+        $('.js-end-time').datetimepicker({
+            language:  "${lang!'zh-CN'}",
+            format:'yyyy-mm-dd hh:ii:ss',
+            pickerPosition: 'bottom-left',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1,
+            startDate: new Date("${@date.getDate()}")
+        }).on("changeDate", function (e) {
+            $('.js-start-time').datetimepicker('setEndDate', e.date);
+        });
+
+    })
+
+     $(".radioType").change(function () {
+         var val = $(this).val();
+         if(val == 1){ //满减
+             $("#deductibleAmountFor").css("display","block");
+             $("#conditionAmountFor").css("display","block");
+             $("#productQuantityRuleFor").css("display","none");
+             $("#discountFor").css("display","none");
+         }
+         if(val == 2){ //免运
+             $("#deductibleAmountFor").css("display","none");
+             $("#conditionAmountFor").css("display","none");
+             $("#productQuantityRuleFor").css("display","block");
+             $("#discountFor").css("display","none");
+         }
+         if(val == 3){ //折扣
+             $("#deductibleAmountFor").css("display","none");
+             $("#conditionAmountFor").css("display","none");
+             $("#productQuantityRuleFor").css("display","block");
+             $("#discountFor").css("display","block");
+         }
+     })
+
+    //禁用启用颠倒了
+    $("[name='enabled']").change(function () {
+        if (this.checked) {
+            $("[name='disabled']:hidden").val(0);
+        } else {
+            $("[name='disabled']:hidden").val(1);
+        }
+    });
+
+
+
+
+
+</script>
+
+
+<!--#}#-->
+
+

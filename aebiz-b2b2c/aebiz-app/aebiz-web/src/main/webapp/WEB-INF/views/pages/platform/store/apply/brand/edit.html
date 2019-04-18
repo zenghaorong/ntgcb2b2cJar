@@ -1,0 +1,138 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.config.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.all.min.js"></script>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/store/apply/brand" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+    <div class="pull-right">
+        <div class="btn-group tool-button">
+            <button class="btn btn-primary navbar-btn" type="button" id="save">
+                审核</button>
+        </div>
+    </div>
+</header>
+
+<div class="content-wrap bg-white">
+    <div class="wrapper" style="min-height:500px;">
+        <div class="detail">
+            <div class="form-group col-xs-10">
+                <label  class="col-xs-2 control-label">${msg['goods.brand.column.name']}</label>
+                <div class="col-xs-10">
+                    ${obj.brandName!}
+                </div>
+            </div>
+            <div class="form-group col-xs-10" >
+                <label class="col-xs-2 control-label">${msg['goods.brand.column.aliasName']}</label>
+                <div class="col-xs-10">
+                    ${obj.aliasName!}
+                </div>
+            </div>
+            <div class="form-group col-xs-10">
+                <label class="col-xs-2 control-label">${msg['goods.brand.column.url']}</label>
+                <div class="col-xs-10">
+                    ${obj.url!"空"}
+                </div>
+            </div>
+
+            <div class="form-group col-xs-10">
+                <label for="type" class="col-xs-2 control-label">${msg['goods.brand.column.about']}</label>
+                <div class="col-xs-10" id="type">
+                    <div style="float: left;height: 35px;line-height: 35px;">
+                        <!--#for(o in typeList){#-->
+                                ${o.name!}&nbsp;
+                        <!--#}#-->
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-10">
+                <label for="imgurl" class="col-xs-2 control-label">${msg['goods.brand.column.imgurl']}</label>
+
+                <div class="col-xs-10">
+                    <!--# if(isNotEmpty(obj.imgurl)){ #--><img src='${obj.imgurl!}'><!--# }else{ #--><span>暂无图片</span><!--# } #-->
+                    <input type="hidden" id="imgurl" name="imgurl" value="${obj.imgurl!}" >
+                </div>
+            </div>
+            <div class="form-group col-xs-10">
+                <label for="note" class="col-xs-2 control-label">${msg['goods.brand.column.note']}</label>
+
+                <div class="col-xs-10">
+                    <textarea id="note" name="note" style="width:100%;height:200px;" readonly>${obj.note!}</textarea>
+                </div>
+            </div>
+        </div>
+        <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/store/apply/brand/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+
+                <div class="col-xs-12">
+                        <div class="form-group col-xs-10">
+                            <label for="applyNote" class="col-xs-2 control-label">${msg['store.apply.brand.column.applyNote']}</label>
+                            <div class="col-xs-10">
+                                <input type="text" id="applyNote" readonly class="form-control" name="applyNote" data-parsley-required="true"
+                                       placeholder="${msg['store.apply.brand.column.applyNote']}" value="${obj.applyNote}" >
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-10">
+                            <label for="status" class="col-xs-2 control-label">${msg['store.apply.brand.column.status']}</label>
+                            <div class="col-xs-10">
+                                <input type="checkbox" id="disabled" name="disabled" class="form-control js-switch-blue">
+                                <input type="hidden" id="status" name="status" value="2"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-10">
+                            <label for="checkNote" class="col-xs-2 control-label">${msg['store.apply.brand.column.checkNote']}</label>
+                            <div class="col-xs-10">
+                                <textarea id="checkNote" name="checkNote" cols="60" rows="6" data-parsley-required="true"></textarea>
+                            </div>
+                        </div>
+                </div>
+            </form>
+    </div>
+</div>
+<style>
+    .control-label{
+        text-align: left!important;
+    }
+</style>
+<script language="JavaScript">
+    $("#disabled").change(function () {
+        if ($("#disabled")[0].checked)
+            $('#status').val(1);
+        else
+            $('#status').val(2);
+    });
+    var ue;
+    $(document).ready(function () {
+        myForm.init();
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+                setTimeout(function () {
+                    window.location.reload();
+                },500)
+            }
+        });
+        $('#save').click(function () {
+            $('#editForm').submit();
+        })
+        setTimeout(function () {
+            ue= new baidu.editor.ui.Editor({readonly:true});
+            ue.render('note');
+        },500);
+    });
+
+
+</script>
+<!--#}#-->

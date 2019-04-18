@@ -1,0 +1,246 @@
+<!doctype html>
+<html>
+<head>
+
+    <style type="text/css">
+
+        .mb_0 {
+            margin-bottom: 0;
+        }
+
+        .tab-content .p_nopadding, .p_nopadding {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .p_left {
+            float: left;
+            padding: 0 10px;
+            line-height: 34px;
+        }
+
+        .p_right {
+            float: right;
+        }
+
+        .p_background {
+            background: #f1f1f1;
+            overflow: hidden;
+            padding: 15px 0;
+        }
+
+        .p_btn {
+            display: inline-block;
+            background: #2D2D2D;
+            line-height: 34px;
+            padding: 0 15px;
+            color: #fff;
+        }
+
+        .p_bj_bt {
+            padding-top: 20px;
+        }
+
+        .p_bj_bt b {
+            color: #e51400;
+            font-weight: lighter;
+        }
+
+        .p_bj_bt li.active b {
+            color: #fff;
+        }
+
+        .module-con .p_bj_list {
+            background: #fff;
+            overflow: hidden;
+            margin-bottom: -15px;
+            padding: 0;
+            clear: both;
+        }
+
+        .p_bj_list dl {
+            width: 100%;
+            overflow: hidden;
+            padding: 10px 2%;
+            border-bottom: 1px solid #ddd
+        }
+
+        .p_bj_list dl:hover {
+            background: #fffecf;
+        }
+
+        .p_bj_list dt {
+            width: 50px;
+            height: 50px;
+            float: left;
+            margin-right: 15px;
+        }
+
+        .p_bj_list dt img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .p_bj_list dd {
+            float: left;
+            width: 70%;
+            line-height: 22px;
+            padding-top: 5px;
+        }
+
+        .p_bj_list dd p {
+            height: 22px;
+            overflow: hidden;
+        }
+
+        .p_bj_list dd.operation {
+            float: right;
+            width: 20%;
+        }
+
+        .p_bj_list dd.operation a, .p_bj_list dd.operation span {
+            margin-right: 10px;
+        }
+
+    </style>
+    <script type="text/javascript" src=""></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+
+
+<form class="form-horizontal" id="pictureadform">
+    <div class="form-group">
+        <label for="loginname" class="col-sm-3 control-label">登陆跳转地址</label>
+        <div class="col-sm-3">
+            <input type="text" name="loginUrl" id="loginUrl" placeholder="" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="loginname" class="col-sm-3 control-label">商品跳转地址</label>
+        <div class="col-sm-3">
+            <input type="text" name="productUrl" id="productUrl" placeholder="" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="loginname" class="col-sm-3 control-label">店铺跳转地址</label>
+        <div class="col-sm-3">
+            <input type="text" name="storeUrl" id="storeUrl" placeholder="" class="form-control">
+        </div>
+    </div>
+    <div id="imageHtml" style="display: none;">
+
+
+        <dl id="2edc9c5c40d44ed3b893a0e87dc71995222">
+            <dt>
+                <a href="#"><img height="40" width="40"
+                                 src="http://www.tclo2o.cn/dev1/0/000/001/0000001643.fid"></a>
+            </dt>
+            <dd>
+                <p>
+                    <span>TCL XQB50-1678NS 5公斤 全自动波轮洗衣机 模式可调（浅灰色）</span>
+                </p>
+            </dd>
+            <dd class="operation">
+
+                <a
+                        href="javascript:recommend('2edc9c5c40d44ed3b893a0e87dc71995222')">推荐</a>
+
+            </dd>
+        </dl>
+
+
+    </div>
+
+
+</form>
+
+
+</body>
+
+
+<script type="text/javascript">
+    var pageJson = ${webPageModelJsonStr};
+
+    var componentsParam = {
+        initParamData: function (pageJson) {
+            if (typeof (pageJson) == "string") {
+                pageJson = JSON.parse(pageJson);
+            }
+
+            if (pageJson.needAsyncInit) {
+                $("input[name='needAsyncInit'][value=" + pageJson.needAsyncInit + "]")
+                    .attr("checked", true);
+            }
+            if(pageJson.loginUrl){
+                $("#loginUrl").val(pageJson.loginUrl);
+            }
+            if(pageJson.storeUrl){
+                $("#storeUrl").val(pageJson.storeUrl);
+            }
+            if(pageJson.productUrl){
+                $("#productUrl").val(pageJson.productUrl);
+            }
+
+
+        },
+        saveParamData: function () {
+            var needAsyncInit = $("input[name='needAsyncInit']:checked").val();
+            var qrtype = $("input[name='qrtype']:checked").val();
+
+
+            //登陆，商铺，商品跳转链接
+
+            var loginUrl = $('#loginUrl').val();
+            if(!loginUrl){
+                loginUrl = "";
+            }
+            var storeUrl = $('#storeUrl').val();
+            if(!storeUrl){
+                storeUrl = "";
+            }
+            var productUrl = $('#productUrl').val();
+            if(!productUrl){
+                productUrl = "";
+            }
+
+            var pageJson = {
+                compId: 'picturead',
+                "needAsyncInit": needAsyncInit,
+                "loginUrl":loginUrl,
+                "storeUrl":storeUrl,
+                "productUrl":productUrl
+
+            };
+            return pageJson;
+        },
+
+        showParamData: function () {
+
+            var paramData = [];
+
+            var srcImage = {
+                type: 'src',
+                target: 'img',
+                value: $("#imgSrc").val()
+            };
+
+            paramData.push(srcImage);
+
+            var srcText = {
+                type: 'text',
+                target: 'txt',
+                value: $("#defineTitle").val()
+            };
+
+            paramData.push(srcText);
+
+
+
+            return paramData;
+        }
+    }
+
+    componentsParam.initParamData(pageJson);
+</script>
+</html>

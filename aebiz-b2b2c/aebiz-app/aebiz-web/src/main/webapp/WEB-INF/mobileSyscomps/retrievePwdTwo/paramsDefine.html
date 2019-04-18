@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+<head>
+
+    <style type="text/css">
+
+        .mb_0 {
+            margin-bottom: 0;
+        }
+
+        .tab-content .p_nopadding, .p_nopadding {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .p_left {
+            float: left;
+            padding: 0 10px;
+            line-height: 34px;
+        }
+
+        .p_right {
+            float: right;
+        }
+
+        .p_background {
+            background: #f1f1f1;
+            overflow: hidden;
+            padding: 15px 0;
+        }
+
+        .p_btn {
+            display: inline-block;
+            background: #2D2D2D;
+            line-height: 34px;
+            padding: 0 15px;
+            color: #fff;
+        }
+
+        .p_bj_bt {
+            padding-top: 20px;
+        }
+
+        .p_bj_bt b {
+            color: #e51400;
+            font-weight: lighter;
+        }
+
+        .p_bj_bt li.active b {
+            color: #fff;
+        }
+
+        .module-con .p_bj_list {
+            background: #fff;
+            overflow: hidden;
+            margin-bottom: -15px;
+            padding: 0;
+            clear: both;
+        }
+
+        .p_bj_list dl {
+            width: 100%;
+            overflow: hidden;
+            padding: 10px 2%;
+            border-bottom: 1px solid #ddd
+        }
+
+        .p_bj_list dl:hover {
+            background: #fffecf;
+        }
+
+        .p_bj_list dt {
+            width: 50px;
+            height: 50px;
+            float: left;
+            margin-right: 15px;
+        }
+
+        .p_bj_list dt img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .p_bj_list dd {
+            float: left;
+            width: 70%;
+            line-height: 22px;
+            padding-top: 5px;
+        }
+
+        .p_bj_list dd p {
+            height: 22px;
+            overflow: hidden;
+        }
+
+        .p_bj_list dd.operation {
+            float: right;
+            width: 20%;
+        }
+
+        .p_bj_list dd.operation a, .p_bj_list dd.operation span {
+            margin-right: 10px;
+        }
+
+    </style>
+    <script type="text/javascript" src=""></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+
+
+<form class="form-horizontal" id="pictureadform">
+
+    <div class="form-group">
+        <label for="loginname" class="col-sm-3 control-label">找回密码页面3地址</label>
+        <div class="col-sm-3">
+            <input type="text" name="defineUrl" id="defineUrl" placeholder="" class="form-control">
+        </div>
+    </div>
+
+
+</form>
+
+
+</body>
+
+
+<script type="text/javascript">
+    var pageJson = ${webPageModelJsonStr};
+
+    var componentsParam = {
+        initParamData: function (pageJson) {
+            if (typeof (pageJson) == "string") {
+                pageJson = JSON.parse(pageJson);
+            }
+
+            if (pageJson.needAsyncInit) {
+                $("input[name='needAsyncInit'][value=" + pageJson.needAsyncInit + "]")
+                    .attr("checked", true);
+            }
+            if (pageJson.imgSrc) {
+                $("#imgSrc").val(pageJson.imgSrc);
+            }
+            if (pageJson.defineUrl) {
+                $("#defineUrl").val(pageJson.defineUrl);
+            }
+            if (pageJson.defineTitle) {
+                $("#defineTitle").val(pageJson.defineTitle);
+            }
+
+
+
+        },
+        saveParamData: function () {
+            var needAsyncInit = $("input[name='needAsyncInit']:checked").val();
+            var qrtype = $("input[name='qrtype']:checked").val();
+            var defineUrl = $("#defineUrl").val();
+            if (!defineUrl) {
+                defineUrl = "";
+            }
+            var pageJson = {
+                compId: 'picturead',
+                "needAsyncInit": needAsyncInit,
+                "defineUrl": defineUrl
+
+            };
+            return pageJson;
+        },
+
+        showParamData: function () {
+
+            var paramData = [];
+
+            var srcImage = {
+                type: 'src',
+                target: 'img',
+                value: $("#imgSrc").val()
+            }
+
+            paramData.push(srcImage);
+
+            var srcText = {
+                type: 'text',
+                target: 'txt',
+                value: $("#defineTitle").val()
+            }
+
+            paramData.push(srcText);
+
+
+
+            return paramData;
+        }
+    }
+
+    componentsParam.initParamData(pageJson);
+</script>
+</html>

@@ -1,0 +1,163 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button">
+            <a id="add" class="btn btn-primary navbar-btn" href="${base}/platform/sys/menu/add" data-pjax><i
+                    class="ti-plus"></i> ${msg['globals.button.add']}</a>
+        </div>
+        <div class="pull-right">
+            <div class="btn-group tool-button">
+                <a class="btn btn-primary navbar-btn" href="${base}/platform/sys/menu/sort" data-pjax><i class="ti-share"></i> ${msg['sys.menu.button.sort']}</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="content-wrap">
+        <div class="wrapper" style="min-height:500px;">
+            <div class="row mb15">
+                <div class="col-lg-12">
+                    <table id="unitTreeTable" class="table no-m">
+                        <thead>
+                        <tr>
+                            <th>${msg['sys.menu.column.name']}</th>
+                            <th>${msg['sys.menu.column.path']}</th>
+                            <th>${msg['sys.menu.column.permission']}</th>
+                            <th>${msg['sys.menu.column.disabled']}</th>
+                            <th>${msg['sys.menu.column.buttons']}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!--# for(o in obj){
+                       #-->
+                        <tr data-tt-id="${o.id}" data-tt-parent-id="${o.parentId}" data-tt-branch="${o.hasChildren}">
+                            <td>
+                                <span class="pd-l-sm"></span>${o.name!}
+                            </td>
+                            <td>${o.path!}</td>
+                            <td>${o.permission!}</td>
+                            <td><!--#if(false==o.disabled){#--><i id="disable_${o.id!}" class="fa fa-circle text-success ml5"></i><!--#}else{#--><i id="disable_${o.id!}" class="fa fa-circle text-danger ml5"></i><!--#}#--></td>
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle"
+                                            data-toggle="dropdown">
+                                        <i class="ti-settings"></i>
+                                        <span class="ti-angle-down"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="${base}/platform/sys/menu/edit/${o.id!}" data-pjax>${msg['sys.menu.column.update']}</a></li>
+                                        <li><a href="javascript:;" onclick="del('${o.id!}')">${msg['sys.menu.column.del']}</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="${base}/platform/sys/menu/add/${o.id!}" data-pjax>${msg['sys.menu.column.addChile']}</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="javascript:;" onclick="enableRole('${o.id!}')">${msg['sys.menu.column.enable']}</a></li>
+                                        <li><a href="javascript:;" onclick="disableRole('${o.id!}')">${msg['sys.menu.column.disable']}</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <!--#
+                         }#-->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</section>
+
+
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}
+                </button>
+                <button id="okDel" type="button" class="btn btn-primary"
+                        data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    var unitTreeTable;
+    $(function () {
+        unitTreeTable = $("#unitTreeTable").treetable({
+            expandable: true,
+            onNodeExpand: function () {
+                var node = this;
+                var rows = "<tr data-tt-id=\"loading\" data-tt-parent-id=\"" + node.id + "\" data-tt-branch=\"false\"><td colspan='5'><img src=\"" + base + "/assets/img/loading.gif\"/>loading</td></tr>";
+                unitTreeTable.treetable("loadBranch", node, rows);
+                $.post("${base}/platform/sys/menu/child/" + node.id, {}, function (data) {
+                    unitTreeTable.treetable("unloadBranch", node);
+                    unitTreeTable.treetable("loadBranch", node, data);
+                });
+            }
+        });
+    });
+
+    function enableRole(id) {
+        $.post("${base}/platform/sys/menu/enable/" + id, {}, function (data) {
+            if (data.code == 0) {
+                $("#disable_" + id).attr("class", "fa fa-circle text-success ml5");
+            } else {
+                Toast.error(data.msg);
+            }
+        }, "json");
+    }
+
+    function disableRole(id) {
+        $.post("${base}/platform/sys/menu/disable/" + id, {}, function (data) {
+            if (data.code == 0) {
+                $("#disable_" + id).attr("class", "fa fa-circle text-danger ml5");
+            } else {
+                Toast.error(data.msg);
+            }
+        }, "json");
+    }
+
+
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/sys/menu/delete/"+id, {}, function (data) {
+                //重置按钮状态，关闭提示框
+                dialog.modal("hide");
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    unitTreeTable.treetable("removeNode", id);
+                    //从表格中移除此行
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+            }, "json");
+        });
+    }
+</script>
+<!--#}#-->

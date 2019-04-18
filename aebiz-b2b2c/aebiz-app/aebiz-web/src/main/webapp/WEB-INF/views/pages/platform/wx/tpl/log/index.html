@@ -1,0 +1,138 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group" style="padding-top: 5px;">
+            <div >
+                <select id="wxid" name="wxid" class="form-control">
+                    <!--# for(o in wxList){
+                    #-->
+                    <option value="${o.id}" <!--#if(o.id==wxid){#-->selected<!--#}#-->>${o.appname}</option>
+                    <!--#
+                    } #-->
+                </select>
+            </div>
+        </div>
+        <div class="pull-right">
+            <button class="btn btn-primary navbar-btn" onclick="sublime.toggleFilter('.cd-panel')"><i
+                    class="fa fa-sliders"></i> ${msg['wx.tpl.log.column.screening']}
+            </button>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                    <tr>
+                        <th>${msg['wx.tpl.log.column.openid']}</th>
+                        <th>${msg['wx.tpl.log.column.wechatnickname']}</th>
+                        <th>${msg['wx.tpl.log.column.sendcontent']}</th>
+                        <th>${msg['wx.tpl.log.column.sendtime']}</th>
+                        <th>${msg['wx.tpl.log.column.sendstatus']}</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div class="cd-panel from-right">
+    <header class="cd-panel-header">
+        <h4>${msg['wx.tpl.log.column.advancedscreening']}</h4>
+    </header>
+    <div class="cd-panel-container">
+        <div class="cd-panel-content shadow">
+            <div class="form-group">
+                <label for="nickname">${msg['wx.tpl.log.column.wechatnickname']}</label>
+                <input type="text" id="nickname" name="nickname" onclick="this.value=''" class="form-control" placeholder="${msg['wx.tpl.log.column.wechatnickname']}">
+            </div>
+            <div class="form-group">
+                <label for="nickname">${msg['wx.tpl.log.column.openid']}</label>
+                <input type="text" id="openid" name="openid" onclick="this.value=''" class="form-control" placeholder="openid">
+            </div>
+            <button id="searchBtn" type="button" class="btn btn-default">${msg['wx.tpl.log.column.query']}</button>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang!}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/wx/tpl/log/data",
+                "type": "post",
+                "data": function (d) {
+                    d.wxid=$("#wxid").val();
+                    d.openid=$("#openid").val();
+                    d.nickname=$("#nickname").val();
+                }
+            },
+            //默认排序列
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "openid", "bSortable": true},
+                {"data": "nickname", "bSortable": true},
+                {"data": "content", "bSortable": true},
+                {"data": "opAt", "bSortable": true},
+                {"data": "status", "bSortable": true}
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return moment(parseInt(data*1000)).format("YYYY-MM-DD HH:mm:ss");
+                        }
+                        return '';
+                    },
+                    "targets": 3
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data==1) {
+                            return "${msg['wx.tpl.log.column.sendsuccess']}";
+                        }else if(data==2){
+                            return "<span style='color: red'>${msg['wx.tpl.log.column.sendfailure']}</span>";
+                        }
+                        return '';
+                    },
+                    "targets": 4
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+    $(function () {
+        initDatatable();
+        $("#wxid").on("change",function(){
+            datatable.ajax.reload();
+        });
+    });
+</script>
+
+<!--#}#-->

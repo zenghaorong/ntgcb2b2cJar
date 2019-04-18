@@ -1,0 +1,30 @@
+<!--component mnotice-->
+<style>
+    .m-index-notice .img-box {
+        width: 18.6%;
+        text-align: center;
+    }
+
+    .m-index-notice .text-box {
+        border-left: 1px solid #ccc;
+        padding: 0 10px;
+        overflow: hidden;
+    }
+</style>
+
+<table id="$_mnotice_compId" class="m-index-notice m-components">
+    <tr>
+        <td class="img-box rmggimg"><img src="${contextPath}/static/mobileTempAssets/defaultTemplate/images/index/10.png" alt="logo" /> </td>
+        <td>
+            <ul class="text-box rmggtext " id="scrollnews" style="line-height:20px;overflow:hidden;height:40px;"></ul>
+        </td>
+    </tr>
+</table>
+
+<script id="m-index-notice-list" type="text/html">
+    {{each rows as row i}}
+        <li data-uuid="{{row.uuid}}">
+            <a href="javascript:void(0)">{{row.contentTitle}}</a>
+        </li>
+    {{/each }}
+</script>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>图文详情</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!--标准mui.css-->
+    <link rel="stylesheet" href="${base!}/assets/front/h5/css/mui.min.css" />
+    <link rel="stylesheet" href="${base!}/assets/front/h5/css/hryc.css" />
+    <!--App自定义的css-->
+    <!--<link rel="stylesheet" type="text/css" href="../css/app.css"/>-->
+    <style>
+        [v-cloak]{
+            display: none !important;
+        }
+        .detil{
+            width: 90%;
+            margin: 0 auto;
+        }
+        .detil img{
+            width: 100%;
+        }
+    </style>
+</head>
+<body style="background: white;">
+
+<div id="vue" v-cloak>
+    <header class="mui-bar mui-bar-nav top-color">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+        <h1 class="mui-title" style="color: white;">
+           {{cms.title}}
+        </h1>
+    </header>
+
+
+    <div class="mui-card" style="margin-top: 60px;">
+        <div class="mui-content" style="background: white;" >
+            <div class="detil" v-html="cms.content" style="padding-top: 20px;">
+                {{cms.content}}
+            </div>
+
+        </div>
+    </div>
+    <div style="padding: 20px;margin-bottom:30px;">
+        <div class="title" style="padding-bottom: 10px;">
+            评论
+        </div>
+        <ul class="mui-table-view">
+            <div id="zanwu" style="display: none;margin: 40px 30px;">暂无评论....</div>
+            <li class="mui-table-view-cell" v-for="item in reviewList" :key="item.id">
+                <img src="${base!}/assets/front/h5/img/魏晨.jpg" width="20px;">
+                {{item.reviewOpName}}:
+                <p style="padding:10px;">
+                    {{item.content}}
+                    <span style="margin-left: 10px;color: #2700ef;" v-on:click="clickReply(item.id,item.reviewOpName,item.reviewOpId)">回复</span>
+                </p>
+                <div v-for="item2 in item.replyVOList" :key="item2.id" style="padding-left:10px;">
+                    <p style="color: #0a0a0a;">{{item2.reviewOpName}}-回复-{{item2.reviewFatherName}}:</p>
+                    <p style="padding:10px;">
+                        {{item2.content}}
+                        <span style="margin-left: 10px;color: #2700ef;" v-on:click="clickReply2(item.id,item2.reviewOpName,item2.reviewOpId,item2.id)">回复</span>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <nav class="mui-bar mui-bar-tab" style="height: 40px;">
+        <div class="mui-input-row mui-password" style="border: 0px;">
+            <input type="text" id="place" v-model="content" class="mui-input-clear mui-input" placeholder="请输入评论内容" style="margin-bottom: 0px;width: 80%;">
+            <button type="button" v-on:click="isPlHf" style="width: 20%;top: 0px;line-height:1;"
+                        class="mui-btn mui-btn-primary" id="review">评论</button>
+        </div>
+    </nav>
+</div>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/mui.js" ></script>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/vue.js" ></script>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/jquery-2.0.0.min.js" ></script>
+<script type="application/javascript">
+    mui.init({
+        swipeBack:true //启用右滑关闭功能
+    });
+
+    var _this;
+
+    var vue = new Vue({
+        el: '#vue',
+        data: {
+            cms: '',
+            cmsTitle:'',
+            reviewList:'',
+            content:'',    //评论内容
+            rcontent:'',   //回复内容
+            reviewId:'',  //回复父级编号
+            reviewFatherName:'',//回复父级发布人名称
+            reviewFatherId:'', //回复父级发布人编号
+            reviewReplyId:'', //回复父级回复编号（区分回复的是评论底下哪条回复）
+            isHf:1, //是评论还是回复
+
+        },
+        created:function () {   //实例初始化创建完成执行
+
+            this.getCmsList();     //调用自身方法
+            this.jqueryLin();
+
+        },
+        methods:{              //定义封装方法
+            //获取列表
+            getCmsList:function () {
+                var self = this;
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/cms/cmsArticle.html",
+                    dataType:"JSON",
+                    data:{
+                        id:'${id!}',
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            var d = data.data;
+                            self.cms = d;
+                            self.cmsTitle = d.title;
+                            self.getReview();
+                        } else {
+
+                        }
+                    }
+                });
+
+            },
+            //获取评论回复列表
+            getReview:function () {
+                var self = this;
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/cms/getReview.html",
+                    dataType:"JSON",
+                    data:{
+                        cmsId:'${id!}',
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            var d = data.data;
+                            self.reviewList = d;
+                        } else {
+
+                        }
+                    }
+                });
+
+            },
+            //发布评论
+            review:function () {
+                var self = this;
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/cms/review.html",
+                    dataType:"JSON",
+                    data:{
+                        cmsId:'${id!}',
+                        cmsTitle:self.cmsTitle,
+                        content:self.content
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            var d = data.data;
+                            self.content='';
+                            self.getReview();
+                        } else {
+
+                        }
+                    }
+                });
+
+            },
+            //点击回复
+            clickReply:function(reviewId,reviewFatherName,reviewFatherId){
+                    this.reviewId = reviewId; //回复父级编号
+                    this.reviewFatherName = reviewFatherName;//回复父级发布人名称
+                    this.reviewFatherId = reviewFatherId; //回复父级发布人编号
+                    this.textBian();
+            },
+            //点击回复下回复
+            clickReply2:function(reviewId,reviewFatherName,reviewFatherId,reviewReplyId){
+                this.reviewId = reviewId; //回复父级编号
+                this.reviewFatherName = reviewFatherName;//回复父级发布人名称
+                this.reviewFatherId = reviewFatherId; //回复父级发布人编号
+                this.reviewReplyId= reviewReplyId; //回复父级回复编号（区分回复的是评论底下哪条回复）
+                this.textBian();
+            },
+            //变换样式
+            textBian:function(){
+                $("#place").attr("placeholder",'请输入回复内容');
+                $("#review").html("回复");
+                $("#place").focus();
+                this.isHf=2;
+            },
+            //回复评论
+            reply:function () {
+                var self = this;
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/cms/reply.html",
+                    dataType:"JSON",
+                    data:{
+                        cmsId:'${id!}',
+                        cmsTitle:self.cmsTitle,
+                        content:self.content,
+                        reviewId : self.reviewId, //回复父级编号
+                        reviewFatherName:self.reviewFatherName,//回复父级发布人名称
+                        reviewFatherId:self.reviewFatherId, //回复父级发布人编号
+                        reviewReplyId:self.reviewReplyId //回复父级回复编号（区分回复的是评论底下哪条回复）
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            var d = data.data;
+                            self.content='';
+                            self.getReview();
+                        } else {
+
+                        }
+                    }
+                });
+
+            },
+            //判断调用评论还是回复
+            isPlHf:function(){
+                if(this.isHf==1){ //评论
+                    this.review();
+                }else{ //回复
+                    this.reply();
+                }
+            },
+            //初始化jquery监听
+            jqueryLin:function () {
+                 _this = this;
+            }
+        },
+        watch:{     //监听器
+            reviewList:function () {
+                // console.log(this.reviewList)
+                if(this.reviewList.length<1){
+                    console.log("暂无评论...")
+                    $("#zanwu").css("display","block");
+                }else {
+                    $("#zanwu").css("display","none");
+                }
+
+            }
+        }
+
+    })
+
+    $("#place").blur(function () {
+        if(_this.content.length<1){
+            $("#place").attr("placeholder",'请输入评论内容');
+            $("#review").html("评论");
+            _this.isHf=1;
+        }
+    })
+
+
+    //处理时间戳
+    function timestamp(timestamp) {
+        var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        Y = date.getFullYear() + '-';
+        M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        D = date.getDate() + ' ';
+        h = date.getHours() + ':';
+        m = date.getMinutes();
+        s = date.getSeconds();
+        return Y+M+D+h+m;
+    }
+</script>
+</body>
+</html>

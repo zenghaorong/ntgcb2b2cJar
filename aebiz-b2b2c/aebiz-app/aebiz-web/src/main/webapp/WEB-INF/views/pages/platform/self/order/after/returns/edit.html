@@ -1,0 +1,126 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/order/after/returns" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/order/after/returns/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="afterSaleId" class="col-sm-2 control-label">${msg['order.after.returns.column.afterSaleId']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="afterSaleId" class="form-control" name="afterSaleId" data-parsley-required="true"
+                                       placeholder="${msg['order.after.returns.column.afterSaleId']}" value="${obj.afterSaleId}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="note" class="col-sm-2 control-label">${msg['order.after.returns.column.note']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="note" class="form-control" name="note" data-parsley-required="true"
+                                       placeholder="${msg['order.after.returns.column.note']}" value="${obj.note}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="evidence1" class="col-sm-2 control-label">${msg['order.after.returns.column.evidence1']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="evidence1" class="form-control" name="evidence1" data-parsley-required="true"
+                                       placeholder="${msg['order.after.returns.column.evidence1']}" value="${obj.evidence1}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="evidence2" class="col-sm-2 control-label">${msg['order.after.returns.column.evidence2']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="evidence2" class="form-control" name="evidence2" data-parsley-required="true"
+                                       placeholder="${msg['order.after.returns.column.evidence2']}" value="${obj.evidence2}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="evidence3" class="col-sm-2 control-label">${msg['order.after.returns.column.evidence3']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="evidence3" class="form-control" name="evidence3" data-parsley-required="true"
+                                       placeholder="${msg['order.after.returns.column.evidence3']}" value="${obj.evidence3}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="logisticsCompany" class="col-sm-2 control-label">${msg['order.after.returns.column.logisticsCompany']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="logisticsCompany" class="form-control" name="logisticsCompany" data-parsley-required="true"
+                                       placeholder="${msg['order.after.returns.column.logisticsCompany']}" value="${obj.logisticsCompany}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="logisticsSheetId" class="col-sm-2 control-label">${msg['order.after.returns.column.logisticsSheetId']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="logisticsSheetId" class="form-control" name="logisticsSheetId" data-parsley-required="true"
+                                       placeholder="${msg['order.after.returns.column.logisticsSheetId']}" value="${obj.logisticsSheetId}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="returnsMan" class="col-sm-2 control-label">${msg['order.after.returns.column.returnsMan']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="returnsMan" class="form-control" name="returnsMan" data-parsley-required="true"
+                                       placeholder="${msg['order.after.returns.column.returnsMan']}" value="${obj.returnsMan}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="returnsManId" class="col-sm-2 control-label">${msg['order.after.returns.column.returnsManId']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="returnsManId" class="form-control" name="returnsManId" data-parsley-required="true"
+                                       placeholder="${msg['order.after.returns.column.returnsManId']}" value="${obj.returnsManId}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="returnsTime" class="col-sm-2 control-label">${msg['order.after.returns.column.returnsTime']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="returnsTime" class="form-control" name="returnsTime" data-parsley-required="true"
+                                       placeholder="${msg['order.after.returns.column.returnsTime']}" value="${obj.returnsTime}" >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<script language="JavaScript">
+    $(document).ready(function () {
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<!--#}#-->

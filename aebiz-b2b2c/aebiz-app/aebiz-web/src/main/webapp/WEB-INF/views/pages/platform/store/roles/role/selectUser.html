@@ -1,0 +1,94 @@
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="pull-left offscreen-left" style="padding-top:15px;">
+            <div class="form-group">
+                <input id="name" type="text" onclick="this.value='';" placeholder="${msg['sys.role.column.enterusernickname']}">
+            </div>
+        </div>
+        <div class="pull-right offscreen-right btn-group tool-button">
+            <a class="btn btn-primary navbar-btn" onclick="_selectAll()">${msg['sys.role.column.futuregenerations']}</a>
+            <a class="btn btn-primary navbar-btn" onclick="_selectOn()">${msg['sys.role.column.soure']}</a>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border" style="padding-top: 5px;" >
+            <input id="unitid" type="hidden">
+            <table id="datatable_select" class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                <tr>
+                    <th>${msg['account.info.column.nickname']}</th>
+                    <th>${msg['account.info.column.name']}</th>
+                    <th>${msg['account.info.column.sex']}</th>
+            </table>
+        </div>
+    </div>
+</section>
+<script language="JavaScript">
+    var datatable_select;
+    function initdatatable_select() {
+        datatable_select = $('#datatable_select').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang!}.json"
+            },
+            "ajax": {
+                "url": "${base}/store/roles/role/selectData",
+                "type": "post",
+                "data": function (d) {
+                    d.roleid = $('#roleid').val();
+                    d.name = $('#name').val();
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "nickname", "bSortable": true},
+                {"data": "name", "bSortable": true},
+                {"data": "sex", "bSortable": true},
+            ],
+            "columnDefs": [
+                {
+                }
+            ]
+        });
+        datatable_select.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#name").on('keyup', function () {
+            datatable_select.ajax.reload();
+        });
+    }
+    function _selectAll() {
+        $("#datatable_select").find("tr").each(function () {
+            if (!$(this).hasClass('selected'))
+                $(this).addClass('selected');
+        });
+    }
+    function _selectOn() {
+        var chks = datatable_select.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable_select.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            $.post("${base}/store/roles/role/pushUser", {menuIds: ids.toString(),roleid: $('#roleid').val()}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload();
+                } else {
+                    Toast.error(data.msg);
+                }
+                $('#dialogUserSelect').modal('hide');
+            }, "json");
+        }else{
+            Toast.warning("请先选择用户！");
+        }
+    }
+    $(document).ready(function () {
+        initdatatable_select();
+    });
+
+</script>

@@ -1,0 +1,111 @@
+<html>
+<script src="${base!}/assets/platform/vendor/jquery/jquery.min.js"></script>
+<script src="${base!}/assets/platform/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="${base!}/assets/platform/vendor/bootstrap-colorpalette/js/bootstrap-colorpalette.js"></script>
+<script src="${base!}/assets/platform/vendor/jquery.easing/jquery.easing.min.js"></script>
+<script src="${base!}/assets/platform/vendor/jquery.easing/jquery.easing.compatibility.js"></script>
+<script src="${base!}/assets/platform/vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="${base!}/assets/platform/vendor/datatables/js/dataTables.bootstrap.js"></script>
+<!--<script src="${base!}/assets/platform/vendor/jquery.form/jquery.form.js"></script>
+<script src="${base!}/assets/platform/vendor/sortable/js/sortable.min.js"></script>
+<script src="${base!}/assets/platform/vendor/nestable/jquery.nestable.js"></script>-->
+<script src="${base!}/assets/platform/vendor/bootbox/jquery.bootbox.js"></script>
+<script src="${base!}/assets/platform/vendor/modernizr.js"></script>
+<script src="${base!}/assets/platform/scripts/jquery.pjax.js"></script>
+<script src="${base!}/assets/platform/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--<script src="${base!}/assets/platform/vendor/bootstrap-colorpalette/js/bootstrap-colorpalette.js"></script>-->
+<script src="${base!}/assets/platform/vendor/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="${base!}/assets/platform/vendor/jquery.placeholder.js"></script>
+<script src="${base!}/assets/platform/vendor/moment/locale/${lang!}.js"></script>
+<script src="${base!}/assets/platform/vendor/parsleyjs/parsley.min.js"></script>
+
+<style>
+    .item{
+        position:relative;
+        display: block;
+        float: left;
+        width:150px;
+        height: 190px;
+        margin-right: 1%;
+        margin-left:1%;
+        padding: 10px;
+        box-sizing: border-box;
+        box-shadow: 1px 1px 5px rgba(0,0,0,.1);
+        margin-bottom: 20px;
+        overflow: hidden;
+        background-color: white;
+        transition:box-shadow .2s ease,translate 1s ease;
+    }
+
+    .item img{
+        width:100%;
+    }
+
+    .item h5{
+        margin-top:10px;
+        height: 32px;
+        overflow: hidden;
+    }
+
+    .tempMask{
+        display:none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,.5);
+        left: 0;
+        bottom: 0;
+        z-index: 100;
+        line-height: 160px;
+        text-align: center;
+    }
+    .tempMask img{
+        width:60px;
+        height:60px;
+    }
+</style>
+<div class="row">
+    <div class="col-sm-12 tab-content y_imgbox">
+        <div class="box">
+            <div class="tab-pane">
+                <!--# for(templateSkin in list){
+ #-->
+                <div class="col-sm-3 item">
+                    <a class="small-img" href="javascript:void(0);" onclick="enable(this,'${templateSkin.id}','${templateSkin.templateUuid}')" title="${templateSkin.styleName }">
+                        <!--#if(templateSkin.styleImage=="" || templateSkin.styleImage==null){#-->
+                        <img src="/assets/front/pc/images/nsindex01.png" />
+                        <!--#}else{#-->
+                          <img src="${templateSkin.styleImage }" />
+                        <!--#}#-->
+                    </a>
+                    <h5>${templateSkin.styleName}</h5>
+                    <div class="tempMask"<!--#if(templateSkin.disabled==true){#-->style="display:block"<!--#}#-->>
+                    <img alt="" src="/assets/front/pc/member/images/temp_select.png">
+                </div>
+            </div>
+            <!--#
+}#-->
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    function enable(target,id) {
+        bootbox.confirm("确认启用该皮肤吗？", function(r){
+            if(r){
+                $.post("${base}/platform/dec/templates/style/enable/" + id, {}, function (data) {
+                    console.log(data);
+                    if (data.code == 0) {
+                        $('.item').find('.tempMask').hide();
+                        $(target).parents('.item').find('.tempMask').show();
+                        Toast.success(data.msg);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                }, "json");
+            }
+        })
+    }
+
+</script>
+</html>

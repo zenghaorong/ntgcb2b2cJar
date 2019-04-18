@@ -1,0 +1,54 @@
+	<!-- 登录弹出框 -->
+<div id="$_poplogin_compId" class="m-components">
+    <div class="m-comsloading" id="$_poplogin_compId_comsloading"></div>
+	<div class="modal fade y_suslogin" id="modal-login-form" tabindex="-1" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<!-- 标题 -->
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title">您尚未登录</h4>
+					</div>
+					<!-- 中间结构 -->
+					<div class="modal-body">
+						<p id="isfastbuy" name="" ></p>
+						<div id="center">
+							<form id="domainForm" action="" method="get" class='form-validate3' >
+								<input type="hidden" id="$_poplogin_compId_hasVilidateCode" name="hasVilidateCode" value="false">
+								<input type="hidden" id="type" name="type" value="customer">
+								<div class="y_suslgbx">
+									<div class="form-group">
+										<label class="control-label" for="loginName">用户名/手机</label>
+										<input type="text" required class="form-control" id="$_poplogin_compId_loginName" name="loginName" value="">
+									</div>
+									<div class="form-group">
+										<label class="control-label" for="pwd">密码</label>
+										<input type="password" required class="form-control" id="$_poplogin_compId_pwd" name="pwd" value="">
+									</div>
+									
+									<div id="errordiv" style="display:none;">
+										<div class="form-group">
+											<div class="alert alert-danger" id="error_msg"></div>
+										</div>
+									</div>
+				
+									<div class="y_suskjbx">
+										<a id="$_poplogin_compId_a_reg" class="f_clr999" href="/customerregist/toRegister">注册</a>
+										<label><input type="checkbox" name="remember" id="$_poplogin_compId_remember" />记住我</label>
+										<a id="$_poplogin_compId_a_forgetpwd" class="f_clr999 f-fr" href="/customerfindpwd/toFindPwdStep1">忘记密码</a>
+									</div>
+										
+									
+									<button type="button" id="y_loadlogin_id" class="btn btn-primary btn-custom btn-lg btn-block" data-loading-text="登录中">登录</button>
+								</div>
+							</form>
+						</div>
+					</div>
+					<!-- 底部 -->
+					<div class="modal-footer y_copeweb">
+					
+					</div><!-- End .modal-footer -->
+				</div><!-- End .modal-content -->
+			</div><!-- End .modal-dialog -->
+	</div><!-- End 登录弹出框 -->
+</div>

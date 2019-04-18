@@ -1,0 +1,105 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/dec/templates/files" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/dec/templates/files/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="templateUuid" class="col-sm-2 control-label">${msg['dec.templates.files.column.templateUuid']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="templateUuid" class="form-control" name="templateUuid" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.files.column.templateUuid']}" value="${obj.templateUuid}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="fileType" class="col-sm-2 control-label">${msg['dec.templates.files.column.fileType']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="fileType" class="form-control" name="fileType" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.files.column.fileType']}" value="${obj.fileType}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="showName" class="col-sm-2 control-label">${msg['dec.templates.files.column.showName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="showName" class="form-control" name="showName" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.files.column.showName']}" value="${obj.showName}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pageUuid" class="col-sm-2 control-label">${msg['dec.templates.files.column.pageUuid']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="pageUuid" class="form-control" name="pageUuid" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.files.column.pageUuid']}" value="${obj.pageUuid}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="parentUuid" class="col-sm-2 control-label">${msg['dec.templates.files.column.parentUuid']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="parentUuid" class="form-control" name="parentUuid" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.files.column.parentUuid']}" value="${obj.parentUuid}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="note" class="col-sm-2 control-label">${msg['dec.templates.files.column.note']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="note" class="form-control" name="note" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.files.column.note']}" value="${obj.note}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="isDefault" class="col-sm-2 control-label">${msg['dec.templates.files.column.isDefault']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="isDefault" class="form-control" name="isDefault" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.files.column.isDefault']}" value="${obj.isDefault}" >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<script language="JavaScript">
+    $(document).ready(function () {
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<!--#}#-->

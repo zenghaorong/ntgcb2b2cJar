@@ -1,0 +1,288 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button">
+            <a id="add" class="btn btn-primary navbar-btn" href="${base}/platform/dec/component/add?versionType=${versionType!}" data-pjax><i class="ti-plus"></i> ${msg['globals.button.add']}</a>
+            <button class="btn btn-danger navbar-btn" onclick="delCheck()"><i class="ti-close"></i> ${msg['globals.button.delete.more']}</button>
+            <a id="index" class="btn btn-primary navbar-btn" href="${base}/platform/dec/component/goComponentClass" data-pjax>${msg['dec.component.column.class']}</a>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="form-group" style="padding-top:7px">
+            <label class="control-label  col-xs-1" >组件编号:</label>
+            <div class="col-xs-2"> <input type="text" name="coId" class="form-control"></div>
+            <label class="control-label  col-xs-1" >版本类型:</label>
+            <div class="col-xs-2">
+                <select  class="form-control" name="coVersionType">
+                    <option value="">-请选择-</option>
+                    <option value="1">电脑</option>
+                    <option value="2">手机</option>
+                </select>
+            </div>
+            <label class="control-label col-xs-1" >组件名称:</label>
+            <div class="col-xs-2"> <input type="text" name="coName" class="form-control"></div>
+            <label class="control-label col-xs-1">组件分类:</label>
+            <div class="col-xs-2">
+                <select  class="form-control" name="coClass">
+
+                    <option value="">-请选择-</option>
+                    <!--# for(o in ClassList){
+        #-->
+                    <option value="${o.id}">${o.categoryName}</option>
+                    <!--#
+    }#-->
+                </select>
+            </div>
+            <button type="button" class="btn btn-info" onclick="search()">查询</button>
+            <button type="button" class="btn btn-default" id="clear">清空</button>
+        </div>
+        <div id="checkStatus"></div>
+        <div class="table-responsive no-border"  style="min-height: 500px;">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                    <tr>
+                            <th>${msg['dec.component.column.compId']}</th>
+                            <th hidden="hidden">${msg['dec.component.column.versionType']}</th>
+                            <th>${msg['dec.component.column.compCategoryUuid']}</th>
+                            <th>${msg['dec.component.column.compType']}</th>
+                            <th>${msg['dec.component.column.competence']}</th>
+                            <th>${msg['dec.component.column.versionType']}</th>
+                            <th hidden="hidden">${msg['dec.component.column.useType']}</th>
+                            <th>${msg['dec.component.column.compName']}</th>
+                            <th hidden="hidden">${msg['dec.component.column.compImage']}</th>
+                            <th hidden="hidden">${msg['dec.component.column.classFullName']}</th>
+                            <th hidden="hidden">${msg['dec.component.column.description']}</th>
+                            <th hidden="hidden">${msg['dec.component.column.pHeight']}</th>
+                            <th hidden="hidden">${msg['dec.component.column.pWidth']}</th>
+                            <th>${msg['dec.component.column.disabled']}</th>
+                            <th>${msg['globals.table.column.operation']}</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<style>
+    .col-xs-1{
+        height: 34px;
+        line-height: 34px;
+    }
+    .col-xs-2{
+        width: 150px;
+    }
+    a{
+        cursor: pointer;
+    }
+</style>
+
+<script language="JavaScript">
+    var datatable;
+    var coId='';
+    var coName='';
+    var coClass='';
+    var coVersionType=${versionType!};
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/dec/component/data",
+                "type": "post",
+                "data": function (d) {
+                    d.compId=coId;
+                    d.compName=coName;
+                    d.compType=coClass;
+                    d.versionType=coVersionType;
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                    {"data": "compId", "bSortable": true},
+                    {"data": "compCategoryUuid", "bSortable": true},
+                    {"data": "compType", "bSortable": true},
+                    {"data": "competence", "bSortable": true},
+                    {"data": "versionType", "bSortable": true},
+                    {"data": "compName", "bSortable": true},
+                    {"data": "disabled", "bSortable": true},
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        if (false!=row.disabled) {
+                            return '<i id="disable_' + row.id + '" class="fa fa-circle text-success ml5"></i>';
+                        } else {
+                            return '<i id="disable_' + row.id + '" class="fa fa-circle text-danger ml5"></i>';
+                        }
+                    },
+                    "targets": 6
+                },
+                {
+                    "render": function (data, type, row) {
+                       if(row.compType=="1"){
+                           return '<p>系统组件</p>';
+                       }else if(row.compType=="2"){
+                           return '<p>自定义组件</p>';
+                       }
+                    },
+                    "targets": 2
+                },
+                {
+                    "render": function (data, type, row) {
+                        if(row.competence=="1"){
+                            return  '<p>公共类</p>';;
+                        }else if(row.competence=="2"){
+                            return  '<p>平台类</p>';;
+                        }else if(row.competence=="3"){
+                            return  '<p>商户类</p>';
+                        }
+                    },
+                    "targets": 3
+                },
+
+                {
+                    "render": function (data, type, row) {
+                        if(row.versionType=="1"){
+                            return '<p>电脑端</p>';
+                        }else if(row.versionType=="2"){
+                            return '<p>手机端</p>';
+                        }else if(row.versionType=="3"){
+                            return '<p>微信端</p>';
+                        }else if(row.versionType=="4"){
+                            return '<p>电视端</p>';
+                        }
+                    },
+                    "targets": 4
+                },
+                {
+                    "render": function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                                '<li><a href="${base}/platform/dec/component/detail/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">${msg["globals.button.detail"]}</a></li>' +
+                                '<li><a href="${base}/platform/dec/component/edit/' + row.id + '" data-pjax>${msg["globals.button.update"]}</a></li>' +
+                                '<li class="divider"></li>' +
+                                '<li><a href="javascript:;" onclick="del(\'' + row.id + '\')">${msg["globals.button.delete"]}</a></li>' +
+                            '<li><a href="${base}/platform/dec/component/toRegister/' + row.id + '" data-toggle="modal" >注册</a></li>' +
+                            '</ul></div>';
+                    },
+                    "targets": 7
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+    //查询表单
+    function search() {
+        coId = $("input[name='coId']").val();
+        coName = $("input[name='coName']").val();
+        coClass=$("select[name='coClass']").val();
+        coVersionType=$("select[name='coVersionType']").val();
+        datatable.ajax.reload();
+    }
+    //清空搜索框
+    $("#clear").click(function () {
+        $("input[name='coId']").val('');
+        $("input[name='coName']").val('');
+        $("select[name='coClass']").val('');
+        $("select[name='coVersionType']").val('');
+        datatable.ajax.reload();
+    })
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/dec/component/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#okDel").unbind("click");
+            dialog.find("#okDel").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/platform/dec/component/delete", {ids: ids.toString()}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null,false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("${msg['globals.button.delete.select']}");
+        }
+    }
+    $(function () {
+        initDatatable();
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+</script>
+<!--#}#-->

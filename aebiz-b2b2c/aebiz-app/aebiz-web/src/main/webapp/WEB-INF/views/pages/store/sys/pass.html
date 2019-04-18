@@ -1,0 +1,75 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="modal-title">${msg['sys.user.pass.password']}</h4>
+</div>
+<div class="modal-body">
+    <form id="passForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+          action="${base}/store/home/doChangePassword" method="post">
+        <div class="row" style="padding-top: 10px;">
+            <div class="col-lg-12">
+                <div class="form">
+                    <label for="oldPassword" class="col-sm-2 control-label">${msg['sys.user.pass.oldpass']}</label>
+                    <div class="col-sm-8">
+                        <input id="oldPassword" tabindex="1" type="password" class="form-control" name="oldPassword"
+                               data-parsley-required="true" placeholder="${msg['sys.user.pass.oldpass']}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding-top: 10px;">
+            <div class="col-lg-12">
+                <div class="form">
+                    <label for="newPassword" class="col-sm-2 control-label">${msg['sys.user.pass.newpass']}</label>
+                    <div class="col-sm-8">
+                        <input id="newPassword" tabindex="2" type="password" class="form-control" name="newPassword"
+                               data-parsley-required="true" data-parsley-minlength="6" data-parsley-maxlength="20"  placeholder="${msg['sys.user.pass.newpass']}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding-top: 10px;">
+            <div class="col-lg-12">
+                <div class="form">
+                    <label for="passwordAgain" class="col-sm-2 control-label">${msg['sys.user.pass.repeat']}</label>
+
+                    <div class="col-sm-8">
+                        <input id="passwordAgain" type="password" tabindex="6" class="form-control"
+                               data-parsley-equalto="#newPassword"
+                               data-parsley-required="true" name="eqPassword" placeholder="${msg['sys.user.pass.repeat']}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+    <button type="button" id="okPwd" class="btn btn-primary">${msg['globals.button.confirm']}</button>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#okPwd").on("click",function(){
+            $("#passForm").submit();
+        });
+        $("#passForm").ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                $("#okPwd").text("${msg['globals.button.confirm']}");
+                $("#okPwd").attr("disabled", "disabled");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    $('#homeDetail').modal('hide');
+                    Toast.success(data.msg);
+                    $("#okPwd").text("${msg['globals.button.confirm']}");
+                } else {
+                    $("#okPwd").text("${msg['globals.button.confirm']}");
+                    $("#okPwd").removeAttr("disabled");
+                    Toast.error(data.msg);
+                }
+
+            }
+        });
+    });
+</script>

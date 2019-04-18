@@ -1,0 +1,134 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow" xmlns:c="http://www.w3.org/1999/html">
+	<div class="btn-group tool-button">
+		<a class="btn btn-primary navbar-btn"
+			href="${base}/platform/shop/config/express" data-pjax><i
+			class="ti-angle-left"></i> ${msg['sys.dict.return']}</a>
+	</div>
+</header>
+<div class="content-wrap">
+	<div class="wrapper" style="min-height: 500px;">
+		<section class="panel panel-form">
+			<form id="editForm" role="form" class="form-horizontal parsley-form"
+				data-parsley-validate
+				action="${base}/platform/shop/config/express/editDo" method="post">
+				<input name="id" type="hidden" value="${obj.id}">
+				<div class="row mb10 mt10">
+					<div class="col-lg-12">
+						<div class="form-group">
+							<label for="name" class="col-sm-2 control-label">${msg['shop.config.express.column.name']}</label>
+							<div class="col-sm-8">
+								<input type="text" id="name" class="form-control" name="name"
+									data-parsley-required="true"
+									placeholder="${msg['shop.config.express.column.name']}"
+									value="${obj.name}">
+							</div>
+						</div>
+						<div class="form-group">
+						<label for="url" class="col-sm-2 control-label">${msg['shop.config.express.column.code']}</label>
+						<div class="col-sm-8">
+						<select id="code"  class="form-control" style="float:left;width:45%"
+									name="code" data-parsley-required="true">
+									<option value="SF" id="SF">SF</option>
+									<option value="EMS" id="EMS">EMS</option>
+									<option value="STO" id="STO">STO</option>
+									<option value="YTO" id="YTO">YTO</option>
+									<option value="ZTO" id="ZTO">ZTO</option>
+									<option value="ZJS" id="ZJS">ZJS</option>
+									<option value="LBEX" id="LBEX">LBEX</option>
+									<option value="YUNDA" id="YUNDA">YUNDA</option>
+									<option value="TTKDEX" id="TTKDEX">TTKDEX</option>
+								</select>${msg['shop.config.express.column.custom']}
+							<input type="checkbox" id="codecheck"  value="1"
+									class="js-switch-blue">
+							<input type="hidden" id="name111" name="codecheck" value="${obj.code}"
+								   class="js-switch-blue">
+                            <input type="text"
+									id="codecustom" style="float:right;width:40%" name="codecustom"
+									data-parsley-required="false" value=""
+									placeholder="${msg['shop.config.express.column.code']}">
+                            
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="url" class="col-sm-2 control-label">${msg['shop.config.express.column.url']}</label>
+							<div class="col-sm-8">
+								<input type="text" id="url" class="form-control" name="url"
+									data-parsley-required="true"
+									placeholder="${msg['shop.config.express.column.url']}"
+									value="${obj.url}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="queryurl" class="col-sm-2 control-label">${msg['shop.config.express.column.queryurl']}</label>
+							<div class="col-sm-8">
+								<input type="text" id="queryurl" class="form-control"
+									name="queryurl" data-parsley-required="true"
+									placeholder="${msg['shop.config.express.column.queryurl']}"
+									value="${obj.queryurl}">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3"></div>
+				<div class="col-lg-6">
+					<div class="form-group text-center">
+						<label></label>
+						<div>
+							<button class="btn btn-primary btn-block btn-lg btn-parsley"
+								data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</section>
+
+	</div>
+</div>
+<script language="JavaScript">
+    function contains(arr, obj) {
+        var i = arr.length;
+        while (i--) {
+            if (arr[i] === obj) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    $(document).ready(function () {
+        var arr=new Array("EMS","STO","YTO","SF","ZTO","ZJS","LBEX","YUNDA","TTKDEX");
+        if(!contains(arr,$("#name111").val())){
+            $("#codecheck").attr("checked",true);
+            $("#codecustom").val($("#name111").val());
+        }else{
+            var i = arr.length;
+            while (i--) {
+                if (arr[i] === $("#name111").val()) {
+                    $("#"+arr[i]).attr("selected",true);
+                }
+            }
+		}
+        myForm.init();
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<!--#}#-->

@@ -1,0 +1,662 @@
+<!--#
+include("/pages/front/pc/inc/header.html"){}
+#-->
+<!-- body -->
+<!--#
+    include("/pages/front/pc/inc/navbar.html"){}
+#-->
+<!--#
+    include("/pages/front/pc/inc/center.html"){}
+#-->
+<style>
+	.y_suslogin .modal-dialog {
+		width: 400px;
+	}
+	.y_suslogin .modal-header {
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+	.y_suslogin .modal-body {
+		 padding-top: 20px;
+		 padding-bottom: 20px;
+	 }
+	.modal-body {
+		position: relative;
+		padding: 20px;
+	}
+	.modal-body div {
+		height: auto;
+		padding-bottom: 6px;
+	}
+	.y_suslogin .form-group {
+		margin-bottom: 0;
+		padding-top: 5px;
+	}
+	.alert {
+		word-break: break-all;
+		width: 100%;
+		margin-top: 6px;
+		margin-bottom: 6px;
+	}
+	.alert-danger {
+		color: #b94a48;
+		background-color: #f2dede;
+		border-color: #ebccd1;
+	}
+	.y_suslogin .y_suskjbx {
+		padding-bottom: 15px;
+		padding-top: 10px;
+	}
+	.y_suslogin .y_suskjbx label {
+		font-weight: normal;
+		margin-right: 10px;
+	}
+	.y_suslogin .y_suskjbx label input {
+		vertical-align: middle;
+		margin: -2px 4px 0 1px;
+	}
+/*	.btn-block {
+		display: block;
+		width: 100%;
+		padding-right: 0;
+		padding-left: 0;
+	}*/
+/*	.btn-lg {
+		padding: 10px 16px;
+		font-size: 18px;
+		line-height: 1.33;
+		border-radius: 6px;
+	}*/
+	/*.modal-content {
+		position: relative;
+		background-color: #fff;
+		border: 1px solid #999;
+		border: 1px solid rgba(0,0,0,0.2);
+		border-radius: 6px;
+		outline: 0;
+		-webkit-box-shadow: 0 3px 9px rgba(0,0,0,0.5);
+		box-shadow: 0 3px 9px rgba(0,0,0,0.5);
+		background-clip: padding-box;
+	}*/
+	/*.btn-primary {
+		color: #fff;
+		background-color: #428bca;
+		border-color: #357ebd;
+	}
+	.btn {
+		display: inline-block;
+		padding: 6px 12px;
+		margin-bottom: 0;
+		font-size: 14px;
+		font-weight: normal;
+		line-height: 1.428571429;
+		text-align: center;
+		white-space: nowrap;
+		vertical-align: middle;
+		cursor: pointer;
+		background-image: none;
+		border: 1px solid transparent;
+		border-radius: 4px;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		-o-user-select: none;
+		user-select: none;
+	}*/
+	.y_suslogin .y_copeweb {
+		text-align: left;
+		width: 300px;
+		margin: 0 auto;
+		padding: 15px 15px 20px;
+		color: #999;
+	}
+	/*.modal-footer {
+		padding: 19px 20px 20px;
+		margin-top: 15px;
+		text-align: right;
+		border-top: 1px solid #e5e5e5;
+	}*/
+	.modal-header .close {
+		margin-top: -2px;
+	}
+	button.close {
+		padding: 0;
+		cursor: pointer;
+		background: transparent;
+		border: 0;
+		-webkit-appearance: none;
+	}
+/*	.close {
+		float: right;
+		font-size: 21px;
+		font-weight: bold;
+		line-height: 1;
+		color: #000;
+		text-shadow: 0 1px 0 #fff;
+		opacity: .2;
+		filter: alpha(opacity=20);
+	}*/
+	.modal-header {
+		min-height: 16.428571429px;
+		padding: 15px;
+		border-bottom: 1px solid #e5e5e5;
+	}
+/*	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0,0,0,0);
+		border: 0;
+	}*/
+	.modal-body div {
+		height: auto;
+		padding-bottom: 6px;
+	}
+	.y_suslogin .form-control {
+		width: 278px;
+	}
+</style>
+<div class="m-bd">
+	<div class="m-center">
+		<div class="cart-table-th f-cb">
+			<div class="th check">
+				<!--# if(storeCart.~size > 0){ #-->
+				<input type="checkbox" name="" id="cart_all_check" value="" checked /><span>全选</span>
+				<!--# }else{ #-->
+				<input type="checkbox" name="" id="cart_all_check" value="" /><span>全选</span>
+				<!--# } #-->
+			</div>
+			<div class="th info">商品信息</div>
+			<div class="th price">单价</div>
+			<div class="th number">数量</div>
+			<div class="th count">小计</div>
+			<div class="th action">操作</div>
+		</div>
+
+		<!--title end-->
+		<!--# var chooseNum = 0; var count = 0; for(var carts in storeCart){  chooseNum = chooseNum + carts.value.cartList.~size;  #-->
+		<div class="item">
+			<div class="cart-shop-name">
+				<input type="checkbox" name="cart-shop_check" id="" value="" checked /><a href="#">${carts.value.cartList[0].storeMain.storeName}<img src="/assets/front/pc/images/shoplogo.png" alt="" /></a>
+				<!--# if(carts.value.couponList.~size > 0){ #-->
+				<div class="getCoupon f-push-20-l">
+					<span class="icon-coupon">优惠劵</span>
+					<div class="coupons" lang="${carts.key}">
+						<!--# for(var coupon in carts.value.couponList){ var couponSolution = @org.nutz.json.Json.fromJson(coupon.salesRuleOrder.action_solution); #-->
+
+						<li class="f-cb" lang="${coupon.id}">
+							<!--# if(coupon.salesRuleOrder.sale_template == "tpl_sale_sol_subfixed" ){#-->
+							<div class="coupon f-fl">￥${@money.fenToYuan(couponSolution.tpl_sale_sol_subfixed.total_amount)}</div>
+							<div class="info f-fl">
+								<h3>${coupon.name}</h3>
+								<small>${@date.getDate(coupon.salesRuleOrder.sartAt,"yyyy-MM-dd")}-${@date.getDate(coupon.salesRuleOrder.endAt,"yyyy-MM-dd")}</small>
+							</div>
+								<!--# if(coupon.hasReceive){ #-->
+								<div class="button f-fl active"><a ></a></div>
+								<!--# }else{ #-->
+								<div class="button f-fl "><a ></a></div>
+								<!--# } #-->
+							<!--# }else{  #-->
+
+							<!--# } #-->
+						</li>
+						<!--# } #-->
+						<!--<li class="f-cb">
+							<div class="coupon f-fl">￥30</div>
+							<div class="info f-fl">
+								<h3>满￥150减￥30</h3>
+								<small>2017.07.15-2017.07.31</small>
+							</div>
+							<div class="button f-fl"><a ></a></div>
+						</li>
+						<li class="f-cb">
+							<div class="coupon f-fl">￥90</div>
+							<div class="info f-fl">
+								<h3>满￥199减￥90</h3>
+								<small>2017.07.15-2017.07.31</small>
+							</div>
+							<div class="button f-fl"><a ></a></div>
+						</li>-->
+					</div>
+				</div>
+				<!--# } #-->
+			</div>
+			<div class="cart-table-item">
+				<!--#  for(var cart in carts.value.cartList){  var price = cart.price; var cartTotal = price * cart.num;   count = count + cartTotal; #-->
+				<div class="cart-goods-item" >
+					<div class="item-hd" hidden>
+						<span class="spark"></span><span class="info"></span>
+						<!--<div class="money">
+							<p>¥198.00</p>
+						</div>-->
+					</div>
+					<hr style="height:1px;border:none;border-top:0.5px solid #DDDDDD;">
+					<div class="cart-table-td f-cb" id="cart_tr_${cart.sku}">
+						<div class="th check">
+							<input type="checkbox" name="oneCheck" id="${cart.sku}" value="" checked />
+						</div>
+						<div class="th info">
+							<a href="#" class="pic"><img src="${cart.imgurl}"/></a>
+							<h3 style="text-align: left;"><a href="">${cart.goodsMain.name!} <br/> ${cart.goodsProduct.name!}</a></h3>
+						</div>
+						<div class="th price">
+							¥<span data-price="${cart.price}">${@money.fenToYuan(cart.price!)}</span>
+							<!--# if(isNotEmpty(cart.salesRuleGoodsList)){  #-->
+							<div class="select">
+								<div class="value">更多优惠<i class="iconfont icon-zhankai"></i></div>
+								<div class="option">
+									<ul>
+										<!--# for(var sales_goods in cart.salesRuleGoodsList){ #-->
+										<li><label><input type="radio" class="sales" name="sales${cart.sku}" id="${sales_goods.id}" value="${sales_goods.id}" lang="${sales_goods.salesPrice}" />${sales_goods.name}</label></li>
+										<!--# } #-->
+									</ul>
+									<div class="btn"><a class="chooseSales" href="javascript:void(0)">确定</a><a>取消</a></div>
+								</div>
+							</div>
+							<!--# } #-->
+							<!--<small class="green">降价￥5.10</small>-->
+						</div>
+						<div class="th number">
+							<div class="m-input-num f-cb">
+								<div class="u-input-num">
+									<a class="prev">-</a>
+									<input type="text" placeholder="1" lang="${cart.sku}" name="cartNum" id="cartNum" value="${cart.num!0}" onkeyup="value=(parseInt((value=value.replace(/\D/g,''))==''||parseInt((value=value.replace(/\D/g,''))==0)?'1':value,10))" onafterpaste="value=(parseInt((value=value.replace(/\D/g,''))==''||parseInt((value=value.replace(/\D/g,''))==0)?'1':value,10))" />
+									<a class="next">+</a>
+								</div>
+							</div>
+						</div>
+						<div class="th count">¥<span>${@money.fenToYuan(cartTotal)}</span></div>
+						<div class="th action"><a class="icon-delete1" onclick="delchoose('${cart.sku!}')">删除</a><br /><a class="js-add-collection" data-collection-sku="${cart.sku}">加入收藏</a></div>
+					</div>
+				</div>
+				<!--# } #-->
+			</div>
+		</div>
+		<!--# } #-->
+
+		<div class="cart-table-fd">
+			<!--# if(storeCart.~size > 0){ #-->
+			<input type="checkbox" name="" id="allCheck" value="" checked />
+			<span>已选（<span id="chooseNum">${chooseNum}</span>）        <a href="javascript:batchDel();" class="delete js-batch-delete">批量删除</a></span>
+			<a href="javascript:void(0)" class="btn submit">结算</a>
+			<!--# }else{ #-->
+			<input type="checkbox" name="" id="allCheck" value="" />
+			<span>已选（<span id="chooseNum">${chooseNum}</span>）        <a href="javascript:batchDel();" class="delete js-batch-delete">批量删除</a></span>
+			<a href="javascript:void(0)" class="btn submit disable">结算</a>
+			<!--# } #-->
+			<div class="count">
+				<p><span><!--商品合计 : ¥<span id="goodsMoney">${@money.fenToYuan(count)}--></span><span><!--活动优惠 : -¥0.00--></span>合计（不含运费）：<span class="mark">¥<span id="goodsMoney">${@money.fenToYuan(count)}</span></span></p>
+			</div>
+		</div>
+	</div>
+	<!--猜你喜欢-->
+	<!--#
+        include("/pages/front/pc/member/inc/foot.html"){}
+    #-->
+	<!--end-->
+</div>
+
+<!-- end -->
+
+<div id="ly-delete" class="m-layer-pop"><div class="info">确认从购物车删除商品?</div></div>
+<!--#
+    include("/pages/front/pc/inc/poplogin.html"){}
+#-->
+<!--<div id="ly-login" class="m-layer-pop">
+
+</div>-->
+<script src="/assets/front/pc/vendor/layer/layer.js"></script>
+<script src="/assets/front/pc/scripts/cart.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#cartNum").on("input onpropertychange",function () {
+            var num = Number($(this).val());
+            var price = $(this).parents(".th.number").prev(".th.price").children('span').data("price");
+            var th_price = setPrice(price*num);
+            $(this).parents(".th.number").next(".th.count").children("span").text(th_price);
+            amount();
+            //获取当前操作的id
+            var sku = $(this).attr("lang");
+            updateData(sku,num);
+        })
+
+        $(".prev").click(function(){
+            var t=$(this).parent().find("input[type=text]");
+            var tempNum = parseInt(t.val())-1;
+            if(tempNum < 1){
+                tempNum = 1;
+            }
+            t.val(tempNum);
+            var num = Number(t.val());
+            var price = $(this).parents(".th.number").prev(".th.price").children('span').data("price");
+            var th_price = setPrice(price*num);
+            $(this).parents(".th.number").next(".th.count").children("span").text(th_price);
+            amount();
+            //获取当前操作的id
+            var sku = t.attr("lang");
+            updateData(sku,num);
+        })
+
+        $(".next").click(function(){
+            var t=$(this).parent().find("input[type=text]");
+            t.val(parseInt(t.val())+1);
+            var num = Number(t.val());
+            var price = $(this).parents(".th.number").prev(".th.price").children('span').data("price");
+            var th_price = setPrice(price*num);
+            $(this).parents(".th.number").next(".th.count").children("span").text(th_price);
+            amount();
+            //获取当前操作的id
+            var sku = t.attr("lang");
+            updateData(sku,num);
+        })
+
+        //每个店铺的全选事件
+        $("input[name='cart-shop_check']").click(function () {
+            if($(this).prop('checked')){
+                //勾选对应列
+                $(this).parent(".cart-shop-name").next(".cart-table-item").find("input[type='checkbox']").prop("checked",true);
+            }else{
+                //取消勾选
+                $(this).parent(".cart-shop-name").next(".cart-table-item").find("input[type='checkbox']").prop("checked",false);
+            }
+            updateCheckedStatue();
+            amount();
+        })
+
+        //每个货品的选择事件
+        $("input[name='oneCheck']").click(function () {
+            //更新当前店铺的check状态
+            var num =  $(this).parents(".cart-table-item").find("input[name='oneCheck']:checked").length;
+            if(num == 0){
+                $(this).parents(".cart-table-item").prev().find("input[name='cart-shop_check']").prop("checked",false);
+            }else{
+                $(this).parents(".cart-table-item").prev().find("input[name='cart-shop_check']").prop("checked",true);
+            }
+            updateCheckedStatue();
+            amount();
+        })
+
+        //购物车全选事件
+        $("#cart_all_check").click(function () {
+            if($(this).prop('checked')){
+                $("input[name='cart-shop_check']").prop("checked",true);
+                $("input[name='oneCheck']").prop("checked",true);
+            }else{
+                $("input[name='cart-shop_check']").prop("checked",false);
+                $("input[name='oneCheck']").prop("checked",false);
+            }
+            updateCheckedStatue();
+            amount();
+        })
+
+        $(".icon-delete1,.icon-shanchu").click(function () {
+            layer.open({
+                type: 1,
+                content: $('#ly-delete'),
+                //offset: '200px',
+                area: '560px',
+                title: ['删除购物车商品', 'font-size:18px;color:#ba9963;font-weight:600'],
+                btn: ['确定', '取消'],
+                shadeClose: true,
+                btnAlign: 'c',
+                scrollbar: false,
+                yes: function () {
+                    delData(delId);
+                    layer.closeAll();
+                    //更新店铺是否选择状态
+                    var $cart_tr_item = $("#cart_tr_"+delId).parent(".cart-table-item");
+                    $("#cart_tr_"+delId).parent().remove();
+                    updateStoreCheckStatus($cart_tr_item);
+                    //更新全选是否选择状态
+                    updateCheckedStatue();
+                    amount();
+                }
+            });
+        });
+
+        //批量删除
+        $(".js-batch-delete").click(function () {
+            layer.open({
+                type: 1,
+                content: $('#ly-delete'),
+                //offset: '200px',
+                area: '560px',
+                title: ['删除购物车商品', 'font-size:18px;color:#ba9963;font-weight:600'],
+                btn: ['确定', '取消'],
+                shadeClose: true,
+                btnAlign: 'c',
+                scrollbar: false,
+                yes: function () {
+                    var skus = $("[name='oneCheck']:checked").map(function () {
+                        return this.id;
+                    }).get();
+                    delDatas(skus);
+                    layer.closeAll();
+                }
+            });
+        });
+		
+		//领取优惠券
+		$(".getCoupon .coupons .button.f-fl").click(function () {
+		    var $this = $(this);
+            if($this.hasClass("active")){
+                return;
+            }
+            var couponId = $this.parents("li.f-cb:first").attr("lang");
+            var storeId = $this.parents(".coupons:first").attr("lang");
+            $.post("${base!}/goods/couponSave",{"storeId":storeId,"couponId":couponId},function (result) {
+				if(result.code == 101){
+				    //表示需要会员登录
+					layer.msg("请登录会员");
+					return;
+				}
+				if(result.code == 102){
+                    //优惠券已领完
+                    layer.msg("优惠券已领完");
+                    return;
+                }
+				if(result.code == 0){
+                    $this.addClass("active");
+				}
+            })
+        })
+
+		//选取促销功能
+		$("a.chooseSales").click(function () {
+			var salesId = $(this).parents(".option:first").find(".sales:checked").val();
+			var salesName = $(this).parents(".option:first").find(".sales:checked").parent().text();
+			var salesPrice = $(this).parents(".option:first").find(".sales:checked").attr("lang");
+			//替换促销信息
+			$(this).parents(".cart-goods-item:first").find("span.info").text(salesName);
+            $(this).parents(".cart-goods-item:first").find(".item-hd").removeAttr("hidden");
+            $(this).parents(".cart-goods-item:first").find("span.spark").text("满减");
+            var num = $(this).parents(".cart-goods-item:first").find("input[name='cartNum']").val();
+			$(this).parents(".cart-goods-item:first").find(".th.price span").data("price",salesPrice);
+            $(this).parents(".cart-goods-item:first").find(".th.count span").text(setPrice(salesPrice*num));
+            amount();
+        })
+
+		//结算
+        $("a.btn.submit").click(function () {
+            if($(this).hasClass("disable")){
+                return;
+            }
+            //var skus = "";
+            var cartList = [];
+
+            $("input[name='oneCheck']:checked").each(function () {
+                var cart ={};
+                cart.sku = $(this).attr("id");
+                cart.salesId  = $(this).parent().siblings(".th.price").find(".sales:checked").val();
+                cartList.push(cart);
+                //skus += ($(this).attr("id")+",");
+            })
+            $.post("${base!}/goods/isLogin",function (result) {
+                debugger;
+                var href="";
+                var info = JSON.stringify(cartList);
+                if(result.code == 0){
+                    window.location.href ="${base!}/goods/placeOrder?"+$.param({cartInfo:info}, true);
+                }else{
+                    //todo 弹出登陆的模态框
+                    $("#modal-login-form").modal('show');
+                    localStorage.setItem("href",info);
+                }
+            })
+        });
+
+        //收藏
+		$(".js-add-collection").click(function () {
+			var sku = $(this).attr("data-collection-sku");
+            $.ajax({
+                type : "GET",
+                url : "/collectionProductComp/collectProduct",
+                data : {
+                    sku : sku,
+                    ranNum : Math.random()
+                },
+                dataType : "json",
+                async : false,
+                success : function(data) {
+                    data=eval("("+data+")");
+                    if(data.state=="1" || data.state=="3"){
+                        layer.msg("收藏成功");
+                    }
+                    else if (data.state=="2"){
+                        layer.msg("收藏失败");
+                    }
+                }
+            })
+        });
+    })
+
+    //初始化商品总金额
+    var goodsMoney = 0;
+
+    //初始化优惠金额
+    var freeMoney = 0;
+
+    //初始化运费金额
+	/*var freightMoney = 0;*/
+
+    //应付总金额
+    var payMoney = 0;
+
+    //当前选择要删的数据Id
+    var delId = "";
+
+    //统计选中的总金额
+    function amount() {
+        goodsMoney =0;
+        payMoney = 0;
+        $(".th.check").find("input[type='checkbox']:checked").each(function () {
+            //单个一行选中的货品总价
+            var tr_price = Number($(this).parent(".th.check").siblings(".th.count").find("span").text());
+            goodsMoney = FloatAdd(goodsMoney,tr_price).toFixed(2);
+        })
+        //var payMoney = FloatSub(goodsMoney,payMoney);
+        $("#goodsMoney").text(goodsMoney);
+        //$("#payMoney").text(payMoney);
+    }
+
+    //更新店铺的check状态
+    function updateStoreCheckStatus($cart_tr_item) {
+        var len = $cart_tr_item.find("input[name='oneCheck']:checked").length;
+        if(len == 0){
+            $cart_tr_item.prev(".cart-shop-name").find("input[name='cart-shop_check']").prop("checked",false);
+        }else{
+            $cart_tr_item.prev(".cart-shop-name").find("input[name='cart-shop_check']").prop("checked",true);
+        }
+    }
+
+    //更新已选和全选的选择状态
+    function updateCheckedStatue() {
+        var checkedNum = $("input[name='oneCheck']:checked").length;
+        if(checkedNum == 0){
+            $("#cart_all_check").prop("checked",false);
+            $("#allCheck").prop("checked",false);
+            $(".btn.submit").addClass("disable");
+        }else{
+            //检查checkbox是否全选的标记，默认全选
+			var checkFlag = true;
+			//循环所有checkbox,当其中有checkbox未选择时，将标记置为false
+            $("input[name='oneCheck']").each(function () {
+				if($(this).prop("checked")==false){
+                    checkFlag = false;
+				}
+            });
+            //如果checkFlag为true，则说明，全选，否则为部分选择，将全选的checkbox置为false
+            if (checkFlag){
+                $("#cart_all_check").prop("checked",true);
+			} else {
+                $("#cart_all_check").prop("checked",false);
+			}
+            $("#allCheck").prop("checked",true);
+            $(".btn.submit").removeClass("disable");
+        }
+        //并选择数量赋值
+        $("#chooseNum").text(checkedNum);
+    }
+
+    //删除选择
+    function delchoose(sku) {
+        delId = sku;
+    }
+
+    function batchDel() {
+        $("[name='oneCheck']").each(function () {
+            var sku = $(this).attr("id");
+            delchoose(sku)
+        });
+    }
+
+    //删除购物车数据
+    function delData(sku) {
+        $.post("${base!}/goods/delCartInfo",$.param({"sku":sku}, true),function (data) {
+            if(data.code != 0 ){
+                layer.msg(data.msg);
+                //更新店铺是否选择状态
+                var $cart_tr = $("#cart_tr_"+sku);
+                var $cart_tr_item = $cart_tr.parent(".cart-table-item");
+                updateStoreCheckStatus($cart_tr_item);
+                $cart_tr.remove();
+                //更新全选是否选择状态
+                updateCheckedStatue();
+                amount();
+            }
+        })
+    }
+
+    function delDatas(skus) {
+        $.post("${base!}/goods/delCartInfo",$.param({"skus":skus}, true),function (data) {
+            if(data.code != 0 ){
+                layer.msg(data.msg);
+            } else {
+                $("[name='oneCheck']:checked").each(function () {
+                    //更新店铺是否选择状态
+                    var $cart_tr = $("#cart_tr_"+this.id);
+                    var $cart_tr_item = $cart_tr.parent(".cart-table-item");
+                    updateStoreCheckStatus($cart_tr_item);
+                    $cart_tr.parent().remove();
+                });
+                //更新全选是否选择状态
+                updateCheckedStatue();
+                amount();
+            }
+        })
+    }
+
+    //更新购物车购买货品数量
+    function updateData(sku,num) {
+        $.post("${base!}/goods/updateCartInfoNum",{"sku":sku,"num":num},function (data) {
+            if(data.code != 0 ){
+                layer.msg(data.msg);
+            }
+        })
+    }
+</script>
+</body>
+</html>

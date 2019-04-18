@@ -1,0 +1,167 @@
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button">
+            <a id="add" class="btn btn-primary navbar-btn" href="${base}/platform/dec/templates/pages/add/${id}" data-pjax><i class="ti-plus"></i> ${msg['globals.button.add']}</a>
+        </div>
+        <input hidden="hidden" type="text" id="templateUuid" value="${id}">
+    </header>
+    <div class=panel-body>
+        <div class="table-responsive no-border"  style="min-height: 500px;">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                    <tr>
+                            <th hidden="hidden">${msg['dec.templates.pages.column.templateUuid']}</th>
+                            <th hidden="hidden">${msg['dec.templates.pages.column.pageNo']}</th>
+                            <th>${msg['dec.templates.pages.column.pageName']}</th>
+                            <th hidden="hidden">${msg['dec.templates.pages.column.pageFileName']}</th>
+                            <th>${msg['dec.templates.pages.column.pageType']}</th>
+                            <th>${msg['dec.templates.pages.column.templateName']}</th>
+                            <th>${msg['dec.templates.pages.column.description']}</th>
+                            <th>${msg['globals.table.column.operation']}</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script src="/assets/platform/vendor/treetable/jquery.treetable.js"></script>
+<script src="/assets/platform/vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="/assets/platform/vendor/datatables/js/dataTables.bootstrap.js"></script>
+<script src="/assets/platform/vendor/jstree/jstree.min.js"></script>
+<script src="/assets/platform/vendor/switchery/switchery.min.js"></script>
+<script language="JavaScript">
+    var templateUuid=$("#templateUuid").val();
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/dec/templates/pages/data/"+templateUuid,
+                "type": "post",
+                "data": function (d) {
+
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                    {"data": "pageName", "bSortable": true},
+                    {"data": "pageFileName", "bSortable": true},
+                    {"data": "templateUuid", "bSortable": true},
+                    {"data": "description", "bSortable": true},
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                                '<li><a target="_blank" href="${base}/platform/dec/templates/manager/toPageDefine?templateUuid=' +templateUuid + '&pageUuid='+row.id+'">${msg["dec.templates.pages.button.visualization"]}</a></li>' +
+                                '<li><a target="_blank" href="${base}/platform/dec/templates/manager/toPageDefineByCode?templateUuid='+templateUuid+'&pageUuid='+row.id+'">源码编辑</a></li>' +
+                                '<li><a href="${base}/platform/dec/templates/pages/setting/'+row.id+'" data-toggle="modal" data-target="#dialogDetail">${msg["dec.templates.pages.button.applyPage"]}</a></li>' +
+                                '<li><a href="${base}/platform/dec/templates/sub/' + row.id + '" data-pjax>${msg["dec.templates.pages.button.edition"]}</a></li>' +
+                                '<li><a href="${base}/platform/dec/templates/pages/edit/' + row.id + '" data-pjax>${msg["globals.button.update"]}</a></li>' +
+                                '<li class="divider"></li>' +
+                                '<li><a href="javascript:;" onclick="del(\'' + row.id + '\')">${msg["globals.button.delete"]}</a></li>' +
+                                '</ul></div>';
+                    },
+                    "targets": 4
+                }
+            ]
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/dec/templates/pages/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#okDel").unbind("click");
+            dialog.find("#okDel").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/platform/dec/templates/pages/delete", {ids: ids.toString()}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null,false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("${msg['globals.button.delete.select']}");
+        }
+    }
+    $(function () {
+        initDatatable();
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+</script>

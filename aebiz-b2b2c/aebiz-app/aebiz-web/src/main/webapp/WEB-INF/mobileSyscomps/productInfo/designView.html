@@ -1,0 +1,71 @@
+<div class="m-components  main-wrapper" id="$_productInfo_compId">
+</div>
+
+<script type="text/html" id="m-index-product">
+    <!--轮播开始-->
+    <div class="swiper-container">
+        <div class="swiper-wrapper ">
+            <div class="swiper-slide"><a href="javascript:;">{{if productDetailInfo}}<img src="{{productDetailInfo.bigImageUrl}}" />{{/if}}</a></div>
+            {{each productDetailInfo.productMultiImage as productImage}}
+            <div class="swiper-slide"><a href="javascript:;">{{if productImage}}<img src="{{productImage.bigImageUrl}}" />{{/if}}</a></div>
+            {{/each}}
+        </div>
+
+        <div class="swiper-pagination"></div>
+    </div>
+    <!-- 轮播结束-->
+     <div class="commodity-details">
+         <div class="details-block">
+             <p class="h4" id="productName">{{productDetailInfo.productName}}</p>
+             <p class="mess" id="description">{{productDetailInfo.productName}}</p>
+             <div class="commodity-price"> <span class="span1" id="shopPrice">¥{{productDetailInfo.shopPrice}}</span> <span class="span2" id="marketPrice">¥{{productDetailInfo.marketPrice}}</span>  </div>
+             <div id="Percentage" style="display: none;">
+                 <p class="lengh">仅剩
+                     <font>
+                         <!-- 10件 -->
+                     </font><span><em style="width:43%;"></em></span></p>
+                 <p class="time">距活动结束还有<span>00</span>:<span>00</span>:<span>00</span></p>
+             </div>
+             <div class="act-over" style="display:none; line-height:3.5; background:#ccc; text-align: center; font-size:0.28rem;">
+                 <!-- 活动结束 -->
+             </div>
+             <div class="commodity-sales">
+                 <span id="favoriteCount">收藏{{productDetailInfo.favoriteCount}}</span>
+                 <span id="saleCount">销量{{productDetailInfo.saleCount}}</span>
+                 <span id="isShareYesNo">分享<a href="#"><img src="/static/images/mobileIcons/2.png" data-bd-imgshare-binded="1"></a></span>
+             </div>
+             <ul class="commodity-pledge" id="protections"><li><i><img src="#"></i>按时发货</li></ul>
+
+             <ul id="couponList" class="commodity-pledge" onclick="">
+                 <li class="coupon"><span class="span1">券 <em class="arrow-more"><img src="/static/images/mobileIcons/11.png" alt="" data-bd-imgshare-binded="1"></em></span>
+                     <span id="storePromotions2" class="span2">领取优惠券</span>
+                 </li>
+             </ul>
+
+         </div>
+     </div>
+    <div class="opacitys" style="display: none;"></div>
+    <div class="mui-row fxiang" style="overflow: hidden; display: none;">
+        <div class="bdsharebuttonbox bdshare-button-style0-32" data-bd-bind="1495783843256">
+            <!-- <a href="#" class="bds_more" data-cmd="more"></a> -->
+            <a href="#" class="bds_sqq share" data-cmd="sqq" title="QQ好友">
+                <p>QQ好友</p>
+            </a>
+            <a href="#" class="bds_qzone share" data-cmd="qzone" title="QQ空间">
+                <p>QQ空间</p>
+            </a>
+            <a href="#" class="bds_tsina share" data-cmd="tsina" title="新浪微博">
+                <p>新浪微博</p>
+            </a>
+            <a href="#" class="bds_weixin share" data-cmd="weixin" title="二维码">
+                <p>二维码</p>
+            </a>
+            <a href="#" class="bds_copy share" data-cmd="copy" title="复制网址">
+                <p>复制网址</p>
+            </a>
+        </div>
+    <div class="mui-col-sm-12 mui-col-xs-12 mui-text-center">
+        <button>取消</button>
+    </div>
+</div>
+</script>

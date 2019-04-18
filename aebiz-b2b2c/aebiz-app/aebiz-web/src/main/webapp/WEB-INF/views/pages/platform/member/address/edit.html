@@ -1,0 +1,136 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/member/address" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/member/address/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="province" class="col-sm-2 control-label">${msg['member.address.column.province']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="province" class="form-control" name="province" data-parsley-required="true"
+                                       placeholder="${msg['member.address.column.province']}" value="${obj.province}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="city" class="col-sm-2 control-label">${msg['member.address.column.city']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="city" class="form-control" name="city" data-parsley-required="true"
+                                       placeholder="${msg['member.address.column.city']}" value="${obj.city}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="county" class="col-sm-2 control-label">${msg['member.address.column.county']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="county" class="form-control" name="county" data-parsley-required="true"
+                                       placeholder="${msg['member.address.column.county']}" value="${obj.county}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="town" class="col-sm-2 control-label">${msg['member.address.column.town']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="town" class="form-control" name="town" data-parsley-required="true"
+                                       placeholder="${msg['member.address.column.town']}" value="${obj.town}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="address" class="col-sm-2 control-label">${msg['member.address.column.address']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="address" class="form-control" name="address" data-parsley-required="true"
+                                       placeholder="${msg['member.address.column.address']}" value="${obj.address}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="postCode" class="col-sm-2 control-label">${msg['member.address.column.postCode']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="postCode" class="form-control" name="postCode" data-parsley-required="true"
+                                       placeholder="${msg['member.address.column.postCode']}" value="${obj.postCode}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="fullName" class="col-sm-2 control-label">${msg['member.address.column.fullName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="fullName" class="form-control" name="fullName" data-parsley-required="true"
+                                       placeholder="${msg['member.address.column.fullName']}" value="${obj.fullName}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile" class="col-sm-2 control-label">${msg['member.address.column.mobile']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="mobile" class="form-control" name="mobile" data-parsley-required="true"
+                                       placeholder="${msg['member.address.column.mobile']}" value="${obj.mobile}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="col-sm-2 control-label">${msg['member.address.column.phone']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="phone" class="form-control" name="phone" data-parsley-required="true"
+                                       placeholder="${msg['member.address.column.phone']}" value="${obj.phone}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="defaultValue" class="col-sm-2 control-label">${msg['shop.config.currency.column.defaulted']}</label>
+                            <div class="col-sm-8 switcha">
+                                <div class="mr15">
+                                    <input type="checkbox" id="defaultValue" name="defaultValue" value="1" <!--#if(obj.defaultValue){#-->checked<!--#}#-->
+                                    class="js-switch-blue">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="accountId" class="col-sm-2 control-label">${msg['member.address.column.accountId']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="accountId" class="form-control" name="accountId" data-parsley-required="true"
+                                       placeholder="${msg['member.address.column.accountId']}" value="${obj.accountId}" >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<script language="JavaScript">
+    $(document).ready(function () {
+        myForm.init();
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<!--#}#-->

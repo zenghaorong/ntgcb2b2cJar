@@ -1,0 +1,319 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+
+<style type="text/css">
+    .mycheck {
+        width: 25px;
+        margin: 20px 100px;
+        position: relative;
+    }
+
+    .mycheck input[type=checkbox] {
+        visibility: hidden;
+    }
+
+    .mycheck label {
+        cursor: pointer;
+        position: absolute;
+        width: 25px;
+        height: 25px;
+        top: 0;
+        left: 0;
+        background: #fff;
+        border: 2px solid #ccc;
+        -moz-border-radius: 3px; /* Gecko browsers */
+        -webkit-border-radius: 3px; /* Webkit browsers */
+        border-radius: 3px; /* W3C syntax */
+    }
+
+    .mycheck label:after {
+        opacity: 0;
+        content: '';
+        position: absolute;
+        width: 9px;
+        height: 5px;
+        background: transparent;
+        top: 6px;
+        left: 6px;
+        border: 2px solid #333;
+        border-top: none;
+        border-right: none;
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+    }
+
+    .mycheck label:hover::after {
+        opacity: 0.5;
+    }
+
+    .mycheck input[type=checkbox]:checked + label:after {
+        opacity: 1;
+    }
+</style>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/store/config/menu" data-pjax id="goback"><i
+                class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="unitAddForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/store/config/menu/editDo" method="post">
+                <input type="hidden" id="id" name="id" value="${obj.id!}">
+                <input type="hidden" id="isShow" name="isShow" value="${obj.isShow!}">
+                <input type="hidden" id="hasChildren" name="hasChildren" value="${obj.hasChildren!}">
+                <input type="hidden" id="oldPermission" name="oldPermission" value="${obj.permission!}">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">${msg['store.menu.column.system']}</label>
+
+                            <div class="col-sm-8">
+                                <input type="text" id="showSystem" class="form-control"
+                                       data-parsley-required="true" disabled
+                                <!--#if(obj.system =="platform"){#-->
+                                value="${msg['store.menu.column.platform']}"
+                                <!--#}else{#-->
+                                value="${msg['store.menu.column.merchants']}"
+                                <!--#}#-->
+                                >
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label for="parentId" class="col-sm-2 control-label">${msg['store.menu.column.highermenu']}</label>
+
+                            <div class="col-sm-8">
+                                <input id="parentId" type="text" class="form-control" placeholder="${msg['store.menu.column.upmenu']}" disabled
+                                       value="<!--#if(!isEmpty(parentMenu)){#-->${parentMenu.name}<!--#}#-->"/>
+                                <input type="hidden" name="parentId"
+                                       value="<!--#if(!isEmpty(parentMenu)){#-->${parentMenu.id}<!--#}#-->">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">${msg['store.menu.column.name']}</label>
+
+                            <div class="col-sm-8">
+                                <input type="text" id="name" class="form-control" name="name" value="${obj.name!}"
+                                       data-parsley-required="true"
+                                       placeholder="${msg['store.menu.column.name']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">${msg['store.menu.column.aliasName']}</label>
+
+                            <div class="col-sm-8">
+                                <input type="text" id="aliasName" class="form-control" name="aliasName" value="${obj.aliasName!}"
+                                       data-parsley-required="true"
+                                       placeholder="${msg['store.menu.column.aliasName']}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="permission" class="col-sm-2 control-label">${msg['store.menu.column.permissionidentify']}</label>
+
+                            <div class="col-sm-8">
+                                <input type="text" id="permission" name="permission" value="${obj.permission!}"
+                                       class="form-control" placeholder="${msg['store.menu.column.permissionidentify']}" data-parsley-required="true">
+
+                                <p class="help-block no-m">${msg['store.menu.column.forexample']}</p>
+                            </div>
+                        </div>
+                        <div id="divId" <!--#if(obj.type=="data"){#--> style="display:none;"<!--#}#-->>
+                        <div class="form-group">
+                            <label for="href" class="col-sm-2 control-label">${msg['store.menu.column.url']}</label>
+
+                            <div class="col-sm-8">
+                                <input type="text" id="href" name="href" value="${obj.href!}" class="form-control"
+                                       placeholder="URL">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="target" class="col-sm-2 control-label">target</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="target" name="target" value="${obj.target!}" class="form-control"
+                                       placeholder="data-pjax">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="icon" class="col-sm-2 control-label">${msg['store.menu.column.icon']}</label>
+                            <div class="col-sm-8">
+                                <input id="icon" type="text" name="icon" value="${obj.icon!}" class="form-control"
+                                       placeholder="图标样式">
+                                <p class="help-block no-m">${msg['store.menu.column.resultspreview']}<i id="iconPreview"
+                                                                   class="<!--#if(!isEmpty(obj.icon)){#-->${obj.icon!}<!--#}else{#-->ti-plus<!--#}#-->"></i>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label control-label">${msg['store.menu.column.dataaccess']}</label>
+                        <div class="row">
+                            <div class="col-sm-4">
+
+                                <div class="checkbox">
+                                    <!--# for(cl in childList){ #-->
+
+                                    <div class="mt25 mb5">
+                                        <input type="checkbox" onclick="checkboxOnclick($(this))" class="checkbox"
+                                        <!--#if(false==cl.disabled){#--> checked='checked' <!--#}else{#-->  <!--#}#-->>
+                                        <label class="ml5">${cl.name!}[${cl.permission!}]&nbsp;</label>
+                                        <a href="javascript:;" id="${cl.id!}"
+                                           class="btn btn-danger btn-xs btn-ge ">×</a>
+
+                                    </div>
+
+                                    <!--# }#-->
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <label class="control-label"></label>
+                                        <input id="dataName" type="text" class="form-control input-sm mb20"
+                                               placeholder="${msg['store.menu.column.accessname']}">
+                                        <input id="dataPermission" type="text" class="form-control input-sm mb20"
+                                               placeholder="${msg['store.menu.column.accesslogo']}">
+                                        <button type="button" class="btn btn-primary" id="addData"><i
+                                                class="ti-plus"></i>${msg['store.menu.column.add']}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['store.menu.column.nowsubmit']}">${msg['store.menu.column.submit']}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<a class="exit-offscreen"></a>
+<script language="JavaScript">
+    $(document).ready(function () {
+        //图标样式 实时预览
+        $("#icon").on("keyup", function () {
+            $("#iconPreview").attr("class", $(this).val());
+        });
+        $("#type").on("change", function () {
+            if ($(this).val() == "menu") {
+                $("#divId").show();
+            } else {
+                $("#href").val("");
+                $("#target").val("");
+                $("#icon").val("");
+                $("#divId").hide();
+            }
+        });
+        $('#unitAddForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goback").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+
+    $("#addData").on("click", function () {
+            var tempP = $("#permission").val();
+            var dataName = $("#dataName").val();
+            var dataPermission = $("#dataPermission").val();
+            if (dataName && dataPermission) {
+                var pid = '${obj.id!}';
+                console.log(dataPermission);
+                $.post("${base}/platform/store/config/menu/addChildData?pid=" + pid + "&system=${obj.system!}&name=" + dataName + "&permission=" + dataPermission, {}, function (data) {
+                    if (data) {
+                        $(".checkbox").append("<div class='mt25 mb5'>" +
+                                "<input type='checkbox' onclick='checkboxOnclick($(this))' class='checkbox' checked='checked'>" +
+                                "<label   class='ml5'>" + dataName + "&nbsp;["+dataPermission+"]</label>" +
+                                "<a href='javascript:;' id='" + data.id + "' class='btn btn-danger btn-xs btn-ge' onclick='delChild('" + data.id + "')'>×</a>" +
+                                "</div>");
+
+                        $("#dataName").val("");
+                        $("#dataPermission").val("");
+
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                }, "json");
+
+            }
+    });
+
+
+    $('body').on('click', '.btn-ge', function () {
+        var id = $(this).attr("id");
+        $.post("${base}/platform/store/config/menu/delete/" + id, {}, function (data) {
+            $("#" + id).parent().remove();
+
+             if (data.code == 0) {
+             Toast.success(data.msg);
+             } else {
+             Toast.error(data.msg);
+             }
+
+        },"json")
+
+    });
+
+    function checkboxOnclick(checkbox) {
+        var id = checkbox.next().next().attr("id");
+        console.log(id);
+        if (checkbox.prop("checked")) {
+            $.post("${base}/platform/store/config/menu/enable/" + id, {}, function (data) {
+
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                } else {
+                    Toast.error(data.msg);
+                }
+
+            },"json")
+
+        } else {
+            $.post("${base}/platform/store/config/menu/disable/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                } else {
+                    Toast.error(data.msg);
+                }
+
+            },"json")
+
+        }
+    }
+
+</script>
+
+
+<!--#
+}#-->

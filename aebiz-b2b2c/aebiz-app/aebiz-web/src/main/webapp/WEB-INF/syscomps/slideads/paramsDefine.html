@@ -1,0 +1,252 @@
+<!doctype html>
+<html>
+<head>
+<link href="${base!}/assets/platform/style/decorate/css/platDecoration.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+.ad-item{padding:10px;padding-bottom:16px;border:2px solid #fff;transition:all ease-in .3s;-webkit-transition:all ease-in .3s;-o-transition:all ease-in .3s;-ms-transition:all ease-in .3s;-moz-transition:all ease-in .3s;}
+.ad-item:hover,.ad-item:active,.ad-item.active{border:2px solid #e51400;background-color:#f5f5f5;}
+.ad-item a{display:block;width:100%;height:auto;padding:2px;border:1px solid #ddd;}
+.ad-item a img{width:100%;height:200px;}
+.ad-item .ad-name{height:50px;line-height:18px;padding-top:6px;}
+.ad-item .ad-btns {clear:both;}
+</style>
+</head>
+<body>
+<div class="modal-body">
+	<div class="container-fiuld">
+		<div class="module-con">
+			<form id="mainForm" action="#" method="post" class='form-horizontal form-bordered form-validate'>
+				<ul class="nav nav-tabs nav-tabs-zx">
+					<li class="active"><a href="#contentSetting" data-toggle="tab">选择广告</a></li>
+					<li><a href="#displaySetting" data-toggle="tab">显示设置</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="contentSetting">
+                        <input type="hidden" id="nowPage" name="nowPage" value="${nowPage }"/>
+                        <input type="hidden" id="pageShow" name="pageShow" value="${pageShow }"/>
+                        <input type="hidden" id="param_imageurls" name="param_imageurls" value=""/>
+                        <input type="hidden" id="param_imagecount" name="param_imagecount" value=""/>
+                        <input type="hidden" id="param_adname" name="param_adname" value=""/>
+                        <input type="hidden" id="param_adUuid" name="param_adUuid" value="${configuredAd!}"/>
+                        <div class="modal-body">
+                            <div class="container-fiuld">
+                                <div class="module-con">
+                                    <div class="tab-content">
+                                        <div class="row scrollable" id="adList" data-height="400" >
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="j_page" id="pageDiv"></div>
+                    </div>
+					<div class="tab-pane" id="displaySetting" class="form-horizontal">
+				      	<div class="form-group">
+					        <label class="col-sm-2 control-label">是否异步加载：</label>
+					        <div id="needAsyncInit" class="col-sm-10">
+					            <label class="radio-inline">
+					                <input type="radio" name="needAsyncInit" id="needAsyncInit_t" value="true" > 是
+					            </label>
+					            <label class="radio-inline">
+					                <input type="radio" name="needAsyncInit" id="needAsyncInit_f" value="false" checked> 否
+					            </label>
+					        </div>
+				    	</div>
+
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">自动轮播速度(ms)/自动轮播间隔时间</label>
+                            <div class="col-sm-6">
+                                <select id="slider-interTime" class="form-control">
+                                    <option value="1000">1s</option>
+                                    <option value="2000">2s</option>
+                                    <option value="3000">3s</option>
+                                    <option value="4000">4s</option>
+                                    <option value="5000" selected>5s</option>
+                                    <option value="6000">6s</option>
+                                    <option value="7000">7s</option>
+                                    <option value="8000">8s</option>
+                                    <option value="9000">9s</option>
+                                    <option value="10000">10s</option>
+                                    <option value="0">0</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">轮播效果速度(ms)</label>
+                            <div class="col-sm-6">
+                                <select name="delayTime" id="slider-speed" class="form-control">
+                                    <option value="300">300</option>
+                                    <option value="500">500</option>
+                                    <option value="700">700</option>
+                                    <option value="1000">1000</option>
+                                    <option value="0">0</option>
+                                </select>
+                            </div>
+                        </div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+    <div class="col-sm-4 col-li" id="adListTemplate" style="display: none">
+        <div class="ad-item">
+            <a class="ad-img"><img src="http://223.202.123.112:7500//dev1/0/000/077/0000077946.fid"/></a>
+            <p class="ad-name"></p>
+            <p class="ad-uuid" style="display:none"></p>
+            <div class="ad-btns clearfix">
+                <a class="btn btn-red pull-left" href="#">选择此广告</a>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<script type="text/javascript">
+    //选中图片的效果
+    $(document.body).on('click','.ad-item',function(){
+        $(this).addClass('active');
+        $(this).parents('.col-li').siblings().find('.ad-item').removeClass('active');
+        $(this).addClass('active').find('.btn-red').addClass('active');
+        $(this).parents('.col-li').siblings().find('.btn-red').removeClass('active');
+       // $("#param_imageurls").val($(this).attr("url"));
+        //$("#param_imagecount").val($(this).attr("count"));
+        $("#param_adUuid").val($(this).attr("adUuid"));
+      
+        //$("#param_adname").val($(this).attr("adname"));
+    });
+    //选中选择按钮从而选择到图片的效果
+      $(document.body).on('click','.ad-item .btn-red',function(){
+        $(this).addClass('active');
+        $(this).parents('.ad-item').addClass('active').parents('.col-li').siblings().find('.ad-item').removeClass('active');
+       // $("#param_imageurls").val($(this).parents('.ad-item').attr("url"));
+        //$("#param_imagecount").val($(this).parents('.ad-item').attr("count"));
+        //$("#param_adUuid").val($(this).parents('.ad-item').attr("adUuid"));
+        //$("#param_adname").val($(this).parents('.ad-item').attr("adname"));
+    })
+
+    //搜索商品，首次搜索初始化分页 (initPage:是否需要初始化分页)
+    var searchProduct =  function(nowPage,pageShow,initPage){
+        var pagingDiv = $("#pageDiv");
+        var reqdata = {
+            "nowPage" : nowPage,
+            "pageShow" : pageShow
+        };
+
+        $.ajax({
+            type : "GET",
+            url : ContextPath+"/slideAds/getPlatAdList",
+            data : reqdata,
+            dataType : "json",
+            success : function(data) {
+            	console.log(data);
+                var adList = data.adList;
+                //渲染列表数据
+                renderAdList(adList);
+                if(initPage){
+                    //渲染分页插件
+                    renderAdPaging(data.totalPage, pagingDiv);
+                }
+            }
+        })
+    }
+
+    var renderAdList = function(data){
+        var adListDivClone = $("#adListTemplate");
+        var listContainer = $("#adList");
+        var selectedUuid =  $("#param_adUuid").val();
+        listContainer.empty();
+        //渲染数据
+        if(data.length > 0){
+            for(var i=0;i<data.length;i++){
+                var adTemp = adListDivClone.clone().removeAttr("id");
+                var adObj = data[i];
+                var adUuid = adObj.adUuid;
+                if(adUuid==selectedUuid){
+                	adTemp.find(".ad-item").addClass('active');
+                }
+                var adName = adObj.adName;
+                var adUrlList = adObj.adUrlAndPicList;
+                if(adUrlList.length >0){
+                    var firstUrl = adUrlList[0].split(';');
+                    adTemp.find(".ad-img").children(0).attr("src", firstUrl[0]);
+                }
+                adTemp.find(".ad-name").html(adName);
+                adTemp.find(".ad-item").attr("adUuid", adUuid);
+//                adTemp.find(".ad-uuid").html(adUuid);
+                adTemp.attr("style", "display:block");
+
+                listContainer.append(adTemp);
+            }
+        }
+    }
+
+    //渲染分页组件
+    var renderAdPaging = function(totalPage,pageEle){
+        layui.use(['laypage', 'layer'], function(){
+            var laypage = layui.laypage  ,layer = layui.layer;
+            laypage({
+                cont: pageEle,
+                pages: totalPage,
+                jump: function(obj, first){
+                    if(!first){
+                        searchProduct(obj.curr,9,false);
+                    }
+                }
+            });
+        });
+    }
+</script>
+
+<script type="text/javascript">
+    var pageJson = ${webPageModelJsonStr};
+    var componentsParam = {
+        initParamData : function(pageJson) {
+            if (typeof (pageJson) == "string") {
+                pageJson = JSON.parse(pageJson);
+            }
+
+            if (pageJson.needAsyncInit) {
+                $("#needAsyncInit").val(pageJson.needAsyncInit);
+            }
+
+            if (pageJson.adUuid) {
+                $("#param_adUuid").val(pageJson.adUuid);
+            }
+          
+ 			 $("#slider-speed").val(pageJson.slideSpeed);
+            
+            $("#slider-interTime").val(pageJson.interTime);
+
+            searchProduct(0, 9, true);
+        },
+        saveParamData : function() {
+            var needAsyncInit = $("input[name='needAsyncInit']:checked").val();
+            var adUuid = $("#param_adUuid").val();
+            var speed = $("#slider-speed").val();
+            if(speed!=""){
+                speed = parseInt(speed);
+            }
+            var interTime  = $("#slider-interTime").val();
+            if(interTime != ""){
+                interTime = parseInt(interTime);
+            }
+
+            var pageJson = {
+                "compId" : 'slideAds',
+                "needAsyncInit" : needAsyncInit,
+                "slideSpeed":speed,
+                "interTime":interTime,
+                "adUuid" : adUuid
+            };
+            return pageJson;
+        }
+    }
+    componentsParam.initParamData(pageJson);
+
+</script>
+
+</body>
+</html>

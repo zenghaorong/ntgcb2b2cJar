@@ -1,0 +1,138 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group" style="padding-top: 5px;">
+        <div >
+            <select id="wxid" name="wxid" class="form-control">
+                <!--# for(o in wxList){
+                #-->
+                <option value="${o.id}" <!--#if(o.id==wxid){#-->selected<!--#}#-->>${o.appname}</option>
+                <!--#
+                } #-->
+            </select>
+        </div>
+        </div>
+
+        <div class="pull-right">
+            <div class="btn-group tool-button">
+                <button class="btn btn-info navbar-btn" id="down"><i class="ti-import"></i>${msg['wx.tpl.list.column.toobtainlisttemplate']} </button>
+            </div>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                <tr>
+                    <th>${msg['wx.tpl.list.column.templatenumber']}</th>
+                    <th>${msg['wx.tpl.list.column.title']}</th>
+                    <th>${msg['wx.tpl.list.column.templatecontent']}</th>
+                    <th>${msg['wx.tpl.list.column.templatesample']}</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialog" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['wx.tpl.list.column.prompt']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['wx.tpl.list.column.message']} <br/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="ok" type="button" class="btn btn-primary" data-loading-text="${msg['wx.tpl.list.column.']}">${msg['wx.tpl.list.column.soure']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang!}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/wx/tpl/list/data",
+                "type": "post",
+                "data": function (d) {
+                    d.wxid=$("#wxid").val();
+                }
+            },
+            //默认排序列
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "template_id", "bSortable": true},
+                {"data": "title", "bSortable": true},
+                {"data": "content", "bSortable": true},
+                {"data": "example", "bSortable": true}
+            ],
+            "columnDefs": [
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+    $(function () {
+        initDatatable();
+        $("#wxid").on("change",function(){
+            datatable.ajax.reload();
+        });
+        $("#down").on("click",function(){
+            var dialog = $("#dialog");
+            dialog.modal("show");
+            dialog.find("#ok").unbind("click");
+            dialog.find("#ok").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/platform/wx/tpl/list/getDo", {wxid:$("#wxid").val()}, function (data) {
+                    //重置按钮状态，关闭提示框
+                    btn.button("reset");
+                    dialog.modal("hide");
+                    if (data.code == 0) {
+                        Toast.success(data.msg);
+                        datatable.ajax.reload();
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                }, "json");
+            });
+
+        });
+    });
+</script>
+
+<!--#}#-->

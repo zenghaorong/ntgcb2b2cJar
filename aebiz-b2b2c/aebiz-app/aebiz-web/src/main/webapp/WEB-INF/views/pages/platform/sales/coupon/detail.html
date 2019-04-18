@@ -1,0 +1,74 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">优惠券</a>
+                        <small>${obj.name}</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                        <tr>
+                            <td>${msg['sales.coupon.column.name']}</td><td>${obj.name}</td>
+                        </tr>
+                        <tr>
+                            <td>${msg['sales.coupon.column.codeprefix']}</td><td>${obj.codeprefix}</td>
+                        </tr>
+                        <tr>
+                            <td>${msg['sales.coupon.column.type']}</td><td>${obj.type}</td>
+                        </tr>
+                        <tr>
+                            <td>规则名称</td><td>${rule.name}</td>
+                        </tr>
+                        <tr>
+                            <td>会员限制</td><td>@Json(${ruleName}</td>
+                        </tr>
+                        <tr>
+                            <td>${msg['sales.coupon.column.limit_num']}</td><td>${obj.limit_num}</td>
+                        </tr>
+                        <tr>
+                            <td>${msg['sales.coupon.column.send_num']}</td><td>${obj.send_num}</td>
+                        </tr>
+                        <tr>
+                            <td>${msg['sales.coupon.column.send_type']}</td><td>${obj.send_type == 'receive' ? '领取' : '积分兑换'}</td>
+                        </tr>
+                        <tr>
+                            <td>${msg['sales.coupon.column.score']}</td><td>${obj.send_type == 'score' ? obj.score}</td>
+                        </tr>
+                        <tr>
+                            <td>${msg['sales.coupon.column.checkStatus']}</td>
+                            <td>
+                                <!--#if (obj.checkStatus == 0) {#-->
+                                未提交
+                                <!--#}else if (obj.checkStatus == 1) {#-->
+                                待审核
+                                <!--#} else if (obj.checkStatus == 2) {#-->
+                                审核通过
+                                <!--#} else if (obj.checkStatus == 3) {#-->
+                                未通过
+                                <!--#}#-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>${msg['sales.coupon.column.disabled']}</td>
+                            <td>
+                                <!--#if (obj.disabled) {#-->
+                                <i class="fa fa-circle text-danger ml5"></i>
+                                <!--#}else {#-->
+                                <i class="fa fa-circle text-success ml5"></i>
+                                <!--#}#-->
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

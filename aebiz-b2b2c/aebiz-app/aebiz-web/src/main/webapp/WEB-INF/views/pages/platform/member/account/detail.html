@@ -1,0 +1,42 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">${msg['member.account.column.memberaccount']}</a>
+
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                        <tr>
+                            <td>${msg['member.account.column.accountId']}</td><td>${obj.accountId}</td>
+                        </tr>
+                                                        <tr>
+                                <td>${msg['member.account.column.money']}</td><td>${obj.money}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['member.account.column.freezeMoney']}</td><td>${obj.freezeMoney}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['member.account.column.payPassword']}</td><td>${obj.payPassword}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['member.account.column.score']}</td><td>${obj.score}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['member.account.column.freezeScore']}</td><td>${obj.freezeScore}</td>
+                            </tr>
+
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

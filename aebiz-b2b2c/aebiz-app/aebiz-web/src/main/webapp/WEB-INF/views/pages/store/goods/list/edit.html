@@ -1,0 +1,2634 @@
+<!--#
+layout("/layouts/store.html"){
+#-->
+<style>
+    .div-img-album{
+        list-style-type: none;
+        margin: 2px;
+        height: 118px;
+        float: left;
+    }
+    .divImg{
+        float: left;
+        margin: 2px;
+        padding: 2px;
+        height:108px;
+        width:100px;
+        border: 1px solid #dcdcdc;
+        cursor: pointer;
+    }
+    .divImgD{
+        float: left;
+        margin: 2px;
+        padding: 2px;
+        height:108px;
+        width:100px;
+        border: 1px solid red;
+        cursor: pointer;
+    }
+    /*.product-price-sm{
+        width: 80px;
+        min-width: 75px;
+    }
+    .product-price-xs{
+        width: 15px;
+        min-width: 13px;
+    }*/
+    .line-height-sm{
+        height: 30px;
+    }
+    .goods-area-label{
+        float:left;margin:3px 1px 2px 1px;
+    }
+    .goods-area-label-del {
+        cursor: pointer;
+        font-family: 'themify';
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        position: relative;
+        font-size: 10px;
+        margin-left: 10px;
+    }
+    .product-number-input{
+        height: 22px;width: 90px;padding: 0 2px;
+    }
+    .product-sku-input{
+        height: 22px;width: 100px;padding: 0 2px;
+    }
+    .spec-modal-body{
+        min-height: 300px;
+        padding-top: 0px;
+    }
+    div.spec{
+        margin-bottom: 0;
+    }
+</style>
+
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base!}/store/goods/list/${type!}" data-pjax><i class="ti-angle-left"></i> ${msg['goods.main.btn.back']}</a>
+        <a id="doLink" href="${base!}/store/goods/list${isNotEmpty(type) ? '/'+type}/edit/${obj.id}" data-pjax></a>
+    </div>
+    <div class="pull-right">
+        <div class="btn-group tool-button">
+            <!--# if(needCheck) { #-->
+            <button class="btn btn-primary navbar-btn js-goods-btn-submit-audit" type="button" >提交审核</button>
+            <!--# } else { #-->
+            <button class="btn btn-primary navbar-btn js-goods-btn-publish" type="button" > 发布</button>
+            <!--# }#-->
+            <button class="btn btn-primary navbar-btn js-goods-btn-save-to-drafts" type="button" > 保存草稿</button>
+            <button class="btn btn-primary navbar-btn js-goods-btn-preview" type="button" > 预览</button>
+        </div>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate action="${base!}/store/goods/list/editDo" method="post">
+            <input type="hidden" name="id" id="id" value="${obj.id!}">
+            <input type="hidden" name="storeId" id="storeId" value="${obj.storeId!}">
+            <input type="hidden" name="status" id="status" value="">
+            <input type="hidden" name="isSubmit" id="isSubmit" value="0">
+            <input type="hidden" name="subType" id="subType" value="">
+            <div class="box-tab ">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#base" data-toggle="tab">${msg['goods.main.tab.base']}</a></li>
+                    <li class=""><a href="#goods_info" data-toggle="tab">${msg['goods.main.tab.info']}</a></li>
+                    <li id="goods_params_tab" class="" style="${ !isEmpty(obj.goodsType) && obj.goodsType.hasParam ? 'display:block' : 'display:none'}" ><a href="#goods_params" data-toggle="tab">${msg['goods.main.tab.spec']}</a></li>
+                    <li id="goods_props_tab" class="" style="${ !isEmpty(obj.goodsType) && obj.goodsType.hasProp ? 'display:block' : 'display:none'}" ><a href="#goods_props" data-toggle="tab">${msg['goods.main.tab.prop']}</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="base">
+                        <div class="row mb10">
+                            <div class="col-lg-12">
+                                <div class="form-group has-feedback">
+                                    <label class="col-sm-2 control-label"><span style="color: red">*</span>${msg['goods.main.column.classId']}</label>
+                                    <div class="col-sm-3">
+                                        <input type="hidden" name="classId" value="${isNotEmpty(obj.goodsClass) ? obj.goodsClass.id}" />
+                                        <input type="text" class="form-control" id="classId" disabled data-toggle="modal" data-target="#dialogSelectClass" value="${isNotEmpty(obj.goodsClass) ? obj.goodsClass.name}" data-parsley-required="true"/>
+                                    </div>
+                                    <label class="col-sm-1 control-label"><span style="color: red">*</span>${msg['goods.main.column.frontClassId']}</label>
+                                    <div class="col-sm-4">
+                                        <!--#{
+                                            var tags = "[";
+                                            for(tag in obj.storeGoodsClassList){
+                                                tags = tags + strutil.format("'{\"id\":\"'{0}\"'}", tag.id);
+                                                if(!tagLP.last) tags =  tags + ",";
+                                            }
+                                            tags =  tags + "]";
+                                        #-->
+                                        <input type="hidden" id="front_classes" name="front_classes" value="${tags, escape}">
+                                        <!--#}#-->
+                                        <input type="text" class="form-control" id="frontClassId" name="tmp_frontClassId" readonly value="<!--#for(sgc in obj.storeGoodsClassList){#-->${sgc.name}${!sgcLP.last ? ','}<!--#}#-->" data-parsley-required="true" data-toggle="modal" data-target="#dialogSelectFrontClass" style="cursor: pointer;" placeholder="${msg['goods.main.tip.selectplease']}${msg['goods.main.column.frontClassId']}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="typeId" class="col-sm-2 control-label">${msg['goods.main.column.typeId']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="hidden" name="typeId" value="${obj.typeId}">
+                                        <select id="typeId" name="typeId" class="form-control" data-live-search="true" disabled>
+                                            <option value="">${msg['goods.main.select.typeId.option.default']}</option>
+                                            <!--#for(o in typeList){#-->
+                                            <option value="${o.id!}" <!--#if(obj.typeId==o.id){#-->selected<!--#}#-->>${o.name!}</option>
+                                            <!--#}#-->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" hidden>
+                                    <label for="brandId" class="col-sm-2 control-label">${msg['goods.main.column.brandId']}</label>
+                                    <div class="col-sm-8">
+                                        <select id="brandId" name="brandId" class="form-control" >
+                                            <!--#for(o in brandList){#-->
+                                            <option value="${o.id!}" <!--#if(obj.brandId == o.id){#-->selected<!--#}#-->>${o.name!}</option>
+                                            <!--#}#-->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="name" class="col-sm-2 control-label"><span style="color: red">*</span>${msg["goods.main.column.name"]}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="name" class="form-control" name="name" data-parsley-required="true" placeholder="${msg['goods.main.column.name']}" value="${obj.name!}"  data-parsley-maxlength="150">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="title" class="col-sm-2 control-label">${msg["goods.main.column.title"]}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="title" name="title"  value="${obj.title!}" data-parsley-maxlength="150" placeholder="${msg['goods.main.column.title']}" >
+                                    </div>
+                                </div>
+                                <div class="form-group" hidden>
+                                    <label for="keywords" class="col-sm-2 control-label">${msg['goods.main.column.keywords']}</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="keywords" class="form-control" name="keywords" value="${obj.keywords!}" data-parsley-maxlength="150" >
+                                    </div>
+                                </div>
+                                <div class="form-group" hidden>
+                                    <label class="col-sm-2 control-label">${msg['goods.main.column.tags']}</label>
+                                    <div class="col-sm-8" align="left">
+                                        <!--# for (o in tagList) { #-->
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="tag" value="${o.id}" <!--# for (t in obj.tagList) {  if (t.id == o.id) {#-->checked<!--#break;}}#--> >${o.name}
+                                            <!--#if(isNotEmpty(o.imgurl)){#--><img src="${o.imgurl!}" style="width: 15px;height: 15px;"><!--#}#-->
+                                        </label>
+                                        <!--# } #-->
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="display: none">
+                                    <label for="imgList" class="col-sm-2 control-label">${msg['goods.main.column.imgList']}</label>
+                                    <div class="col-sm-8">
+                                        <div id="div_imgList_queue"></div>
+                                        <div>
+                                            <input id="file_upload_imgList" name="file_upload_imgList" type="file" multiple="false">
+                                        </div>
+                                        <div id="div_imgList_img" style="padding: 5px;">
+                                            <!--#if(!isEmpty(obj.imgList)){#-->
+                                            <img src='${obj.imgList!}' style='width:150px;'>
+                                            <i style="cursor: pointer" class="fa fa-close" onclick="$('#imgList').val('');$('#div_imgList_img').empty();"></i>
+                                            <!--#}#-->
+                                        </div>
+                                        <input type="hidden" id="imgList" name="imgList"  value="${obj.imgList!}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label"><span style="color: red">*</span>${msg['goods.main.column.unit']}</label>
+                                    <div class="col-sm-8">
+                                        <select id="unit" name="unit" class="form-control" data-parsley-required="true">
+                                            <option value="">${msg['goods.main.select.unit.option.default']}</option>
+                                            <!--# for (o in unitDictList) { #-->
+                                            <option value="${o.code}" ${obj.unit == o.code ? "selected"}>${o.name}</option>
+                                            <!--# } #-->
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div id="sp_new" style="${obj.hasSpec ? 'display:block' : 'display:none'}" >
+                                    <!--#if(obj.hasSpec){#-->
+                                    <div class="form-group" id="div_spec_new">
+                                        <label class="col-sm-2 control-label">${msg["goods.product.column.spec"]}</label>
+                                        <div class="col-sm-8">
+                                            <button id="specEditBtn" class="btn btn-primary" style="float: left;" type="button">${msg['goods.main.btn.specEditBtn']}</button>
+                                            <div id="div_spec_groups" style="float: left;text-align: left;">${msg["goods.main.div.spec.words0"]}${@productsList.size()}${msg["goods.main.div.spec.words1"]}[
+                                                <!--#for(o in productsList){
+                                                    var specGroup = @org.nutz.json.Json.fromJson(o.spec);
+                                                    for (g in specGroup) {
+                                                        print(g.spec_value_name);
+                                                    }
+                                                    if (!oLP.last) print(" | ");
+                                                }#-->
+                                                ]
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--#}#-->
+                                </div>
+
+                                <div id="sp" <!--# if (obj.hasSpec){ #-->style="display:none;"<!--# }else{ #-->style="display:block;"<!--# } #--> >
+                                    <div class="form-group">
+                                        <label for="weight" class="col-sm-2 control-label"><span style="color: red">*</span>${msg['goods.product.column.weight']}</label>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <input type="hidden" name="productId" value="${productsList[0].id!}"/>
+                                                <input type="text" id="weight" class="form-control input-sm" name="weight" value="${productsList[0].weight!}" data-parsley-type="integer" data-parsley-min="0" data-parsley-required="true" placeholder="${msg['goods.main.placeholder.weightunit']}">
+                                                <span class="input-group-addon">${msg["goods.main.unit.length"]}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="length" class="col-sm-2 control-label">${msg['goods.product.column.length']}</label>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <input type="text" id="length" class="form-control input-sm" name="length" value="${productsList[0].length!}" data-parsley-type="integer" data-parsley-min="0" data-parsley-required="true" placeholder="${msg['goods.main.placeholder.lengthunit']}">
+                                                <span class="input-group-addon">${msg["goods.main.unit.length"]}</span>
+                                            </div>
+                                        </div>
+                                        <label for="width" class="col-sm-1 control-label">${msg['goods.product.column.width']}</label>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <input type="text" id="width" class="form-control input-sm" name="width" value="${productsList[0].width!}" data-parsley-type="integer" data-parsley-min="0" data-parsley-required="true" placeholder="${msg['goods.main.placeholder.lengthunit']}">
+                                                <span class="input-group-addon">${msg["goods.main.unit.length"]}</span>
+                                            </div>
+                                        </div>
+                                        <label for="height" class="col-sm-1 control-label">${msg['goods.product.column.height']}</label>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <input type="text" id="height" class="form-control input-sm" name="height" value="${productsList[0].height!}" data-parsley-type="integer" data-parsley-min="0" data-parsley-required="true" placeholder="${msg['goods.main.placeholder.lengthunit']}">
+                                                <span class="input-group-addon">${msg["goods.main.unit.length"]}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" hidden>
+                                        <label for="sku" class="col-sm-2 control-label">${msg["goods.product.column.sku"]}</label>
+                                        <div class="col-sm-8">
+                                            <input type="hidden" name="productId" value="${productsList[0].id}">
+                                            <input type="text" id="sku" value="${productsList[0].sku!}" class="form-control" name="sku" data-parsley-type="alphanum" placeholder="${msg['goods.main.placeholder.sku']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="costPrice" class="col-sm-2 control-label">${msg["goods.product.column.costPrice"]}</label>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">${msg["goods.main.unit.money"]}</span>
+                                                <input type="text" class="form-control input-sm" name="costPrice" id="costPrice" value="${@money.fenToYuan(productsList[0].costPrice)}" data-parsley-price="true" placeholder="${msg['goods.main.placeholder.priceunit']}">
+                                            </div>
+                                        </div>
+                                        <label for="salePrice" class="col-sm-1 control-label"><span style="color: red">*</span>${msg["goods.product.column.salePrice"]}</label>
+                                        <div class="col-sm-2">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">${msg["goods.main.unit.money"]}</span>
+                                                <input type="text" class="form-control input-sm" name="salePrice" id="salePrice" value="${@money.fenToYuan(productsList[0].salePrice)}" data-parsley-price="true" data-parsley-required="true" placeholder="${msg['goods.main.placeholder.priceunit']}">
+                                            </div>
+                                        </div>
+                                        <label for="marketPrice" class="col-sm-1 control-label">${msg["goods.product.column.marketPrice"]}</label>
+                                        <div class="col-sm-2" hidden>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">${msg["goods.main.unit.money"]}</span>
+                                                <input type="text" class="form-control input-sm" name="marketPrice" id="marketPrice" value="${@money.fenToYuan(productsList[0].marketPrice)}" placeholder="${msg['goods.main.placeholder.priceunit']}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="stock" class="col-sm-2 control-label"><span style="color: red">*</span>${msg["goods.product.column.stock"]}</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" id="stock" value="${productsList[0].stock!}" class="form-control" name="stock" data-parsley-type="integer" data-parsley-min="0" data-parsley-required="true" placeholder="${msg['goods.product.column.stock']}">
+                                        </div>
+                                        <!--<label for="buyMin" class="col-sm-1 control-label">${msg["goods.product.column.buyMin"]}</label>-->
+                                        <!--<div class="col-sm-2">-->
+                                            <!--<input type="text" id="buyMin" class="form-control" value="${productsList[0].buyMin!}" name="buyMin" data-parsley-type="integer" data-parsley-min="0" placeholder="${msg['goods.main.placeholder.defult']}1">-->
+                                        <!--</div>-->
+                                        <!--<label for="buyMax" class="col-sm-1 control-label">${msg["goods.product.column.buyMax"]}</label>-->
+                                        <!--<div class="col-sm-2">-->
+                                            <!--<input type="text" id="buyMax" class="form-control" value="${productsList[0].buyMax!}" name="buyMax" data-parsley-type="integer" data-parsley-min="0" placeholder="${msg['goods.main.placeholder.defult']}100">-->
+                                        <!--</div>-->
+                                    </div>
+                                    <div class="form-group" hidden>
+                                        <label class="col-sm-2 control-label">${msg['goods.product.column.partitionBy']}</label>
+                                        <div class="col-sm-8" align="left">
+                                            <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" value="0" ${productsList[0].partitionBy == 0 ? 'checked'} >${msg["goods.main.select.option.unlimited"]}</label>
+                                            <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" value="1" ${productsList[0].partitionBy == 1 ? 'checked'} >${msg["goods.product.select.partitionBy.option.area"]}</label>
+                                            <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" value="2" ${productsList[0].partitionBy == 2 ? 'checked'} >${msg["goods.product.select.partitionBy.option.city"]}</label>
+                                            <div class="js-goods-select-area" ${productsList[0].partitionBy != 1 ? 'style="display: none"'}>
+                                                <button type="button" class="btn btn-default btn-sm " data-toggle="modal" data-target="#dialogSelectArea"><i class="fa fa-plus mr5"></i>${msg["goods.product.btn.selectArea"]}</button>
+                                                <!--#{
+                                                    var areas = "[";
+                                                    var areaText = "";
+                                                    if (productsList[0].partitionBy == 1) {
+                                                        for (area in productsList[0].areaList) {
+                                                            areas = areas + strutil.format("'{\"id\":\"'{0}\",\"productId\":\"{1}\",\"partitionBy\":{2},\"area\":\"{3}\"'}", area.id, area.productId, area.partitionBy, area.area);
+                                                            areaText = areaText + "<span class=\"label label-default goods-area-label\" >"+areaMap[area.area]+"</span>";
+                                                            if(!areaLP.last) areas =  areas + ",";
+                                                        }
+                                                    }
+                                                    areas =  areas + "]";
+                                                #-->
+                                                <input type="hidden" name="areaCodes" value="${areas, escape}">
+                                                <div class="js-goods-area">${areaText}</div>
+                                                <!--#}#-->
+                                            </div>
+                                            <div class="js-goods-select-province-city" ${productsList[0].partitionBy != 2 ? 'style="display: none"'}>
+                                                <button type="button" class="btn btn-default btn-sm " data-toggle="modal" data-target="#dialogSelectCity"><i class="fa fa-plus mr5"></i>${msg["goods.product.btn.selectCity"]}</button>
+                                                <!--#{
+                                                    var areas = "[";
+                                                    var areaText = "";
+                                                    if (productsList[0].partitionBy == 2) {
+                                                        for (area in productsList[0].areaList) {
+                                                            areas = areas + strutil.format("'{\"id\":\"'{0}\",\"productId\":\"{1}\",\"partitionBy\":{2},\"province\":\"{3}\",\"city\":\"{4}\"'}", area.id, area.productId, area.partitionBy, area.province, area.city);
+                                                            areaText = areaText + strutil.format("<span class=\"label label-default goods-area-label\" >{0}/{1}</span>", provinceCityMap[area.province], provinceCityMap[area.city]);
+                                                            if(!areaLP.last) areas =  areas + ",";
+                                                        }
+                                                    }
+                                                    areas =  areas + "]";
+                                                #-->
+                                                <input type="hidden" name="areaProvinceCitys" value="${areas, escape}" />
+                                                <div class="js-goods-province-city">${areaText}</div>
+                                                <!--#}#-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" hidden>
+                                        <label class="col-sm-2 control-label">${msg['goods.product.column.saleToMemberType']}</label>
+                                        <div class="col-sm-8" align="left">
+                                            <label class="checkbox-inline" ><input type="checkbox" name="saleToMemberType" value="0" ${productsList[0].saleToMemberType == 0 ? 'checked'}/>${msg["goods.main.select.option.unlimited"]}</label>
+                                            <!--#for(o in memberTypeList){#-->
+                                            <label class="checkbox-inline" ><input type="checkbox" name="saleToMemberType" value="${o.id!}" <!--#for(m in productsList[0].memberTypeList!){ if(o.id==m.id){print('checked');break;}}#-->/>${o.name!}</label>
+                                            <!--#}#-->
+                                        </div>
+                                    </div>
+                                    <div class="form-group" hidden>
+                                        <label class="col-sm-2 control-label">${msg["goods.product.column.deliveryTime"]}</label>
+                                        <div class="col-sm-8" align="left">
+                                            <label class="radio-inline" >
+                                                <input type="radio" name="deliveryTime" value="0" ${productsList[0].deliveryTime == 0 ? "checked"} >${msg["goods.product.deliveryTime.select.option0"]}
+                                            </label>
+                                            <label class="radio-inline" >
+                                                <input type="radio" name="deliveryTime" value="1" ${productsList[0].deliveryTime == 1 ? "checked"}>${msg["goods.product.deliveryTime.select.option1"]}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" hidden>
+                                        <label class="col-sm-2 control-label">${msg["goods.product.column.orderVerify"]}</label>
+                                        <div class="col-sm-1 switcha">
+                                            <div class="mr15">
+                                                <input type="checkbox" id="orderVerify" name="orderVerify" <!--#if(productsList[0].orderVerify){#-->checked<!--#}#--> class="js-switch-blue" >
+                                            </div>
+                                        </div>
+                                        <label class="col-sm-2 control-label">${msg["goods.product.column.serializable"]}</label>
+                                        <div class="col-sm-1 switcha">
+                                            <div class="mr15">
+                                                <input type="checkbox" id="serializable" name="serializable" <!--#if(productsList[0].serializable){#-->checked<!--#}#--> class="js-switch-blue" >
+                                            </div>
+                                        </div>
+                                        <label class="col-sm-2 control-label">${msg["goods.product.column.enabled"]}</label>
+                                        <div class="col-sm-1 switcha">
+                                            <div class="mr15">
+                                                <input type="checkbox" id="enabled" name="enabled" <!--#if(productsList[0].enabled){#-->checked<!--#}#--> class="js-switch-blue" >
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="div_spec" style="display: none" hidden>
+                                        <label class="col-sm-2 control-label">${msg["goods.product.column.spec"]}</label>
+                                        <div class="col-sm-8">
+                                            <button id="specBtn" class="btn btn-primary" style="float: left;" type="button">${msg["goods.product.btn.setspec"]}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- product end -->
+
+                                <div class="form-group" hidden>
+                                    <label class="col-sm-2 control-label">${msg['goods.main.column.recommend']}</label>
+                                    <div class="col-sm-1 switcha">
+                                        <div class="mr15">
+                                            <input type="hidden" name="recommend" value="${obj.recommend}" />
+                                            <input type="checkbox" id="recommend"  class="js-switch-blue" <!--#if(obj.recommend == 1){#-->checked<!--#}#--> />
+                                        </div>
+                                    </div>
+                                    <label class="col-sm-2 control-label">${msg['goods.main.column.saleZero']}</label>
+                                    <div class="col-sm-1 switcha">
+                                        <div class="mr15">
+                                            <input type="checkbox" id="saleZero" name="saleZero" class="js-switch-blue" <!--#if(obj.saleZero){#-->checked<!--#}#--> />
+                                        </div>
+                                    </div>
+                                    <label class="col-sm-2 control-label">${msg["goods.product.column.hiddenSalePrice"]}</label>
+                                    <div class="col-sm-1 switcha">
+                                        <div class="mr15">
+                                            <input type="checkbox" id="hiddenSalePrice" name="hiddenSalePrice" class="js-switch-blue" <!--#if(obj.hiddenSalePrice){#-->checked<!--#}#--> />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" hidden>
+                                    <label class="col-sm-2 control-label">${msg['goods.main.column.stockOffType']}</label>
+                                    <div class="col-sm-8" align="left">
+                                        <label class="radio-inline" ><input type="radio" id="stockOffType0" name="stockOffType" value="0" <!--#if(obj.stockOffType == 0){#-->checked<!--#}#--> />${msg['goods.enum.stockofftype.pay']}</label>
+                                        <label class="radio-inline" ><input type="radio" id="stockOffType1" name="stockOffType" value="1" <!--#if(obj.stockOffType == 1){#-->checked<!--#}#--> />${msg['goods.enum.stockofftype.order']}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group" hidden>
+                                    <label class="col-sm-2 control-label">${msg["goods.main.column.saleTimeBy"]}</label>
+                                    <div class="col-sm-8 form-inline line-height-sm" align="left">
+                                        <label class="radio-inline line-height-sm" ><input type="radio" name="saleTimeBy" value="0" ${obj.saleTimeBy == 0 ? 'checked'} />${msg['goods.main.select.saleTimeBy.option.now']}</label>
+                                        <label class="radio-inline line-height-sm" ><input type="radio" name="saleTimeBy" value="1" ${obj.saleTimeBy == 1 ? 'checked'} />${msg['goods.main.select.saleTimeBy.option.donothing']}</label>
+                                        <label class="radio-inline line-height-sm" ><input type="radio" name="saleTimeBy" value="2" ${obj.saleTimeBy == 2 ? 'checked'} />${msg['goods.main.select.saleTimeBy.option.time']}</label>
+                                        <div class="input-group date form_datetime js-goods-saleat" style="${obj.saleTimeBy != 2 ? 'display: none;'}width:260px;padding-right: 16px;" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="saleAt">
+                                            <input type="text" size="16" readonly class="form-control input-sm" value="${@date.getDate(obj.saleAt)}" >
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                        </div>
+                                        <input type="hidden" id="autoSale" name="tmp_autoSale" value="" />
+                                        <input type="hidden" id="saleAt" name="tmp_saleAt" value="${@date.getDate(obj.saleAt)}" />
+                                    </div>
+                                </div>
+                                <div class="form-group" hidden>
+                                    <label class="col-sm-2 control-label">${msg["goods.main.column.offsaleTime"]}</label>
+                                    <div class="col-sm-8 form-inline line-height-sm" align="left">
+                                        <label class="radio-inline line-height-sm" ><input type="radio" name="autoOff" value="0" ${!obj.autoOff ? 'checked'} />${msg["goods.main.select.option.unlimited"]}</label>
+                                        <label class="radio-inline line-height-sm" ><input type="radio" name="autoOff" value="1" ${obj.autoOff ? 'checked'} />${msg["goods.main.column.autoOff"]}</label>
+                                        <div class="input-group date form_datetime js-goods-offat" style="${!obj.autoOff ? 'display: none;'}width:260px;padding-right: 16px;" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="offAt">
+                                            <input type="text" size="16" readonly class="form-control input-sm" value="${@date.getDate(obj.offAt)}" data-parsley-required="true">
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                        </div>
+                                        <input type="hidden" id="offAt" name="tmp_offAt" value="${@date.getDate(obj.offAt)}" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="goods_info">
+
+                        <div class="form-group" hidden>
+                            <label for="saleClientPC" class="col-sm-2 control-label">${msg['goods.main.column.saleClientPC']}</label>
+                            <div class="col-sm-8 switcha">
+                                <div class="mr15">
+                                    <input type="checkbox" id="saleClientPC" name="saleClientPC" <!--#if(obj.saleClientPC){#-->checked<!--#}#--> class="js-switch-blue" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" hidden>
+                            <label class="col-sm-2 control-label">${msg["goods.main.info.pc.album"]}</label>
+                            <div class="col-sm-8">
+                                <div id="queue_album_pc"></div>
+                                <div >
+                                    <input id="file_upload_album_pc" name="file_upload_album_pc" type="file" multiple="true">
+                                </div>
+                                <div id="div_img_album_pc"  class="div-img-album">
+                                    <!--#
+                                    if (!isEmpty(obj.imageList)){
+                                        var i = 0;
+                                        for(o in obj.imageList){
+                                            if (o.saleClient != 1) continue;
+                                            i++;
+                                            var c = "divImg";
+                                            if(o.defaultValue){
+                                                c = "divImgD";
+                                            }
+                                    #-->
+                                    <div id='div_album_item_pc_${i}' class='${c}'>
+                                        <img onclick="setAlbumImg('div_album_item_pc_${i}')" src='${o.imgAlbum!}' data-id="${o.id!}" data-goods-id="${obj.id!}" style='width:100px;height: 80px;margin-bottom: 1px;'><br>
+                                        <i style='float: right;padding-top: 4px;' class='fa fa-close' onclick="delAlbumImg('div_album_item_pc_${i}')"></i></div>
+                                    <!--#}}#-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" hidden>
+                            <label for="pcNote" class="col-sm-2 control-label">${msg["goods.main.info.pc.note"]}</label>
+                            <div class="col-sm-8">
+                                <textarea id="pcNote" name="pcNote" style="width:100%;height:200px;">${obj.pcNote!}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group" hidden>
+                            <label for="saleClientWAP" class="col-sm-2 control-label">${msg['goods.main.column.saleClientWAP']}</label>
+                            <div class="col-sm-8 switcha">
+                                <div class="mr15">
+                                    <input type="checkbox" id="saleClientWAP" name="saleClientWAP" <!--#if(obj.saleClientWAP){#-->checked<!--#}#--> class="js-switch-blue" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">${msg["goods.main.info.wap.album"]}</label>
+                            <div class="col-sm-8">
+                                <div id="queue_album_wap"></div>
+                                <div >
+                                    <input id="file_upload_album_wap" name="file_upload_album_wap" type="file" multiple="true">
+                                </div>
+                                <div id="div_img_album_wap"  class="div-img-album">
+                                    <!--#
+                                    if (!isEmpty(obj.imageList)){
+                                        var i = 0;
+                                        for(o in obj.imageList){
+                                            if (o.saleClient != 2) continue;
+                                            i++;
+                                            var c = "divImg";
+                                            if(o.defaultValue){
+                                                c = "divImgD";
+                                            }
+                                    #-->
+                                    <div id='div_album_item_wap_${i}' class='${c}'>
+                                        <img onclick="setAlbumImg('div_album_item_wap_${i}')" src='${o.imgAlbum!}' data-id="${o.id!}" data-goods-id="${obj.id!}" style='width:100px;height: 80px;margin-bottom: 1px;'><br>
+                                        <i style='float: right;padding-top: 4px;' class='fa fa-close' onclick="delAlbumImg('div_album_item_wap_${i}')"></i></div>
+                                    <!--#}}#-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="wapNote" class="col-sm-2 control-label">${msg["goods.main.info.wap.note"]}</label>
+                            <div class="col-sm-8">
+                                <textarea id="wapNote" name="wapNote" style="width:100%;height:200px;">${obj.tvNote!}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group" hidden>
+                            <label for="saleClientTV" class="col-sm-2 control-label">${msg['goods.main.column.saleClientTV']}</label>
+                            <div class="col-sm-8 switcha">
+                                <div class="mr15">
+                                    <input type="checkbox" id="saleClientTV" name="saleClientTV" <!--#if(obj.saleClientTV){#-->checked<!--#}#--> class="js-switch-blue" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" hidden>
+                            <label class="col-sm-2 control-label">${msg["goods.main.info.tv.album"]}</label>
+                            <div class="col-sm-8">
+                                <div id="queue_album_tv"></div>
+                                <div >
+                                    <input id="file_upload_album_tv" name="file_upload_album_tv" type="file" multiple="true">
+                                </div>
+                                <div id="div_img_album_tv"  class="div-img-album">
+                                    <!--#
+                                    if (!isEmpty(obj.imageList)){
+                                        var i = 0;
+                                        for(o in obj.imageList){
+                                            if (o.saleClient != 3) continue;
+                                            i++;
+                                            var c = "divImg";
+                                            if(o.defaultValue){
+                                                c = "divImgD";
+                                            }
+                                    #-->
+                                    <div id='div_album_item_tv_${i}' class='${c}'>
+                                        <img onclick="setAlbumImg('div_album_item_tv_${i}')" src='${o.imgAlbum!}' data-id="${o.id!}" data-goods-id="${obj.id!}" style='width:100px;height: 80px;margin-bottom: 1px;'><br>
+                                        <i style='float: right;padding-top: 4px;' class='fa fa-close' onclick="delAlbumImg('div_album_item_tv_${i}')"></i></div>
+                                    <!--#}}#-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" hidden>
+                            <label for="tvNote" class="col-sm-2 control-label">${msg["goods.main.info.tv.note"]}</label>
+                            <div class="col-sm-8">
+                                <textarea id="tvNote" name="tvNote" style="width:100%;height:200px;">${obj.tvNote!}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="goods_params">
+                        <!--#for(paramg in typeParamgList){#-->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" data-id="${paramg.id!}">${paramg.name!}</label>
+                            <!--#for(p in paramg.params){#-->
+                            <div class="col-sm-12 " style="margin-left:6%;padding-bottom:5px;">
+                                <div class="col-sm-10 input-group">
+                                    <span class="input-group-btn">
+                                    <button class="btn" style="width:120px;" type="button" data-id="${p.id!}">${p.name!}</button>
+                                    </span>
+                                    <input type="text" class="form-control" placeholder="${p.name!}">
+                                </div>
+                            </div>
+                            <!--#}#-->
+                        </div>
+                        <!--#}#-->
+                        <script>
+                            $(function(){
+                                //初始化商品参数
+                                var param = ${obj.param!"[]"};
+                                $.each(param, function(i,o){
+                                    var name = o.name;
+                                    $.each(o.value, function(j, k){
+                                        $("#goods_params").find(".form-group").each(function(r,t){
+                                            var self = $(this);
+                                            if($(this).find(".control-label").html()== o.name){
+                                                self.find(".input-group").each(function(n,m){
+                                                    var obj=$(this);
+                                                    if(obj.find("button").html()== k.name){
+                                                        obj.find("input").val(k.value);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    });
+                                });
+                            });
+                        </script>
+                    </div>
+                    <div class="tab-pane fade" id="goods_props">
+                        <!--#for(prop in typePropList){
+                        if(prop.type == 'select') {
+                        #-->
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" data-id="${prop.id!}">${prop.name!}</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" >
+                                    <option value="" ></option>
+                                    <!--#for(value in prop.propsValues){
+                                    #-->
+                                    <option value="${value.id!}">${value.name!}</option>
+                                    <!--#
+                                    }#-->
+                                </select>
+                            </div>
+                        </div>
+                        <!--#
+                        }else{
+                        #-->
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" data-id="${prop.id!}">${prop.name!}</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" value=""/>
+                            </div>
+                        </div>
+                        <!--#
+
+                        }#-->
+
+                        <!--#}#-->
+                        <script>
+                            $(function(){
+                                //初始化商品扩展属性
+                                var prop = ${obj.prop!"[]"};
+                                $.each(prop, function(i, o){
+                                    $("#goods_props").find(".form-group").each(function(j, k){
+                                        var self = $(this);
+                                        if(self.find(".control-label").attr("data-id")== o.id){
+                                                self.find("input").val(o.value);
+                                                self.find("select>option[value='"+o.value+"']").prop("selected", true);
+                                        }
+                                    });
+                                });
+                            });
+                        </script>
+                    </div>
+
+                </div>
+            <div class="col-lg-3"></div>
+            <input id="hasSpec" name="hasSpec" type="hidden" value="${obj.hasSpec ? 1 : 0}">
+            <input id="images" name="images" type="hidden" value="[]">
+            <input id="tags" name="tags" type="hidden" value="[]">
+            <input id="spec_values" name="spec" type="hidden" value="[]">
+            <input id="prop_values" name="prop" type="hidden" value="[]">
+            <input id="param_values" name="param" type="hidden" value="[]">
+            <input id="products" name="products" type="hidden" value="[]">
+        </form>
+    </div>
+</div>
+
+<div id="dialogSelectClass" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg["goods.main.btn.classId.select"]}${msg["goods.main.column.classId"]}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeClass" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary" onclick="selectClass()">${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogSelectFrontClass" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg["goods.main.btn.select"]}${msg["goods.main.column.frontClassId"]}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeFrontClass" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary" onclick="selectFrontClass()">${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialogSelectArea" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg["goods.main.modal.dialogSelectArea.title"]}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12" align="left">
+                        <!--# for (area in areaList!) {#-->
+                        <label class="checkbox-inline"><input type="checkbox" name="saleToArea" value="${area.code}" >${area.name}</label>
+                        <!--# }#-->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary" onclick="selectArea()">${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogSelectCity" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg["goods.main.modal.dialogSelectCity.title"]}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeCity" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary" onclick="selectCity()">${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="specHtml">
+    <!--#if(obj.hasSpec){#-->
+    <div id="dialogSpec" class="modal fade" tabindex="-2" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="display: none;">
+        <div class="modal-dialog" style="width: 1200px;">
+            <div class="modal-content" style="width: 100%;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">${msg["goods.main.modal.dialogSpec.title"]}</h4>
+                </div>
+                <div class="modal-body spec-modal-body">
+                    <form id="productForm" class="form-horizontal parsley-form" data-validate="parsley">
+                        <div class="row">
+                            <div class="col-xs-12" style="float: left">
+                                <!--#for(o in specList){ #-->
+                                <div class="form-group spec" data-spec-name="${o.name!}" data-spec-type="${o.type!}" data-spec-id="${o.id!}">
+                                    <label class="col-xs-1 control-label checkbox-inline line-height-sm"><input class="specDisable" name="specDisable${o.id!}" type="checkbox"><strong>${o.name!}:</strong></label>
+                                    <div class="col-xs-11">
+                                        <div class="form-inline">
+                                            <!--# for(v in o.specValues){ #-->
+                                            <label class="checkbox-inline js-spec-val">
+                                                <input type="checkbox" id="s${v.id!}" name="specValue${o.id!}" value="${v.id!}" title="${v.spec_value!}" />${v.spec_value!}
+                                                <!--#if(!isEmpty(v.spec_picurl)){#--><img src="${v.spec_picurl!}" style="width: 12px;height: 12px;"><!--#}#-->
+                                            </label>
+                                            <!--# } #-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--# }#-->
+                            </div>
+                            <div class="col-xs-12" style="padding-top: 5px;height: 45px;">
+                                <button id="doProduct" type="button" class="btn btn-primary btn-sm">${msg["goods.main.modal.dialogSpec.btn.generateallproduct"]}</button>
+                            </div>
+                            <div class="col-xs-12 table-responsive no-border">
+                                <p class="help-block">* ${msg['goods.main.placeholder.sku']}</p>
+                                <table id="plist" class="table table-bordered table-striped table-condensed" style="min-width:2000px;overflow-x: auto">
+                                    <thead>
+                                    <tr>
+                                        <th>${msg["goods.product.column.specvalue"]}</th>
+                                        <th>${msg["goods.product.column.sku"]}</th>
+                                        <th class="product-sku-input">${msg["goods.product.column.stock"]}</th>
+                                        <th class="numeric">${msg["goods.product.column.buyMin"]}</th>
+                                        <th class="numeric">${msg["goods.product.column.buyMax"]}</th>
+                                        <th class="numeric">${msg["goods.product.column.weight"]}(g)</th>
+                                        <th class="numeric">${msg["goods.product.column.length"]}(${msg["goods.main.unit.length"]})</th>
+                                        <th class="numeric">${msg["goods.product.column.width"]}(${msg["goods.main.unit.length"]})</th>
+                                        <th class="numeric">${msg["goods.product.column.height"]}(${msg["goods.main.unit.length"]})</th>
+                                        <th class="product-price-sm">${msg["goods.product.column.costPrice"]}(${msg["goods.main.unit.money"]})</th>
+                                        <th class="product-price-sm">${msg["goods.product.column.salePrice"]}(${msg["goods.main.unit.money"]})</th>
+                                        <th class="product-price-sm">${msg["goods.product.column.marketPrice"]}(${msg["goods.main.unit.money"]})</th>
+                                        <th class="numeric">${msg["goods.product.column.partitionBy"]}</th>
+                                        <th class="numeric">${msg['goods.product.column.saleToMemberType']}</th>
+                                        <th class="numeric">${msg["goods.product.column.deliveryTime"]}</th>
+                                        <th class="product-price-xs">${msg["goods.product.column.serializable"]}</th>
+                                        <th class="product-price-xs">${msg["goods.product.column.orderVerify"]}</th>
+                                        <th class="product-price-xs">${msg['goods.product.column.enabled']}</th>
+                                        <th class="product-price-xs">${msg["goods.product.column.defaultValue"]}</th>
+                                        <th class="numeric">${msg["globals.table.column.operation"]}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!--# for(o in productsList){ #-->
+                                    <tr><td><!--#
+                                            var specGroup = @org.nutz.json.Json.fromJson(o.spec);
+                                            for (g in specGroup) {
+                                                print(g.spec_value_name);
+                                            }
+                                            #-->
+                                            <input name="productId" type="hidden" value="${o.id!}"><input name="spec" type="hidden" value="${o.spec!, escape}">
+                                        </td>
+                                        <td><input name="sku" type="text" class="form-control product-sku-input" value="${o.sku!}" data-parsley-type="alphanum" ></td>
+                                        <td><input name="stock" type="text" value="${o.stock}" class="form-control product-number-input" data-parsley-type="integer" data-parsley-min="0" ></td>
+                                        <td><input name="buyMin" type="text" value="${o.buyMin}" class="form-control product-number-input" data-parsley-type="integer" data-parsley-min="0" ></td>
+                                        <td><input name="buyMax" type="text" value="${o.buyMax}" class="form-control product-number-input" data-parsley-type="integer" data-parsley-min="0" ></td>
+                                        <td><input name='weight' type='text' value='${o.weight}' class='form-control product-number-input' data-parsley-type='integer' data-parsley-min='0' ></td>
+                                        <td><input name='length' type='text' value='${o.length}' class='form-control product-number-input' data-parsley-type='integer' data-parsley-min='0'></td>
+                                        <td><input name='width' type='text' value='${o.width}' class='form-control product-number-input' data-parsley-type='integer' data-parsley-min='0' ></td>
+                                        <td><input name='height' type='text' value='${o.height}' class='form-control product-number-input' data-parsley-type='integer' data-parsley-min='0' ></td>
+                                        <td><input name="costPrice" value="${@money.fenToYuan(o.costPrice)}" type="text" class="form-control product-number-input" data-parsley-price="true" ></td>
+                                        <td><input name="salePrice" value="${@money.fenToYuan(o.salePrice)}" type="text" class="form-control product-number-input" data-parsley-price="true" ></td>
+                                        <td><input name="marketPrice" value="${@money.fenToYuan(o.marketPrice)}" type="text" class="form-control product-number-input" data-parsley-price="true" ></td>
+                                        <td>
+                                            <div class="js-product-area" align="left" >
+                                                <!--#{
+                                                    var areas = "[";
+                                                    var areaText = "";
+                                                    if (o.partitionBy == 1) {
+                                                        for (area in o.areaList) {
+                                                            if (area.partitionBy != 1) continue;
+                                                            areas = areas + strutil.format("'{\"id\":\"'{0}\",\"productId\":\"{1}\",\"partitionBy\":{2},\"area\":\"{3}\"'}", area.id, area.productId, area.partitionBy, area.area!);
+                                                            areaText = areaText + "<span class=\"label label-default goods-area-label\" >"+areaMap[area.area]+"</span>";
+                                                            if(!areaLP.last) areas =  areas + ",";
+                                                        }
+                                                    } else if (o.partitionBy == 2) {
+                                                        for (area in o.areaList) {
+                                                            if (area.partitionBy != 2) continue;
+                                                            areas = areas + strutil.format("'{\"id\":\"'{0}\",\"productId\":\"{1}\",\"partitionBy\":{2},\"province\":\"{3}\",\"city\":\"{4}\"'}", area.id, area.productId, area.partitionBy, area.province!, area.city!);
+                                                            areaText = areaText + "<span class=\"label label-default goods-area-label\" >"+provinceCityMap[area.province]+ (area.city!="null" ? "/")+provinceCityMap[area.city]+"</span>";
+                                                            if(!areaLP.last) areas =  areas + ",";
+                                                        }
+                                                    }
+                                                    areas =  areas + "]";
+                                                    areas = "{\"partitionBy\":"+o.partitionBy+",\"values\":"+areas+"}";
+                                                #-->
+                                                <input type="hidden" class="js-product-area-values" name="areaCodes" value="${areas, escape}"/>
+                                                <label class="checkbox-inline line-height-sm"><input type="checkbox" name="saleToAreaBy" value="0" checked>${msg["goods.main.select.option.unlimited"]}</label>
+                                                <span class="js-product-area-span"></span>
+                                                <button type="button" class="btn btn-default btn-xs js-product-area-set" ><i class="fa fa-plus mr5"></i>设置</button>
+                                                <!--#}#-->
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="js-product-member" align="left" >
+                                                <!--#{
+                                                    var members = "[";
+                                                    for (m in o.memberTypeList!) {
+                                                        members = members + strutil.format("'{\"id\":'{0}'}", m.id);
+                                                        if(!mLP.last) members =  members + ",";
+                                                    }
+                                                    members = members + "]";
+                                                #-->
+                                                <input type="hidden" class="js-product-member-values" name="members" value="${members, escape}"/>
+                                                <label class="checkbox-inline" ><input type="checkbox" name="saleToMemberType" value="0" checked/>${msg["goods.main.select.option.unlimited"]}</label>
+                                                <span class="js-product-member-span"></span>
+                                                <button type="button" class="btn btn-default btn-xs js-product-member-set" ><i class="fa fa-plus mr5"></i>设置</button>
+                                                <!--#}#-->
+                                            </div>
+                                        </td>
+                                        <td><select name='deliveryTime'>
+                                            <option value="0" <!--#if(o.deliveryTime == 0){#-->selected<!--#}#-->>${msg["goods.product.deliveryTime.select.option0"]}</option>
+                                            <option value="1" <!--#if(o.deliveryTime == 1){#-->selected<!--#}#-->>${msg["goods.product.deliveryTime.select.option1"]}</option>
+                                        </select>
+                                        </td>
+                                        <td><input name='serializable' type='checkbox' <!--#if(o.serializable){#-->checked<!--#}#-->></td>
+                                        <td><input name='orderVerify' type='checkbox'<!--#if(o.orderVerify){#-->checked<!--#}#-->></td>
+                                        <td><input name='enabled' type='checkbox'<!--#if(o.enabled){#-->checked<!--#}#-->></td>
+                                        <td><input name="defaultValue" type="radio" <!--#if(o.defaultValue){#-->checked<!--#}#--> ></td>
+                                        <td><i class="ti-layout-line-solid" style="padding: 5px;" title="${msg['goods.main.modal.dialogSpec.no']}"></i></td></tr>
+                                    <!--#}#-->
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                    <button id="dialogSpecOK" type="button" class="btn btn-primary" data-loading-text="${msg['goods.main.modal.dialogSpec.ok.loading']}">${msg["goods.main.modal.dialogSpec.ok"]}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="dialogSpecSelectArea" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <div class="modal-title">
+                        <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" value="0">${msg["goods.main.select.option.unlimited"]}</label>
+                        <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" value="1" checked>${msg["goods.product.select.partitionBy.option.area"]}</label>
+                        <label class="checkbox-inline line-height-sm"><input type="checkbox" name="partitionBy" value="2" >${msg["goods.product.select.partitionBy.option.city"]}</label>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12 js-select-area-div" align="left">
+                            <!--# for (area in areaList!) {#-->
+                            <label class="checkbox-inline"><input type="checkbox" name="saleToArea" value="${area.code}" >${area.name}</label>
+                            <!--# }#-->
+                        </div>
+                        <div class="col-xs-12 js-select-area-city-div" align="left">
+                            <div id="jsTreeSpecCity" class="demo"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                    <button type="button" class="btn btn-primary" id="dialog_spec_select_area_ok">${msg["goods.class.column.enter"]}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="dialogSpecSelectMember" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <div class="modal-title">
+                        ${msg["goods.main.modal.dialogSpecSelectMember.title"]}
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12" align="left">
+                            <label class="checkbox-inline" ><input type="checkbox" name="saleToMemberType" value="0" checked/>${msg["goods.main.select.option.unlimited"]}</label>
+                            <!--#for(o in memberTypeList){#-->
+                            <label class="checkbox-inline" ><input type="checkbox" name="saleToMemberType" value="${o.id!}" />${o.name!}</label>
+                            <!--#}#-->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                    <button type="button" class="btn btn-primary" id="dialog_spec_select_member_ok" >${msg["goods.class.column.enter"]}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="js-product-area-hidden" align="left" style="display: none">
+        <input type="hidden" class="js-product-area-values" name="areaCodes" value='{"partitionBy":0,"values":[]}'/>
+        <label class="checkbox-inline line-height-sm"><input type="checkbox" name="saleToAreaBy" value="0" checked>${msg["goods.main.select.option.unlimited"]}</label>
+        <span class="js-product-area-span"></span>
+        <button type="button" class="btn btn-default btn-xs js-product-area-set" ><i class="fa fa-plus mr5"></i>${msg["goods.main.btn.set"]}</button>
+    </div>
+    <div class="js-product-member-hidden" align="left" style="display: none">
+        <input type="hidden" class="js-product-member-values" name="members" value='[]'/>
+        <label class="checkbox-inline" ><input type="checkbox" name="saleToMemberType" value="0" checked/>${msg["goods.main.select.option.unlimited"]}</label>
+        <span class="js-product-member-span"></span>
+        <button type="button" class="btn btn-default btn-xs js-product-member-set" ><i class="fa fa-plus mr5"></i>${msg["goods.main.btn.set"]}</button>
+    </div>
+    <script language="JavaScript">
+
+        $(document).ready(function () {
+
+            //先初始化规格区域选择树
+            initSpecAreaTreeView();
+
+            //初始化商品设置的规格选项及规格图片
+            var spec = ${obj.spec!"[]"};//[[{},],]
+            initSpecOptions(spec);
+
+            var $set;//设置区域按钮对象
+            $("#plist .js-product-area-set").off("click").on("click", function () {
+                $set = $(this);
+                var $dialog = $("#dialogSpecSelectArea");
+                $dialog.on('show.bs.modal', function () {
+                    var values = $set.siblings(".js-product-area-values").val();
+                    if ($.trim(values) != "") {
+                        var obj = JSON.parse(values);
+                        if (obj.partitionBy == 0) {//不限时默认按片区显示
+                            $(".js-select-area-city-div", $dialog).hide();
+                            $("[name='partitionBy'][value='1']:checkbox", $dialog).prop("checked", true);
+                            $("[name='partitionBy'][value!='1']:checkbox", $dialog).prop("checked", false);
+                        }
+                        if (obj.partitionBy == 1) {//按片区
+                            $(".js-select-area-div", $dialog).show();
+                            $(".js-select-area-city-div", $dialog).hide();
+                            $("[name='partitionBy'][value='1']:checkbox", $dialog).prop("checked", true);
+                            $("[name='partitionBy'][value!='1']:checkbox", $dialog).prop("checked", false);
+                            $(obj.values).each(function () {
+                                $("[name=saleToArea][value='"+this.area+"']:checkbox", $dialog).prop("checked", true);
+                            });
+                        } else if (obj.partitionBy == 2) {//按省市
+                            $(".js-select-area-div", $dialog).hide();
+                            $(".js-select-area-city-div", $dialog).show();
+                            $("[name='partitionBy'][value='2']:checkbox", $dialog).prop("checked", true);
+                            $("[name='partitionBy'][value!='2']:checkbox", $dialog).prop("checked", false);
+                            var cityValues = $(obj.values).map(function () {
+                                return this.city == "null" ? this.province : this.city;
+                            }).get();
+                            $("#jsTreeSpecCity").jstree(true).select_node(cityValues);
+                        }
+                    }
+                });
+                $dialog.on('hide.bs.modal', function () {
+                    var tree = $("#jsTreeSpecCity").jstree(true);
+                    tree.deselect_all();
+                    tree.close_all();
+                    tree.open_node(tree.get_node(".jstree-container-ul li"));
+                    $("[name='partitionBy'][value='0']:checkbox,[name='partitionBy'][value='2']:checkbox", $dialog).prop("checked", false);
+                    $("[name='partitionBy'][value='1']:checkbox", $dialog).prop("checked", true);
+                    $("[name=saleToArea]:checkbox", $dialog).prop("checked", false);
+                    $(".js-select-area-div").show();
+
+                });
+                $dialog.modal("show");
+            });
+            $("#dialogSpecSelectArea [name=partitionBy]:checkbox").change(function () {
+                var $dialog = $("#dialogSpecSelectArea");
+                switch (this.value) {
+                    case '0': { //销售区域(不限)
+                                    if (this.checked) {
+                                        $("[name=partitionBy]:checkbox", $dialog).not(this).prop("checked", false);
+                                        $(".js-select-area-div,.js-select-area-city-div", $dialog).hide();
+                                    }
+                                };break;
+                    case '1': { //销售区域(按片区)
+                                    if (this.checked) {
+                                        $("[name=partitionBy]:checkbox", $dialog).not(this).prop("checked", false);
+                                        $(".js-select-area-div", $dialog).show();
+                                        $(".js-select-area-city-div", $dialog).hide();
+                                    } else {
+                                        $(".js-select-area-div", $dialog).hide();
+                                    }
+                                };break;
+                    case '2': { //销售区域(按省市)
+                                    if (this.checked) {
+                                        $("[name=partitionBy]:checkbox", $dialog).not(this).prop("checked", false);
+                                        $(".js-select-area-city-div", $dialog).show();
+                                        $(".js-select-area-div", $dialog).hide();
+                                    }else {
+                                        $(".js-select-area-city-div", $dialog).hide();
+                                    }
+                                };break;
+                }
+            });
+            $("#dialog_spec_select_area_ok").off("click").on("click", function () {
+                var $dialog = $("#dialogSpecSelectArea");
+                var partitionBy = $("[name='partitionBy']:checked", $dialog).val();
+                var areas = {partitionBy: partitionBy};
+                if (partitionBy == '0') {//不限
+                    areas.values = [];
+                    $set.siblings(".js-product-area-values").val(JSON.stringify(areas));//.replace(/\"/g,"&quot;")
+                    $set.siblings(".js-product-area-span").attr("title", "").html("");
+                    $set.parent().find("[name=saleToAreaBy][value='0']:checkbox").prop("checked", true).parent().show();
+                    $set.siblings(".js-product-area-span").hide();
+                } else if (partitionBy == '1') {//按片区
+                    areas.values = $("[name=saleToArea]:checked", $dialog).map(function () {
+                        return {
+                            partitionBy: partitionBy,
+                            area: this.value,
+                        };
+                    }).get();
+                    if (areas.values.length == 0) {
+                        Toast.warning("${msg['goods.product.tip.selectArea']}");
+                        return false;
+                    }
+                    var areasText = $("[name=saleToArea]:checked", $dialog).map(function () {
+                        return $(this).parent().text();
+                    }).get().join(",");
+                    $set.siblings(".js-product-area-values").val(JSON.stringify(areas));//.replace(/\"/g,"&quot;")
+                    $set.siblings(".js-product-area-span").attr("title", areasText).html("区域["+areas.values.length+" 已选]");
+                    $set.parent().find("[name=saleToAreaBy][value='0']:checkbox").prop("checked", false).parent().hide();
+                    $set.siblings(".js-product-area-span").show();
+                }else if (partitionBy == '2') {//按省市
+                    var tree = $("#jsTreeSpecCity").jstree(true);
+                    var nodes = tree.get_bottom_checked(true);
+                    areas.values = $(nodes).map(function () {
+                        var parentId = tree.get_parent(this);
+                        return {
+                            partitionBy: partitionBy,
+                            province: parentId == "86" ? this.id : parentId,
+                            city: parentId == "86" ?  null : this.id
+                        }
+                    }).get();
+                    if (areas.values.length == 0) {
+                        Toast.warning("${msg['goods.product.tip.selectCity']}");
+                        return false;
+                    }
+                    var areasText = $(nodes).map(function () {
+                        return tree.get_path(this, "/");
+                    }).get().join(",");
+                    $set.siblings(".js-product-area-values").val(JSON.stringify(areas));//.replace(/\"/g,"&quot;")
+                    $set.siblings(".js-product-area-span").attr("title", areasText).html("省市["+areas.values.length+" 已选]");
+                    $set.parent().find("[name=saleToAreaBy][value='0']:checkbox").prop("checked", false).parent().hide();
+                    $set.siblings(".js-product-area-span").show();
+                }
+                $dialog.modal("hide");
+            });
+
+            $("#plist .js-product-member-set").click(function () {
+                var $dialog = $("#dialogSpecSelectMember");
+                $set = $(this);
+                $dialog.on('show.bs.modal', function () {
+                    var values = $set.siblings(".js-product-member-values").val();
+                    if ($.trim(values) != "") {
+                        var obj = JSON.parse(values);
+                        $(obj).each(function () {
+                            $("[name=saleToMemberType][value='"+this.id+"']").prop("checked", true);
+                        })
+                        $("[name=saleToMemberType][value='0']").prop("checked", $("[name=saleToMemberType][value!='0']:checked").length == 0);
+                    }
+                });
+                $dialog.on('hide.bs.modal', function () {
+                    $("[name=saleToMemberType][value='0']", $dialog).prop("checked", true);
+                    $("[name=saleToMemberType][value!='0']", $dialog).prop("checked", false);
+                });
+                $dialog.modal("show");
+            });
+            $("#dialogSpecSelectMember [name=saleToMemberType]:checkbox").change(function () {
+                if (this.value == '0') {
+                    if (this.checked) {
+                        $("#dialogSpecSelectMember [name=saleToMemberType][value!='0']:checkbox").prop("checked", false);
+                    }
+                } else {
+                    $("#dialogSpecSelectMember [name=saleToMemberType][value='0']:checkbox").prop("checked", false);
+                }
+            });
+            $("#dialog_spec_select_member_ok").off("click").on("click", function () {
+                var $dialog = $("#dialogSpecSelectMember");
+                var areasText = $("[name=saleToMemberType]:checked", $dialog).map(function () {
+                    return $(this).parent().text();
+                }).get().join(",");
+                var members = $("[name=saleToMemberType]:checked", $dialog).map(function () {
+                    return {id: this.value};
+                }).get();
+                $set.siblings(".js-product-member-values").val(JSON.stringify(members));//.replace(/\"/g,"&quot;")
+                $set.siblings(".js-product-member-span").attr("title", areasText).html("会员["+members.length+" 已选]");
+                if ($("[name=saleToMemberType][value='0']", $dialog).is(":checked")) {
+                    $set.parent().find("[name=saleToMemberType][value='0']:checkbox").prop("checked", true).parent().show();
+                    $set.siblings(".js-product-member-span").hide();
+                } else {
+                    $set.parent().find("[name=saleToMemberType][value='0']:checkbox").prop("checked", false).parent().hide();
+                    $set.siblings(".js-product-member-span").show();
+                }
+
+                $dialog.modal("hide");
+            });
+
+            $("#plist .js-spec-del").off("click").on("click",function(){
+                $(this).parent().parent().remove();
+            });
+
+            $("#doProduct").on("click", function(){
+                var specs = getSpec();
+                var product_spec = [];
+                var spec_values = [];
+
+                var existGroups = $("#plist tbody input[name=spec]:hidden").map(function () {
+                    return new Array(JSON.parse(this.value));
+                }).get();
+
+                $.each(specs, function(i,s){
+                    var t = [];
+                    $.each(s.spec_values, function(j, o){
+                        t.push(o);
+                    });
+                    spec_values.push(t);
+                });
+
+                if(spec_values.length < 1){
+                    Toast.warning("${msg['goods.main.tip.specrequired']}");
+                    return false;
+                }
+
+                var selectedSpecValues = getProductSpecs(spec_values);
+
+                //找到不存在规格值并去除
+                $("#plist tbody input[name=spec]:hidden").each(function () {
+                    if (!isSpecGroupExists(JSON.parse(this.value), selectedSpecValues)) {
+                        $(this).parents("tr:first").remove();
+                    }
+                });
+
+                //过滤掉已存在的规格值
+                $.each(selectedSpecValues, function(i, v){
+                    if (isSpecGroupExists(v, existGroups)) return true;
+                    var spec_group = {};
+                    spec_group.json = v;
+                    var n = "";
+                    $.each(v, function(j,s){
+                        n = n + s.spec_value_name;
+                    });
+                    spec_group.text = n;
+                    product_spec.push(spec_group);
+                });
+
+                $.each(product_spec, function(index, spec_group){
+                    var str = "<tr>";
+                    str += "<td>" + spec_group.text+"<input name='productId' type='hidden'>";
+                    str += '<input type="hidden" name="spec" value="' + JSON.stringify(spec_group.json).replace(/\"/g,"&quot;") + '" />';
+                    str += "</td>";
+                    str += "<td><input name='sku' type='text' class='form-control alphanum ' value='' data-parsley-type='alphanum' style='height: 22px;width: 80px;padding: 0 2px;'></td>";
+                    str += "<td><input name='stock' type='text' value='0' class='form-control product-number-input' data-parsley-type='integer' data-parsley-min='0' ></td>";
+                    str += "<td><input name='buyMin' type='text' value='1' class='form-control product-number-input' data-parsley-type='integer' data-parsley-min='0' ></td>";
+                    str += "<td><input name='buyMax' type='text' value='100' class='form-control product-number-input' data-parsley-type='integer' data-parsley-min='0' ></td>";
+                    str += "<td><input name='weight' type='text' value='' class='form-control product-number-input' data-parsley-type='integer' data-parsley-min='0' ></td>";
+                    str += "<td><input name='length' type='text' value='' class='form-control product-number-input' data-parsley-type='integer' data-parsley-min='0' ></td>";
+                    str += "<td><input name='width' type='text' value='' class='form-control product-number-input' data-parsley-type='integer' data-parsley-min='0' ></td>";
+                    str += "<td><input name='height' type='text' value='' class='form-control product-number-input' data-parsley-type='integer' data-parsley-min='0' ></td>";
+                    str += "<td><input name='costPrice' value='' type='text' class='form-control product-number-input' data-parsley-price='true' ></td>";
+                    str += "<td><input name='salePrice' type='text' value='' class='form-control product-number-input' data-parsley-price='true' data-parsley-required='true'></td>";
+                    str += "<td><input name='marketPrice' value='' type='text' class='form-control product-number-input' data-parsley-price='true' ></td>";
+                    str += "<td>";
+                    str += $(".js-product-area-hidden").clone().show().html();
+                    str += "</td>";
+                    str += "<td>";
+                    str += $(".js-product-member-hidden").clone().show().html();
+                    str += "</td>";
+                    str += "<td><select name='deliveryTime'>";
+                    str += '<option value="0" selected >${msg["goods.product.deliveryTime.select.option0"]}</option>';
+                    str += '<option value="1" >${msg["goods.product.deliveryTime.select.option1"]}</option>';
+                    str += "</select></td>";
+                    str += "<td><input name='serializable' type='checkbox' ></td>";
+                    str += "<td><input name='orderVerify' type='checkbox' ></td>";
+                    str += "<td><input name='enabled' type='checkbox' checked ></td>";
+                    str += "<td><input name='defaultValue' type='radio'></td>";
+                    str += "<td><i class=\"del fa fa-remove js-spec-del\" style=\"cursor:pointer;padding: 5px;\" title=\"${msg['goods.main.modal.dialogSpec.btn.delete']}\"></i></td>";
+                    $("#plist tbody").append(str);
+                });
+
+                //货品重排序
+                var $trs = [];
+                $(selectedSpecValues).each(function () {
+                    var sv = this;
+                    $("#plist tbody input[name=spec]:hidden").map(function () {
+                        if (isSpecGroupEqual(JSON.parse(this.value), sv)) {
+                            $trs.push($(this).parents("tr:first").remove());
+                            return false;
+                        }
+                    });
+                });
+                $("#plist tbody").append($trs);
+
+                $("#plist .js-product-area-set").off("click").on("click", function () {
+                    $set = $(this);
+                    var $dialog = $("#dialogSpecSelectArea");
+                    $dialog.on('show.bs.modal', function () {
+                        var values = $set.siblings(".js-product-area-values").val();
+                        if ($.trim(values) != "") {
+                            var obj = JSON.parse(values);
+                            if (obj.partitionBy == 0) {
+                                $("[name='partitionBy'][value='1']:checkbox", $dialog).prop("checked", true);
+                                $("[name='partitionBy'][value!='1']:checkbox", $dialog).prop("checked", false);
+                            }
+                            if (obj.partitionBy == 1) {//按片区
+                                $(".js-select-area-div").show();
+                                $(obj.values).each(function () {
+                                    $("[name=saleToArea][value='"+this.area+"']:checkbox", $dialog).prop("checked", true);
+                                });
+                            } else if (obj.partitionBy == 2) {//按省市
+
+                            }
+                        }
+                    });
+                    $dialog.on('hide.bs.modal', function () {
+                        $("[name='partitionBy'][value='0']:checkbox,[name='partitionBy'][value='2']:checkbox", $dialog).prop("checked", false);
+                        $("[name='partitionBy'][value='1']:checkbox", $dialog).prop("checked", true);
+                        $("[name=saleToArea]:checkbox", $dialog).prop("checked", false);
+                        $(".js-select-area-div").show();
+                    });
+                    $dialog.modal("show");
+                });
+
+                $("#plist .js-product-member-set").click(function () {
+                    var $dialog = $("#dialogSpecSelectMember");
+                    $set = $(this);
+                    $dialog.on('show.bs.modal', function () {
+                        var values = $set.siblings(".js-product-member-values").val();
+                        if ($.trim(values) != "") {
+                            var obj = JSON.parse(values);
+                            $(obj).each(function () {
+                                $("[name=saleToMemberType][value='"+this.id+"']").prop("checked", true);
+                            })
+                            $("[name=saleToMemberType][value='0']").prop("checked", $("[name=saleToMemberType][value!='0']:checked").length == 0);
+                        }
+                    });
+                    $dialog.on('hide.bs.modal', function () {
+                        $("[name=saleToMemberType][value='0']", $dialog).prop("checked", true);
+                        $("[name=saleToMemberType][value!='0']", $dialog).prop("checked", false);
+                    });
+                    $dialog.modal("show");
+                });
+
+                $("#plist .js-spec-del").off("click").on("click",function(){
+                    $(this).parent().parent().remove();
+                });
+
+            });
+
+            $("#dialogSpecOK").on("click",function(){
+                if (!$("#productForm").parsley().validate()) {
+                    return false;
+                }
+
+                if($("#plist tbody input[name='defaultValue']:checked").length >= 1){
+                    //开启规格
+                    $("#hasSpec").val("1");
+
+                    //填充商品的规格值组合
+                    $("#spec_values").val(JSON.stringify(getSpecValues()));
+
+                    //填充货品
+                    $("#products").val(JSON.stringify(getProducts()));
+
+                    $("#sp").hide();
+
+                    //拼接货品规格值组合，作显示用
+                    var specsNames = $("#plist tbody tr").map(function () {
+                        return $.trim($("td:first", this).text());
+                    }).get();
+                    $("#sp_new").html('<div class="form-group" id="div_spec_new">'+
+                        '<label class="col-sm-2 control-label">${msg["goods.product.column.spec"]}</label>'+
+                        '<div class="col-sm-8">'+
+                        '<button id="specEditBtn" class="btn btn-primary" style="float: left;" type="button">${msg["goods.main.btn.specEditBtn"]}</button>'+
+                        '<div style="float: left;text-align: left;">${msg["goods.main.div.spec.words0"]}'+specsNames.length+'${msg["goods.main.div.spec.words1"]}['+ specsNames.join("|") +']</div>'+
+                        '</div>'+
+                        '</div>').show();
+
+                    $("#specEditBtn").click(function(){
+                        $("#dialogSpec").modal("show");
+                    });
+                    $("#dialogSpec").modal("hide");
+                }else {
+                    Toast.warning("${msg['goods.main.tip.selectdefaultproduct']}");
+                    return false;
+                }
+            });
+        });
+
+        //初始化销售区域树
+        function initSpecAreaTreeView() {
+            $("#jsTreeSpecCity").jstree({
+                plugins: ["wholerow", "checkbox", "changed", "json_data"],
+                core: {
+                    data: function (node, callback){
+                        $.get("${base!}/store/goods/publish/area/tree", function (ret) {
+                            if (ret) {
+                                var areas = $(ret).map(function () {
+                                    this["state"] = {disabled: this.parent === "#", opened: this.parent === "#"};
+                                    return this;
+                                }).get();
+                                callback(areas);
+                            }
+                        }, "json");
+                    },
+                    multiple: true
+                },
+                checkbox: {
+                    three_state: true,
+                    cascade: 'down'
+                }
+            }).on("select_node.jstree", function (e, data) {
+                var tree = $(this).jstree();
+                if (!tree.is_leaf(data.node)) {
+                    tree.open_node(data.node);
+                }
+            }).on("loaded.jstree", function () {
+                initProduct();
+            });
+        }
+
+        function initSpecOptions(specs) {
+            //初始化货品规格
+            $.each(specs, function (i, ss) {
+                $.each(ss, function (j, s) {
+                    if(s.spec_value_imgurl){
+                        $("#s_img"+s.spec_value_id).html('<img class="specImg" src="'+s.spec_value_imgurl+'" style="height: 30px;width: 30px;">');
+                    }
+                    $("#s"+s.spec_value_id).prop('checked',true);
+                });
+            });
+            //编辑时不能新增规格
+            $("#productForm div.spec").each(function () {
+                var notChecked = $("div .js-spec-val :checked", this).length == 0;
+                $(".specDisable:checkbox", this).prop("checked", !notChecked);
+                $(":checkbox", this).prop("disabled", notChecked);
+            });
+            //编辑时原有规格不能取消
+            $("#productForm div.spec div .js-spec-val :checkbox").change(function () {
+                var $chk = $(this);
+                if ($chk.parents("div .js-spec-val:first").siblings().find(":checked").size() <= 0) {
+                    $chk.prop("checked", true);
+                    Toast.warning("${msg['goods.product.tip.mustHavespecValues']}")
+                }
+            });
+            $("#productForm div.spec .specDisable:checkbox").change(function () {
+                if(!this.checked){
+                    $(this).prop("checked",true);
+                    Toast.warning("${msg['goods.product.tip.mustHavespecValues']}");
+                }
+            });
+        }
+
+        function initProduct() {
+            $("table#plist tbody>tr").each(function () {
+                //销售区域
+                var areas = JSON.parse($(".js-product-area-values", this).val());
+                var partitionBy = areas.partitionBy;
+                var areasText = "";
+                if (partitionBy == "0") {//不限
+                    $("[name=saleToAreaBy][value='0']:checkbox", this).prop("checked", true).parent().show();
+                    $(".js-product-area-span", this).hide();
+                } else if (partitionBy == "1") {//按片区
+                    areasText = $(areas.values).map(function () {
+                        return $("#dialogSpecSelectArea [name=saleToArea][value='"+this.area+"']").parent().text();
+                    }).get().join(",");
+                    $(".js-product-area-span", this).attr("title", areasText).html("区域["+areas.values.length+" 已选]").show();
+                    $("[name=saleToAreaBy][value='0']:checkbox", this).prop("checked", false).parent().hide();
+                } else if (partitionBy == "2") {//按省市
+                    var tree = $("#jsTreeSpecCity").jstree(true);
+                    areasText = $(areas.values).map(function () {
+                        var arr = [];
+                        arr.push(tree.get_text(tree.get_node(this.province)));
+                        arr.push(tree.get_text(tree.get_node(this.city)));
+                        return arr.join("/");
+                    }).get().join(",");
+                    $(".js-product-area-span", this).attr("title", areasText).html("省市["+areas.values.length+" 已选]").show();
+                    $("[name=saleToAreaBy][value='0']:checkbox", this).prop("checked", false).parent().hide();
+                }
+                //销售对象
+                var members = JSON.parse($(".js-product-member-values", this).val());
+                var membersText = $(members).map(function () {
+                    $("#dialogSpecSelectMember [name=saleToMemberType][value='"+ this.id +"']").parent().text();
+                }).get().join(",");
+                $(".js-product-member-span", this).attr("title", membersText).html("会员["+members.length+" 已选]");
+                if (members.length == 0 || members[0].id == 0) {
+                    $("[name=saleToMemberType][value='0']:checkbox", this).prop("checked", true).parent().show();
+                    $(".js-product-member-span", this).hide();
+                } else {
+                    $("[name=saleToMemberType][value='0']:checkbox", this).prop("checked", false).parent().hide();
+                    $(".js-product-member-span", this).show();
+                }
+            });
+        }
+
+        function getSpec(){
+            var specs = [];
+            $("#dialogSpec").find("div .spec").each(function(){
+                var $self = $(this);
+                var spec_values = [];
+                var spec = {};
+                spec.spec_name = $self.attr("data-spec-name");
+                spec.spec_type = $self.attr("data-spec-type");
+                spec.spec_id = $self.attr("data-spec-id");
+
+                $("div .js-spec-val", $self).each(function(){
+                    var v = {};
+                    v.spec_name = spec.spec_name;
+                    v.spec_type = spec.spec_type;
+                    v.spec_id = spec.spec_id;
+                    var chk = false;
+                    $(this).find("img[class='specImg']").each(function(){
+                        v.spec_value_imgurl = $(this).attr("src");
+                    });
+                    $(this).find("input[type=checkbox]").each(function(){
+                        v.spec_value_id = $(this).val();
+                        v.spec_value_name = $(this).attr("title");
+                        chk = $(this).prop("checked");
+                    });
+                    if(chk){
+                        spec_values.push(v);
+                        spec.spec_values = spec_values;
+                    }
+                });
+                if(spec_values.length > 0){
+                    specs.push(spec);
+                }
+
+            });
+            return specs;
+        }
+
+        function getSpecValues() {
+            var spec_values = [];
+            var specs = getSpec();
+            $.each(specs, function(i, spec){
+                var group = [];
+                $.each(spec.spec_values, function(j, o){
+                    group.push(o);
+                });
+                spec_values.push(group);
+            });
+            return spec_values;
+        }
+
+        function getProducts() {
+            var products = [];
+            $("#plist tbody tr").each(function(){
+                var $self = $(this);
+                var areas = JSON.parse($(".js-product-area-values", $self).val());
+                var productId = $("input[name='productId']", $self).val();
+                var spec = $("input[name='spec']", $self).val();
+                var weight = $("input[name='weight']", $self).val();
+                var length = $("input[name='length']", $self).val();
+                var width = $("input[name='width']", $self).val();
+                var height = $("input[name='height']", $self).val();
+                var sku = $("input[name='sku']", $self).val();
+                var sale = $("input[name='sale']", $self).is(":checked");
+                var stock = $("input[name='stock']", $self).val();
+                var buyMin = $("input[name='buyMin']", $self).val();
+                var buyMax = $("input[name='buyMax']", $self).val();
+                var salePrice = $("input[name='salePrice']", $self).val();
+                var costPrice = $("input[name='costPrice']", $self).val();
+                var marketPrice = $("input[name='marketPrice']", $self).val();
+                var saleToAllAera = $("input[name='saleToAllAera']", $self).is(":checked");
+                var saleToMemberType = $("input[name='saleToMemberType']:checked", $self).val()||0;
+                var memberTypeList = JSON.parse($(".js-product-member-values", $self).val());
+                var deliveryTime = $("select[name='deliveryTime']", $self).val();
+                var serializable = $("input[name='serializable']", $self).is(":checked");
+                var orderVerify = $("input[name='orderVerify']", $self).is(":checked");
+                var enabled = $("input[name='enabled']", $self).is(":checked");
+                var defaultValue = $("input[name='defaultValue']", $self).is(":checked");
+
+                products.push({
+                    'id': productId,
+                    'spec': spec,
+                    'name': getProductName(JSON.parse(spec)),
+                    'weight': weight,
+                    'length': length,
+                    'width': width,
+                    'height': height,
+                    'sku': sku,
+                    'stock': stock,
+                    'buyMin': buyMin,
+                    'buyMax': buyMax,
+                    'salePrice': parseFloat(salePrice) * 100,
+                    'costPrice': parseFloat(costPrice) * 100,
+                    'marketPrice': parseFloat(marketPrice) * 100,
+                    'partitionBy': areas.partitionBy,
+                    'areaList': areas.values,
+                    'saleToMemberType': saleToMemberType,
+                    'memberTypeList': memberTypeList,
+                    'deliveryTime': deliveryTime,
+                    'serializable': serializable,
+                    'orderVerify': orderVerify,
+                    'enabled': enabled,
+                    'defaultValue': defaultValue
+                });
+            });
+            return products;
+        }
+
+        function getProductSpecs(specs) {
+            if (!specs || specs.length == 0) {
+                return [];
+            } else {
+                return joinSpec([[]], specs, 0, specs.length-1);
+            }
+            function joinSpec(prevProducts, specs, i, max) {
+                var currentProducts = [], currentProduct, currentSpecs = specs[i];
+                if ( i > max ) {
+                    return prevProducts;
+                }
+                $.each(prevProducts,function(i,prevProduct) {
+                    $.each(currentSpecs,function(j,spec) {
+                        currentProduct = prevProduct.slice(0);
+                        currentProduct.push(spec);
+                        currentProducts.push(currentProduct);
+                    });
+                });
+                return joinSpec(currentProducts, specs, ++i, max);
+            }
+        }
+        
+        function isSpecGroupEqual(src, target) {
+
+            var srcArr = $(src).map(function () {
+                return this.spec_id +","+ this.spec_value_id;
+            }).get();
+            var targetArr = $(target).map(function () {
+                return this.spec_id +","+ this.spec_value_id;
+            }).get();
+            srcArr.sort();
+            targetArr.sort();
+
+            return srcArr.join(",") == targetArr.join(",");
+        }
+
+        function isSpecGroupExists(specgroup, groups) {
+            var exist = false;
+            $(groups).each(function () {
+                if (isSpecGroupEqual(specgroup, this)) {
+                    exist = true;
+                    return false;
+                }
+            });
+            return exist;
+        }
+
+        function getProductName(specGroup) {
+            return $(specGroup).map(function () {
+                return this.spec_value_name;
+            }).get().join(" ");
+        }
+
+    </script>
+    <!--#}#-->
+</div>
+
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.config.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.all.min.js"></script>
+
+<script language="JavaScript">
+
+    var pcUE, wapUE, tvUE;
+    $(document).ready(function () {
+
+        myForm.init();
+        setTimeout(function () {
+            pcUE = new baidu.editor.ui.Editor();
+            pcUE.render('pcNote');
+            wapUE = new baidu.editor.ui.Editor();
+            wapUE.render("wapNote");
+            tvUE = new baidu.editor.ui.Editor();
+            tvUE.render("tvNote");
+        }, 500);
+
+        $("#brandId").select2({
+            language: "${lang!'zh-CN'}"
+        });
+
+        //初始化开关颜色
+        $(".js-switch-blue:checked").siblings(".switchery").css({
+            "box-shadow": "rgb(21, 130, 220) 0px 0px 0px 15px inset",
+            "border-color": "rgb(21, 130, 220)",
+            "background-color": "rgb(21, 130, 220)",
+            "transition": "border 0.4s, box-shadow 0.4s, background-color 1.2s"
+        });
+
+        //销售区域
+        $("[name=partitionBy]:checkbox").change(function () {
+            switch (this.value) {
+                case '0': { //销售区域(不限)
+                    if (this.checked) {
+                        $("[name=partitionBy]:checkbox").not(this).prop("checked", false);
+                        $(".js-goods-select-area,.js-goods-select-province-city").hide();
+                    }
+                };break;
+                case '1': { //销售区域(按片区)
+                    if (this.checked) {
+                        $("[name=partitionBy]:checkbox").not(this).prop("checked", false);
+                        $(".js-goods-select-area").show();
+                        $(".js-goods-select-province-city").hide();
+                    } else {
+                        $("[name=partitionBy][value='0']:checkbox").prop("checked", true);
+                        $(".js-goods-select-area,.js-goods-select-province-city").hide();
+                    }
+                };break;
+                case '2': { //销售区域(按省市)
+                    if (this.checked) {
+                        $("[name=partitionBy]:checkbox").not(this).prop("checked", false);
+                        $(".js-goods-select-province-city").show();
+                        $(".js-goods-select-area").hide();
+                    }else {
+                        $("[name=partitionBy][value='0']:checkbox").prop("checked", true);
+                        $(".js-goods-select-area,.js-goods-select-province-city").hide();
+                    }
+                };break;
+            }
+
+        });
+
+        //销售对象
+        $("[name=saleToMemberType]:checkbox").change(function () {
+            if (this.value == '0') {
+                if (this.checked) {
+                    $("[name=saleToMemberType][value!='0']:checkbox").prop("checked", false);
+                }
+            } else {
+                $("[name=saleToMemberType][value='0']:checkbox").prop("checked", false);
+            }
+        });
+
+        //上架时间
+        $("input[name=saleTimeBy]:radio").click(function () {
+            if (this.checked && this.value == '2') {//定时上架
+                $("#autoSale").val("1");
+                $(".js-goods-saleat").show();
+            } else {
+                $("#autoSale").val("0");
+                $(".js-goods-saleat").hide();
+            }
+        });
+
+        //定时下架
+        $("[name=autoOff]:radio").click(function () {
+            if (this.value == '1' && this.checked) {
+                $(".js-goods-offat").show();
+            } else {
+                $(".js-goods-offat").hide();
+            }
+        });
+
+        $("#keywords").tokenfield();
+        $("#keywords-tokenfield").blur(function () {
+            var tokensList = $('#keywords').tokenfield('getTokensList');
+            if (tokensList == "" || (this.value != "" && (tokensList+",").indexOf(this.value+",") < 0)) {
+                $("#keywords").tokenfield('createToken', this.value);
+            }
+            this.value = "";
+        });
+
+        initTreeView();
+        initFrontClassTreeView();
+        initAreaTreeView();
+
+        $('.form_datetime').datetimepicker({
+            language:  'zh-CN',
+            format:'yyyy-mm-dd hh:ii:ss',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1
+        });
+
+        <!--#/* 单个复选框赋值[0/1]，避免出现值[on]*/#-->
+        $("#recommend").change(function () {
+            $("input[name=recommend]:hidden").val(this.checked ? "1" : "0");
+        });
+
+        $("#selectAreaBtn").click(function(){
+            $("#dialogSelectCity").modal("show");
+        });
+
+        $("#typeId").on("change",function(){
+            getType(this.value);
+        });
+
+        $("#specBtn").on("click",function(){
+            $("#specHtml").load("${base!}/store/goods/publish/type/"+$("#typeId").val()+ "/spec/" + $("#sku").val(), function (response, status, xhr) {
+                $("#dialogSpec").modal("show");
+            });
+        });
+
+        $('#file_upload_imgList').uploadifive({
+            'auto': true,
+            'multi': false,
+            'width': '100%',
+            'height': '35',
+            'buttonText': "${msg['goods.main.tip.selectplease']}${msg['goods.main.column.imgList']}",
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024,
+            'queueSizeLimit': 1,
+            'formData': {},
+            'queueID': 'div_imgList_queue',
+            'removeCompleted':true,
+            'removeTimeout':0,
+            'uploadScript': '${base}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    $("#div_imgList_img").html("<img src='" + data.data + "' style='width:150px;height:95px;'><i style=\"cursor: pointer\" class=\"fa fa-close\" onclick=\"$('#imgList').val('');$('#div_imgList_img').empty();\"></i>");
+                    $("#imgList").val(data.data);
+                } else {
+                    Toast.error(data.msg);
+                }
+            },
+            'onDrop': function (file, fileDropCount) {
+                //clearImgListFile();
+            },
+            'onClearQueue': function (queue) {
+                //clearImgListFile();
+            },
+            'onCancel': function () {
+                //clearImgListFile();
+            },
+            'onSelect':function () {
+                if($("#div_imgList_img").children().size() >= 1){
+                    Toast.warning("${msg['goods.main.tip.selectimagessizestart'] + '1' + msg['goods.main.tip.selectimagessizeend']}");
+                }
+            }
+        });
+
+        $('#file_upload_album_pc').uploadifive(initAlbumOptions("pc"));
+        $('#file_upload_album_wap').uploadifive(initAlbumOptions("wap"));
+        $('#file_upload_album_tv').uploadifive(initAlbumOptions("tv"));
+
+        <!--#if(obj.hasSpec){#-->
+
+        //开启规格
+        $("#hasSpec").val("1");
+        //填充商品的规格值组合
+        $("#spec_values").val(JSON.stringify(getSpecValues()));
+        //填充货品
+        $("#products").val(JSON.stringify(getProducts()));
+
+        $("#specEditBtn").click(function(){
+            $("#dialogSpec").modal("show");
+        });
+
+        $("#plist .delSpec").on("click",function(){
+            $(this).parent().parent().remove();
+        });
+
+        //end spec
+        <!--#}#-->
+
+        //保存草稿
+        $(".js-goods-btn-save-to-drafts").click(function(){
+            fillForm();
+            //验证：货品
+            if ($("#hasSpec").val() == "0") {//非规格货品
+                var $productDiv = $("#sp");
+                var values = getAreaList($productDiv);
+                if (!$("[name='partitionBy'][value=0]", $productDiv).is(":checked") && values.length == 0) {
+                    Toast.warning("${msg['goods.product.tip.selectSaleArea']}");
+                    return false;
+                }
+            } else {
+                var products = $("#products").val();
+                if (products == "" || products == "[]") {
+                    Toast.warning("${msg['goods.product.tip.addSpecProduct']}");
+                    return false;
+                }
+            }
+            $("[data-parsley-required]").attr("data-parsley-required", "false");
+            //防止重复提交
+            if($("#isSubmit").val()=="1"){
+                Toast.error("${msg['goods.main.tip.noduplicatesubmit']}");
+            }else{
+                $("#status").val("1");
+                $("#subType").val("draft");
+                $('#addForm').submit();
+            }
+        });
+        //预览
+        $(".js-goods-btn-preview").click(function () {
+
+        });
+        <!--# if(needCheck) { #-->
+        //提交审核
+        $(".js-goods-btn-submit-audit").click(function () {
+
+            fillForm();
+
+            if (!$("#addForm").parsley().validate()) {
+                return false;
+            }
+
+            if (!checkForm()) {
+                return false;
+            }
+
+            //防止重复提交
+            if($("#isSubmit").val()=="1"){
+                Toast.error("${msg['goods.main.tip.noduplicatesubmit']}");
+            }else{
+                $("#status").val("5");
+                $("#subType").val("publish");
+                $('#addForm').submit();
+            }
+        });
+        <!--# } else {#-->
+        $(".js-goods-btn-submit-audit").hide();
+        //发布
+        $(".js-goods-btn-publish").click(function(){
+
+            fillForm();
+
+            if (!$("#addForm").parsley().validate()) {
+                return false;
+            }
+
+            if (!checkForm()) {
+                return false;
+            }
+
+            //防止重复提交
+            if($("#isSubmit").val()=="1"){
+                Toast.error("${msg['goods.main.tip.noduplicatesubmit']}");
+            }else{
+                $("#status").val(getStatusOnPublish());
+                $("#subType").val("publish");
+                $('#addForm').submit();
+            }
+        });
+        <!--# }#-->
+
+        $(".parsley-form").parsley({
+            errorsContainer: function (parsleyField) {
+                var inputGroup = parsleyField.$element.parents("div:first.input-group");
+                if (inputGroup.length > 0) {
+                    return inputGroup.parent();
+                }
+                return parsleyField.$element.parents(".form-control:first").children("div:last");
+            }
+        });
+
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+                $("#isSubmit").val("1");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    if ($("#subType").val() == "draft") {
+                        $("#doLink").attr("href", "${base!}/store/goods/list${isNotEmpty(type)?"/"+type}/edit/"+data.data).trigger("click");
+                    } else {
+                        $("#doLink").attr("href", "${base!}/store/goods/publish/add").trigger("click");
+                    }
+                } else {
+                    Toast.error(data.msg);
+                }
+                $("#isSubmit").val("0");
+                form.find("button:submit").button("reset");
+            },
+            error:function () {
+                $("#subType").val("");
+                $("#isSubmit").val("0");
+                $("[data-parsley-required]").attr("data-parsley-required", "true");
+            }
+        });
+    });
+
+    function initTreeView() {
+        $("#jsTreeClass").jstree({
+            plugins: ["wholerow", "json_data"],
+            core: {
+                data: function (node, callback) {
+                    $.get("${base}/store/goods/list/class/tree", function (ret) {
+                        var classes = [];
+                        if (ret) {
+                            for (var i = 0; i < ret.length; i++) {
+                                classes.push({
+                                    id: ret[i].id,
+                                    text: ret[i].name,
+                                    parent: ret[i].parentId == "" ? "#" : ret[i].parentId,
+                                    state:{
+                                        disabled: ret[i].disabled,
+                                    }
+                                })
+                            }
+                        }
+                        callback(classes);
+                    }, "json");
+                },
+                multiple: false
+            }
+        }).on("dblclick.jstree", function (node) {
+            var tree = $(this).jstree();
+            var node = tree.get_selected(true);
+            if (node.length && tree.is_leaf(node)) {
+                selectClass();
+            }
+        }).on("select_node.jstree", function (e, data) {
+            //禁止选父节点
+            var tree = $(this).jstree();
+            if (tree.is_parent(data.node)) {
+                tree.deselect_node(data.node);
+            }
+        }).on("loaded.jstree", function () {
+            initClassNameText();
+        });
+    }
+
+    //初始化前台分类树
+    function initFrontClassTreeView() {
+        $("#jsTreeFrontClass").jstree({
+            plugins: ["wholerow", "json_data","checkbox"],
+            core: {
+                data: function (node, callback) {
+                    $.get("${base}/store/goods/publish/frontclass/tree", function (ret) {
+                        var classes = [];
+                        if (ret) {
+                            for (var i = 0; i < ret.length; i++) {
+                                classes.push({
+                                    id: ret[i].id,
+                                    text: ret[i].name,
+                                    parent: ret[i].parentId == "" ? "#" : ret[i].parentId,
+                                    state:{
+                                        disabled: ret[i].disabled,
+                                    }
+                                })
+                            }
+                        }
+                        callback(classes);
+                    }, "json");
+                },
+                multiple: true
+            }
+        }).on("dblclick.jstree", function (node) {
+            var tree = $(this).jstree();
+            var node = tree.get_selected(true);
+            if (node.length && tree.is_leaf(node)) {
+                selectFrontClass();
+            }
+        }).on("select_node.jstree", function (e, data) {
+            //禁止选父节点
+            var tree = $(this).jstree();
+            if (tree.is_parent(data.node)) {
+                tree.open_node(data.node);
+            }
+        }).on("loaded.jstree", function () {
+            initFrontClassNameText();
+        });
+    }
+
+    function initAreaTreeView() {
+        var values = $(JSON.parse($("input[name=areaProvinceCitys]:hidden").val())).map(function () {
+            return this.city;
+        }).get().join(",");
+        values = ',' + values + ',';
+        $("#jsTreeCity").jstree({
+            plugins: ["wholerow", "checkbox", "changed", "json_data"],
+            core: {
+                data: function (node, callback){
+                    $.get("${base}/store/goods/publish/area/tree", function (ret) {
+                        if (ret) {
+                            var areas = $(ret).map(function () {
+                                var selected = values.indexOf(","+this.id+",") >= 0;
+                                this["state"] = {disabled: this.parent === "#", opened: selected, checked: selected, selected: selected};
+                                return this;
+                            }).get();
+                            callback(areas);
+                        }
+                    }, "json");
+                },
+                multiple: true
+            },
+            checkbox: {
+                three_state: true,
+                cascade: 'down'
+            }
+        }).on("select_node.jstree", function (e, data) {
+            var tree = $(this).jstree();
+            if (!tree.is_leaf(data.node)) {
+                tree.open_node(data.node);
+            }
+        });
+    }
+
+    function initClassNameText() {
+        var tree = $("#jsTreeClass").jstree(true);
+        var classId = $("[name=classId]:hidden").val();
+        if (!tree.get_node(classId)) return false;
+        $("#classId").val(tree.get_path(tree.get_node(classId), "/"));
+    }
+    function initFrontClassNameText() {
+        var tree = $("#jsTreeFrontClass").jstree(true);
+        var ids = $("#front_classes").val();
+        var node = {};
+        var exist = true;
+        var text = $(JSON.parse(ids)).map(function () {
+            node = tree.get_node(this);
+            if (node) {
+                return tree.get_path(tree.get_node(this.id), "/");
+            } else {
+                exist = false;
+                return true;
+            }
+        }).get().join(",");
+        if (exist) {
+            $("#frontClassId").val(text);
+        }
+    }
+
+    function selectClass() {
+        var tree = $.jstree.reference("#jsTreeClass");
+        var node = tree.get_selected(true);
+        var id = node[0].id;
+        $("#classId").val(node[0].text);
+        $("#classId").parsley().reset();
+        $("#addForm input[name='classId']").val(id);
+        $("#dialogSelectClass").modal("hide");
+        $("#brandId").find("option").remove();
+        $.get("${base!}/store/goods/publish/class/" + id, function (data) {
+            if(data.code==0){
+                var type=data.data.goodsType;
+                $("input[name=typeId]:hidden").val("");
+                if(type){
+                    $("input[name=typeId]:hidden").val($("#typeId option[value='"+type.id+"']").prop("selected", true).val());
+                    if(type.hasBrand){
+                        getBrand(type.id);
+                    }
+                    if(type.hasProp){
+                        $("#goods_props_tab").show();
+                        getProps(type.id);
+                    }else{
+                        $("#goods_props_tab").hide();
+                    }
+                    if(type.hasParam){
+                        $("#goods_params_tab").show();
+                        getParam(type.id);
+                    }else{
+                        $("#goods_params_tab").hide();
+                    }
+                    if(type.hasSpec){
+                        $("#div_spec").show();
+                    }else{
+                        $("#div_spec").hide();
+                    }
+                }else {
+                    $("#typeId").val("");
+                }
+            }else{
+                Toast.error(data.msg);
+            }
+        }, "json");
+    }
+
+    //前台商品分类选择事件处理
+    function selectFrontClass() {
+        var tree = $.jstree.reference("#jsTreeFrontClass");
+        var nodes = tree.get_bottom_selected(true);
+        var ids = $(nodes).map(function () {
+            return {id: this.id};
+        }).get();
+        var text = $(nodes).map(function () {
+            return tree.get_path(this, "/");
+        }).get().join(",");
+        $("#frontClassId").val(text);
+        $("#frontClassId").parsley().reset();
+        $("#front_classes").val(JSON.stringify(ids));
+        $("#dialogSelectFrontClass").modal("hide");
+    }
+
+    //销售区域选择片区
+    function selectArea() {
+        var $diolog = $("#dialogSelectArea");
+        var $cks = $diolog.find(":checked");
+        var areas = $cks.map(function () {
+            return {
+                partitionBy: 1,
+                area: this.value,
+            };
+        }).get();
+        if (areas.length == 0) {
+            Toast.warning("${msg['goods.product.tip.selectArea']}");
+            return false;
+        }
+        var areasText = $cks.map(function () {
+            return '<span class="label label-default goods-area-label" >'+$(this).parent().text()+"</span>";
+        }).get().join("");
+        $("input[name='areaCodes']:hidden").val(JSON.stringify(areas));
+        $(".js-goods-area").html(areasText);
+        $diolog.modal("hide");
+    }
+
+    //销售区域选择省市
+    function selectCity() {
+        var tree = $.jstree.reference("#jsTreeCity");
+        var nodes = tree.get_bottom_checked(true);
+        var areas = [];
+        var areasText = [];
+        $(nodes).each(function () {
+            var parentId = tree.get_parent(this);
+            var arr = [];
+            if (parentId == "86") {
+                arr.push(tree.get_text(this));
+            } else {
+                var province = tree.get_text(tree.get_node(parentId));
+                arr.push(province);
+                arr.push(tree.get_text(this));
+            }
+            var obj = {
+                partitionBy: 2,
+                    province: parentId == "86" ? this.id : parentId,
+                city: parentId == "86" ?  null : this.id
+            };
+            areasText.push('<span class="label label-default goods-area-label" >'+arr.join("/")+'</span>');
+            areas.push(obj);
+        });
+        if (areas.length == 0) {
+            Toast.warning("${msg['goods.product.tip.selectCity']}");
+            return false;
+        }
+        $("input[name='areaProvinceCitys']:hidden").val(JSON.stringify(areas));
+        $(".js-goods-province-city").html(areasText.join(""));
+        $("#dialogSelectCity").modal("hide");
+    }
+
+    function getType(id) {
+        if(id == ''){
+            $("#goods_props_tab").hide();
+            $("#goods_params_tab").hide();
+            $("#div_spec").hide();
+            $("#goods_props").empty();
+            $("#sp_new").hide().empty();
+            $("#sp").show();
+            $("#hasSpec").val("0");
+            $("#products").val('[]');
+            $("#spec_values").val('[]');
+            $("#param_values").val('[]');
+            $("#prop_values").val('[]');
+            $("#brandId").children().remove();
+        }else {
+            getBrand(id);
+            $.get("${base!}/store/goods/publish/type/" + id, function (data) {
+                if(data.code==0){
+                    $("#sp_new").hide().empty();
+                    $("#sp").show();
+                    $("#hasSpec").val("0");
+                    $("#products").val('[]');
+                    $("#spec_values").val('[]');
+                    $("#param_values").val('[]');
+                    $("#prop_values").val('[]');
+                    if(data.data.hasProp){
+                        $("#goods_props_tab").show();
+                        getProps(data.data.id);
+                    }else{
+                        $("#goods_props_tab").hide();
+                    }
+                    if(data.data.hasParam){
+                        $("#goods_params_tab").show();
+                        getParam(data.data.id);
+                    }else{
+                        $("#goods_params_tab").hide();
+                    }
+                    if(data.data.hasSpec){
+                        $("#div_spec").show();
+                    }else{
+                        $("#div_spec").hide();
+                    }
+                }else{
+                    Toast.error(data.msg);
+                }
+            }, "json");
+        }
+    }
+
+    function getProps(id){
+        $.get("${base!}/store/goods/publish/type/" + id + "/props", function (ret) {
+            if(ret.code == 0){
+                var str = '';
+                $.each(ret.data,function(i, prop){
+                    if(prop.type == 'select'){
+                        str += '<div class="form-group">';
+                        str += '<label class="col-sm-2 control-label" data-id="' + prop.id + '">' + prop.name + '</label>';
+                        str += '<div class="col-sm-8">';
+                        str += '<select class="form-control" >';
+                        str += '<option value=""></option>';
+                        $.each(prop.propsValues, function(j,value){
+                            str += '<option value="'+ value.id + '">' + value.name + '</option>';
+                        });
+                        str += '</select>';
+                        str += '</div>';
+                        str += '</div>';
+                    }else {
+                        str += '<div class="form-group">';
+                        str += '<label class="col-sm-2 control-label" data-id="' + prop.id + '">' + prop.name + '</label>';
+                        str += '<div class="col-sm-8">';
+                        str += '<input class="form-control" />';
+                        str += '</div>';
+                        str += '</div>';
+                    }
+                });
+                $("#goods_props").html(str);
+            }else {
+                $("#goods_props").empty();
+            }
+        }, "json");
+    }
+
+    function getParam(id){
+        $.get("${base!}/store/goods/publish/type/" + id + "/params", function (ret) {
+            if(ret.code == 0){
+                var str = '';
+                $.each(ret.data,function(i, param){
+                    str += '<div class="form-group">';
+                    str += '<label class="col-sm-3 control-label" data-id="' + param.id + '">' + param.name + '</label>';
+                    $.each(param.params, function(j, k) {
+                        str += '<div class="col-sm-12" style="padding-bottom:5px;"><div class="col-sm-10 input-group"><span class="input-group-btn"><button class="btn" style="width:120px;" type="button" data-id="' + k.id + '">' + k.name + '</button>';
+                        str += '</span><input type="text" class="form-control" placeholder="'+ k.name+'"></div></div>';
+                    });
+                    str += '</div>';
+
+                });
+                $("#goods_params").html(str);
+            }else {
+                $("#goods_params").empty();
+            }
+        }, "json");
+    }
+
+    function getBrand(id){
+        $.get("${base!}/store/goods/publish/type/" + id + "/brands", function (ret) {
+            if(ret.code == 0){
+                var options = '';
+                options += '<option value=""></option>';
+                $.each(ret.data,function(i, brand){
+                    options += '<option value="' + brand.brandId + '">' + brand.brand.name + '</option>';
+                });
+                $("#brandId").html(options);
+            }
+        }, "json");
+    }
+
+    function setAlbumImg(id){
+        $("#"+id).toggleClass("divImg divImgD").siblings().removeClass("divImgD").addClass("divImg");
+    }
+
+    function delAlbumImg(id){
+        var $album_item = $("#"+id);
+        if ($album_item.hasClass("divImgD")) {
+            $album_item.siblings(":first").toggleClass("divImg divImgD");
+        }
+        $album_item.remove();
+    }
+
+    function validateAlbum() {
+        // if ($("#saleClientPC").is(":checked") && $.trim($("#div_img_album_pc").html()) === "") {
+        //     Toast.error("${msg['goods.main.tip.pcalbumrequired']}");
+        //     return false;
+        // }
+        if ($("#saleClientWAP").is(":checked") && $.trim($("#div_img_album_wap").html()) === "") {
+            Toast.error("${msg['goods.main.tip.wapalbumrequired']}");
+            return false;
+        }
+        // if ($("#saleClientTV").is(":checked") && $.trim($("#div_img_album_tv").html()) === "") {
+        //     Toast.error("${msg['goods.main.tip.tvalbumrequired']}");
+        //     return false;
+        // }
+        return true;
+    }
+
+    /**
+     * 不同类型的相册图存入数组
+     * @param containerId 相册图容器ID
+     * @param albumType 相册类型(all, pc, wap, tv)
+     * @param images 接收数组
+     */
+    function pushAlbumImages(albumType, images){
+        $("div", "#div_img_album_" + albumType).each(function(index){
+            var img = {};
+            var id = $("img", this).attr("data-id");
+            if (id) {
+                img.id = id;
+            }
+
+            var goodsId = $("img", this).attr("data-goods-id");
+            if (goodsId) {
+                img.goodsId = goodsId;
+            }
+
+            if (albumType == "all") {
+                img.saleClient = 0;
+            } else if (albumType == "pc") {
+                img.saleClient = 1;
+            } else if (albumType == "wap") {
+                img.saleClient = 2;
+            } else if (albumType == "tv") {
+                img.saleClient = 3;
+            }
+
+            img.imgAlbum = $("img", this).attr("src");
+            img.defaultValue = $(this).hasClass("divImgD");
+            img.location = index;
+
+            images.push(img);
+        });
+    }
+
+    /**
+     * 初始化相册
+     * @param typeName (all, pc, wap, tv)
+     * @returns
+     */
+    function initAlbumOptions(typeName) {
+        var queueId = "queue_album_" + typeName;
+        var fileuploadId = "file_upload_album_" + typeName;
+        var imgDivIdPrefix = "div_album_item_" + typeName + "_";
+        var albumContainer = document.getElementById("div_img_album_" + typeName);
+        var sort = Sortable.create(albumContainer);
+        var imgIndex = $(albumContainer).children().size();
+        return {
+            'auto': true,
+            'multi': true,
+            'width': '100%',
+            'height': '35',
+            'buttonText': "${msg['goods.main.tip.selectplease']}相册图片",
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024,
+            'queueSizeLimit': 5,
+            'formData': {},
+            'removeCompleted':true,
+            'removeTimeout':0,
+            'queueID': queueId,
+            'uploadScript': '${base!}/open/file/upload/image?type='+typeName,
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    var c = "divImg";
+                    imgIndex++;
+                    if($(albumContainer).children().size() == 0){
+                        c = "divImgD";
+                    }
+                    var imgDivId = imgDivIdPrefix + imgIndex;
+                    $(albumContainer).append("<div id='"+imgDivId+"' class='"+c+"'>" +
+                        "<img  onclick=\"setAlbumImg('"+imgDivId+"')\" src='" + data.data+ "' style='width:100px;height: 80px;margin-bottom: 1px;'><br>" +
+                        "<i style='float: right;padding-top: 4px;cursor: pointer;' class='fa fa-close' onclick=\"delAlbumImg('"+imgDivId+"')\"></i></div>");
+                    sort.destroy();
+                    sort = Sortable.create(albumContainer);
+                    $("#"+queueId).empty();
+                } else {
+                    Toast.error(data.msg);
+                }
+            },
+            'onSelect' : function(queue) {
+                if($(albumContainer).children().length >= 5){
+                    Toast.warning("${msg['goods.main.tip.selectimagessizestart'] + '5' + msg['goods.main.tip.selectimagessizeend']}");
+                    $("#" + fileuploadId).uploadifive('cancel', $('.uploadifive-queue-item').first().data('file'));
+                }
+            }
+        };
+    }
+
+    function clearImgListFile() {
+        $("#div_imgList_img").empty();
+        $("#div_imgList_queue").empty();
+        $("#imgList").val("");
+    }
+
+    //获取销售区域列表
+    function getAreaList(selector) {
+        var partitionBy = $("[name='partitionBy']:checked", selector).val();
+        if (partitionBy == '1') {//按片区
+            return JSON.parse($("input[name='areaCodes']:hidden", selector).val()||"[]");
+        } else if (partitionBy == '2') {//按省市
+            return JSON.parse($("input[name='areaProvinceCitys']:hidden", selector).val()||"[]");
+        }
+        return [];
+    }
+
+    //填充表单
+    function fillForm() {
+
+        //塞值：标签
+        var tags = $("[name='tag']:checked").map(function () {
+            return {id: this.value};
+        }).get();
+        $("#tags").val(JSON.stringify(tags));
+
+        //填充货品
+        if ($("#hasSpec").val() == "0") {
+            var products = [];
+            var spec = "";
+            var name = $("#name").val();
+
+            var $productDiv = $("#sp");
+            var productId = $("input[name='productId']", $productDiv).val()||"";
+            var weight = $("input[name='weight']", $productDiv).val();
+            var length = $("input[name='length']", $productDiv).val();
+            var width = $("input[name='width']", $productDiv).val();
+            var height = $("input[name='height']", $productDiv).val();
+            var sku = $("input[name='sku']", $productDiv).val()||"";
+            var sale = $("input[name='sale']", $productDiv).is(":checked");
+            var stock = $("input[name='stock']", $productDiv).val();
+            var buyMin = $("input[name='buyMin']", $productDiv).val();
+            var buyMax = $("input[name='buyMax']", $productDiv).val();
+            var salePrice = $("input[name='salePrice']", $productDiv).val();
+            var costPrice = $("input[name='costPrice']", $productDiv).val();
+            var marketPrice = $("input[name='marketPrice']", $productDiv).val();
+            var saleToAllAera = $("input[name='partitionBy'][value='0']", $productDiv).is(":checked");
+            var partitionBy = $("input[name='partitionBy']:checked", $productDiv).val();
+            var areaList = getAreaList($productDiv);
+            var saleToMemberType = $("input[name='saleToMemberType']:checked", $productDiv).val()||0;
+            var memberTypeList = $("input[name='saleToMemberType'][value!='0']:checked", $productDiv).map(function () {return {id: this.value};}).get();
+            var deliveryTime = $("input[name='deliveryTime']:checked", $productDiv).val();
+            var serializable = $("input[name='serializable']", $productDiv).is(":checked");
+            var orderVerify = $("input[name='orderVerify']", $productDiv).is(":checked");
+            var enabled = $("input[name='enabled']", $productDiv).is(":checked");
+            var defaultValue = true;
+            products.push({
+                'id': productId,
+                'spec': spec,
+                'name': name,
+                'sale': sale,
+                'weight': weight,
+                'length': length,
+                'width': width,
+                'height': height,
+                'sku': sku,
+                'stock': stock,
+                'buyMin': buyMin,
+                'buyMax': buyMax,
+                'salePrice': parseFloat(salePrice) * 100,
+                'costPrice': parseFloat(costPrice) * 100,
+                'marketPrice': parseFloat(marketPrice) * 100,
+                'saleToAllAera': saleToAllAera,
+                'partitionBy': partitionBy,
+                'areaList': areaList,
+                'saleToMemberType': saleToMemberType,
+                'memberTypeList': memberTypeList,
+                'deliveryTime': deliveryTime,
+                'serializable': serializable,
+                'orderVerify': orderVerify,
+                'enabled': enabled,
+                'defaultValue': defaultValue
+            });
+            $("#products").val(JSON.stringify(products));
+        } else {
+            //去除被隐藏输入校验
+            $("#sp [data-parsley-type]:hidden,[data-parsley-min]:hidden,[data-parsley-price]:hidden,[data-parsley-required]:hidden").removeAttr("data-parsley-type data-parsley-min data-parsley-price data-parsley-required");
+        }
+
+        //填充扩展属性
+        var props = [];
+        $("#goods_props").find(".form-group").each(function(){
+            var obj = {};
+            obj.id = $("label", this).attr("data-id");
+            obj.name = $("label", this).text();
+            obj.value = $("select", this).val()||$("input", this).val()||"";
+            obj.text = $("select>option:selected", this).text()||$("input", this).val()||"";
+            props.push(obj);
+        });
+        $("#prop_values").val(JSON.stringify(props));
+
+        //填充详细参数
+        var params = [];
+        $("#goods_params").find(".form-group").each(function(){
+            var group = [];
+            var obj = {};
+            obj.id = $("label", this).attr("data-id");
+            obj.name = $("label", this).text();
+            $(".col-sm-12", this).each(function(){
+                var o ={ };
+                o.id = $(".btn", this).attr("data-id");
+                o.name= $(".btn", this).text();
+                o.value= $("input", this).val();
+                group.push(o);
+            });
+            obj.value = group;
+            params.push(obj);
+        });
+        $("#param_values").val(JSON.stringify(params));
+
+        //填充相册图
+        var images = [];
+        pushAlbumImages("pc", images);
+        pushAlbumImages("wap", images);
+        pushAlbumImages("tv", images);
+        $("#images").val(JSON.stringify(images));
+    }
+
+    function checkForm() {
+        //验证：货品
+        if ($("#hasSpec").val() == "0") {//非规格货品
+            var $productDiv = $("#sp");
+            var values = getAreaList($productDiv);
+            if (!$("[name='partitionBy'][value=0]", $productDiv).is(":checked") && values.length == 0) {
+                Toast.warning("${msg['goods.product.tip.selectSaleArea']}");
+                return false;
+            }
+        } else {
+            var products = $("#products").val();
+            if (products == "" || products == "[]") {
+                Toast.warning("${msg['goods.product.tip.addSpecProduct']}");
+                return false;
+            }
+        }
+
+        //验证：相应终端相册图必填
+        // if ($("#saleClientPC").is(":checked") && $.trim($("#div_img_album_pc").html()) === "") {
+        //     Toast.error("${msg['goods.main.tip.pcalbumrequired']}");
+        //     return false;
+        // }
+        if ($("#saleClientWAP").is(":checked") && $.trim($("#div_img_album_wap").html()) === "") {
+            Toast.error("${msg['goods.main.tip.wapalbumrequired']}");
+            return false;
+        }
+        // if ($("#saleClientTV").is(":checked") && $.trim($("#div_img_album_tv").html()) === "") {
+        //     Toast.error("${msg['goods.main.tip.tvalbumrequired']}");
+        //     return false;
+        // }
+        return true;
+    }
+
+    //发布时获取当前商品状态
+    function getStatusOnPublish() {
+        var saleTimeBy = $("[name=saleTimeBy]:checked").val();
+        var val = 2;
+        switch (saleTimeBy) {
+            case '0': val = 3;break;
+            case '1': val = 2;break;
+            case '2': val = 2;
+        }
+        return val;
+    }
+
+</script>
+
+
+<!--#}#-->

@@ -1,0 +1,472 @@
+<div class="modal-body" style="height:70vh;overflow-y: auto">
+    <form id="receiptForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+          action="${base}/store/order/main/receiptSave" method="post">
+        <div class="panel-body">
+            <input type="hidden" name="id" value="${obj.id}">
+            <div class="form-group">
+                <label for="payType" class="col-sm-1 control-label">${msg['order.main.label.payType']}</label>
+                <div class="col-sm-2">
+                    <input type="text" readonly class="form-control" id="payType"   value="${@com.aebiz.app.order.modules.models.em.OrderPayTypeEnum.getValue(obj.payType)}">
+                </div>
+                <label for="payAccount" class="col-sm-1 col-offset-sm-1 control-label">${msg['order.main.label.payAccount']}</label>
+                <div class="col-sm-4">
+                    <select id="payAccount"  class="form-control"  >
+                        <option value="">${msg['order.main.select.payAccountTip']}</option>
+                        <!--#for(o in shopAccountList){#-->
+                        <option value="${o.id!}">${o.accountName!}-${o.bankName!}(${o.bankAccount})</option>
+                        <!--#}#-->
+                    </select>
+                </div>
+            </div>
+            <div class="table-responsive ">
+                <table class="table s-table">
+                    <caption></caption>
+                    <thead>
+                    <tr>
+                        <th>商品</th>
+                        <th>销售价</th>
+                        <th>购买价</th>
+                        <th>数量</th>
+                        <th>优惠</th>
+                        <th>配送费</th>
+                        <th>应付总金额</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--#for(o in orderGoods ){  #-->
+                    <tr style="border-bottom: 1px solid #dfe6ec;">
+                        <td>${o.goodsName} ${o.name}</td>
+                        <td>￥${@money.fenToYuan(o.salePrice)}</td>
+                        <td>￥${@money.fenToYuan(o.buyPrice)}</td>
+                        <td>${o.buyNum}</td>
+                        <td>￥${@money.fenToYuan(o.freeMoney)}</td>
+                        <!--# if(oLP.first ){ #-->    <!--border-bottom: 1px solid #dfe6ec;-->
+                        <td rowspan="${@orderGoods.size()}" style="text-align: center;border: 1px solid #dfe6ec;vertical-align: middle;">￥${@money.fenToYuan(obj.freightMoney)}</td>
+                        <td rowspan="${@orderGoods.size()}" style="text-align: center;border: 1px solid #dfe6ec;vertical-align: middle;">￥<span id="needMoney">${@money.fenToYuan(obj.payMoney)}</span></td>
+                        <!--# }#-->
+                    </tr>
+                    <!--#}#-->
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive">
+                <table class="table s-table">
+                    <caption>已收款项</caption>
+                    <thead>
+                    <tr>
+                        <th width="70%">收款账号</th>
+                        <th width="30%">金额(元)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--# var received = 0; for(pay in orderPayPaymentList){ var payMoney = pay.payMoney; received = received+payMoney;  #-->
+                    <tr class="received_item" style="border-bottom: 1px solid #dfe6ec;">
+                        <td>${pay.payAccount}</td>
+                        <td>${@money.fenToYuan(pay.payMoney)}</td>
+                    </tr>
+                    <!--#  } #-->
+                    <tr id="received" style="color:red">
+                        <td >已收合计(元)</td>
+                        <td><span>${@money.fenToYuan(received)}</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive">
+                <table class="table s-table">
+                    <caption>收款账号详情</caption>
+                    <thead>
+                    <tr>
+                        <th width="60%">收款账号</th>
+                        <th width="20%">金额(元)</th>
+                        <th width="20%">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr id="actual" style="color:red">
+                        <td >实收合计(元)</td>
+                        <td><span>0.00</span></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-group" style="color:red">
+                使用余额 : <span id="balance">${@money.fenToYuan(memberAccount.money!)}</span>
+            </div>
+            <div class="form-group" style="border: 1px #E3E6F3 solid;min-height: 180px">
+                <div class="col-sm-2" style="border: 1px #E3E6F3 solid;min-height: 180px;text-align: center">
+                    <span class="control-label" style="display: inline-block;margin-top: 30px;">支付凭证图片</span>
+                </div>
+                <div class="col-sm-8">
+                    <div id="queue"></div>
+                    <div>
+                        <input id="file_upload"  type="file" multiple="true">
+                    </div>
+                    <div id="img" class="div-img-album">
+                        <!--# for(var payTransfer in payTransfers){ #-->
+                        <div id="${payTransfer.id}" class="divImgD">
+                            <img  onclick="setAlbumImg(${payTransfer.id})" src="${payTransfer.uploadImage}" style='width:100px;height: 80px;margin-bottom: 1px;'><br>
+                            <i style='float: right;padding-top: 4px;' class='fa fa-close' onclick="delAlbumImg(${payTransfer.id})"></i></div>
+                        <!--#} #-->
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-1">审核状态</label>
+                <label class="radio-inline"><input type="radio" name="checkStatus" value="1" checked>通过</label>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-1">审核意见</label>
+                <div class="col-sm-8">
+                    <textarea class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" style="float: left" data-dismiss="modal" >关闭</button>
+    <button class="btn btn-primary navbar-btn" type="button" onclick="load()">确认收款</button>
+</div>
+
+<!--确认收款 【确认】-->
+<div class="modal fade" id="dialogPay" tabindex="-1" role="dialog" aria-labelledby="dialogPayModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"  onclick="receiptClose()"  aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="dialogGoodsModalLabel">收款确认</h4>
+            </div>
+            <div class="modal-body">
+                <span>已收合计(元) : ${@money.fenToYuan(received)}</span><br>
+                <span id="payMoney">已付金额(元) :<span></span> </span><br>
+                <span>应付金额(元) : ${@money.fenToYuan(obj.payMoney)}</span><br>
+                <span id="noPay" hidden>订单未付(元) :<span></span> </span><br>
+                <span id="hasPay" hidden>结余(元) :<span></span> </span><br>
+                <span style="color:#eb1409">说明: 已付金额=已收合计+本次实收+使用余额 <br>
+                            订单未付=应付金额-已付金额<br>
+                            结余=已付金额-应付金额
+                </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="receipt" >确认</button>
+                <button type="button" class="btn btn-default" style="float: left" onclick="receiptClose()">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<style>
+    .div-img-album{
+        list-style-type: none;
+        margin: 2px;
+        height: 118px;
+        float: left;
+    }
+    .divImg{
+        float: left;
+        margin: 2px;
+        padding: 2px;
+        height:108px;
+        width:100px;
+        border: 1px solid #dcdcdc;
+        cursor: pointer;
+    }
+    .divImgD{
+        float: left;
+        margin: 2px;
+        padding: 2px;
+        height:108px;
+        width:100px;
+        border: 1px solid red;
+        cursor: pointer;
+    }
+    table .s-input{margin: auto;}
+    table,table.s-table tr td,table tr th{border: 1px solid #ddd;text-align: center;vertical-align: middle;}
+</style>
+<script>
+
+    var accountList = [];
+
+    //已收合计金额
+    var received = 0;
+
+    //本次已付金额
+    var payMoney = 0;
+
+    //应付金额
+    var needMoney = 0;
+
+    //订单未付金额
+    var noPay = 0;
+
+    //订单结余金额
+    var balance  = 0;
+    
+    function  init() {
+        //初始化原相册图的数据
+        $("#img").find("img").each(function () {
+            var imgSrc =  $(this).attr("src");
+            uploadImageList.push(imgSrc);
+        });
+        received = parseFloat($("#received").find("span").text());
+        balance = parseFloat($("#balance").text());
+        payMoney = FloatAdd(received,balance);
+        needMoney =  parseFloat($("#needMoney").text());
+    }
+    
+    //商城账户选择事件
+    $("#payAccount").change(function () {
+        var id =$(this).val();
+        var payTemp = 0;
+        $(".accountTr").find("input[type='number']").each(function () {
+            payTemp = FloatAdd(payTemp,parseFloat($(this).val())).toFixed(2) ;
+        })
+        var needTemp = FloatSub(needMoney,payTemp);
+        if(jQuery.inArray(id,accountList) == -1 && id != ""){
+            //添加账号列表信息
+            $("#actual").before("<tr class='accountTr' id="+$(this).val()+">" +
+                    "<td>"+$(this).children('option:selected').text()+"</td>" +
+                    "<td><input type='number' class='form-control accountItem' style='width: 100px' placeholder='0'  onkeyup='price(this)' data-parsley-price='true' value="+needTemp+">" +
+                    "</td> <td><button type='button' onclick='delAccount("+id+")' class='btn btn-sm btn-danger'>删除</button></td>" +
+                    "</tr>");
+            accountList.push(id);
+            amount();
+           /* $("#"+id).find("input").on("input propertychange",function () {
+                if($(this).val() <0){
+                    $(this).val(0)
+                }
+                amount();
+            })*/
+        }
+    })
+
+    //校验价格
+    function price(obj) {
+        if( !(/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(obj.value))){
+            layer.msg("只能输入数字，小数点后只能保留两位");
+            obj.value='';
+            amount();
+            return;
+        }
+        amount();
+    }
+
+    //删除商家账户列表
+    function delAccount(id) {
+        $("#"+id).remove();
+        accountList.splice(getAccountListIndex(id),1);
+        amount();
+    }
+
+    //获取账号List的索引下标
+    function getAccountListIndex(id) {
+        for(var i=0;i<accountList.length;i++){
+            if(accountList[i] == id){
+                return i;
+            }
+        }
+    }
+
+    var accountInfoList = []; //账号收款信息
+    var accountTotal = 0;//收款金额
+    //收款合计金额
+    function amount() {
+        accountTotal = 0;//收款金额
+        accountInfoList = [];
+        $(".accountItem").each(function () {
+            var orderPayment = {};
+            //获取对公账户ID
+            var id = $(this).parent("td").parent("tr").attr('id');
+            var money = $(this).val();
+            if(!money){
+                money =0;
+            }
+            orderPayment.accountId = id;
+            orderPayment.payMoney = money;
+            accountInfoList.push(orderPayment);
+            accountTotal  = FloatAdd(accountTotal,parseFloat(money)).toFixed(2);
+        })
+        $("#actual").find("span").text(accountTotal);
+           //已付金额
+           payMoney =  FloatAdd(FloatAdd(accountTotal,parseFloat($("#received").find("span").text())),parseFloat($("#balance").text())).toFixed(2);
+           $("#payMoney").find("span").text(payMoney);
+    }
+
+    function load() {
+        if($(".accountItem").length > 0){
+            $("#payMoney").find("span").text(payMoney);
+            if(payMoney >= needMoney){
+                $("#noPay").hide();
+                $("#hasPay").show();
+                $("#hasPay").find("span").text(FloatSub(payMoney,needMoney));
+            }else{
+                $("#hasPay").hide();
+                $("#noPay").show();
+                $("#noPay").find("span").text(FloatSub(needMoney,payMoney));
+            }
+            $("#dialogPay").modal({show:true});
+        } else {
+            layer.alert('请先选择收款账号，再进行确认收款！');
+        }
+    }
+
+    var uploadImageList = [];//上传图片凭证
+    /*添加图片*/
+    function setAlbumImg(id){
+        $("#"+id).removeClass("divImg").addClass("divImgD").siblings().removeClass("divImgD").addClass("divImg");
+    }
+    /*删除图片*/
+    function delAlbumImg(id){
+        var data = $(this).prev('img').attr("src");
+        uploadImageList.splice(getImageListIndex(data),1);
+        $("#"+id).remove();
+    }
+
+    //获取上传图片的索引下标
+    function  getImageListIndex(val) {
+        for(var i=0;i<uploadImageList.length;i++){
+            if(uploadImageList[i] == val){
+                return i;
+            }
+        }
+    }
+
+    /**
+     * 初始化相册图方法
+     * @param queueId 队列元素ID
+     * @param fileuploadId 上传容器ID
+     * @param imgDivIdPrefix 图片DIV的名称前缀
+     * @param albumContainer 相册图容器Id
+     */
+    function initAlbumOptions(queueId,imgDivIdPrefix,albumContainerId) {
+        var albumContainer = document.getElementById(albumContainerId);
+        var sort = Sortable.create(albumContainer);
+        var imgIndex = $(albumContainer).children().size();
+        return {
+            'auto': true,
+            'multi': true,
+            'width': '100%',
+            'height': '35',
+            'buttonText': "请选择图片",
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024*5,
+            'queueSizeLimit': 6,
+            'formData': {},
+            'queueID': queueId,
+            'removeCompleted':true,
+            'removeTimeout':0,
+            'uploadScript': '${base!}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    uploadImageList.push(data.data);
+                    Toast.success(data.msg);
+                    var c = "divImg";
+                    imgIndex++;
+                    if(imgIndex == 1){
+                        c = "divImgD";
+                    }
+                    var imgDivId = imgDivIdPrefix + imgIndex;
+                    $(albumContainer).append("<div id='"+imgDivId+"' class='"+c+"'>" +
+                            "<img  onclick=\"setAlbumImg('"+imgDivId+"')\" src='" + data.data+ "' style='width:100px;height: 80px;margin-bottom: 1px;'><br>" +
+                            "<i style='float: right;padding-top: 4px;' class='fa fa-close' onclick=\"delAlbumImg('"+imgDivId+"')\"></i></div>");
+                    sort.destroy();
+                    sort = Sortable.create(albumContainer);
+                    $("#"+queueId).empty();
+                } else {
+                    Toast.error(data.msg);
+                }
+            }
+        };
+    }
+
+    function receiptClose() {
+        $("#dialogPay").modal('hide');
+    }
+
+    $(document).ready(function () {
+        $('#receiptForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                //对付款的钱进行分元转换
+                for(var i=0;i<accountInfoList.length;i++){
+                    accountInfoList[i].payMoney = FloatMul(accountInfoList[i].payMoney,100);
+                }
+                var orderPayPaymentList = JSON.stringify(accountInfoList);
+                var accountInfo = {
+                    name: "accountInfo",
+                    required: false,
+                    value: orderPayPaymentList
+                }
+                arr.push(accountInfo);
+                var transferList = JSON.stringify(uploadImageList);
+                var  uploadInfo = {
+                    name: "uploadInfo",
+                    required: false,
+                    value:transferList
+                }
+                arr.push(uploadInfo);
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        window.location.reload();
+                    },500)
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+        $('#file_upload').uploadifive(initAlbumOptions('queue','imgItem','img'));
+        init();
+    });
+
+    $('#receipt').on("click",function () {
+        $("#receiptForm").submit();
+    })
+
+    //浮点数加法运算
+    function FloatAdd(arg1,arg2){
+        var r1,r2,m;
+        try{r1=arg1.toString().split(".")[1].length}catch(e){r1=0}
+        try{r2=arg2.toString().split(".")[1].length}catch(e){r2=0}
+        m=Math.pow(10,Math.max(r1,r2));
+        return (arg1*m+arg2*m)/m;
+    }
+
+
+    //浮点数减法运算
+    function FloatSub(arg1,arg2){
+        var r1,r2,m,n;
+        try{r1=arg1.toString().split(".")[1].length}catch(e){r1=0}
+        try{r2=arg2.toString().split(".")[1].length}catch(e){r2=0}
+        m=Math.pow(10,Math.max(r1,r2));
+        //动态控制精度长度
+        n=(r1=r2)?r1:r2;
+        return ((arg1*m-arg2*m)/m).toFixed(2);
+    }
+
+    //浮点数乘法运算
+    function FloatMul(arg1,arg2)
+    {
+        var m=0,s1=arg1.toString(),s2=arg2.toString();
+        try{m+=s1.split(".")[1].length}catch(e){}
+        try{m+=s2.split(".")[1].length}catch(e){}
+        return Number(s1.replace(".",""))*Number(s2.replace(".",""))/Math.pow(10,m);
+    }
+
+    //数组的包含方法
+    Array.prototype.contains = function ( needle ) {
+        for (i in this) {
+            if (this[i] == needle) return true;
+        }
+        return false;
+    }
+
+</script>

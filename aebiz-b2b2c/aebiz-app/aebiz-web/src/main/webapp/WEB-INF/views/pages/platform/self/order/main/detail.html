@@ -1,0 +1,473 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/self/order/main" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+    <div class="pull-right">
+
+    </div>
+</header>
+<script src="${base!}/assets/common/vendor/city-picker/js/data.86.all.js" type="text/javascript"></script>
+<script src="${base!}/assets/common/vendor/city-picker/js/picker.86.js" type="text/javascript"></script>
+<div class="content-wrap bg-white">
+    <div class="wrapper" style="min-height:500px;top:50px;">
+        <div class="panel-body" style="margin-bottom: 35px">
+            <input type="hidden" name="id" value="${obj.id}">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">基本信息</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-10 col-md-offset-1">
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            订单编号:   <span>${obj.id}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            会员昵称:   <span>${obj.accountInfo.nickname}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            用户名:   <span>${obj.accountUser.loginname}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            订单来源:   <span>${@com.aebiz.app.order.modules.models.em.OrderSourceEnum.getValue(obj.orderSrc)}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            下单时间:   <span><!--#if(!isEmpty(obj.orderAt)){#-->${@date.getDate(obj.orderAt)} <!--#}#--></span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            订单优惠:   <span>￥${obj.freeMoney}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            付款状态:   <span>${@com.aebiz.app.order.modules.models.em.OrderPayStatusEnum.getValue(obj.payStatus)}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            支付方式:   <span>${@com.aebiz.app.order.modules.models.em.OrderPayTypeEnum.getValue(obj.payType)}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            支付时间:   <span><!--#if(!isEmpty(obj.payAt)){#-->${@date.getDate(obj.payAt)} <!--#}#--></span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            商品总价:   <span>￥${@money.fenToYuan(obj.goodsMoney)}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            配送费用:   <span>￥${@money.fenToYuan(obj.freightMoney)}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            实付现金:   <span>￥${@money.fenToYuan(obj.payMoney)}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            发货状态:   <span>${@com.aebiz.app.order.modules.models.em.OrderDeliveryStatusEnum.getValue(obj.deliveryStatus)}</span>
+                        </div>
+                        <div class="col-md-8" style="padding: 5px 0px">
+                            发货时间:   <span><!--#if(!isEmpty(obj.deliveryAt)){#-->${@date.getDate(obj.deliveryAt)} <!--#}#--></span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            收货状态:   <span>${@com.aebiz.app.order.modules.models.em.OrderGetStatusEnum.getValue(obj.getStatus)}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            收货时间:   <span><!--#if(!isEmpty(obj.getAt)){#-->${@date.getDate(obj.getAt)} <!--#}#--></span>
+                        </div>
+
+                        <!-- <div class="col-md-4" style="padding: 5px 0px">
+                             商品数量:   <span>${@orderGoods.size()}</span>
+                         </div>
+                         <div class="col-md-4" style="padding: 5px 0px">
+                             商品重量:   <span>${obj.goodsWeight}</span>
+                         </div>
+                         <div class="col-md-4" style="padding: 5px 0px">
+                             参与活动:   <span>双11促销</span>
+                         </div> -->
+                        <div class="col-md-12" style="padding: 5px 0px">
+                            订单备注:   <span>${obj.mark}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">订单支付凭证</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-10 col-md-offset-1">
+                        <!--# if(isEmpty(payTransfers)){ #-->
+                        <span>暂无图片</span>
+                        <!--# } #-->
+                        <!--# for(var payTransfer in payTransfers){ #-->
+                        <div id="img" class="div-img-album">
+                            <div class="col-sm-6 col-md-3">
+                                <a href="${payTransfer.uploadImage}" class="thumbnail">
+                                    <img id="${payTransfer.id}" src="${payTransfer.uploadImage}">
+                                </a>
+                            </div>
+                        </div>
+                        <!--#} #-->
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">收货信息</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-10 col-md-offset-1">
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            收件人:   <span>${obj.deliveryName}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            手机号码:   <span>${obj.deliveryMobile}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            固定电话:   <span>${obj.deliveryPhone}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            邮编:   <span>${obj.deliveryPostcode}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            配送状态:   <span>${@com.aebiz.app.order.modules.models.em.OrderDeliveryStatusEnum.getValue(obj.deliveryStatus)}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            发货时间:   <span><!--#if(!isEmpty(obj.deliveryAt)){#-->${@date.getDate(obj.deliveryAt)} <!--#}#--></span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            物流公司:   <span>${obj.expressName!}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            物流单号:   <span>${obj.expressNo!}</span>
+                        </div>
+                        <div class="col-md-4" style="padding: 5px 0px">
+                            收货时间:   <span><!--#if(!isEmpty(obj.getAt)){#-->${@date.getDate(obj.getAt)} <!--#}#--></span>
+                        </div>
+                        <div class="col-md-12" style="padding: 5px 0px">
+                            收货地址:   <span>${@area.getNameByCode(obj.deliveryProvince)} ${@area.getNameByCode(obj.deliveryCity)} ${@area.getNameByCode(obj.deliveryCounty)} ${obj.deliveryAddress}</span>
+                        </div>
+                        <div class="col-md-12" style="padding: 5px 0px">
+                            买家留言:   <span>${obj.note}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">商品信息</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive ">
+                        <table class="table">
+                            <caption></caption>
+                            <thead>
+                            <tr>
+                                <th>商品</th>
+                                <th>销售价</th>
+                                <th>购买价</th>
+                                <th>数量</th>
+                                <th>优惠</th>
+                                <th>配送费</th>
+                                <th>应付总金额</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--#for(o in orderGoods ){  #-->
+                            <tr style="border-bottom: 1px solid #dfe6ec;">
+                                <td>${o.goodsName} ${o.name}</td>
+                                <td>￥${@money.fenToYuan(o.salePrice)}</td>
+                                <td>￥${@money.fenToYuan(o.buyPrice)}</td>
+                                <td>${o.buyNum}</td>
+                                <td>￥${@money.fenToYuan(o.freeMoney)}</td>
+                                <!--# if(oLP.first ){ #-->    <!--border-bottom: 1px solid #dfe6ec;-->
+                                <td rowspan="${@orderGoods.size()}" style="text-align: center;border: 1px solid #dfe6ec;vertical-align: middle;">￥${@money.fenToYuan(obj.freightMoney)}</td>
+                                <td rowspan="${@orderGoods.size()}" style="text-align: center;border: 1px solid #dfe6ec;vertical-align: middle;">￥${@money.fenToYuan(obj.payMoney)}</td>
+                                <!--# }#-->
+                            </tr>
+                            <!--#}#-->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">订单日志</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive ">
+                        <table class="table">
+                            <caption></caption>
+                            <thead>
+                            <tr>
+                                <th>操作时间</th>
+                                <th>操作人</th>
+                                <th>操作类型</th>
+                                <th>操作内容</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--#for(log in orderLogList){  #-->
+                            <tr style="border-bottom: 1px solid #dfe6ec;">
+                                <td><!--#if(!isEmpty(log.opAt)){#-->${@date.getDate(log.opAt)} <!--#}#--></td>
+                                <td>${log.opByName!}</td>
+                                <td>${@com.aebiz.app.order.modules.models.em.OrderLogBehaviorEnum.getValue(log.behavior)}</td>
+                                <td>${log.note}</td>
+                            </tr>
+                            <!--#}#-->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="position:fixed;bottom:0px;background-color:#FFFFFF;width:100%;min-height: 50px;z-index: 5">
+            <div class="form-group col-md-12 col-md-offset-4" style="display: inline-block;line-height: 50px">
+                <!--# if(obj.orderStatus == 0){ #-->
+                    <button type="button" class="btn btn-sm btn-info" onclick="auditModal('${obj.id}')">审核</button>
+                <!--# } #-->
+                <!--# if(obj.payStatus < 2 && obj.orderStatus == 1){ #-->
+                    <button type="button" class="btn btn-sm btn-info" onclick="operation('改价','${base}/platform/self/order/main/changePrice/${obj.id}')">改价</button>
+                <!--# } #-->
+
+                <!--# if(obj.deliveryStatus == 0 && obj.orderStatus == 1){ #-->
+                    <button type="button" class="btn btn-sm btn-info" onclick="operation('改地址','${base}/platform/self/order/main/changeAddress/${obj.id}')">改地址</button>
+                <!--# } #-->
+
+                <!--# if(obj.payStatus < 3 && obj.orderStatus == 1 && (obj.payType == 0 || obj.payType == 4)){ #-->
+                    <button type="button" class="btn btn-sm btn-info" onclick="operation('上传支付凭证','${base}/platform/self/order/main/upload/${obj.id}')">上传支付凭证</button>
+                <!--# } #-->
+
+                <!--# if(((obj.payStatus == 1 || obj.payStatus == 2) || (obj.payType == 1 || obj.payType == 2 || obj.payType == 3)) && obj.payStatus != 3 && obj.orderStatus == 1 ){ #-->
+                    <button type="button" class="btn btn-sm btn-info" onclick="operation('确认收款','${base}/platform/self/order/main/receipt/${obj.id}')">确认收款</button>
+                <!--# } #-->
+
+                <!--# if(obj.payStatus <= 1 && obj.orderStatus == 1){ #-->
+                    <button type="button" class="btn btn-sm btn-info" onclick="closeOrder('${obj.id}')">关闭订单</button>
+                <!--# } #-->
+
+                <!--# if(obj.orderStatus == 2 || obj.orderStatus == 3 || obj.orderStatus == 4){ #-->
+                    <button type="button" class="btn btn-sm btn-info" onclick="del('${obj.id}')">删除订单</button>
+                <!--# } #-->
+
+                <!--# if(obj.orderStatus == 2){ #-->
+                    <button type="button" class="btn btn-sm btn-info" onclick="operation('现价恢复')">现价恢复</button>
+                    <button type="button" class="btn btn-sm btn-info" onclick="operation('原价恢复')">原价恢复</button>
+                <!--# } #-->
+
+                <!--# if(obj.payStatus == 3 && obj.orderStatus == 1 && (obj.deliveryStatus == 0 || obj.deliveryStatus == 2)){ #-->
+                    <button type="button" class="btn btn-sm btn-info" onclick="operation('创建配货单','${base}/platform/self/order/main/createDelivery/${obj.id}')">创建配货单</button>
+                <!--# } #-->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--通用操作功能模态框-->
+<div class="modal fade" id="dialogOperation" tabindex="-1" role="dialog" aria-labelledby="dialogOperationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 80%;margin-left: 10%;top:5%">
+        <div  class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="dialogOperationModalLabel"></h4>
+            </div>
+            <div id="operationContent">
+
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!-- 删除订单 弹出模态 开始 -->
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 删除订单 弹出模态 结束 -->
+
+<!-- 关闭订单 弹出模态 开始 -->
+<div id="dialogCloseOrder" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['order.button.closeOrder']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['order.button.closeOrder.notice']}
+                    </div>
+                    <div class="col-xs-10 col-xs-offset-1" style="padding: 15px 0px">
+                        <select id="reason"  class="form-control" >
+                            <option value="">${msg['order.main.select.closeOrderTip']}</option>
+                            <!--# if(has(reasonList)){ #-->
+                            <!--#for(o in reasonList){#-->
+                            <option value="${o.code!}">${o.name!}</option>
+                            <!--#}#-->
+                            <!--# } #-->
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button id="okCloseOrder" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['order.button.closeOrder']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 关闭订单 弹出模态 结束 -->
+
+<!-- 订单审核 弹出模态 开始 -->
+<div id="dialogAudit" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['order.main.modal.dialogAudit.title']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="hidden" name="orderIds" id="orderIds"/>
+                    <label class="control-label col-xs-2">${msg['order.main.column.auditStatus']}</label>
+                    <label class="radio-inline"><input type="radio" name="checkStatus" value="1" checked>${msg["order.enum.checkstatus.pass"]}</label>
+                    <label class="radio-inline"><input type="radio" name="checkStatus" value="2" >${msg["order.enum.checkstatus.nopass"]}</label>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-2">${msg['order.main.column.remark']}</label>
+                    <textarea class="form-control" name="comment" style="width: 75%;height: 100px;"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button id="btn_ok_audit" type="button" onclick="audit();" class="btn btn-primary" data-loading-text="${msg['order.main.modal.dialogAudit.ok.loading']}">${msg["globals.button.confirm"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 订单审核 弹出模态 结束 -->
+
+<style>
+    table .s-input{margin: auto;}
+    table,table.s-table tr td,table tr th{border: 1px solid #ddd;text-align: center;vertical-align: middle;}
+</style>
+<script>
+    var id = $("input[name='id']").val();
+    $(document).ready(function () {
+        $("input[name='feedScore']").rating();
+    });
+
+    //通用操作方法
+    function  operation(name,url) {
+        $("#dialogOperation").modal('show');
+        $("#dialogOperationModalLabel").text(name);
+        $.post(url,{},function (data) {
+            $("#operationContent").html(data);
+        })
+    }
+
+    $(function() {
+        $('#dialogOperation').on('hide.bs.modal',
+            function() {
+                //$.pjax({url:"${base!}/platform/self/order/main/detail/"+id,  container: '#container'});
+            })
+    });
+
+    //订单审核弹出模态框
+    function auditModal(id) {
+        $('#orderIds').val(id);
+        $("#dialogAudit").modal("show");
+    }
+
+    //确认审核的保存方法
+    function audit() {
+        var orderIds = $('#orderIds').val();
+        var dialog = $("#dialogAudit");
+        var checkStatus = $("input[name=checkStatus]:checked", dialog).val();
+        var comment = $("textarea[name=comment]", dialog).val();
+        if(checkStatus == 2 && (comment == null || comment == "")){
+            Toast.error("请填写审核不通过的原因");
+            return;
+        }
+        //alert('orderIds:'+orderIds+'--auditStatus:'+checkStatus+"--comment:"+comment);
+
+        $.post("${base!}/platform/order/main/audit", $.param({ids:orderIds.toString(), checkStatus: checkStatus, comment: comment}, true), function (data) {
+            if (data.code == 0) {
+                $("#dialogAudit").modal("hide");
+                window.location.reload();
+            } else {
+                Toast.error(data.msg);
+            }
+        }, "json");
+    }
+
+    //删除订单（逻辑删除）
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/self/order/main/delOrder/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $.pjax({ url: '${base}/platform/self/order/main', container: '#container' });
+                    },1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+
+    //关闭订单
+    function closeOrder(id) {
+        var dialog = $("#dialogCloseOrder");
+        dialog.modal("show");
+        dialog.find("#okCloseOrder").unbind("click");
+        dialog.find("#okCloseOrder").bind("click", function (event) {
+            var btn = $(this);
+            //btn.button("loading");
+            var mark  = $("#reason").val();
+            if(mark == null || mark == ""){
+                Toast.error("请选择订单关闭原因");
+                return;
+            }
+            $.post("${base}/platform/self/order/main/closeOrder/" + id,{mark:mark}, function (data) {
+                if (data.code == 0) {
+                    window.location.reload();
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+
+</script>
+<!--#}#-->

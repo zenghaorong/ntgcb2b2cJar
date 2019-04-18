@@ -1,0 +1,59 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">${msg['member.address.column.address']}</a>
+                        <!--<small>${obj.id}</small>-->
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>${msg['member.address.column.province']}</td><td>${obj.province}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['member.address.column.city']}</td><td>${obj.city}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['member.address.column.county']}</td><td>${obj.county}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['member.address.column.town']}</td><td>${obj.town}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['member.address.column.address']}</td><td>${obj.address}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['member.address.column.postCode']}</td><td>${obj.postCode}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['member.address.column.fullName']}</td><td>${obj.fullName}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['member.address.column.mobile']}</td><td>${obj.mobile}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['member.address.column.phone']}</td><td>${obj.phone}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['member.address.column.defaultValue']}</td><td>
+                                                            <!--#if(obj.defaultValue){#--><i class="fa fa-circle text-success ml5"></i><!--#}else{#--><i class="fa fa-circle text-danger ml5"></i><!--#}#-->
+
+                                                            </td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['member.address.column.accountId']}</td><td>${obj.accountId}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

@@ -1,0 +1,50 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">Order_return_detail</a>
+                        <small>${obj.id}</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>${msg['order.return.detail.column.orderId']}</td><td>${obj.orderId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.return.detail.column.orderGoodsId']}</td><td>${obj.orderGoodsId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.return.detail.column.deliveryId']}</td><td>${obj.deliveryId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.return.detail.column.goodsId']}</td><td>${obj.goodsId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.return.detail.column.productId']}</td><td>${obj.productId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.return.detail.column.sku']}</td><td>${obj.sku}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.return.detail.column.name']}</td><td>${obj.name}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.return.detail.column.spec']}</td><td>${obj.spec}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.return.detail.column.sendNum']}</td><td>${obj.sendNum}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

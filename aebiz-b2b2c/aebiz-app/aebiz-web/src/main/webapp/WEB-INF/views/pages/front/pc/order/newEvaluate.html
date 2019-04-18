@@ -1,0 +1,284 @@
+<!--#
+include("/pages/front/pc/member/inc/header.html"){}
+#-->
+<!-- body -->
+<script src="${base!}/assets/platform/vendor/uploadifive/jquery.uploadifive.min.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.config.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.all.js"></script>
+<link href="http://at.alicdn.com/t/font_paidwj9uheyiudi.css" rel="stylesheet">
+<div class="m-bd">
+	<div class="u-branch m-center f-push-30-t">
+		<i class="iconfont icon-jingxuananlifangzi"></i>当前位置：
+		<a href="">B2B2C商城 ></a>
+		<a href="">我的订单 ></a>评价
+	</div>
+	<!--# if(orderMain.feedStatus==1){ #-->
+	<!--# if(storeHasfeed=="0"){ #-->
+
+	<!--# } #-->
+	<!--# else if(storeHasfeed=="1"){ #-->
+	<div class="evaluateStatus m-center">
+		<div class="f-tal">
+			<i class="iconfont icon-right"></i>
+			<div class="txt">
+				还有商品未评价，可继续评价
+				<!--评价已完成，以下商品未评价，快去看看吧~-->
+				<p><a href="${base!}/member/order/data?status=4" class="mark a_post">返回评价列表></a></p>
+			</div>
+		</div>
+	</div>
+	<!--# } #-->
+	<!--# else if(storeHasfeed=="2"){ #-->
+	<div class="evaluateStatus m-center">
+		<div class="f-tal">
+			<i class="iconfont icon-right"></i>
+			<div class="txt">
+				<!--# if(isNotEmpty(ListProduct)){ #-->
+				还有商品未评价，可继续评价
+				<!--# } #-->
+				<!--# else { #-->
+				评价已完成，以下商品未评价，快去看看吧~
+				<!--# } #-->
+				<p><a href="${base!}/member/order/data?status=4" class="mark a_post">返回评价列表></a></p>
+			</div>
+		</div>
+	</div>
+	<!--# } #-->
+	<!--# } #-->
+	<!--# if(orderMain.feedStatus!=1 || isNotEmpty(ListProduct)){ #-->
+	<form action="${base}/member/personalOrder/addFeedBack" onsubmit="return toVaild()" method="post">
+		<input hidden="hidden" id="isHasStore" name="isHasStore" value="">
+		<input hidden="hidden" id="isOpen1" name="isOpen" value="">
+		<input hidden="hidden"  name="storeId" value="${orderMain.storeId}">
+		<div class="m-center orderEvaluate">
+			<input name="orderId" value="${orderMain.id}" hidden="hidden">
+			<div class="oe-hd">订单评价 <span class="orderId">订单号：${orderMain.id}</span><span class="date f-push-50-l">2017-05-01&nbsp;&nbsp;&nbsp;13:21:24</span></div>
+			<!--# if(orderMain.feedStatus==0){ #-->
+			<div class="sh-bd f-cb" id="storeIsFeed">
+				<div class="sh-left">
+					<img class="sl-pic" src="${storeMain.logo}" width="58" height="58px" />客户评价
+				</div>
+				<div class="sh-right">
+					<div class="f-cb f-push-30-t">
+						<div class="f-fl f-push-20-r">描述相符
+							<div class="u-stars f-ib"><i class="iconfont icon-star"></i><i class="iconfont icon-star"></i><i class="iconfont icon-star"></i><i class="iconfont icon-star"></i><i class="iconfont icon-star"></i></div><span class="storeDescScore"></span><input id="storeDescScore" name="storeDescScore" hidden="hidden" val=""></div>
+						<div class="f-fl f-push-20-r">服务态度
+							<div class="u-stars f-ib"><i class="iconfont icon-star"></i><i class="iconfont icon-star"></i><i class="iconfont icon-star"></i><i class="iconfont icon-star"></i><i class="iconfont icon-star"></i></div><span class="storeSerScore"></span><input id="storeSerScore" name="storeSerScore" hidden="hidden" val=""></div>
+						<div class="f-fl">物流速度
+							<div class="u-stars f-ib"><i class="iconfont icon-star"></i><i class="iconfont icon-star"></i><i class="iconfont icon-star"></i><i class="iconfont icon-star"></i><i class="iconfont icon-star"></i></div><span class="storeSpeScore"></span><input id="storeSpeScore" name="storeSpeScore" hidden="hidden" val=""></div>
+					</div>
+					<div class="f-cb f-push-40-t">
+						<label class="f-fl">具体描述</label>
+						<div class="textarea f-fl">
+							<textarea name="storeContent" id="storeContent" cols="30" rows="10" placeholder="完善服务，我们会做得更好~"></textarea>
+							<div class="ps">还可输入200字</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--# } #-->
+			<input hidden="hidden" name="productFeedNum" id="productFeedNum">
+			<!--# if(isNotEmpty(ListProduct)){ #-->
+				<!--# var x=0;for(var productLi in ListProduct){ x=x+1;#-->
+			<div class="sh-bd f-cb j_products" id="${productLi.id}">
+				<input hidden="hidden" name="orderProductId${x}" value="${productLi.id}">
+				<div class="sh-left">
+					<img src="${productLi.imgUrl}" width="130" height="130" />
+					<p class="tit">${productLi.goodsName}</p>
+				</div>
+				<div class="sh-right">
+					<p class="ahr-top" hidden="hidden"><i class="iconfont icon-notice"></i>请至少填写一件商品的评价</p>
+					<div class="f-cb f-push-20-t">
+						<label class="f-fl">描述相符</label>
+						<div class="f-fl">
+							<div class="u-stars f-ib"><i class="iconfont icon-star"></i><i class="iconfont icon-star"></i><i class="iconfont icon-star"></i><i class="iconfont icon-star"></i><i class="iconfont icon-star"></i></div><span name="productScore${x}" class="productScore_${productLi.id}"></span>
+							<input name="productScore${x}" hidden="hidden">
+						</div>
+					</div>
+					<div class="f-cb">
+						<label class=" f-fl ">买家印象</label>
+						<div class="marks f-fl ">
+							<span>品质好</span><span>包装好</span><span>味道纯正</span>
+						</div>
+					</div>
+					<div class="f-cb f-push-10-t ">
+						<label class="f-fl ">评价商品</label>
+						<div class="textarea f-fl ">
+							<textarea name="productContent${x}" id="productContent_${productLi.id} " class="productContent${x}" cols="30 " rows="10 " placeholder="完善服务，我们会做得更好~ "></textarea>
+							<div class="ps ">还可输入200字</div>
+						</div>
+					</div>
+					<div class="f-cb f-push-10-t js-product-album" data-album-type="${productLi.id}">
+						<label class="f-fl ">晒照片</label>
+						<div class="uploadPic f-fl ">
+							<div id="queue_album_${productLi.id}" style="display: none"></div>
+							<div class="uploading f-fl">
+								<input id="file_upload_album_${productLi.id}" name="file_upload_album_${productLi.id}" type="file" multiple="true">
+							</div>
+							<input hidden="hidden" name="productImages${x}" id="productImages_${productLi.id}" value="">
+							<div id="div_img_album_${productLi.id}" class="f-fl f-cb div-img-album">
+							<!--	<li class="f-fl"><img src="/assets/front/pc/images/cart1.png" width="50" height="50"/></li>
+								<li class="f-fl"><img src="/assets/front/pc/images/cart1.png" width="50" height="50"/></li>
+								<li class="f-fl"><img src="/assets/front/pc/images/cart1.png" width="50" height="50"/></li>-->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+				<!--# } #-->
+			<!--# } #-->
+			<br />
+			<div class="sh-fd f-tac">
+				<input type="submit" class="submit" id="submit" value ="提交"/>
+				<label><input type="checkbox"  id="isOpen" />&nbsp;匿名提交</label>
+			</div>
+		</div>
+	</form>
+	<!--# } #-->
+	<br /><br />
+</div>
+<!-- end -->
+<!--#include("/pages/front/pc/member/inc/tail.html"){}#-->
+
+<div id="evaluate " class="m-layer-pop "><div class="info "><i class="iconfont icon-jianhao "></i>没有登录</div></div>
+<script src="${base!}/assets/front/pc/scripts/evaluate.js "></script>
+<script>
+    $(document).ready(function () {
+		$("#productFeedNum").val($(".j_products").size());
+        // 文件上传
+		$(".js-product-album").each(function(){
+            var typeName = $(this).attr("data-album-type");
+            $('#file_upload_album_'+typeName).uploadifive(initAlbumOptions(typeName));
+		});
+    });
+    /**
+     * 初始化相册
+     */
+    function initAlbumOptions(typeName) {
+        var queueId = "queue_album_" + typeName;
+        var fileuploadId = "file_upload_album_" + typeName;
+        var imgDivIdPrefix = "div_album_item_" + typeName + "_";
+        var albumContainer = document.getElementById("div_img_album_" + typeName);
+        var imgIndex = $(albumContainer).children().size();
+        return {
+            'auto': true,
+            'multi': true,
+            'width': '100%',
+            'height': '35',
+            'buttonText': "",
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024,
+            'queueSizeLimit': 5,
+            'removeCompleted':true,
+            'removeTimeout':0,
+            'formData': {},
+            'queueID': queueId,
+            'uploadScript': '${base!}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+                data = JSON.parse(data);
+                if (data.code == 0) {
+                    var images=$("#productImages_"+ typeName).val();
+                    var image=data.data;
+					if(images ==""){
+                        $("#productImages_"+ typeName).val(images+image);
+					}else{
+                        $("#productImages_"+ typeName).val(images+","+image);
+					}
+                    console.log($("#productImages_"+ typeName).val());
+                    $(albumContainer).append('<li class="f-fl"><img src="'+image+'" width="50" height="50"/></li>');
+                    $("#"+queueId).empty();
+                } else {
+                }
+            },
+            'onSelect' : function(queue) {
+                if($(albumContainer).children().length >= 5){
+					alert("最多5张");
+                    $("#" + fileuploadId).uploadifive('cancel', $('.uploadifive-queue-item').first().data('file'));
+                }
+            }
+        };
+    }
+
+    function toVaild() {
+        //是否匿名
+       if($("#isOpen").is(":checked")){
+           $("#isOpen1").val("0")
+	   }else{
+           $("#isOpen1").val("1")
+	   }
+        //判断店铺是否评价过了
+        if($("#storeIsFeed").length>0){
+           //代表有店铺评价
+           $("#isHasStore").val("1");
+            //获取店铺的描述相符得分
+            var storeDescScore=$("#storeDescScore").val();
+            //获取店铺的服务态度得分
+            var storeSerScore=$("#storeSerScore").val();
+            //获取店铺的物流速度得分
+            var storeSpeScore=$("#storeSpeScore").val();
+            //评论内容
+            var storeContent=$("#storeContent").val();
+            if(storeDescScore ==""){
+                alert("描述相符评分不能为空！");
+                return false;
+            }else if(storeSerScore ==""){
+                alert("服务态度评分不能为空！");
+                return false;
+            }else if(storeSpeScore ==""){
+                alert("物流速度评分不能为空！");
+                return false;
+            }else{
+                $(".j_products").each(function(index,obj){
+                    var x=index+1;
+                    var productScore=$(obj).find("#productScore"+x+"").val();
+                    var productContent=$(obj).find("#productContent"+x+"").val();
+                    if(productContent!=""){
+                        if(productScore ==""){
+                            //alert("商品描述评分至少评论1个")
+                            (obj).find("#productContent"+x+"").val("")
+                        }
+                    }
+                });
+                return true;
+            }
+		}else{
+            //代表没有店铺评价
+            $("#isHasStore").val("0");
+            //循环商品列表。判断是否评价
+			var flag=true;
+            $(".j_products").each(function(index,obj){
+                var x=index+1;
+				var productScore=$(obj).find("#productScore"+x+"").val();
+				var productContent=$(obj).find("#productContent"+x+"").val();
+				if(productContent!=""){
+                    if(productScore ==""){
+                       alert("商品描述评分至少评论1个")
+                    }
+				}
+				if(productScore !=""){
+                    flag=true;
+				}
+            });
+			if(!flag){
+                $(".ahr-top").show();
+                alert("请至少填写一件商品的评价");
+                return false;
+			}else{
+                return true;
+			}
+		}
+    }
+    
+    $(document).on("click",".a_post",function () {
+        var param={
+            "pageNo": 1,
+            "status": 4
+        }
+        $.post("/member/order/data",param,function (data) {
+
+        });
+    })
+</script>
+</body>
+
+</html>

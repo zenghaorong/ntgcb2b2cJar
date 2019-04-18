@@ -1,0 +1,18 @@
+<!--components indexShowcase-->
+<div class="title m-index-title-2 m-components" id="$_mnad1_compId">
+    <h5><span>商品橱窗</span></h5></div>
+<div class="m-product-list">
+    <ul class="m-showcase-list"></ul>
+    <div style="clear:both"></div>
+</div>
+
+<script id="m-showcase-list-tpl" type="text/html">
+    {{each list as secondItemWindow i}}
+    <li class="pl-item spcc0"><a href="javascript:void(0)" class="pl-pic"
+                                 data-uuid="{{secondItemWindow.uuid}}"><img
+            src="{{secondItemWindow.imageUrl}}"></a>
+        <div class="pl-info"><p class="baoyou pl-title"><font class="subStr" limit="40" title="">{{secondItemWindow.name}}</font></p>
+            <p><strong class="pl-price">￥{{secondItemWindow.price}}</strong><span class="pl-buycount">{{secondItemWindow.saleCount}}人付款</span></p></div>
+    </li>
+    {{/each}}
+</script>

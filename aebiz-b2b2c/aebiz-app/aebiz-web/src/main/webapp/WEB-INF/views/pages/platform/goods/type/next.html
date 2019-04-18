@@ -1,0 +1,72 @@
+<div id="typeDialog" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">${msg['goods.type.column.goodsTypeConfig']}</h4>
+            </div>
+            <div class="modal-body" style="margin-left:100px;">
+                <div class="row mb10">
+                    <div class="form-group">
+                        <label for="physical" class="col-sm-4 control-label">${msg['goods.type.column.isEntity']}</label>
+                        <div class="col-sm-6" id="physical">
+                            <input type="radio" <!--#if(!has(obj)||(has(obj)&&obj.physical)){#-->checked<!--#}#--> value="1" name="physical">${msg['goods.type.column.yes']}
+                            <input type="radio" <!--#if(has(obj)&&!obj.physical){#-->checked<!--#}#--> value="0" name="physical">${msg['goods.type.column.no']}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb10">
+                    <div class="form-group">
+                        <label for="hasBrand" class="col-sm-4 control-label">${msg['goods.type.column.isLinkBrand']}</label>
+                        <div class="col-sm-6" id="hasBrand">
+                            <input type="radio" <!--#if(!has(obj)||(has(obj)&&obj.hasBrand)){#-->checked<!--#}#--> value="1" name="hasBrand">${msg['goods.type.column.yes']}
+                            <input type="radio" <!--#if(has(obj)&&!obj.hasBrand){#-->checked<!--#}#--> value="0" name="hasBrand">${msg['goods.type.column.no']}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb10">
+                    <div class="form-group">
+                        <label for="hasProp" class="col-sm-4 control-label">${msg['goods.type.column.isStartExtend']}</label>
+
+                        <div class="col-sm-6" id="hasProp">
+                            <input type="radio" <!--#if(has(obj)&&obj.hasProp){#-->checked<!--#}#--> value="1" name="hasProp">${msg['goods.type.column.yes']}
+                            <input type="radio" <!--#if(!has(obj)||has(obj)&&!obj.hasProp){#-->checked<!--#}#--> value="0" name="hasProp">${msg['goods.type.column.no']}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb10">
+                    <div class="form-group">
+                        <label for="hasSpec" class="col-sm-4 control-label">${msg['goods.type.column.isStartSpecifications']}</label>
+
+                        <div class="col-sm-6" id="hasSpec">
+                            <input type="radio" <!--#if(has(obj)&&obj.hasSpec){#-->checked<!--#}#--> value="1" name="hasSpec">${msg['goods.type.column.yes']}
+                            <input type="radio" <!--#if(!has(obj)||has(obj)&&!obj.hasSpec){#-->checked<!--#}#--> value="0" name="hasSpec">${msg['goods.type.column.no']}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb10">
+                    <div class="form-group">
+                        <label for="hasParam" class="col-sm-4 control-label">${msg['goods.type.column.isGoodsParams']}</label>
+
+                        <div class="col-sm-6" id="hasParam">
+                            <input type="radio" <!--#if(has(obj)&&obj.hasParam){#-->checked<!--#}#--> value="1" name="hasParam">${msg['goods.type.column.yes']}
+                            <input type="radio" <!--#if(!has(obj)||has(obj)&&!obj.hasParam){#-->checked<!--#}#--> value="0" name="hasParam">${msg['goods.type.column.no']}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb10">
+                    <div class="form-group">
+                        <label for="hasTab" class="col-sm-4 control-label">${msg['goods.type.column.isCustomTAB']}</label>
+
+                        <div class="col-sm-6" id="hasTab">
+                            <input type="radio" <!--#if(has(obj)&&obj.hasTab){#-->checked<!--#}#--> value="1" name="hasTab">${msg['goods.type.column.yes']}
+                            <input type="radio" <!--#if(!has(obj)||has(obj)&&!obj.hasTab){#-->checked<!--#}#--> value="0" name="hasTab">${msg['goods.type.column.no']}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="nextOK" type="button" class="btn btn-primary" data-loading-text="${msg['goods.type.column.nextStepPoint']}">${msg['goods.type.column.nextStep']}</button>
+            </div>
+        </div>
+    </div>
+</div>

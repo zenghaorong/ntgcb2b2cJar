@@ -1,0 +1,568 @@
+<!--#
+include("/pages/front/pc/member/inc/header.html"){}
+#-->
+<div class="m-bd">
+	<div class="g-center f-push-30-t">
+		<!--#
+			include("/pages/front/pc/member/inc/left.html"){}
+		#-->
+
+		<script src="${base!}/assets/front/pc/member/scripts/address.js"></script>
+		<link href="${base!}/assets/front/pc/member/styles/address.css" rel="stylesheet">
+		<link href="${base!}/assets/common/vendor/city-picker/css/main.css" rel="stylesheet">
+		<link href="${base!}/assets/common/vendor/city-picker/css/picker.css" rel="stylesheet">
+		<script src="${base!}/assets/common/vendor/city-picker/js/data.86.all.js"></script>
+		<script src="${base!}/assets/common/vendor/city-picker/js/picker.86.js"></script>
+
+		<div class="ps-main f-fl">
+			<div class="address-hd">
+				<button class="add" id="addAddress">新增收货地址</button>您已创建<span id="addressLen">
+				${listAddressSize!}
+				</span>个地址，最多可创建<span> 20 </span>个
+			</div>
+
+			<div class="m-address-list f-cb" id="memberAddress">
+				<!--# for(address in listAddress){ #-->
+				<div class="item-list <!--# if(address.defaultValue){#-->active default<!--#}#-->" data-label>
+					<div class="hd f-cb"><span class="mark">默认地址</span><span class="iconfont icon-delete1 f-fr" a></span></div>
+					<div class="bd">
+						<p><span class="name"><!--# print(address.fullName);#--></span><span class="tel"><!--# print(address.mobile);#--></span></p>
+						<p class="address"><!--# print(address.province);print(address.city);print(address.county);#--></p>
+						<p class="detail"><!--# print(address.address);#--></p>
+					</div>
+					<div class="fd f-tar">
+						<span class="default" id="<!--# print(address.id);#-->"><i class="iconfont icon-index1"></i>设为默认</span>
+						<span class="edit"><i class="iconfont icon-edit"></i>编辑</span>
+					</div>
+				</div>
+				<!--# } #-->
+
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end -->
+<!--#
+	include("/pages/front/pc/member/inc/tail.html"){}
+#-->
+<!--新建地址弹层-->
+<div id="add-address" class="m-layer-pop">
+	<div class="add-address bd">
+		<form id="AddForm" method="post" action="${base!}/member/address/addAddressDo">
+			<div class="item f-cb">
+				<label class="u-label"><span class="required">*</span>收件人姓名：</label>
+				<input type="text" name="fullName" id="fullName" value="" class="fullName" />
+			</div>
+			<div class="form-group">
+				<label for="totalAddress" class="col-sm-4 control-label"><span class="required">*</span>选择片区：</label>
+				<div class="col-sm-8">
+					<div style="position: relative">
+						<input readonly type="text" data-toggle="city-picker"  data-parsley-required="true" id="totalAddress">
+						<input type="hidden" id="province"  name="province" value="">
+						<input type="hidden" id="city"  name="city" value="">
+						<input type="hidden" id="county"  name="county" value="">
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="item f-cb" style="margin-top: 20px;">
+				<label class="u-label"><span class="required">*</span>详细地址：</label>
+				<textarea name="address" class="detailedAddress" id="address" rows="" cols="3"></textarea>
+			</div>
+
+			<div class="item f-cb">
+				<label class="u-label"><span class="required">*</span>手机号码：</label><input type="text" class="mobile" id="mobile" name="mobile"/>&nbsp;&nbsp;或固定号码：<input type="text" name="phone" id="phone"/>
+			</div>
+			<div class="item f-cb">
+				<label class="u-label">邮政编码：</label>
+				<input type="text" name="postCode" id="postCode"/>
+			</div>
+			<div class="item check">
+				<label for="add-default1">
+				<input type="checkbox" name="defaultValue" id="add-default1" value="1"/>设为默认收货地址</label>
+			</div>
+		</form>
+	</div>
+</div>
+<!-- end -->
+
+<!--编辑地址-->
+<div id="edit-address" class="m-layer-pop">
+	<div class="add-address bd">
+		<form id="editForm" action="${base!}/member/address/editAddressDo" method="post">
+			<input type="hidden" name="id" id="id1" value="">
+			<!--<input type="hidden" id="defaultValue" value="">-->
+			<div class="item f-cb"><label class="u-label"><span class="required">*</span>收件人姓名：</label><input type="text" class="fullName" name="fullName" id="fullName1" value="" /></div>
+			<div class="item f-cb"><label class="u-label"><span class="required">*</span>选择片区：</label>
+				<div class="col-sm-9" style="float: left;">
+					<div style="position: relative">
+						<input readonly type="text" data-toggle="city-picker"  data-parsley-required="true" id="totalAddress1">
+						<input type="hidden" id="province1"  name="province" value="">
+						<input type="hidden" id="city1"  name="city" value="">
+						<input type="hidden" id="county1"  name="county" value="">
+					</div>
+				</div>
+			</div>
+			<div class="item f-cb">
+				<label class="u-label"><span class="required">*</span>详细地址：</label>
+				<textarea name="address" class="detailedAddress" id="address1" rows="" cols="3"></textarea>
+			</div>
+			<div class="item f-cb">
+				<label class="u-label"><span class="required">*</span>手机号码：</label><input type="text" class="mobile"  id="mobile1" name="mobile"/>&nbsp;&nbsp;或固定号码：<input type="text" name="phone" id="phone1" />
+			</div>
+			<div class="item f-cb">
+				<label class="u-label">邮政编码：</label>
+				<input type="text" name="postCode" id="postCode1"/>
+			</div>
+			<div class="item check">
+				<label for="add-default2"><input type="checkbox" name="defaultValue" id="add-default2" value="1"/>设为默认收货地址</label>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+
+
+
+
+<script>
+
+    $(function(){
+		//设置个人中心左侧 对应的菜单为选中状态
+        $("#member_left li a[href|='/member/address']").parent("li").addClass("active").siblings("li").removeClass("active");
+
+        //新增、更新地址  点击取消按钮时执行
+        $(document).on("click",".layui-layer-btn1",function(){
+            addressData()
+            //window.location.reload();
+        });
+        //新增、更新地址  点击关闭按钮时执行
+        $(document).on("click",".layui-layer-close1",function(){
+            addressData()
+            //window.location.reload();
+        });
+
+        $(document).on("click","#addAddress",function(){
+            //
+            $("#AddForm input,#AddForm textarea").css("border-color","");
+            //重置新增地址表单
+            document.getElementById("AddForm").reset();
+            $("#totalAddress").citypicker("reset");
+            $("#totalAddress").citypicker("destroy");
+            $("#totalAddress").citypicker({
+                province:"",
+                city:"",
+                county:""
+            });
+            setTimeout(function () {
+                $('.layui-layer').css("top","32px");
+            },10);
+        });
+
+        $(document).on("click",".edit",function(){
+            setTimeout(function () {
+                $('.layui-layer').css("top","32px");
+            },10);
+        });
+
+        //新增地址、编辑地址
+        $(document).on("click",".layui-layer-btn0",function(){
+            //$(this).parent().parent().css("top","22px");
+            var formId = $(this).parent().siblings(".layui-layer-content").find("form").attr("id");
+            //新增地址
+            if(formId=="AddForm"){
+                if(checkAddForm()==false){
+                    return;
+                }else{
+                    var val = $("#totalAddress").val();
+                    var arr = new Array(); //定义一数组
+                    arr=val.split("/"); //字符分割
+                    $("#province").val(arr[0]);
+                    $("#city").val(arr[1]);
+                    $("#county").val(arr[2]);
+
+                    var provinceValue = $(".select-item").eq(0).attr("data-code");
+                    var cityValue = $(".select-item").eq(1).attr("data-code");
+                    var countyValue = $(".select-item").eq(2).attr("data-code");
+
+                    var action = $(this).parent().siblings(".layui-layer-content").find("form").attr("action");
+                    var defaultValue =0;
+                    if($("#add-default1").is(':checked')){
+                        defaultValue=$("#add-default1").val();
+                    }
+                    $.ajax({
+                        type:"POST",
+                        url:action,
+                        data:{"fullName":$("#fullName").val(),"province":provinceValue
+                            ,"city":cityValue,"county":countyValue
+                            ,"address":$("#address").val(),"mobile":$("#mobile").val(),"phone":$("#phone").val()
+                            ,"postCode":$("#postCode").val(),"defaultValue":defaultValue},
+                        dataType:"JSON",
+                        success:function(data){
+                            if (data.code == 0) {
+                                layer.msg(data.msg, {
+                                    icon: 6,
+                                    offset: '250px',
+                                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                }, function(){
+                                    addressData()
+                                });
+                            } else {
+                                layer.msg(data.msg, {
+                                    icon: 5,
+                                    offset: '250px',
+                                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                }, function(){
+                                    addressData()
+                                });
+                            }
+                        }
+                    });
+                }
+            }else if(formId=="editForm"){//编辑地址
+                //checkEditForm();
+                if(checkEditForm()==false){
+                    return;
+                }else {
+                    var val = $("#totalAddress1").val();
+                    var arr = new Array(); //定义一数组
+                    arr = val.split("/"); //字符分割
+                    $("#province1").val(arr[0]);
+                    $("#city1").val(arr[1]);
+                    $("#county1").val(arr[2]);
+
+
+                    var provinceValue2 = $(".select-item").eq(0).attr("data-code");
+                    var cityValue2 = $(".select-item").eq(1).attr("data-code");
+                    var countyValue2 = $(".select-item").eq(2).attr("data-code");
+
+                    var action = $(this).parent().siblings(".layui-layer-content").find("form").attr("action");
+                    var defaultValue2 = 0;
+                    if ($("#add-default2").is(':checked')) {
+                        defaultValue2 = 1;
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: action,
+                        data: {
+                            "id": $("#id1").val(),
+                            "fullName": $("#fullName1").val(),
+                            "province": provinceValue2,
+                            "city": cityValue2,
+                            "county": countyValue2,
+
+                            "address": $("#address1").val(),
+                            "mobile": $("#mobile1").val(),
+                            "phone": $("#phone1").val(),
+                            "postCode": $("#postCode1").val(),
+                            "defaultValue": defaultValue2
+                        },
+                        dataType: "JSON",
+                        success: function (data) {
+                            if (data.code == 0) {
+                                layer.msg(data.msg, {
+                                    icon: 6,
+                                    offset: '250px',
+                                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                }, function () {
+                                    addressData()
+                                });
+                            } else {
+                                layer.msg(data.msg, {
+                                    icon: 5,
+                                    offset: '250px',
+                                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                }, function () {
+                                    addressData()
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        //手机校验 得到焦点
+        $(".mobile").focus(function () {
+            $(this).css("border-color","#dadada");
+        });
+
+        //手机校验 失去焦点
+        $(".mobile").blur(function () {
+            var pattern = /^1[34578]\d{9}$/;
+            if(pattern.test($(this).val())){
+                $(this).css("border-color","#00ec00");
+            }else{
+                $(this).css("border-color","red");
+            }
+        })
+
+        //姓名校验 得到焦点
+        $(".fullName").focus(function () {
+            $(this).css("border-color","#dadada");
+        });
+
+        //姓名校验 失去焦点
+        $(".fullName").blur(function () {
+            if($(this).val().length==0){
+                $(this).css("border-color","red");
+            }else{
+                $(this).css("border-color","#00ec00");
+            }
+        })
+
+        //详细地址校验 得到焦点
+        $(".detailedAddress").focus(function () {
+            $(this).css("border-color","#dadada");
+        });
+
+        //详细地址校验 失去焦点
+        $(".detailedAddress").blur(function () {
+            if($(this).val().length==0 || $(this).val().length>255){
+                $(this).css("border-color","red");
+            }else{
+                $(this).css("border-color","#00ec00");
+            }
+        })
+
+        //编辑地址
+        $(document).on("click","span[class=edit]",function(){
+            $.ajax({
+                type:"POST",
+                url:"/member/address/selectAddressDo/"+$(this).siblings(".default").attr("id"),
+                dataType:"JSON",
+                success:function(data){
+                    $("#id1").val(data.id);
+                    $("#fullName1").val(data.fullName);
+                    $("#province1").val(data.province);
+                    $("#city1").val(data.city);
+                    $("#county1").val(data.county);
+                    $("#address1").val(data.address);
+                    $("#postCode1").val(data.postCode);
+                    $("#mobile1").val(data.mobile);
+                    $("#phone1").val(data.phone);
+                    $("#totalAddress1").citypicker("reset");
+                    $("#totalAddress1").citypicker("destroy");
+                    $("#totalAddress1").citypicker({
+                        province:data.province,
+                        city:data.city,
+                        county:data.county
+                    });
+
+					$("#add-default2").val(data.defaultValue)
+                    if(data.defaultValue){
+                        $("[name = defaultValue]:checkbox").prop("checked", true);
+                    }else{
+                        $("[name = defaultValue]:checkbox").prop("checked", false);
+                    }
+                }
+            });
+        });
+
+        //设置为默认地址
+        $(document).on("click","span[class=default]",function(){
+            $.ajax({
+                type:"POST",
+                url:"/member/address/setDefaultAddressDo/"+$(this).attr("id"),
+                dataType:"JSON",
+                success:function(data){
+                    if (data.code == 0) {
+                        layer.msg(data.msg, {
+                            icon: 6,
+                            offset: '250px',
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            addressData()
+                        });
+                    } else {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            offset: '250px',
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            addressData()
+                        });
+                    }
+                }
+            });
+        });
+        //删除地址方法
+        $(document).on("click",".icon-delete1",function(){
+            var id= $(this).parent().siblings(".f-tar").children(".default").attr("id");
+            $.ajax({
+                type:"POST",
+                url:"/member/address/delAddressDo/"+id,
+                dataType:"JSON",
+                success:function(data){
+                    if (data.code == 0) {
+                        layer.msg(data.msg, {
+                            icon: 6,
+                            offset: '250px',
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            addressData()
+                        });
+                    } else {
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            offset: '250px',
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            addressData()
+                        });
+                    }
+                }
+            });
+        });
+    });
+
+    function checkAddForm() {
+        var i=0;
+        if($("#fullName").val().length==0){
+            $("#fullName").css("border-color","red")
+			i++;
+        }
+        if($("#totalAddress").val().length==0){
+            $("#totalAddress").css("border-color","red")
+            i++;
+        }
+
+        if($("#address").val().length==0 || $("#address").val().length>255){
+            $("#address").css("border-color","red")
+            i++;
+        }
+        var pattern = /^1[34578]\d{9}$/;
+        if(!pattern.test($("#mobile").val())){
+            $("#mobile").css("border-color","red")
+            i++;
+		}
+
+        if($("#mobile").val().length==0 && $("#phone").val().length==0){
+            $("#mobile").css("border-color","red")
+            i++;
+        }
+        if(i==0){
+            return  true;
+		}else{
+            /*if($("#fullName").css("border-color")=="rgb(255, 0, 0)"){
+                layer.msg("请输入用户名！", {
+                    icon: 5,offset: '250px',time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                }, function(){
+                    if($("#totalAddress").css("border-color")=="rgb(255, 0, 0)"){
+                        layer.msg("请选择地址！", {
+                            icon: 5,offset: '250px',time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            if($("#address").css("border-color")=="rgb(255, 0, 0)" ||$("#inputPassword2").css("border-color")=="rgb(255, 0, 0)" ){
+                                layer.msg("请输入详细地址！", {
+                                    icon: 5,offset: '250px',time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                }, function(){
+                                    if(!pattern.test($("#mobile").val())) {
+                                        layer.msg('请输入正确的手机号！', {icon: 5,offset: '250px'});
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }*/
+            layer.msg('请填写正确的信息！', {icon: 5,offset: '250px',time: 2000});
+            return  false;
+		}
+    }
+
+    function checkEditForm() {
+        var i = 0
+        if($("#fullName1").val().length==0){
+            $("#fullName1").css("border-color","red")
+            i++;
+        }
+        if($("#totalAddress1").val().length==0){
+            $("#totalAddress1").css("border-color","red")
+            i++;
+        }
+
+        if($("#address1").val().length==0 ||$("#address1").val().length>255){
+            $("#address1").css("border-color","red")
+            i++;
+        }
+        var pattern = /^1[34578]\d{9}$/;
+        if(!pattern.test($("#mobile1").val())){
+            $("#mobile1").css("border-color","red")
+            i++;
+        }
+        if($("#mobile1").val().length==0 && $("#phone1").val().length==0){
+            $("#mobile1").css("border-color","red")
+            i++;
+        }
+        if(i==0){
+            return  true;
+        }else{
+            /*if($("#fullName1").css("border-color")=="rgb(255, 0, 0)"){
+                layer.msg("请输入用户名！", {
+                    icon: 5,offset: '250px',time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                }, function(){
+                    if($("#totalAddress1").css("border-color")=="rgb(255, 0, 0)"){
+                        layer.msg("请选择地址！", {
+                            icon: 5,offset: '250px',time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            if($("#address1").css("border-color")=="rgb(255, 0, 0)" ||$("#inputPassword2").css("border-color")=="rgb(255, 0, 0)" ){
+                                layer.msg("请输入详细地址！", {
+                                    icon: 5,offset: '250px',time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                }, function(){
+                                    if(!pattern.test($("#mobile1").val())) {
+                                        layer.msg('请输入正确的手机号！', {icon: 5,offset: '250px'});
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }*/
+            layer.msg('请填写正确的信息！', {icon: 5,offset: '250px',time: 2000});
+            return  false;
+        }
+    }
+
+    function addressData() {
+        $.ajax({
+            type:"POST",
+            url:"/member/address/data",
+            dataType:"JSON",
+            success:function(data){
+				var addressStr ="";
+				var len = data.length;
+				$("#addressLen").text(len);
+                for(var  i=0;i<len;i++){
+                    if(data[i].defaultValue){
+                        addressStr+="<div class=\"item-list active default\" data-label>" ;
+					}else{
+                        addressStr+="<div class=\"item-list\" data-label>" ;
+					}
+                    addressStr+="<div class=\"hd f-cb\"><span class=\"mark\">默认地址</span><span class=\"iconfont icon-delete1 f-fr\" a></span></div>" +
+                        "<div class=\"bd\">" +
+                        "<p><span class=\"name\">"+data[i].fullName+"</span><span class=\"tel\">"+data[i].mobile+"</span></p>" +
+                        "<p class=\"address\">";
+                    if(data[i].province!=undefined){
+                        addressStr+=data[i].province;
+					}
+                    if(data[i].city!=undefined){
+                        addressStr+=data[i].city;
+                    }
+                    if(data[i].county!=undefined){
+                        addressStr+=data[i].county;
+                    }
+                    addressStr+="<p class=\"detail\">"+data[i].address+"</p>" +
+                        "</div>" +
+                        "<div class=\"fd f-tar\">" +
+                        "<span class=\"default\" id=\""+data[i].id+"\"><i class=\"iconfont icon-index1\"></i>设为默认</span>" +
+                        "<span class=\"edit\"><i class=\"iconfont icon-edit\"></i>编辑</span>" +
+                        "</div>" +
+                        "</div>";
+				}
+				$("#memberAddress").html(addressStr);
+            }
+        });
+    }
+</script>
+<!--end-->

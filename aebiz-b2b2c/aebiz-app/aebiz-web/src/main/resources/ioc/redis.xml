@@ -1,0 +1,74 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- redis 相关配置 -->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="${redis.maxTotal}"/>
+        <property name="minIdle" value="${redis.minIdle}"/>
+        <property name="maxIdle" value="${redis.maxIdle}"/>
+        <property name="maxWaitMillis" value="${redis.maxWait}"/>
+        <property name="testWhileIdle" value="${redis.testWhileIdle}"/><!-- 空闲时测试,免得redis连接空闲时间长了断线 -->
+        <property name="testOnBorrow"
+                  value="${redis.testOnBorrow}"/><!-- 向调用者输出“链接”资源时，是否检测是有有效，如果无效则从连接池中移除，并尝试获取继续获取。设为true，一个挂都不能用 -->
+        <property name="testOnReturn" value="${redis.testOnReturn}"/><!-- 向连接池“归还”链接时，是否检测“链接”对象的有效性。 -->
+    </bean>
+    <!-- 关闭应用时必须关掉 -->
+    <bean id="jedisPool" class="redis.clients.jedis.JedisPool" destroy-method="destroy">
+        <constructor-arg index="0" ref="jedisPoolConfig"/>
+        <constructor-arg index="1" value="${redis.host}" type="java.lang.String"/>
+        <constructor-arg index="2" value="${redis.port}" type="int"/>
+        <constructor-arg index="3" value="${redis.timeout}"/>
+        <!--<constructor-arg index="4" value="${redis.pass}"/>-->
+    </bean>
+
+    <bean id="hostAndPort" class="redis.clients.jedis.HostAndPort">
+        <constructor-arg index="0" value="${redis.host}"/>
+        <constructor-arg index="1" value="${redis.port}"/>
+    </bean>
+
+    <bean id="jedisClusterNodeSet" class="com.aebiz.baseframework.redis.JedisClusterNodeSet" init-method="init">
+        <property name="nodes" value="${redis.nodes}"/>
+        <property name="host" value="${redis.host}"/>
+        <property name="port" value="${redis.port}"/>
+    </bean>
+
+    <bean id="jedisCluster" class="redis.clients.jedis.JedisCluster" destroy-method="close" lazy-init="true">
+        <constructor-arg index="0">
+            <set>
+                <ref bean="jedisClusterNodeSet"/>
+            </set>
+        </constructor-arg>
+        <constructor-arg index="1" value="${redis.timeout}" />
+        <constructor-arg index="2" value="${redis.soTimeout}" />
+        <constructor-arg index="3" value="${redis.maxAttempts}" />
+        <constructor-arg index="4" value="${redis.pass}" />
+        <constructor-arg index="5" ref="jedisPoolConfig"/>
+    </bean>
+
+    <bean id="jedisClusterWrapper" class="com.aebiz.baseframework.redis.JedisClusterWrapper" lazy-init="true">
+        <constructor-arg index="0" ref="jedisCluster"/>
+    </bean>
+
+    <bean id="jedisAgent" class="com.aebiz.baseframework.redis.JedisAgentFactoryBean">
+        <!--Redis若是集群请设置集群模式:cluster -->
+        <property name="mode" value=""/>
+    </bean>
+
+    <bean id="redisInterceptor" class="com.aebiz.baseframework.redis.RedisInterceptor">
+        <property name="jedisAgent" ref="jedisAgent"/>
+    </bean>
+
+    <!-- redis 订阅发布服务类 -->
+    <bean id="pubSubService" class="com.aebiz.baseframework.redis.pubsub.PubSubService">
+        <property name="jedisAgent" ref="jedisAgent"/>
+    </bean>
+
+    <!-- 代理所有redis方法 -->
+    <bean id="redisService" class="com.aebiz.baseframework.redis.RedisService">
+        <property name="jedisAgent" ref="jedisAgent"/>
+    </bean>
+
+</beans>

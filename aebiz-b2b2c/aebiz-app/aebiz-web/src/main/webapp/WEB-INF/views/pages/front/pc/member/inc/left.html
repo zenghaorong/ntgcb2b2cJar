@@ -1,0 +1,48 @@
+<div class="ps_leftbar f-fl">
+    <a href="" class="photo">
+        <img id="top" src="${session.personal_photo!}">
+    </a>
+    <div class="name">${@string.getMemberUsername()}</div>
+    <div class="grade"><span></span><font>${session.level}</font></div>
+    <div class="button">
+        <a href="javascript:void(0)" onclick="switchAccount()">切换账号</a>
+    </div>
+    <ul class="list-bar" id="member_left">
+        <li data-label ><a href="/member/order">订单管理</a></li>
+        <li data-label><a href="/member/home/center">个人中心</a></li>
+        <li data-label><a href="/member/address">地址管理</a></li>
+        <!--<li data-label><a href="#">我的红包</a></li>-->
+        <li data-label><a href="/member/coupon">优惠券（<span id="couponCountId">${session.couponCount!0}</span>）</a></li>
+        <li data-label><a href="/member/collection">收藏夹</a></li>
+        <!--<li data-label><a href="#">佣金返利</a></li>-->
+        <li data-label><a href="/member/security/index">账号安全</a></li>
+        <li data-label><a href="/member/orderAfter">售后管理</a></li>
+        <!--<li data-label><a href="#">投诉管理</a></li>-->
+    </ul>
+</div>
+
+<script>
+    $().ready(function () {
+        $("#member_left>li").click(function () {
+            $(this).addClass("active").siblings("li").removeClass("active");
+        });
+
+        if($("#top").attr("src")==null||$("#top").attr("src")==""){
+            $("#top").attr("src","/assets/front/pc/member/images/headPortrait/default.png");
+        }
+    });
+
+    //切换账号
+    function switchAccount() {
+        layer.confirm('您确认要退出登录更换账号登录？', {
+            btn: ['确认','取消'], //按钮
+            offset: ['100px', '500px']
+        }, function(){
+            window.location.href = "/member/login/logout";
+        },function (index) {
+            layer.close(index);
+        });
+    }
+
+</script>
+

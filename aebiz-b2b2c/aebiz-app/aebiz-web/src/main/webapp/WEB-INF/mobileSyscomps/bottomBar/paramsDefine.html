@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+
+
+<form class="form-horizontal" id="pictureadform">
+
+    <div class="form-group">
+        <label for="icon1url" class="col-sm-3 control-label">第一个图标跳转链接</label>
+        <div class="col-sm-3">
+            <input type="text" name="icon1url" id="icon1url" placeholder="" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="icon1txt" class="col-sm-3 control-label">第一个图标文字</label>
+        <div class="col-sm-3">
+            <input type="text" name="icon1txt" id="icon1txt" placeholder="" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="icon2url" class="col-sm-3 control-label">第二个图标跳转链接</label>
+        <div class="col-sm-3">
+            <input type="text" name="icon2url" id="icon2url" placeholder="" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="icon2txt" class="col-sm-3 control-label">第二个图标文字</label>
+        <div class="col-sm-3">
+            <input type="text" name="icon2txt" id="icon2txt" placeholder="" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="icon3url" class="col-sm-3 control-label">第三个图标跳转链接</label>
+        <div class="col-sm-3">
+            <input type="text" name="icon3url" id="icon3url" placeholder="" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="icon3txt" class="col-sm-3 control-label">第三个图标文字</label>
+        <div class="col-sm-3">
+            <input type="text" name="icon3txt" id="icon3txt" placeholder="" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="icon4url" class="col-sm-3 control-label">第四个图标跳转链接</label>
+        <div class="col-sm-3">
+            <input type="text" name="icon1url" id="icon4url" placeholder="" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="icon4txt" class="col-sm-3 control-label">第四个图标文字</label>
+        <div class="col-sm-3">
+            <input type="text" name="icon4txt" id="icon4txt" placeholder="" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="icon5url" class="col-sm-3 control-label">第五个图标跳转链接</label>
+        <div class="col-sm-3">
+            <input type="text" name="icon5url" id="icon5url" placeholder="" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="icon5txt" class="col-sm-3 control-label">第五个图标文字</label>
+        <div class="col-sm-3">
+            <input type="text" name="icon5txt" id="icon5txt" placeholder="" class="form-control">
+        </div>
+    </div>
+
+</form>
+
+
+</body>
+
+
+<script type="text/javascript">
+    var pageJson = ${webPageModelJsonStr};
+
+    var componentsParam = {
+        initParamData: function (pageJson) {
+            if (typeof (pageJson) == "string") {
+                pageJson = JSON.parse(pageJson);
+            }
+
+            if (pageJson.icon1url) {
+                $("#icon1url").val(pageJson.icon1url);
+            }
+
+            if (pageJson.icon1txt) {
+                $("#icon1txt").val(pageJson.icon1txt);
+            }
+
+            if (pageJson.icon2url) {
+                $("#icon2url").val(pageJson.icon2url);
+            }
+
+            if (pageJson.icon2txt) {
+                $("#icon2txt").val(pageJson.icon2txt);
+            }
+
+            if (pageJson.icon3url) {
+                $("#icon3url").val(pageJson.icon3url);
+            }
+
+            if (pageJson.icon3txt) {
+                $("#icon3txt").val(pageJson.icon3txt);
+            }
+
+            if (pageJson.icon4url) {
+                $("#icon4url").val(pageJson.icon4url);
+            }
+
+            if (pageJson.icon4txt) {
+                $("#icon4txt").val(pageJson.icon4txt);
+            }
+
+            if (pageJson.icon5url) {
+                $("#icon5url").val(pageJson.icon5url);
+            }
+
+            if (pageJson.icon5txt) {
+                $("#icon5txt").val(pageJson.icon5txt);
+            }
+
+
+        },
+        saveParamData: function () {
+            var pageJson = {
+                compId: 'mbottomBar',
+                "icon1url": $('#icon1url').val(),
+                "icon1txt": $('#icon1txt').val(),
+                "icon2url": $('#icon2url').val(),
+                "icon2txt": $('#icon2txt').val(),
+                "icon3url": $('#icon3url').val(),
+                "icon3txt": $('#icon3txt').val(),
+                "icon4url": $('#icon4url').val(),
+                "icon4txt": $('#icon4txt').val(),
+                "icon5url": $('#icon5url').val(),
+                "icon5txt": $('#icon5txt').val(),
+            };
+            return pageJson;
+        },
+
+        showParamData: function () {
+
+            var paramData = [];
+
+            var srcImage = {
+                type: 'src',
+                target: 'img',
+                value: $("#imgSrc").val()
+            }
+
+            paramData.push(srcImage);
+
+            return paramData;
+        }
+    }
+
+    componentsParam.initParamData(pageJson);
+</script>
+
+
+</html>

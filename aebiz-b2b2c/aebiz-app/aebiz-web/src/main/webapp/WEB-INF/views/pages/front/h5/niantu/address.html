@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>收货地址</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!--标准mui.css-->
+    <link rel="stylesheet" href="${base!}/assets/front/h5/css/mui.min.css" />
+    <link rel="stylesheet" href="${base!}/assets/front/h5/css/hryc.css" />
+    <!--App自定义的css-->
+    <!--<link rel="stylesheet" type="text/css" href="../css/app.css"/>-->
+    <style>
+        .mui-table-view .mui-media-object {
+            line-height: 42px;
+            max-width: 145px;
+            height: 100px;
+        }
+        .jiage-text{
+            font-size: 18px;
+            color: red;
+            margin-right:10px ;
+        }
+        [v-cloak]{
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+
+<header class="mui-bar mui-bar-nav top-color">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+    <h1 class="mui-title" style="color: white;">
+        收货地址
+    </h1>
+</header>
+<div id="vue" style="margin-top: 60px;" v-cloak>
+    <div class="mui-card"  v-for="item in addressList" :key="item.id">
+
+        <div class="mui-card-header" v-on:click="setMoren(item.id)">
+            <span>{{item.fullName}}</span><span>{{item.mobile}}</span>
+        </div>
+        <div class="mui-card-content"  v-on:click="setMoren(item.id)">
+            <div class="mui-card-content-inner">
+                {{item.address}}
+            </div>
+        </div>
+        <div class="mui-card-header">
+            <button type="button" class="mui-btn mui-btn-success" v-on:click="goUpd(item.id)">编辑</button>
+            <button type="button"  v-on:click="del(item.id)" class="mui-btn mui-btn-danger mui-btn-outlined">
+                删除
+            </button>
+        </div>
+    </div>
+</div>
+
+<div style="width: 300px;margin: 0 auto;">
+  <button type="button" class="mui-btn mui-btn-primary mui-btn-block" onclick="location.href='${base!}/open/h5/address/goAddressAdd.html'">新增地址</button>
+</div>
+
+
+
+<script type="text/javascript" src="${base!}/assets/front/h5/js/mui.js" ></script>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/vue.js" ></script>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/jquery-2.0.0.min.js" ></script>
+<script type="text/javascript" src="${base!}/assets/decorate/pc/decoratecommon/js/layer/mobile/layer.js" ></script>
+<script type="application/javascript">
+    mui.init({
+        swipeBack:true //启用右滑关闭功能
+    });
+
+    var vue = new Vue({
+        el: '#vue',
+        data: {
+            addressList: [],
+        },
+        created:function () {   //实例初始化创建完成执行
+
+            this.getAddressList()     //调用自身方法
+
+        },
+        methods:{              //定义封装方法
+            //获取列表
+            getAddressList:function () {
+                var self = this;
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/address/addressList.html",
+                    dataType:"JSON",
+                    data:{
+
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            var d = data.data;
+                            self.addressList = d;
+                        } else {
+
+                        }
+                    }
+                });
+
+            },
+            goUpd:function (id) {
+                window.location.href='${base!}/open/h5/address/goAddressUp.html?id='+id;
+            },
+            del:function (id) {
+                var self = this;
+                //询问框
+                layer.open({
+                    content: '您确定要删除吗？'
+                    ,btn: ['是', '否']
+                    ,yes: function(index){
+                        layer.close(index);
+                        $.ajax({
+                            type:"POST",
+                            url:"${base!}/open/h5/address/addressDelete.html",
+                            dataType:"JSON",
+                            data:{
+                               id:id
+                            },
+                            success:function(data){
+                                if (data.code == 0) {
+                                    self.getAddressList()
+                                } else {
+
+                                }
+                            }
+                        });
+                    }
+                });
+            },
+            //设为默认地址
+            setMoren:function (id) {
+                var self = this;
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/address/setDefaultAddress.html",
+                    dataType:"JSON",
+                    data:{
+                       id:id
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            var json = '${productList!}';
+                            window.location.href = '${base!}/open/h5/order/orderConfirmation.html?productList='+json;
+                        } else {
+
+                        }
+                    }
+                });
+            }
+        },
+        watch:{     //监听器
+            // carModel:function () {
+            //     this.getProvince();
+            // }
+        }
+
+    })
+
+</script>
+</body>
+</html>

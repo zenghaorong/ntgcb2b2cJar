@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>创意美术</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!--标准mui.css-->
+    <link rel="stylesheet" href="${base!}/assets/front/h5/css/mui.min.css" />
+    <link rel="stylesheet" href="${base!}/assets/front/h5/css/hryc.css" />
+    <!--App自定义的css-->
+    <!--<link rel="stylesheet" type="text/css" href="../css/app.css"/>-->
+    <style>
+      [v-cloak]{
+          display: none !important;
+      }
+    </style>
+</head>
+<body style="background: white;">
+
+
+<header class="mui-bar mui-bar-nav top-color">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+    <div class="mui-title mui-input-row " >
+        <input type="search" class="mui-input-clear" style="background: white;" placeholder="请输入品牌和名称">
+    </div>
+</header>
+
+<!--底部导航栏-->
+<!--<nav class="mui-bar mui-bar-tab">-->
+    <!--<a class="mui-tab-item mui-active" href="#tabbar">-->
+        <!--<span class="mui-icon mui-icon-home"></span>-->
+        <!--<span class="mui-tab-label">领劵中心</span>-->
+    <!--</a>-->
+    <!--<a class="mui-tab-item" href="#tabbar-with-chat">-->
+        <!--<span class="mui-icon mui-icon mui-icon-person"></span>-->
+        <!--<span class="mui-tab-label">宝宝专属</span>-->
+    <!--</a>-->
+    <!--<a class="mui-tab-item" href="#tabbar-with-contact">-->
+        <!--<span class="mui-icon mui-icon mui-icon-person"></span>-->
+        <!--<span class="mui-tab-label">我的优惠劵</span>-->
+    <!--</a>-->
+
+<!--</nav>-->
+
+<div class="mui-content" style="background: white;" id="vue" v-cloak>
+    <ul class="mui-table-view mui-grid-view mui-grid-9" style="background: white;">
+        <li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-3" style="width: 50%"   v-for="item in cmsList" :key="item.id">
+            <a v-bind:href="'${base!}/open/h5/niantu/tutorialDetails.html?id='+item.id">
+                <img :src="item.picurl" width="150px;" height="150px;"/>
+                <div class="mui-media-body">{{item.title}}</div>
+                <div class="mui-media-body" style="height: 19px;">
+                    <span class="tutorial">{{item.opAt}}</span>
+                </div>
+                <div class="mui-media-body">
+                    <span class="left2">
+                        <img class="pon" src="${base!}/assets/front/h5/img/zan.png" width="20px"/>
+                    </span>
+                    <span style="float: left;font-size: 0.88em;color: #919191;">100</span>
+                    <span class="left2" style="margin-left: 15px;">
+                        <img class="pon" src="${base!}/assets/front/h5/img/pinlun.png" width="20px"/>
+                    </span>
+                    <span style="float: left;font-size: 0.88em;color: #919191;">100</span>
+                </div>
+            </a>
+        </li>
+
+    </ul>
+</div>
+
+<script type="text/javascript" src="${base!}/assets/front/h5/js/mui.js" ></script>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/vue.js" ></script>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/jquery-2.0.0.min.js" ></script>
+<script type="application/javascript">
+    mui.init({
+        swipeBack:true //启用右滑关闭功能
+    });
+
+    var vue = new Vue({
+        el: '#vue',
+        data: {
+            cmsList: [],
+        },
+        created:function () {   //实例初始化创建完成执行
+
+            this.getCmsList()     //调用自身方法
+
+        },
+        methods:{              //定义封装方法
+            //获取列表
+            getCmsList:function () {
+                var self = this;
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/cms/cmsListByType.html",
+                    dataType:"JSON",
+                    data:{
+                        typeName:'cyms',
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            var d = data.data;
+                            $.each(d, function (index, obj) {
+                                obj.opAt=timestamp(obj.opAt)
+                                d[index] = obj;
+                            })
+
+                            self.cmsList = d;
+                        } else {
+
+                        }
+                    }
+                });
+
+            }
+        },
+        watch:{     //监听器
+            // carModel:function () {
+            //     this.getProvince();
+            // }
+        }
+
+    })
+
+    //处理时间戳
+    function timestamp(timestamp) {
+        var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        Y = date.getFullYear() + '-';
+        M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        D = date.getDate() + ' ';
+        h = date.getHours() + ':';
+        m = date.getMinutes();
+        s = date.getSeconds();
+        return Y+M+D+h+m;
+    }
+
+</script>
+</body>
+</html>

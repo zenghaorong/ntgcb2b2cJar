@@ -1,0 +1,122 @@
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="pull-left offscreen-left" style="padding-top:15px;">
+            <div class="form-group">
+                <select name="sendTo" id="sendTo_select"  class="required" >
+                    <option value="PLATFORM" selected="selected">${msg['msg.enum.sendTo.platform']}</option>
+                    <option value="STORE">${msg['msg.enum.sendTo.store']}</option>
+                    <option value="MEMBER">${msg['msg.enum.sendTo.member']}</option>
+                </select>
+                <input id="name" type="text" onclick="this.value='';" placeholder="${msg['sys.role.column.enterusernickname']}">
+            </div>
+        </div>
+        <div class="pull-right offscreen-right btn-group tool-button">
+            <a class="btn btn-primary navbar-btn" onclick="_all()">${msg['msg.receive.msg.recieveUser.fun.selectAll']}</a>
+            <a class="btn btn-primary navbar-btn" onclick="_selectAll()">${msg['msg.receive.msg.recieveUser.fun.selectAllofPage']}</a>
+            <a class="btn btn-primary navbar-btn" onclick="_selectOn()">${msg['sys.role.column.soure']}</a>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border" style="padding-top: 5px;" >
+            <table id="datatable_select" class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                <tr>
+                    <th>${msg['msg.receive.msg.recieveUser.column.username']}</th>
+                    <th>${msg['msg.receive.msg.recieveUser.column.name']}</th>
+                    <th>${msg['msg.receive.msg.recieveUser.column.status']}</th>
+            </table>
+        </div>
+    </div>
+</section>
+<script language="JavaScript">
+    var datatable_select;
+    function initdatatable_select() {
+        datatable_select = $('#datatable_select').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang!}.json"
+            },
+            "ajax": {
+                "url": "${base}/platform/msg/send/msg/selectData",
+                "type": "post",
+                "data": function (d) {
+                    d.sendTo = $('#sendTo_select').val();
+                    d.name = $('#name').val();
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "loginname", "bSortable": true},
+                {"data": "username", "bSortable": true},
+                {"data": "disabled", "bSortable": true}
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        if (!data) {
+                            return '<i id="disable_' + row.id + '" class="fa fa-circle text-success ml5"></i>';
+                        } else {
+                            return '<i id="disable_' + row.id + '" class="fa fa-circle text-danger ml5"></i>';
+                        }
+                    },
+                    "targets": 2
+                }
+            ]
+        });
+        datatable_select.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#name").on('keyup', function () {
+            datatable_select.ajax.reload();
+        });
+    }
+
+    <!--#/* 全部 */#-->
+    function _all() {
+        var $selectedOption = $("#sendTo_select>option:selected");
+        var users = $selectedOption.text() + " [${msg['msg.receive.msg.recieveUser.all']}]";
+        $("#sendTo").val($selectedOption.val());
+        $("#receiveUsers").val(users);
+        $("#receiveMsgsDiv").html("<input type='hidden' name='sendAll' value='true'/>");
+        $('#dialogUserSelect').modal('hide');
+    }
+
+    <!--#/* 当前页全选 */#-->
+    function _selectAll() {
+        $("#datatable_select").find("tr").each(function () {
+            if (!$(this).hasClass('selected'))
+                $(this).addClass('selected');
+        });
+    }
+    function _selectOn() {
+        var chks = datatable_select.rows('.selected').data();
+        if (chks.length > 0) {
+            //var ids = [];
+            var names = [];
+            var receiveMsgs = [];
+            $.each(datatable_select.rows('.selected').data(), function (i, n) {
+                //ids.push(n.id);
+                names.push(n.username);
+                receiveMsgs.push('<input type="hidden" name="receiveMsgs[' + i + '].receiveId" value="' + n.id + '" />');
+            });
+            var $selectedOption = $("#sendTo_select>option:selected");
+            var users = $selectedOption.text() + " [" + names.join(",") + "]";
+            $("#sendTo").val($selectedOption.val());
+            $("#receiveUsers").val(users);
+            $("#receiveMsgsDiv").html(receiveMsgs.join("")+"<input type='hidden' name='sendAll' value='false'/>");
+            $('#dialogUserSelect').modal('hide');
+
+        }else{
+            Toast.warning("请先选择用户！");
+        }
+    }
+    $(document).ready(function () {
+        initdatatable_select();
+    });
+
+</script>

@@ -1,0 +1,83 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/cache
+           http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+    <!-- 启用缓存注解功能，这个是必须的，否则注解不会生效，另外，该注解一定要声明在spring主配置文件中才会生效 -->
+    <cache:annotation-driven cache-manager="cacheManager" key-generator="myKeyGenerator"/>
+
+    <!-- 自定义key生成器 -->
+    <bean id="myKeyGenerator" class="com.aebiz.baseframework.cache.generator.MyKeyGenerator"></bean>
+
+
+    <!-- 请勿改变 id 值,此值用于判断是否启用了缓存-->
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <set>
+                <ref bean="sysCache"/><!-- 系统模块缓存名-->
+                <ref bean="msgCache"/><!--消息模块缓存名-->
+                <ref bean="shopCache"/><!--商城配置模块缓存名-->
+                <ref bean="goodsCache"/><!--商品模块缓存名-->
+                <ref bean="cmsCache"/><!--CMS模块缓存名-->
+                <ref bean="accCache"/><!--帐号模块缓存名-->
+                <ref bean="wxCache"/><!--微信模块缓存名-->
+                <ref bean="timeoutCache01"/>
+                <ref bean="storeGoodsClassCache"/><!--前台分类缓存名-->
+            </set>
+        </property>
+    </bean>
+
+
+    <bean id="sysCache" class="com.aebiz.baseframework.cache.impl.redis.RedisCacheFactoryBean">
+        <property name="name" value="sysCache"/>
+        <property name="jedisAgent" ref="jedisAgent"/>
+    </bean>
+
+    <bean id="msgCache" class="com.aebiz.baseframework.cache.impl.redis.RedisCacheFactoryBean">
+        <property name="name" value="msgCache"/>
+        <property name="jedisAgent" ref="jedisAgent"/>
+    </bean>
+
+    <bean id="shopCache" class="com.aebiz.baseframework.cache.impl.redis.RedisCacheFactoryBean">
+        <property name="name" value="shopCache"/>
+        <property name="jedisAgent" ref="jedisAgent"/>
+    </bean>
+
+    <bean id="goodsCache" class="com.aebiz.baseframework.cache.impl.redis.RedisCacheFactoryBean">
+        <property name="name" value="goodsCache"/>
+        <property name="liveTime" value="28800"/>
+        <property name="jedisAgent" ref="jedisAgent"/>
+    </bean>
+
+    <bean id="cmsCache" class="com.aebiz.baseframework.cache.impl.redis.RedisCacheFactoryBean">
+        <property name="name" value="cmsCache"/>
+        <property name="jedisAgent" ref="jedisAgent"/>
+    </bean>
+
+    <bean id="wxCache" class="com.aebiz.baseframework.cache.impl.redis.RedisCacheFactoryBean">
+        <property name="name" value="wxCache"/>
+        <property name="jedisAgent" ref="jedisAgent"/>
+    </bean>
+
+    <bean id="accCache" class="com.aebiz.baseframework.cache.impl.redis.RedisCacheFactoryBean">
+        <property name="name" value="accCache"/>
+        <property name="liveTime" value="7200"/>
+        <property name="jedisAgent" ref="jedisAgent"/>
+    </bean>
+
+
+    <!-- redis缓存1小时-->
+    <bean id="timeoutCache01" class="com.aebiz.baseframework.cache.impl.redis.RedisCacheFactoryBean">
+        <property name="name" value="timeoutCache01"/>
+        <property name="liveTime" value="3600"/>
+        <property name="jedisAgent" ref="jedisAgent"/>
+    </bean>
+    <bean id="storeGoodsClassCache" class="com.aebiz.baseframework.cache.impl.redis.RedisCacheFactoryBean">
+        <property name="name" value="storeGoodsClassCache"/>
+        <property name="jedisAgent" ref="jedisAgent"/>
+    </bean>
+</beans>

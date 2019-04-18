@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<form class="form-horizontal" role="form">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">是否异步加载：</label>
+        <div id="needAsyncInit" class="col-sm-10">
+            <label class="radio-inline">
+                <input type="radio" name="needAsyncInit" id="needAsyncInit_t" value="true"> 是
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="needAsyncInit" id="needAsyncInit_f" value="false"> 否
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">是否有热词：</label>
+        <div id="isHaveHot" class="col-sm-10">
+            <label class="radio-inline">
+                <input type="radio" name="isHaveHot" value="1"> 是
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="isHaveHot" value="0"> 否
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">默认选中：</label>
+        <div id="defaultSelect" class="col-sm-10">
+            <label class="radio-inline">
+                <input type="radio" name="defaultSelect" value="1">店铺
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="defaultSelect" value="0">商品
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="hotWords" class="col-sm-2 control-label">热词（英文,隔开）：</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="hotWords" placeholder="热词1,热词2,热词3">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="productSearchUrl" class="col-sm-2 control-label">商品搜索页面路径：</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="productSearchUrl" placeholder="/sysback/decoratepages/run?templateUuid=9e3c24ff714a48f8bdf5261e0c820a30&pageUuid=7cd1f33bdfd944f99cf4757408eb6aea">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="storeSearchUrl" class="col-sm-2 control-label">店铺搜索页面路径：</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="storeSearchUrl" placeholder="/sysback/decoratepages/run?templateUuid=9e3c24ff714a48f8bdf5261e0c820a30&pageUuid=7cd1f33bdfd944f99cf4757408eb6aea">
+        </div>
+    </div>
+</form>
+<script>
+    //获取属性配置JSON
+    var pageJson = ${webPageModelJsonStr};
+
+    //构建属性配置
+    var componentsParam = {
+        initParamData:function(paramJson){ //初始化渲染属性配置
+            if(typeof(paramJson) == "string"){
+                paramJson = JSON.parse(paramJson);
+            }
+            $("#needAsyncInit input[value=" + paramJson.needAsyncInit + "]").prop("checked", true);
+            $("#isHaveHot input[value=" + paramJson.isHaveHot + "]").prop("checked", true);
+            $("#defaultSelect input[value=" + paramJson.defaultSelect + "]").prop("checked", true);
+            $("#hotWords").val(paramJson.hotWords);
+            $("#productSearchUrl").val(paramJson.productSearchUrl);
+            $("#storeSearchUrl").val(paramJson.storeSearchUrl);
+        },
+        saveParamData:function(){ //返回属性配置JSON
+            var needAsyncInit = $("#needAsyncInit input:checked").val();
+            var isHaveHot = $("#isHaveHot input:checked").val();
+            var defaultSelect = $("#defaultSelect input:checked").val();
+            var hotWords = $("#hotWords").val();
+            var productSearchUrl = $("#productSearchUrl").val();
+            var storeSearchUrl = $("#storeSearchUrl").val();
+            var pageShow = $("#pageShow").val();
+            var paramJson = {
+                compId: 'fullSearch',
+                "needAsyncInit": needAsyncInit,
+                "isHaveHot": isHaveHot,
+                "defaultSelect": defaultSelect,
+                "hotWords": hotWords,
+                "productSearchUrl": productSearchUrl,
+                "storeSearchUrl": storeSearchUrl,
+                "pageShow":pageShow
+            };
+            var err = this.validateData(paramJson);
+            if(!err.success){
+                return err;
+            }
+            return paramJson;
+        },
+        validateData:function(paramJson){
+            var err={
+                success:true,
+                msg:""
+            }
+            var msg=[];
+            msg = decoration.base.validateSpecial(msg,paramJson.hotWords,"热词包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.productSearchUrl,"商品搜索页面路径包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.storeSearchUrl,"店铺搜索页面路径包含特殊字符，请重新输入！<br>");
+            if(msg.length>0){
+                err.success = false;
+                err.msg=msg.join("");
+            }
+            return err;
+        }
+    }
+
+    componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+
+</script>
+</body>
+</html>

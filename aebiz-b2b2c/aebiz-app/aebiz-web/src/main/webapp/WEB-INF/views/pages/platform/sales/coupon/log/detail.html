@@ -1,0 +1,47 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">Sales_coupon_log</a>
+                        <small>${obj.id}</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>${msg['sales.coupon.log.column.storeId']}</td><td>${obj.storeId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sales.coupon.log.column.orderId']}</td><td>${obj.orderId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sales.coupon.log.column.accountId']}</td><td>${obj.accountId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sales.coupon.log.column.couponId']}</td><td>${obj.couponId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sales.coupon.log.column.couponCode']}</td><td>${obj.couponCode}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sales.coupon.log.column.ruleId']}</td><td>${obj.ruleId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sales.coupon.log.column.couponName']}</td><td>${obj.couponName}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['sales.coupon.log.column.orderAt']}</td><td>${obj.orderAt}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

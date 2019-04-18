@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>黏土工程</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="${base!}/assets/front/h5/css/mui.min.css" />
+		<link rel="stylesheet" href="${base!}/assets/front/h5/css/hryc.css" />
+		<style>
+			.productList{
+				width: 50%;
+			}
+
+		</style>
+		<!--App自定义的css-->
+		<!--<link rel="stylesheet" type="text/css" href="../css/app.css"/>-->
+	</head>
+	<body>
+
+		
+		<header class="mui-bar mui-bar-nav top-color">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+		    <div class="mui-title mui-input-row " >
+                <input type="search" class="mui-input-clear" style="background: white;" placeholder="请输入品牌和名称">
+		    </div>
+		</header>
+	
+		<!--底部导航栏-->
+		<!--<nav class="mui-bar mui-bar-tab" style="background: white;">-->
+			<!--<a class="mui-tab-item mui-active" href="#tabbar">-->
+				<!--<span class="mui-icon mui-icon-home"></span>-->
+				<!--<span class="mui-tab-label">领劵中心</span>-->
+			<!--</a>-->
+			<!--<a class="mui-tab-item" href="#tabbar-with-chat">-->
+				<!--<span class="mui-icon mui-icon mui-icon-person"></span>-->
+				<!--<span class="mui-tab-label">宝宝专属</span>-->
+			<!--</a>-->
+			<!--<a class="mui-tab-item" href="#tabbar-with-contact">-->
+				<!--<span class="mui-icon mui-icon mui-icon-person"></span>-->
+				<!--<span class="mui-tab-label">我的优惠劵</span>-->
+			<!--</a>-->
+		<!---->
+		<!--</nav>-->
+		
+		<div class="mui-content" style="background: white;" id="productList">
+		        <ul class="mui-table-view mui-grid-view mui-grid-9" style="background: white;">
+		            <li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-3 productList"  v-for="item in productList" :key="item.id">
+		            	<a v-bind:href="'${base!}/open/h5/product/productDetail.html?id='+item.id" >
+		            		<img  :src="item.imgList"  style="width: 150px;height: 150px"/>
+		                    <div class="mui-media-body">{{item.name}}</div>
+		                    <div class="mui-media-body" style="height: 19px;">
+		                    	<span class="left1">￥{{item.price}}</span>
+		                    	<span class="left2 text-color-1">月销{{item.saleNumMonth}}笔</span>
+		                    	<img class="pon right1" src="${base!}/assets/front/h5/img/购物车.png" width="20px"/>
+		                    </div>
+		            	</a>
+		            </li>
+		        </ul>
+		</div>
+
+		<!--悬浮购物车图标-->
+		<div onclick="window.location.href='#'"
+			style="position: fixed;z-index: 999999;top:80%;left: 80%;">
+			<img src="${base!}/assets/front/h5/img/myCar.png" style="width: 50px;">
+		</div>
+		
+		<script type="text/javascript" src="${base!}/assets/front/h5/js/mui.js" ></script>
+		<script type="text/javascript" src="${base!}/assets/front/h5/js/vue.js" ></script>
+		<script type="text/javascript" src="${base!}/assets/front/h5/js/jquery-2.0.0.min.js" ></script>
+
+		<script type="application/javascript">
+
+            mui.init({
+                swipeBack:true //启用右滑关闭功能
+            });
+
+            var vue = new Vue({
+                el: '#productList',
+                data: {
+                    productList: [],
+                },
+                created:function () {   //实例初始化创建完成执行
+
+                    this.getProductList()     //调用自身方法
+
+                },
+                methods:{              //定义封装方法
+                    //获取列表
+                    getProductList:function () {
+                        var self = this;
+                        $.ajax({
+                            type:"POST",
+                            url:"${base!}/open/h5/product/ProductList.html",
+                            dataType:"JSON",
+                            data:{
+
+                            },
+                            success:function(data){
+                                if (data.code == 0) {
+                                    var d = data.data;
+                                    self.productList = d;
+                                } else {
+
+                                }
+                            }
+                        });
+
+                    }
+                },
+                watch:{     //监听器
+                    // carModel:function () {
+                    //     this.getProvince();
+                    // }
+                }
+
+            })
+		</script>
+	</body>
+</html>

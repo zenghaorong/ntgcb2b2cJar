@@ -1,0 +1,38 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">Order_after_detail</a>
+                        <small>${obj.id}</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>${msg['order.after.detail.column.afterSaleId']}</td><td>${obj.afterSaleId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.after.detail.column.afterSaleNum']}</td><td>${obj.afterSaleNum}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.after.detail.column.orderDetailId']}</td><td>${obj.orderDetailId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.after.detail.column.goodsId']}</td><td>${obj.goodsId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['order.after.detail.column.sku']}</td><td>${obj.sku}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

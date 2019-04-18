@@ -1,0 +1,41 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">Dec_templates_sub</a>
+                        <small>${obj.id}</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>${msg['dec.templates.sub.column.pageUuid']}</td><td>${obj.pageUuid}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['dec.templates.sub.column.resourceKey']}</td><td>${obj.resourceKey}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['dec.templates.sub.column.versionNo']}</td><td>${obj.versionNo}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['dec.templates.sub.column.description']}</td><td>${obj.description}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['dec.templates.sub.column.disabled']}</td><td>${obj.disabled}</td>
+                            </tr>
+                                                        <tr>
+                                <td>${msg['dec.templates.sub.column.createTime']}</td><td>${obj.createTime}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>

@@ -1,0 +1,242 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a id="add" class="btn btn-primary navbar-btn" href="${base}/platform/msg/send/msg/add" data-pjax>${msg['msg.send.column.sendInfomation']}</a>
+    </div>
+</header>
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <div class="box-tab ">
+            <ul class="nav nav-tabs" id="msg_type_tabs">
+                <!--#for(o in msgtypeList){#-->
+                <li class="${oLP.first ? 'active' : ''}" ><a class="msg-type-tabs" data-id="${o.code}" href="#msg_type_tab_content" data-toggle="tab">${o.name}</a></li>
+                <!--#}#-->
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="msg_type_tab_content">
+                    <div class="table-responsive no-border" style="min-height: 500px;">
+                        <table class="table table-bordered table-striped mg-t datatable">
+                            <thead>
+                            <tr>
+                                <th>${msg['msg.send.column.type']}</th>
+                                <th>${msg['msg.send.column.sendFrom']}</th>
+                                <th>${msg['msg.send.msg.column.title']}</th>
+                                <th>${msg['msg.receive.msg.column.hasRead']}</th>
+                                <th>${msg['msg.receive.msg.column.readAt']}</th>
+                                <th>${msg['globals.table.column.operation']}</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">${msg['globals.button.delete']}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        ${msg['globals.button.delete.notice']}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="${msg['globals.button.delete.tip']}">${msg['globals.button.confirm']}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<input type="hidden" value="${menuMsgType}" id="menuMsgType" >
+<script language="JavaScript">
+    var datatable;
+    function initDatatable(requesturl) {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": requesturl,
+                "type": "post",
+                "data": function (d) {
+
+                }
+            },
+            "order": [[2, "desc"]],
+            "columns": [
+                    {"data": "msgSend.type","default":"", "bSortable": true},
+                    {"data": "msgSend.sendFrom","default":"",  "bSortable": true},
+                    {"data": "msgSendMsg.title", "bSortable": true},
+                    {"data": "hasRead", "bSortable": true},
+                    {"data": "readAt", "bSortable": true},
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            var obj = row.msgSend;
+                            if(obj.sendFrom == 'PLATFORM'){
+                                return "${msg['msg.send.from.platform']}";
+                            }else{
+                                return "${msg['msg.send.from.admin']}";
+                            }
+                        }
+                        return "";
+                    },
+                    "targets": 1
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return moment(parseInt(data*1000)).format("YYYY-MM-DD HH:mm:ss");
+                        }
+                        return '';
+                    },
+                    "targets": 4
+                },
+                {
+                    "render": function (data, type, row) {
+                        if(row.hasRead){
+                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                    ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                                    '<li><a href="${base}/platform/msg/receive/msg/detail/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">${msg["globals.button.detail"]}</a></li>' +
+                                    '</ul></div>';
+                        }else{
+                            return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                    ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                                    '<li><a href="javascript:detail(\'' + row.id + '\');" >${msg["globals.button.detail"]}</a></li>' +
+                                    '<li class="divider"></li>' +
+                                    '<li><a href="javascript:;" onclick="markRead(\'' + row.id + '\')">${msg["msg.receive.msg.fun.markread"]}</a></li>' +
+                                    '</ul></div>';
+                        }
+                    },
+                    "targets": 5
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (data) {
+                            return '<i id="disable_' + row.id + '" class="fa fa-circle text-success ml5"></i>';
+                        } else {
+                            return '<i id="disable_' + row.id + '" class="fa fa-circle text-danger ml5"></i>';
+                        }
+                    },
+                    "targets": 3
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/msg/receive/msg/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+
+    function markRead(id) {
+        $.get("${base}/platform/msg/receive/msg/changeReadType/" + id, {}, function (data) {
+            if (data.code == 0) {
+                $("#disable_" + id).attr("class", "fa fa-circle text-success ml5");
+            } else {
+                Toast.error(data.msg);
+            }
+        }, "json");
+    }
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#okDel").unbind("click");
+            dialog.find("#okDel").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/platform/msg/receive/msg/delete", {ids: ids.toString()}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null,false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("${msg['globals.button.delete.select']}");
+        }
+    }
+    function changemsgtype(type){
+        var url ="${base}/platform/msg/receive/msg/data?msgType="+$("#menuMsgType").val()+"&type="+type;
+        datatable.ajax.url(url).load();
+    }
+
+    function detail(id) {
+        $("#dialogDetail").modal({
+            remote:"${base}/platform/msg/receive/msg/detail/" + id
+        });
+        markRead(id);
+    }
+
+    $(function () {
+        var url ="${base}/platform/msg/receive/msg/data?msgType="+$("#menuMsgType").val()+"&type="+$(".msg-type-tabs:first").attr("data-id");
+        initDatatable(url);
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+        $(".msg-type-tabs").click(function(){
+            var code = $(this).attr("data-id");
+            changemsgtype(code);
+        });
+
+    });
+</script>
+<!--#}#-->

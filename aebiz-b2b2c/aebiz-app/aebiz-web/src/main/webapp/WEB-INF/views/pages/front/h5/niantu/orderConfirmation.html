@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>订单确认</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!--标准mui.css-->
+    <link rel="stylesheet" href="${base!}/assets/front/h5/css/mui.min.css" />
+    <link rel="stylesheet" href="${base!}/assets/front/h5/css/hryc.css" />
+    <!--App自定义的css-->
+    <!--<link rel="stylesheet" type="text/css" href="../css/app.css"/>-->
+    <style>
+        .mui-table-view .mui-media-object {
+            line-height: 42px;
+            max-width: 145px;
+            height: 100px;
+        }
+        .jiage-text{
+            font-size: 18px;
+            color: red;
+            margin-right:10px ;
+        }
+        [v-cloak]{
+            display: none !important;
+        }
+    </style>
+</head>
+<body >
+<div id="order">
+
+<header class="mui-bar mui-bar-nav top-color">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+    <h1 class="mui-title" style="color: white;">
+        订单确认
+    </h1>
+</header>
+
+<div class="mui-card" style="margin-top: 60px;">
+    <div class="mui-card-header">
+        <a class="mui-navigate-right" onclick="goAddress()">
+        收货地址
+       </a>
+    </div>
+    <div class="mui-card-header"  v-if ='address!=null'>
+        <span>{{address.fullName}}</span><span>{{address.mobile}}</span>
+    </div>
+    <div class="mui-card-content" v-if ='address!=null'>
+        <div class="mui-card-content-inner" >
+            {{address.address}}
+        </div>
+    </div>
+    <div class="mui-card-content" v-if ='address==null'>
+        <div class="mui-card-content-inner" >
+            您还未添加收货地址
+        </div>
+    </div>
+</div>
+
+<div class="mui-card" >
+    <div class="mui-card-header" >
+        商品金额<span style="color: red;">￥{{zongPrice}}</span>
+    </div>
+    <div class="mui-card-header">
+        运费<span style="color: red;">￥0</span>
+    </div>
+    <!--<div class="mui-card-header">-->
+        <!--优惠劵<span style="color: red;">￥10.00</span>-->
+    <!--</div>-->
+</div>
+
+<div class="mui-card">
+    <div class="mui-card-content" v-for="good in goodsList" :key="good.id">
+        <ul class="mui-table-view">
+            <li class="mui-table-view-cell mui-media" >
+                <a href="#">
+                    <img class="mui-media-object mui-pull-left" :src="good.imgList">
+                    <div class="mui-media-body" style="white-space:normal;" >
+                        <span>{{good.name}}</span>
+                        <p class='mui-ellipsis'style="margin-top: 35px;margin-left: 110px;" >
+                            <span class="jiage-text">￥{{good.price}}</span>
+                            <span>*{{good.num}}</span>
+                        </p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="mui-content-padded">
+    可用优惠劵
+    <select class="mui-btn mui-btn-block" v-model="couponId">
+        <option v-if="item.sales_coupon!=null" :value="item.couponId" v-for="item in coupons" :key="item.id">{{item.sales_coupon.name}}</option>
+        <option v-else selected="selected">暂无可用优惠劵</option>
+    </select>
+</div>
+
+<nav class="mui-bar mui-bar-tab" style="height: 40px;">
+    <div class="mui-input-row mui-password" style="border: 0px;">
+        <button type="button" id="place"  class="mui-btn mui-btn-primary" style="width: 30%;top: 0px;line-height:1;
+            border: 0;background-color:red;" v-on:click="save()">立即支付</button>
+        <button type="button" style="width: 70%;top: 0px;line-height:1;border: 0;background-color:white;"
+                class="mui-btn mui-btn-primary" id="review">
+            <span style="color: black;">应付:</span><span style="color: red;padding-left: 10px;">{{zongPrice+yunPrice}}元</span>
+        </button>
+    </div>
+</nav>
+</div>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/mui.js" ></script>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/vue.js" ></script>
+<script type="text/javascript" src="${base!}/assets/front/h5/js/jquery-2.0.0.min.js" ></script>
+<script type="application/javascript">
+    mui.init({
+        swipeBack:true //启用右滑关闭功能
+    });
+
+    var productList = '${productList}';
+
+    var vue = new Vue({
+        el: '#order',
+        data: {
+            address: '',
+            order:'',
+            goodsList:[],
+            zongPrice:'',
+            yunPrice:0,
+            coupons:[],
+            couponId:''
+        },
+        created:function () {   //实例初始化创建完成执行
+
+            this.defaultAddress();    //调用自身方法
+            this.getOrderProductList();
+
+        },
+        methods:{              //定义封装方法
+            //获取默认收货地址
+            defaultAddress:function () {
+                var self = this;
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/address/defaultAddress.html",
+                    dataType:"JSON",
+                    data:{
+
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            var d = data.data;
+                            self.address = d;
+                        } else {
+
+                        }
+                    }
+                });
+
+            },
+            //获取确认商品
+            getOrderProductList:function () {
+                var self = this;
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/product/getOrderProductList.html",
+                    dataType:"JSON",
+                    data:{
+                        productList:productList
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                            self.goodsList = data.data;
+                            var price = 0;
+                            for(var o=0;o<self.goodsList.length;o++){
+                                price = price + parseFloat(self.goodsList[o].price)*self.goodsList[o].num;
+                            }
+                            self.zongPrice=price;
+                            self.getMyOrderCoupon();
+                        } else {
+
+                        }
+                    }
+                });
+            },
+            //查询可用优惠劵
+            getMyOrderCoupon:function () {
+                var self = this;
+                $.ajax({
+                    type:"POST",
+                    url:"${base!}/open/h5/coupon/getMyOrderCoupon.html",
+                    dataType:"JSON",
+                    data:{
+                        productNum:self.goodsList.length,
+                        price:self.zongPrice,
+                        productType:"1"
+                    },
+                    success:function(data){
+                        if (data.code == 0) {
+                           self.coupons = data.data;
+                            if(self.coupons.length>0) {
+                                self.couponId = self.coupons[0].couponId; //让select默认选中
+                            }
+                        } else {
+
+                        }
+                    }
+                });
+            },
+            save:function () {
+                var json = '${productList}';
+                var addressId = this.address.id;
+                window.location.href="${base!}/open/h5/order/checkoutCounter.html?productList="+json+"&addressId="+addressId;
+            }
+        },
+        watch:{     //监听器
+            // carModel:function () {
+            //     this.getProvince();
+            // }
+        }
+
+    });
+
+    function goAddress() {
+        var json = '${productList}';
+        window.location.href="${base!}/open/h5/address/goAddress.html?productList="+json
+    }
+
+</script>
+
+</body>
+</html>

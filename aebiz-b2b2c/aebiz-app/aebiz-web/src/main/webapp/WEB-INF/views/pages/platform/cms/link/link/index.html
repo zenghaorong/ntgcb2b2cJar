@@ -1,0 +1,186 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+	<div class="btn-group tool-button">
+		<a class="btn btn-primary navbar-btn"
+			href="${base}/platform/cms/link/link/add/${classId!}" data-pjax><i
+			class="ti-plus"></i>${msg['cms.link.column.addlink']}</a>
+		<button class="btn btn-danger navbar-btn" onclick="delCheck()">
+			<i class="ti-close"></i> ${msg['cms.link.column.deleteselected']}
+		</button>
+		<a href="${base}/platform/cms/link/link/index/${classId!}" data-pjax
+			id="_reload"></a>
+	</div>
+	<div class="btn-group">
+		<div>
+			<select id="classId" name="classId" class="form-control">
+				<!--#if(!isEmpty(list)){ for(o in list){
+                #-->
+				<option value="${o.id}"<!--#if(o.id==classId){#-->selected
+					<!--#}#-->>${o.name}
+				</option>
+				<!--#
+                } }#-->
+			</select>
+		</div>
+	</div>
+</header>
+<div class=panel-body style="padding-top: 50px;">
+	<div class="table-responsive no-border">
+		<input id="unitid" type="hidden">
+		<table class="table table-bordered table-striped mg-t datatable">
+			<thead>
+				<tr>
+					<th>${msg['cms.link.column.name']}</th>
+					<th>${msg['cms.link.column.type']}</th>
+					<th>${msg['cms.link.column.url']}</th>
+					<th>${msg['cms.link.column.target']}</th>
+					<th>${msg['cms.link.column.operation']}</th>
+		</table>
+	</div>
+</div>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2"
+	role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h4 class="modal-title">${msg['cms.link.column.delete']}</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-12">
+						${msg['cms.link.column.text']} <br />
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">${msg['cms.link.column.cancel']}
+					</button>
+				<button id="ok" type="button" class="btn btn-primary"
+					data-loading-text="${msg['cms.link.column.nowdelete']}">${msg['cms.link.column.soure']}</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang!}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/cms/link/link/data/${classId!}",
+                "type": "post",
+                "data": function (d) {
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "name", "bSortable": true},
+                {"data": "type", "bSortable": true},
+                {"data": "url", "bSortable": true},
+                {"data": "target", "bSortable": true}
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                                ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                                '<li><a href="${base}/platform/cms/link/link/edit/' + row.id + '" data-pjax>${msg['cms.link.column.edit']}</a></li>' +
+                                '<li><a href="javascript:;" onclick="del(\'' + row.id + '\')">${msg['cms.link.column.delete']}</a></li>' +
+                                '</ul></div>';
+                    },
+                    "targets": 4
+                },
+                {
+                    "render": function (data, type, row) {
+                        if("txt"==data){
+                            return "${msg['cms.link.column.textlink']}";
+                        }
+                        return "${msg['cms.link.column.photolink']}";
+
+                    },
+                    "targets": 1
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#ok").unbind("click");
+        dialog.find("#ok").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/platform/cms/link/link/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                //重置按钮状态，关闭提示框
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#ok").unbind("click");
+            dialog.find("#ok").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/platform/cms/link/link/delete", {ids: ids.toString()}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null,false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("${msg['cms.link.column.selectitemsdelete']}");
+        }
+    }
+    $(function () {
+        $("#classId").on("change",function(){
+            $("#_reload").attr("href","${base}/platform/cms/link/link/index/"+$(this).val());
+            $("#_reload").trigger("click");
+        });
+        initDatatable();
+    });
+</script>
+
+
+<!--#}#-->

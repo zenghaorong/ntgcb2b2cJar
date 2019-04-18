@@ -1,0 +1,254 @@
+<!--#layout("/layouts/platform.html"){#-->
+<header class="header">
+    <!--返回按钮-->
+    <a class="btn btn-default navbar-btn" href="/platform/member/user/" data-pjax>${msg['globals.button.back']}</a>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">会员资料</div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">${msg['member.type.memberType']}</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--#if(isNotEmpty(type)){#-->
+                                    ${type.name}
+                                    <!--#}else{#-->
+                                    未填写
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">${msg['member.level.memberLevel']}</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--#if(level != null && level.name != null){#-->
+                                    ${level.name}
+                                    <!--#}else{#-->
+                                    未填写
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">${msg['account.user.column.userName']}</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--#if(user.loginname != null){#-->
+                                    ${user.loginname}
+                                    <!--#}else{#-->
+                                    未填写
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">${msg['account.user.column.mobile']}</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--#if(user.mobile != null){#-->
+                                    ${user.mobile}
+                                    <!--#}else{#-->
+                                    未填写
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">${msg['account.info.column.nickname']}</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--#if(info.nickname != null && info.nickname != ''){#-->
+                                    ${info.nickname}
+                                    <!--#}else{#-->
+                                    未填写
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">${msg['account.user.column.email']}</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--#if(user.email != null && user.email != ''){#-->
+                                    ${user.email}
+                                    <!--#}else{#-->
+                                    未填写
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">${msg['account.info.column.name']}</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--#if(info.name != null){#-->
+                                    ${info.name}
+                                    <!--#}else{#-->
+                                    未填写
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">${msg['account.info.column.sex']}</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--#if(info.sex != null){#-->
+                                    ${info.sex}
+                                    <!--#}else{#-->
+                                    未填写
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">${msg['account.info.birthday']}</label>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <!--#if(info.birthday != null){#-->
+                                    ${info.birthday}
+                                    <!--#}else{#-->
+                                    未填写
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">${msg['account.info.constellation']}</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--#if(info.astro != null && info.astro != ''){#-->
+                                    ${info.astro}
+                                    <!--#}else{#-->
+                                    未填写
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">${msg['account.info.nativePlace']}</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--#if(isNotEmpty(info.jx_province)){#-->
+                                        ${@area.getNameByCode(info.jx_province)} ${@area.getNameByCode(info.jx_city)} ${@area.getNameByCode(info.jx_county)}
+                                    <!--#}else{#-->
+                                    未填写
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">${msg['account.info.locus']}</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--#if(info.locus != null){#-->
+                                    ${info.locus}
+                                    <!--#}else{#-->
+                                    未填写
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-7 col-md-offset-1">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">账户信息</div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">${msg['member.account.column.money']}</label>
+                            <div class="row">
+                                <div class="col-md-6">${@money.fenToYuan(account.money)}</div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">${msg['member.account.column.score']}</label>
+                            <div class="row">
+                                <div class="col-md-6">${account.score}</div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">${msg['member.account.column.freezeMoney']}</label>
+                            <div class="row">
+                                <div class="col-md-6">${@money.fenToYuan(account.freezeMoney)}</div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">${msg['member.account.column.freezeScore']}</label>
+                            <div class="row">
+                                <div class="col-md-6">${account.freezeScore}</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading">近期行为</div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">最后一次登录时间</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--#if(lastRecord.loginTime != null){#-->
+                                    ${@date.getDate(lastRecord.loginTime *1000,"yyyy-MM-dd hh:mm:ss")}
+                                    <!--#}else{#-->
+                                    无登录记录
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">最后一次登录ip</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--#if(lastRecord.ip != null){#-->
+                                    ${lastRecord.ip}
+                                    <!--#}else{#-->
+                                    未查询到登录的ip
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">最后一次下单时间</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--#if(lastRecord.orderTime != null){#-->
+                                    ${@date.getDate(lastRecord.orderTime *1000,"yyyy-MM-dd hh:mm:ss")}
+                                    <!--#}else{#-->
+                                    从未下单
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="col-md-4 control-label">最后一次支付时间</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--#if(lastRecord.orderTime != null){#-->
+                                    ${@date.getDate(lastRecord.orderTime *1000,"yyyy-MM-dd hh:mm:ss")}
+                                    <!--#}else{#-->
+                                    从未支付
+                                    <!--#}#-->
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+//        myForm.init();
+    });
+</script>
+<!--#}#-->

@@ -1,0 +1,21 @@
+.y_brand{}
+.y_brandbox{ margin:20px 0 0 0;}
+.y_brand .y_item{ width:100%;margin:0 0 20px 0;}
+.y_brand .y_item .y_brand_tit{ border:1px solid #ededed; border-bottom:none;height:43px; line-height:43px;background:url(../img/brand_tit_bg.gif) repeat-x;}
+.y_brand .y_item .y_brand_tit h2{ color:#9fb136; font:300 16px/43px 'microsoft YaHei'; padding-left:20px}
+.y_brand .y_item .y_brand_tit i{width:20px;height:20px; background:url(../img/brand-ico.png) no-repeat;display: inline-block; padding:0 10px;}
+.y_brand .y_item .y_brand_tit i.fa-food{background-position:0 0;}
+.y_brand .y_item .y_brand_tit i.fa-water{background-position:0 -24px;}
+.y_brand .y_item .y_brand_tit i.fa-fruit{background-position:0 -50px;}
+.y_brand .y_item .y_brand_tit i.fa-xiuxian{background-position:0 -72px;}
+.y_brand .y_item .y_brand_tit i.fa-drink{background-position:0 -96px;}
+.y_brand .y_item .y_brand_tit i.fa-baojian{background-position:0 -120px;}
+.y_brand .y_item .y_brand_tit i.fa-jinkou{background-position:0 -146px;}
+.y_brand .y_item .y_brand_tit i.fa-shenghuo{background-position:0 -169px;}
+.y_brand .y_item .y_brandcont{border:1px solid #ededed;}
+.y_brand .y_item .y_brandcont ul{margin:20px;}
+.y_brand .y_item .y_brandcont li{border:1px solid #e6e6e6;float: left; width:190px;margin:0 17px 15px 0;}
+.y_brand .y_item .y_brandcont li:nth-child(6n){margin:0}
+.y_brand .y_item .y_brandcont .y_brand_pic{ background:#fff; text-align:center;height:80px;}
+.y_brand .y_item .y_brandcont .y_brand_pic img{max-width:100%;}
+.y_brand .y_item .y_brandcont p{ height:30px; line-height:30px; font:300 16px/30px 'microsoft YaHei'; text-align:center; background:#ededed; color:#666;}

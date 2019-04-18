@@ -1,0 +1,58 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="modal-title">${msg['sys.user.mode']}</h4>
+</div>
+<div class="modal-body">
+    <form id="modeForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+          action="${base}/platform/sys/user/modeDo" method="post">
+        <div class="row" style="padding-top: 10px;">
+            <div class="col-lg-12">
+                <div class="form">
+                    <div class="col-sm-8">
+                        <input name="mode" value="true" type="radio" <!--#if(@shiro.getPrincipalProperty('loginPjax')){#-->checked<!--#}#-->> ${msg['sys.user.mode.pjax']}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding-top: 10px;">
+            <div class="col-lg-12">
+                <div class="form">
+                    <div class="col-sm-8">
+                        <input name="mode" value="false" type="radio" <!--#if(!@shiro.getPrincipalProperty('loginPjax')){#-->checked<!--#}#-->> ${msg['sys.user.mode.normal']}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+    <button type="button" id="okMode" class="btn btn-primary">${msg['globals.button.confirm']}</button>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#okMode").on("click",function(){
+            $("#modeForm").submit();
+        });
+        $("#modeForm").ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                $("#okMode").text("${msg['globals.button.confirm']}");
+                $("#okMode").attr("disabled", "disabled");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    $('#homeDetail').modal('hide');
+                    Toast.success(data.msg);
+                    $("#okMode").text("${msg['globals.button.confirm']}");
+                } else {
+                    $("#okMode").text("${msg['globals.button.confirm']}");
+                    $("#okMode").removeAttr("disabled");
+                    Toast.error(data.msg);
+                }
+
+            }
+        });
+    });
+</script>

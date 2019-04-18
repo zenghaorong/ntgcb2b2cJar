@@ -1,0 +1,64 @@
+<div class="modal-body no-p">
+    <section class="panel panel-primary no-b">
+        <header class="panel-heading clearfix brtl brtr">
+            <div class="overflow-hidden">
+                <a href="javascript:;" class="h4 show no-m pt5">${msg['member.account.money.title']}</a>
+            </div>
+        </header>
+        <div class="panel-body">
+            <input type="hidden" id="accountId" value="${accountId}">
+            <div class="table-responsive no-border" style="min-height: 100px;">
+                <table id="recordList" class="table table-bordered table-striped mg-t datatable">
+                    <th>${msg['member.account.money.title']}</th>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">${msg['globals.button.ok']}</button>
+</div>
+<script>
+    var dt;
+    function initDatatable() {
+        dt = $('#recordList').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching": false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": false,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/platform/member/account/score/data",
+                "type": "post",
+                "data": function (d) {
+                    d.accountId = $("#accountId").val();
+                }
+            },
+            "columns": [
+                {
+                    "data": "record",
+                    "bSortable": false
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            dt.ajax.reload();
+        });
+    }
+    $(function () {
+        initDatatable();
+    })
+</script>

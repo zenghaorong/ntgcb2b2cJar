@@ -1,0 +1,174 @@
+	<div class="proinfo_right m-productdet m-components" id="$_productdetail">	
+	<div class="m-comsloading" id="$_productdetail_comsloading"></div>
+			<div class="pdfix_wrapper">
+				<div class="y_pdtabbox" id="$_productdetail_header">
+					<div class="container">
+						<div class="y_producttab tabtit clearfix">
+							<div class="col_main">
+								<div class="main_wrap"> 
+									<ul class="tab_style2 clearfix">
+										<li class="active"><a class="y_pddetails" href="#$_productdetail_detail-content" data-toggle="tab">商品详情</a></li>
+										<li ><a class="y_pddetails" href="#$_productdetail_prodAttrs-content" data-toggle="tab" id="$_productdetail_prodAttrs">规格与包装</a></li>
+										<li><a class="y_evaluation" href="#$_productdetail_evaluation" data-toggle="tab">商品评价<span class="f_color1 " id="$_productdetail_appCount"></span></a></li>
+										<li><a class="y_aftservice" href="#$_productdetail_aftservice" data-toggle="tab">售后服务</a></li>
+									</ul>
+									<div class="y_topcartbx j_addtocart">
+										<a class="btn btn-custom u-btn-primary" href="#">加入购物车</a>
+										<div class="y_partcat hide">
+											<div class="y_crtpic"><img class="j_product-detail-img" src=""></div>
+											<div class="y_crtms">
+												<p></p>
+												<span class="f_clrd00 f_size14" class="j_smallPrice"></span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="y_tabonlineserve col_sidebar">
+								<span class="btn"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	
+			<div class="tab-content">
+				<!-- 商品详情 -->
+				<div class="tab-pane active" id="$_productdetail_detail-content">
+						<div class="y_parabox" id="$_productdetail_attrWrap">
+							<h4 class="y_parah4" style="display:none">规格参数</h4>
+							<ul class="y_parameter" id="$_productdetail_attribute">
+								<li class="j_attr-item">
+									<span class="j_attrName"></span>
+									<span class="j_attrValue"></span>
+								</li>
+							</ul>
+						</div>
+					<div class="y_detialimg" id="$_productdetail_detailimg">
+						商品描述信息
+					</div>
+				</div>
+				
+				<div class="tab-pane " id="$_productdetail_prodAttrs-content">
+					<div class="y_detialimg j_content" >
+						规格与包装
+					</div>
+				</div>
+				
+			
+				<!--  商品评价 -->
+				<div class="tab-pane" id="$_productdetail_evaluation">
+						<div class="y_border2 y_mt10 y_mb10">
+							<div class="y_tit y_tit2">
+								<h3>商品评价</h3>
+							</div>
+							<div class="y_scrott clearfix">
+								<div class="y_totlescore">
+									<div class="y_score">
+										<div> <strong id="$_productdetail_goodAppraiseRate"></strong>%好评率 </div>
+									</div>
+									共<span id="$_productdetail_allAppCount"></span>人评价
+								</div>
+								<div class="y_scoretre">
+									<dl>
+										<dt> 好评(<span id="$_productdetail_goodAppraiseRate2"></span>) </dt>
+										<dd>
+											<div class="progress">
+												<div id="$_productdetail_goodProgress"  role="progressbar" class="progress-bar progress-bar-custom"></div>
+											</div>
+										</dd>
+									</dl>
+									<dl>
+										<dt> 中评(<span id="$_productdetail_middleAppraiseRate"></span>) </dt>
+										<dd>
+											<div class="progress">
+												<div id="$_productdetail_middleProgress" role="progressbar" class="progress-bar progress-bar-custom"></div>
+											</div>
+										</dd>
+									</dl>
+									<dl>
+										<dt> 差评(<span id="$_productdetail_badAppraiseRate"></span>) </dt>
+										<dd>
+											<div class="progress">
+												<div id="$_productdetail_badProgress" role="progressbar" class="progress-bar progress-bar-custom"></div>
+											</div>
+										</dd>
+									</dl>
+								</div>
+							</div>
+						</div>
+						<!-- 商品评价好评度切换 -->
+						<div class="tabtit">
+							<ul class="tab_style2 clearfix" id="$_productdetail_apptab">
+								<li class="active"><a id="$_productdetail_allAppraise" data-toggle="tab" href="#$_productdetail_evaluall">全部评价(<span class="j_allAppCount"></span>)</a></li>
+								<li ><a id="$_productdetail_goodAppraise" data-toggle="tab" href="#$_productdetail_evalugood">好评(<span class="j_goodAppCount"></span>)</a></li>
+								<li ><a id="$_productdetail_normalAppraise" data-toggle="tab" href="#$_productdetail_evalunormal">中评(<span class="j_middleAppCount"></span>)</a></li>
+								<li ><a id="$_productdetail_lowAppraise" data-toggle="tab" href="#$_productdetail_evalulow">差评(<span class="j_badAppCount"></span>)</a></li>
+								<li ><a id="$_productdetail_showpicAppraise" data-toggle="tab" href="#$_productdetail_showpic">晒单(<span class="j_picCount"></span>)</a></li>
+							</ul>
+						</div>
+						<div class="tab-content" id="$_productdetail_productAppraiseList">
+							<div class="tab-pane y_apprelist active" >
+								<div id="$_productdetail_evaluall">
+										<div class="j_item j_template item" style="display:none">
+												<div class="j_user user">
+														<div class="u_img">
+															<img class="j_customerImg" src="">
+														</div>
+														<p class="j_customerName f_color1"></p>
+												</div>
+												<div class="j_info  info ">
+														<div class="i_fotit">
+															<span class="j_appTime  fr f_clr999 "></span> 
+															<span class="y_star"><b class="j_appScore" style="width:0"></b></span>
+														</div>
+														<dl class="i_item">
+															<dt>内容：</dt>
+															<dd style="word-break: break-all;" class="j_appContent"></dd>
+														</dl>
+														<dl class="i_item i_attri  j_attr">
+															<dt class="j_attrName"></dt>
+															<dd class="j_attrValue"></dd>
+														</dl>
+														<dl class="i_item">
+															<dt>购买日期：</dt>
+															<dd class="j_appTime"></dd>
+														</dl>
+														<dl class="i_item j_pics">
+															<dt>晒单信息：</dt>
+															<dd>
+																<div class="j_photos">
+																	<ul class="j_photos-thumb">
+																		<li class="j_photos-thumb-item"><img class="j_img" /></li>
+																	</ul>
+																	<div class="j_photo-view" style="display:none">
+																		<img class="j_big-photo" alt="" src="">
+																		<a class="j_photo-view-nav-prev"  >
+																			<i class="j_photo-view-navicon" ></i>
+																		</a>
+																		<a class="j_photo-view-nav-next" >
+																			<i class="j_photo-view-navicon" ></i>
+																		</a>
+																	</div>
+																</div>
+															</dd>
+														</dl>
+												</div>
+										</div>
+										<p style="display:none" class="j_template j_nothing text-nothing" >暂无评价！</p>
+								</div>
+								<div class="page-in y_storepg" id="$_productdetail_page">
+								</div>
+							</div>
+						</div>
+				</div>
+				<!-- END 商品评价 -->	
+				
+				<!-- 售后服务 -->
+				<div class="tab-pane" id="$_productdetail_aftservice">
+					<div class="y_detialname" id="$_productdetail_detailname">
+						
+					</div>
+				</div>
+			</div>
+	</div>

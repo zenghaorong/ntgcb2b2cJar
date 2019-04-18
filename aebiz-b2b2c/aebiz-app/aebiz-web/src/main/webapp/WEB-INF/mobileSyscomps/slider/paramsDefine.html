@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<form class="form-horizontal" role="form">
+    <div class="form-group">
+        <label for="slideTime" class="col-sm-2 control-label">轮播间隔：</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="slideTime">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="slideTime" class="col-sm-2 control-label">广告列表：</label>
+        <div class="col-sm-8">
+            <ul class="list-group">
+
+            </ul>
+            <div id="pageDiv"></div>
+        </div>
+    </div>
+
+    <script type="text/html" id="list-tpl">
+        {{each adList as value i}}
+            <li class="list-group-item" data-uuid="{{value.adUuid}}">{{value.adName}} <a href="javascript:void(0)" class="btn btn-primary btn-xs pull-right j-select">选中此广告</a></li>
+        {{/each}}
+    </script>
+
+    <input type="hidden" id="adUuid">
+</form>
+<script>
+    //获取属性配置JSON
+    var pageJson = ${webPageModelJsonStr};
+
+    //构建属性配置
+    var componentsParam = {
+        initParamData: function (paramJson) { //初始化渲染属性配置
+            if (typeof(paramJson) == "string") {
+                paramJson = JSON.parse(paramJson);
+            }
+
+            if(paramJson.adUuid == undefined){
+                paramJson.adUuid = "";
+            }
+
+            $("#slideTime").val(paramJson.slideTime);
+            $('#adUuid').val(paramJson.adUuid);
+        },
+        saveParamData: function () { //返回属性配置JSON
+            if($('#adUuid').val() == ''){
+                layer.msg('请选择广告');
+                return false;
+            }
+
+            var slideTime = $("#slideTime").val();
+
+            var paramJson = {
+                compId: 'cart',
+                "needAsyncInit": "true",
+                "slideTime": slideTime,
+                adUuid:$('#adUuid').val()==""?'':$('#adUuid').val()
+            };
+            var err = this.validateData(paramJson);
+            if (!err.success) {
+                return err;
+            }
+            return paramJson;
+        },
+        validateData: function (paramJson) {
+            var err = {
+                success: true,
+                msg: ""
+            }
+            var msg = [];
+            msg = decoration.base.validateSpecial(msg, paramJson.adUuid, "请选择广告！");
+            if (msg.length > 0) {
+                err.success = false;
+                err.msg = msg.join("");
+            }
+            return err;
+        }
+    };
+
+    componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+</script>
+
+<script>
+    var sliderParams = {
+        searchProduct:function(nowPage,pageShow,initPage){
+            var pagingDiv = $("#pageDiv");
+            var _self = this;
+            var reqdata = {
+                "nowPage" : nowPage,
+                "pageShow" : pageShow
+            };
+
+            $.ajax({
+                type : "GET",
+                url : ContextPath+"/slideAds/getPlatAdList",
+                data : reqdata,
+                dataType : "json",
+                success : function(data) {
+                    //渲染列表数据
+                    _self.renderAdList(data);
+                    if(initPage){
+                        //渲染分页插件
+                        _self.renderAdPaging(data.totalPage, pagingDiv);
+                    }
+                }
+            })
+        },
+        renderAdList:function(data){
+            var html = template('list-tpl', data);
+            $('.list-group').html(html);
+            this.initSelect();
+
+            //$('#adUuid').val("");
+
+            this.selectAd();
+            console.log(data)
+        },
+        renderAdPaging:function(totalPage,pageEle){
+            var _self = this;
+            layui.use(['laypage', 'layer'], function(){
+                var laypage = layui.laypage  ,layer = layui.layer;
+                laypage({
+                    cont: pageEle,
+                    pages: totalPage,
+                    jump: function(obj, first){
+                        if(!first){
+                            _self.searchProduct(obj.curr,8,false);
+                        }
+                    }
+                });
+            });
+        },
+        selectAd:function(){
+            $(document).on('click','.list-group-item .j-select',function(){
+                var uuid = $(this).parent().attr('data-uuid');
+                $('#adUuid').val(uuid)
+
+                $(this).parent().siblings().find('a').removeAttr('disabled').html('选中此广告').addClass('btn-primary');
+
+                $(this).html('已选').removeClass("btn-primary").prop('disabled','disabled');
+            })
+        },
+        initSelect:function(){
+            $.each($('.list-group-item'),function(){
+                var uuid = $(this).attr('data-uuid');
+
+                if(uuid == $('#adUuid').val()){
+                    $(this).find('a').html('已选').removeClass("btn-primary").prop('disabled','disabled');
+                }
+            })
+        }
+    }
+
+    sliderParams.searchProduct(0, 8, true);
+</script>
+</body>
+
+</html>

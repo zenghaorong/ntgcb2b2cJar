@@ -1,0 +1,121 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="modal-title">${msg['msg.conf.eamil.column.setting']}</h4>
+</div>
+<form id="emailForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+      action="${base}/platform/msg/conf/email/save" method="post">
+    <input type="hidden" value="${obj.id}" name="id">
+    <input type="hidden" id="emailType" value="${emailType}">
+    <div class="modal-body">
+        <div class="row">
+            <label class="col-sm-3 control-label">${msg['msg.conf.email.column.sendEmail']}</label>
+            <div class="col-sm-7">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="sendType" id="optionsRadios1" value="email" <!--#if(obj.sendType=='email'){#--> checked="checked" <!--#}#-->  >${msg['msg.conf.eamil.column.email']}
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="sendType" id="optionsRadios2" value="smtp" <!--#if(obj.sendType=='smtp'){#--> checked="checked" <!--#}#-->>${msg['msg.conf.eamil.column.smtp']}
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label for="sendEmail" class="col-sm-3 control-label">${msg['msg.conf.email.column.sendEmail']}</label>
+            <div class="col-sm-7">
+                <input type="text" id="sendEmail" class="form-control" name="sendEmail" data-parsley-required="true"  value="${obj.sendEmail}" >
+            </div>
+        </div>
+        <div class="row sendstmp ">
+            <label for="smtpUrl" class="col-sm-3 control-label">${msg['msg.conf.email.column.smtpUrl']}</label>
+            <div class="col-sm-7">
+                <input type="text" id="smtpUrl" class="form-control" name="smtpUrl" data-parsley-required="true" value="${obj.smtpUrl}">
+            </div>
+        </div>
+        <div class="row sendstmp">
+            <label for="smtpPort" class="col-sm-3 control-label">${msg['msg.conf.email.column.smtpPort']}</label>
+            <div class="col-sm-7">
+                <input type="text" id="smtpPort" class="form-control" name="smtpPort" data-parsley-required="true"  value="${obj.smtpPort}">
+            </div>
+        </div>
+        <div class="row sendstmp">
+            <label for="smtpUsername" class="col-sm-3 control-label">${msg['msg.conf.email.column.smtpUsername']}</label>
+            <div class="col-sm-7">
+                <input type="text" id="smtpUsername" class="form-control" name="smtpUsername" data-parsley-required="true" value="${obj.smtpUsername}">
+            </div>
+        </div>
+        <div class="row sendstmp">
+            <label for="smtpPassword" class="col-sm-3 control-label">${msg['msg.conf.email.column.smtpPassword']}</label>
+            <div class="col-sm-7">
+                <input type="text" id="smtpPassword" class="form-control" name="smtpPassword" data-parsley-required="true" value="${obj.smtpPassword}">
+            </div>
+        </div>
+
+     </div>
+    <div class="modal-footer ">
+        <button type="button" class="btn btn-default" data-dismiss="modal">${msg['globals.button.cancel']}</button>
+        <button type="submit" class="btn btn-primary emailSetBtn" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.confirm']}</button>
+    </div>
+</form>
+<script>
+    $(function () {
+        $('#emailForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                if($("#optionsRadios1").attr("checked") == "checked" ){
+                    $("#smtpUrl").val("");
+                    $("#smtpPort").val("");
+                    $("#smtpUsername").val("");
+                    $("#smtpPassword").val("");
+                }
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    $('#dialogEmailSetting').modal('hide');
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+
+        $("#optionsRadios1").click(function(){
+            sendemail();
+        })
+        $("#optionsRadios2").click(function(){
+            sendstemp();
+        })
+
+        var emailType = $("#emailType").val();
+        if(emailType == '1'){
+            if($("#optionsRadios2").attr("checked") == "checked" ){
+                sendstemp();
+            }else{
+                sendemail();
+            }
+        }else{
+            //初始化方法
+            $("#optionsRadios1").attr("checked","checked");
+            sendemail();
+        }
+    });
+
+    function sendstemp(){
+        $(".sendstmp").each(function(index,obj){
+            $(obj).attr("style","display:block");
+            $(obj).find("input").attr("data-parsley-required","true");
+        })
+    }
+
+    function sendemail(){
+        $(".sendstmp").each(function(index,obj){
+            $(obj).attr("style","display:none");
+            $(obj).find("input").removeAttr("data-parsley-required");
+        })
+    }
+</script>
+

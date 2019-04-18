@@ -1,0 +1,272 @@
+<!--#for(o in obj){ #-->
+    <form id="imageForm_${o.id}" name="imageForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+          action="/platform/shop/config/image/save" method="post" <!--#if(o.id != 'pc'){#-->hidden<!--#}#-->>
+    <input name="id" type="hidden" value="${o.id}">
+    <div class="form-group">
+        <label class="col-xs-2 control-label" style="min-width: 80px"><span class="red_flag">*</span>${msg['shop.image.column.imgThumb_width']}</label>
+        <div  class="col-xs-1" style="min-width: 70px">
+            <input type="text" class="form-control"  name="imgThumb_width" data-parsley-required="true"  data-parsley-type="integer" value="${o.imgThumb_width}"  >
+        </div>
+        <label class="col-xs-1 control-label" style="width:10px;">x</label>
+        <label class="col-xs-1 control-label" style="min-width: 80px"><span class="red_flag">*</span>${msg['shop.image.column.imgThumb_height']}</label>
+        <div  class="col-xs-1" style="min-width: 70px">
+            <input type="text" class="form-control" name="imgThumb_height" data-parsley-required="true"  data-parsley-type="integer" value="${o.imgThumb_height}"  >
+        </div>
+    </div>
+    <!-- <div class="thumb form-group">
+         <label class="col-xs-2 control-label" style="min-width: 120px" ><span class="red_flag">*</span>${msg['shop.image.column.imgThumb_wmtype']}</label>
+         <div  class="col-xs-8" style="padding-top:5px">
+             <input type="radio" name="imgThumb_wmtype" id="wm4" value="none" &lt;!&ndash;# if(o.imgThumb_wmtype == 'none'){#&ndash;&gt; checked&lt;!&ndash;#}#&ndash;&gt; ><span class="red_flag">*</span>${msg['shop.image.radio.type.none']}
+             <input type="radio" name="imgThumb_wmtype" id="wm5" value="image" &lt;!&ndash;# if(o.imgThumb_wmtype == 'image'){#&ndash;&gt; checked&lt;!&ndash;#}#&ndash;&gt;><span class="red_flag">*</span>${msg['shop.image.radio.type.image']}
+             <input type="radio" name="imgThumb_wmtype" id="wm6" value="text" &lt;!&ndash;# if(o.imgThumb_wmtype == 'text'){#&ndash;&gt; checked&lt;!&ndash;#}#&ndash;&gt;><span class="red_flag">*</span>${msg['shop.image.radio.type.text']}
+         </div>
+     </div>-->
+    <div class="thumb_text form-group"  <!--#if(o.imgThumb_wmtype != 'text'){#-->hidden<!--#}#-->>
+    <div style="background-color: rgba(42, 48, 55, 0.19);margin: 0px 16%;padding: 5px 0">
+        <div class="form-group">
+            <label class="col-xs-2 col-xs-offset-1 control-label" style="min-width: 70px"><span class="red_flag">*</span>${msg['shop.image.label.setting']}</label>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-2 col-xs-offset-3 control-label" style="min-width: 120px" ><span class="red_flag">*</span>${msg['shop.image.column.imgThumb_wmtext']}</label>
+            <div  class="col-xs-4" style="min-width: 100px;float: right;margin-right: 10%">
+                <input type="text" class="form-control"  name="imgThumb_wmtext" value="${o.imgThumb_wmtext}"  >
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="thumb_image form-group"  <!--#if(o.imgThumb_wmtype != 'image'){#-->hidden<!--#}#-->>
+    <div style="background-color: rgba(42, 48, 55, 0.19);margin: 0px 16%;padding: 5px 0">
+        <div class="form-group">
+            <label class="col-xs-2 col-xs-offset-1 control-label" style="min-width: 70px"><span class="red_flag">*</span>${msg['shop.image.label.setting']}</label>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-2 col-xs-offset-3 control-label" style="min-width: 120px"><span class="red_flag">*</span>${msg['shop.image.column.imgThumb_wmimg']}</label>
+            <div  class="col-xs-4" style="float: right;margin-right: 10%">
+                <div id="queueThumb"></div>
+                <div class="input-group">
+                          <span class="input-group-btn">
+                            <input id="file_upload_thumb" name="file_upload" type="file" multiple="false">
+                          </span>
+                </div>
+                <div id="img_thumb" style="padding: 5px;">
+                    <!--#if(!isEmpty(o.imgThumb_wmimg)){#-->
+                    <img src='${o.imgThumb_wmimg!}' style='width:150px;'>
+                    <i class="fa fa-close" onclick="$('#imgurl_thumb').val('');$('#img_thumb').html('');"></i>
+                    <!--#}#-->
+                </div>
+            </div>
+            <input type="hidden" id="imgurl_thumb" name="imgThumb_wmimg" value="${o.imgThumb_wmimg!}" >
+        </div>
+    </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-2 control-label" style="min-width: 80px"><span class="red_flag">*</span>${msg['shop.image.column.imgList_width']}</label>
+        <div  class="col-xs-1" style="min-width: 70px">
+            <input type="text" class="form-control" name="imgList_width" data-parsley-required="true"  data-parsley-type="integer" value="${o.imgList_width}"  >
+        </div>
+        <label class="col-xs-1 control-label" style="width: 10px">x</label>
+        <label class="col-xs-1 control-label" style="min-width: 80px"><span class="red_flag">*</span>${msg['shop.image.column.imgList_height']}</label>
+        <div class="col-xs-1" style="min-width: 70px">
+            <input type="text" class="form-control"  name="imgList_height"  data-parsley-required="true"  data-parsley-type="integer" value="${o.imgList_height}"  >
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-2 control-label" style="min-width: 80px" ><span class="red_flag">*</span>${msg['shop.image.column.imgAlbum_width']}</label>
+        <div  class="col-xs-1" style="min-width: 70px">
+            <input type="text" class="form-control"  name="imgAlbum_width" data-parsley-required="true"  data-parsley-type="integer" value="${o.imgAlbum_width}"  >
+        </div>
+        <label class="col-xs-1 control-label" style="width: 10px">x</label>
+        <label class="col-xs-1 control-label" style="min-width: 80px"><span class="red_flag">*</span>${msg['shop.image.column.imgAlbum_height']}</label>
+        <div  class="col-xs-1" style="min-width: 70px">
+            <input type="text" class="form-control" name="imgAlbum_height" data-parsley-required="true"  data-parsley-type="integer" value="${o.imgAlbum_height}"  >
+        </div>
+    </div>
+   <!-- <div class="album form-group">
+        <label class="col-xs-2 control-label" style="min-width: 120px"><span class="red_flag">*</span>${msg['shop.image.column.imgAlbum_wmtype']}</label>
+        <div  class="col-xs-8" style="padding-top:5px">
+            <input type="radio" name="imgAlbum_wmtype"  value="none" &lt;!&ndash;# if(o.imgAlbum_wmtype == 'none'){#&ndash;&gt; checked&lt;!&ndash;#}#&ndash;&gt; ><span class="red_flag">*</span>${msg['shop.image.radio.type.none']}
+            <input type="radio" name="imgAlbum_wmtype"  value="image" &lt;!&ndash;# if(o.imgAlbum_wmtype == 'image'){#&ndash;&gt; checked&lt;!&ndash;#}#&ndash;&gt;><span class="red_flag">*</span>${msg['shop.image.radio.type.image']}
+            <input type="radio" name="imgAlbum_wmtype"  value="text" &lt;!&ndash;# if(o.imgAlbum_wmtype == 'text'){#&ndash;&gt; checked&lt;!&ndash;#}#&ndash;&gt;><span class="red_flag">*</span>${msg['shop.image.radio.type.text']}
+        </div>
+    </div>-->
+    <div class="album_text form-group "  <!--#if(o.imgAlbum_wmtype != 'text'){#-->hidden<!--#}#-->>
+        <div style="background-color: rgba(42, 48, 55, 0.19);margin: 0px 16%;padding: 5px 0">
+        <div class="form-group">
+            <label class="col-xs-2 col-xs-offset-1 control-label" style="min-width: 70px" ><span class="red_flag">*</span>${msg['shop.image.label.setting']}</label>
+        </div>
+        <div class=" form-group">
+            <label class="col-xs-2 col-xs-offset-3 control-label" style="min-width: 120px"><span class="red_flag">*</span>${msg['shop.image.column.imgAlbum_wmtext']}:</label>
+            <div  class="col-xs-4" style="min-width: 100px;float: right;margin-right: 10%">
+                <input type="text" class="form-control"  name="imgAlbum_wmtext" value="${o.imgAlbum_wmtext}"  >
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="album_image form-group" <!--#if(o.imgAlbum_wmtype != 'image'){#-->hidden<!--#}#-->>
+        <div style="background-color: rgba(42, 48, 55, 0.19);margin: 0px 16%;padding: 5px 0">
+        <div class="form-group">
+            <label class="col-xs-2 col-xs-offset-1 control-label" style="min-width: 70px"><span class="red_flag">*</span>${msg['shop.image.label.setting']}</label>
+        </div>
+        <div id="img" style="padding: 5px;">
+            <!--#if(!isEmpty(o.imgAlbum_wmimg)){#-->
+            <img src='${o.imgAlbum_wmimg!}' style='width:150px;'>
+            <i class="fa fa-close" onclick="$('#imgurl').val('');$('#img').html('');"></i>
+            <!--#}#-->
+        </div>
+        <div class="form-group">
+            <label class="col-xs-2 col-xs-offset-3 control-label" style="min-width: 120px"><span class="red_flag">*</span>${msg['shop.image.column.imgAlbum_wmimg']}</label>
+            <div  class="col-xs-4" style="float: right;margin-right: 10%">
+                <div id="queue"></div>
+                <div class="input-group">
+                              <span class="input-group-btn">
+                                <input id="file_upload" name="file_upload" type="file" multiple="false">
+                              </span>
+                </div>
+                <input type="hidden" id="imgurl" name="imgAlbum_wmimg" value="${o.imgAlbum_wmimg!}" >
+            </div>
+        </div>
+    </div>
+    </div>
+   
+ </form>
+<!--#}#-->
+<style>
+   .red_flag{
+       color: red;
+   }
+</style>
+<script language="JavaScript">
+
+    $(document).ready(function () {
+        <!--详情图文件上传-->
+      $('form[name="imageForm"]').each(function () {
+          let myImage = $(this);
+          myImage.find('#file_upload_thumb').uploadifive({
+              'auto': true,
+              'multi': false,
+              'width': '100%',
+              'height': '35',
+              'buttonText': '请选择图片',
+              'fileType': 'image/jpg,image/jpeg,image/png',
+              'fileSizeLimit': 1024,
+              'queueSizeLimit': 1,
+              'formData': {},
+              'queueID': 'queueThumb',
+              'removeCompleted':true,
+              'removeTimeout':0,
+              'uploadScript': '${base}/open/file/upload/image',
+              'onUploadComplete': function (file, data) {
+                  data = JSON.parse(data);
+                  if (data.code == 0) {
+                      Toast.success(data.msg);
+                      myImage.find("#img_thumb").html("<img src='" + data.data + "' style='width:150px;'>");
+                      myImage.find("#imgurl_thumb").val(data.data);
+                  } else {
+                      //clearThumbFile();
+                      Toast.error(data.msg);
+                  }
+              },
+              'onDrop': function (file, fileDropCount) {
+                  //clearThumbFile();
+              },
+              'onClearQueue': function (queue) {
+                  //clearThumbFile();
+              },
+              'onCancel': function () {
+
+              }
+          });
+          <!--相册图文件上传-->
+          myImage.find('#file_upload').uploadifive({
+              'auto': true,
+              'multi': false,
+              'width': '100%',
+              'height': '35',
+              'buttonText': '请选择图片',
+              'fileType': 'image/jpg,image/jpeg,image/png',
+              'fileSizeLimit': 1024,
+              'queueSizeLimit': 1,
+              'formData': {},
+              'queueID': 'queue',
+              'removeCompleted':true,
+              'removeTimeout':0,
+              'uploadScript': '${base}/open/file/upload/image',
+              'onUploadComplete': function (file, data) {
+                  data = JSON.parse(data);
+                  if (data.code == 0) {
+                      Toast.success(data.msg);
+                      myImage.find("#img").html("<img src='" + data.data + "' style='width:150px;'>");
+                      myImage.find("#imgurl").val(data.data);
+                  } else {
+                      clearFile();
+                      Toast.error(data.msg);
+                  }
+              },
+              'onDrop': function (file, fileDropCount) {
+                  clearFile();
+              },
+              'onClearQueue': function (queue) {
+                  clearFile();
+              },
+              'onCancel': function () {
+                  clearFile();
+              }
+          });
+          myImage.find(".album :radio").click(function(){
+              /*  console.log($(this).val());*/
+              switch ($(this).val()){
+                  case 'none':
+                      myImage.find(".album_text").hide();
+                      myImage.find(".album_image").hide();
+                      break;
+                  case "text":
+                      myImage.find(".album_text").show();
+                      myImage.find(".album_image").hide();
+                      break;
+                  case "image":
+                      myImage.find(".album_text").hide();
+                      myImage.find(".album_image").show();
+                      break;
+              }
+          });
+          myImage.find(".thumb :radio").click(function(){
+              /* console.log($(this).val());*/
+              switch ($(this).val()){
+                  case 'none':
+                      myImage.find(".thumb_text").hide();
+                      myImage.find(".thumb_image").hide();
+                      break;
+                  case "text":
+                      myImage.find(".thumb_text").show();
+                      myImage.find(".thumb_image").hide();
+                      break;
+                  case "image":
+                      myImage.find(".thumb_text").hide();
+                      myImage.find(".thumb_image").show();
+                      break;
+              }
+          });
+          
+      });
+
+      $('form[name="imageForm"]').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:save").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    form.parsley().reset();
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:save").button("reset");
+            }
+        });
+
+    });
+
+
+</script>

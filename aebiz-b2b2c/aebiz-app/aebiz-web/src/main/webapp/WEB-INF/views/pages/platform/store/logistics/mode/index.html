@@ -1,0 +1,99 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.config.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.all.js"></script>
+<form id="addForm" role="form" class="form-horizontal parsley-form"
+      data-parsley-validate action="${base}/platform/store/logistics/mode/editDo"
+      method="post">
+    <input name="id" id="id" value="${obj.id!}" type="hidden">
+    <header class="header navbar bg-white shadow">
+        <div class="pull-right">
+            <div class="btn-group tool-button">
+                <button class="btn btn-primary navbar-btn" type="button" id="save">
+                    ${msg['globals.button.save']}</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="content-wrap">
+        <div class="wrapper" style="min-height: 500px; height: 100%;">
+            <div class="box-tab">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#home1" data-toggle="tab">${msg['store.logistics.mode.column.mode']}</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="home1">
+                        <div class="col-lg-12">
+
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">${msg['store.logistics.mode.column.shippingMode']}</label>
+                                <div class="col-sm-8">
+                                    ${msg['store.logistics.mode.column.aShippingMode']}
+                                    <input type="radio" name="mode" onclick="modeUpdate(1)" value="1"  <!--# if (obj.mode==1){#-->checked<!--#}#-->/>
+                                    ${msg['store.logistics.mode.column.mode']}
+                                    <input type="radio"  name="mode" onclick="modeUpdate(0)" value="0" <!--# if (obj.mode==0){#-->checked<!--#}#-->/>
+                                </div>
+                            </div>
+                            <div class="form-group" id="calculation">
+                                <label  class="col-sm-2 control-label">${msg['store.logistics.mode.column.calculation']}</label>
+                                <div class="col-sm-8">
+                                    ${msg['store.logistics.mode.column.piece']}
+                                    <input type="radio" name="calculation"  value="0" <!--# if (obj.calculation==0){#-->checked<!--#}#-->/>
+                                    ${msg['store.logistics.mode.column.weight']}
+                                    <input type="radio"  name="calculation" value="1"  <!--# if (obj.calculation==1){#-->checked<!--#}#-->/>
+                                    ${msg['store.logistics.mode.column.volume']}
+                                    <input type="radio"  name="calculation" value="2"  <!--# if (obj.calculation==2){#-->checked<!--#}#-->/>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script language="JavaScript">
+
+    function modeUpdate(data){
+        if(data==0){
+            $("#calculation").hide();
+        }else{
+            $("#calculation").show();
+        }
+    }
+
+    $(function(){
+        if(${obj.mode}==0){
+            $("#calculation").hide();
+        }else
+        {
+            $("#calculation").show();
+        }
+    })
+
+    $(document).ready( function() {
+        $("#save").on("click", function() {
+            //      $("#footer_content").val(ue.getContent());
+            $('#addForm').submit();
+        });
+        $('#addForm').ajaxForm({
+            dataType : 'json',
+            beforeSubmit : function(arr, form, options) {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            success : function(data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                } else {
+                    Toast.error(data.msg);
+                }
+                sublime.closeLoadingbar($(".main-content"));
+            }
+        });
+    });
+</script>
+
+<!--#}#-->

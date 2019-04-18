@@ -1,0 +1,221 @@
+<!--#
+layout("/layouts/store.html"){
+#-->
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button">
+            <!--<a id="add" class="btn btn-primary navbar-btn" href="${base}/store/cms/review/add" data-pjax><i class="ti-plus"></i> 新增</a>-->
+            <!--<button class="btn btn-danger navbar-btn" onclick="delCheck()"><i class="ti-close"></i> 删除选中</button>-->
+        </div>
+        <div class="btn-group tool-button" style="padding-top: 8px;">
+            <form class="form-inline js-search-form" >
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <input type="text" class="form-control" name="content" id="content" placeholder="回复内容" />
+                </div>
+                <div class="form-group">
+                    <select class="form-control" name="cmsType" id="cmsType" placeholder="内容类型">
+                        <option value="">内容类型</option>
+                        <option value="1">黏土教程</option>
+                        <option value="2">视频教程</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary js-search-ok" >${msg['globals.button.search']}</button>
+                    <button type="button" class="btn btn-default js-search-reset" >${msg['globals.button.reset']}</button>
+                </div>
+            </form>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border">
+            <table class="table table-bordered table-striped mg-t datatable">
+                <thead>
+                <tr>
+                    <th>内容类型</th>
+                    <th>类型</th>
+                    <th>回复内容</th>
+                    <th>回复点赞数</th>
+                    <th>回复人名称</th>
+                    <th>被回复人名称</th>
+                    <th>是否为官方</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">删除</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        删除后无法恢复。<br/>
+                        <br/>确定删除吗？
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取  消</button>
+                <button id="okDel" type="button" class="btn btn-primary" data-loading-text="正在删除...">确  定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('.datatable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/store/cms/review/data",
+                "type": "post",
+                "data": function (d) {
+                    d.reviewId = "${reviewId!}",
+                    d.type = "2"
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "cmsType", "bSortable": true},
+                {"data": "type", "bSortable": true},
+                {"data": "content", "bSortable": true},
+                {"data": "loveNum", "bSortable": true},
+                {"data": "reviewOpName", "bSortable": true},
+                {"data": "reviewFatherName", "bSortable": true},
+                {"data": "isStore", "bSortable": true},
+            ],
+            "columnDefs": [
+                {
+                    "targets":0,
+                    "render":function (data, type, row) {
+                        var str ="";
+                        switch (data) {
+                            case '1': str = "黏土教程";break;
+                            case '2': str = "视频教程";break;
+                        }
+                        return str;
+                    }
+                },
+                {
+                    "targets":1,
+                    "render":function (data, type, row) {
+                        var str ="";
+                        switch (data) {
+                            case '1': str = "评论";break;
+                            case '2': str = "回复";break;
+                        }
+                        return str;
+                    }
+                },
+                {
+                    "targets":6,
+                    "render":function (data, type, row) {
+                        var str ="";
+                        switch (data) {
+                            case '1': str = "是";break;
+                            case '2': str = "否";break;
+                        }
+                        return str;
+                    }
+                },
+                {
+                    "render": function (data, type, row) {
+                        return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                            ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                            '<li><a href="${base}/store/cms/review/detail/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">查看</a></li>' +
+                            '<li><a href="${base}/store/cms/review/edit/' + row.id + '" data-pjax>修改</a></li>' +
+                            '<li class="divider"></li>' +
+                            '<li><a href="javascript:;" onclick="del(\'' + row.id + '\')">删除</a></li>' +
+                            '</ul></div>';
+                    },
+                    "targets": 7
+                }
+            ]
+        });
+        datatable.on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+    function del(id) {
+        var dialog = $("#dialogDelete");
+        dialog.modal("show");
+        dialog.find("#okDel").unbind("click");
+        dialog.find("#okDel").bind("click", function (event) {
+            var btn = $(this);
+            btn.button("loading");
+            $.post("${base}/store/cms/review/delete/" + id, {}, function (data) {
+                if (data.code == 0) {
+                    datatable.ajax.reload(null,false);
+                } else {
+                    Toast.error(data.msg);
+                }
+                btn.button("reset");
+                dialog.modal("hide");
+            }, "json");
+        });
+    }
+    function delCheck() {
+        var chks = datatable.rows('.selected').data();
+        if (chks.length > 0) {
+            var ids = [];
+            $.each(datatable.rows('.selected').data(), function (i, n) {
+                ids.push(n.id);
+            });
+            var dialog = $("#dialogDelete");
+            dialog.modal("show");
+            dialog.find("#okDel").unbind("click");
+            dialog.find("#okDel").bind("click", function (event) {
+                var btn = $(this);
+                btn.button("loading");
+                $.post("${base}/store/cms/review/delete", {ids: ids.toString()}, function (data) {
+                    if (data.code == 0) {
+                        datatable.ajax.reload(null,false);
+                    } else {
+                        Toast.error(data.msg);
+                    }
+                    btn.button("reset");
+                    dialog.modal("hide");
+                }, "json");
+            });
+        } else {
+            Toast.warning("请先选择要删除的项！");
+        }
+    }
+    $(function () {
+        initDatatable();
+        $("#dialogDetail").on("hidden.bs.modal", function () {
+            $(this).removeData("bs.modal");
+        });
+    });
+</script>
+<!--#}#-->

@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<form class="form-horizontal" role="form">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">是否异步加载：</label>
+        <div id="needAsyncInit" class="col-sm-10">
+            <label class="radio-inline">
+                <input type="radio" name="needAsyncInit" id="needAsyncInit_t" value="true"> 是
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="needAsyncInit" id="needAsyncInit_f" value="false"> 否
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="pageShow" class="col-sm-2 control-label">每页显示商品数：</label>
+
+        <div class="col-sm-10">
+            <input type="number" class="form-control" id="pageShow" placeholder="请填写数字">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="productInfoUrl" class="col-sm-2 control-label">商品详情路径：</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="productInfoUrl" placeholder="/sysback/decoratepages/run?templateUuid=0c7fe32d43b546339c2826db96ae6c5a&pageUuid=ed2e3e98b101466da801982ecc2d0c9b&productUuid=">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="favoriteProUrl" class="col-sm-2 control-label"> 商品收藏页路径：</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="favoriteProUrl" placeholder="/usercenter/productfavorite/toPage">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="topic" class="col-sm-2 control-label"> 组件交互订阅：</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="topic" placeholder="登录框弹出组件交互">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="shareDataName" class="col-sm-2 control-label">共享数据：</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="shareDataName" placeholder="与要共享的组件的设置页面填写一致">
+        </div>
+    </div>
+</form>
+<script>
+    //获取属性配置JSON
+    var pageJson = ${webPageModelJsonStr};
+
+    //构建属性配置
+    var componentsParam = {
+        initParamData:function(paramJson){ //初始化渲染属性配置
+            if(typeof(paramJson) == "string"){
+                paramJson = JSON.parse(paramJson);
+            }
+                $("#needAsyncInit input[value="+paramJson.needAsyncInit+"]").prop("checked",true);
+                $("#pageShow").val(paramJson.pageShow);
+                $("#productInfoUrl").val(paramJson.productInfoUrl);
+                $("#shareDataName").val(paramJson.shareDataName);
+                $("#favoriteProUrl").val(paramJson.favoriteProUrl);
+                $("#topic").val(paramJson.topic);
+        },
+        saveParamData:function(){ //返回属性配置JSON
+            var needAsyncInit =  $("#needAsyncInit input:checked").val();
+            var pageShow = $("#pageShow").val();
+            var productInfoUrl = $("#productInfoUrl").val();
+            var favoriteProUrl = $("#favoriteProUrl").val();
+            var topic = $("#topic").val();
+            var shareDataName = $("#shareDataName").val();
+            var paramJson = {
+                compId: 'productlist',
+                "needAsyncInit": needAsyncInit,
+                "pageShow": pageShow,
+                "productInfoUrl": productInfoUrl,
+                "favoriteProUrl": favoriteProUrl,
+                "topic": topic,
+                "shareDataName": shareDataName
+            };
+            var err = this.validateData(paramJson);
+            if(!err.success){
+                return err;
+            }
+            return paramJson;
+        },
+        validateData:function(paramJson){
+            var err={
+                success:true,
+                msg:""
+            }
+            var msg=[];
+            msg = decoration.base.validateSpecial(msg,paramJson.productInfoUrl,"商品详情路径包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.favoriteProUrl,"商品收藏页路径包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.topic,"组件交互订阅包含特殊字符，请重新输入！<br>");
+            if(msg.length>0){
+                err.success = false;
+                err.msg=msg.join("");
+            }
+            return err;
+        }
+    }
+
+    componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+    //校验数据
+    function validateData(paramJson){
+
+    }
+</script>
+</body>
+</html>

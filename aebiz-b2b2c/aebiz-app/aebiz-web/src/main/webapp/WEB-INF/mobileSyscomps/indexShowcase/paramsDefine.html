@@ -1,0 +1,305 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<form class="form-horizontal" role="form">
+
+    <div class="form-group">
+        <label for="mdetail_url" class="col-sm-3 control-label">详情页跳转url</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="mdetail_url" placeholder="请输入跳转url">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="slideTime" class="col-sm-3 control-label">商品列表：</label>
+        <div class="col-sm-8">
+            <div>
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">列表</a></li>
+                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">已选(<span class="selectNum">0</span>)</a></li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="home">
+                        <ul class="list-group">
+
+                        </ul>
+                        <div id="pageDiv"></div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="profile">
+                        <ul class="list-select-group">
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/html" id="list-tpl">
+        {{each rows as value i}}
+        <li class="list-group-item list-item" data-uuid="{{value.uuid}}">
+            {{value.name}}
+            <label class="checkbox-inline pull-right">
+                <input type="checkbox" id="inlineCheckbox1" value="option1" class="j-select">选中
+            </label>
+        </li>
+        {{/each}}
+    </script>
+
+    <script type="text/html" id="list-select-tpl">
+        {{each rows as value i}}
+        <li class="list-group-item list-select-item" data-uuid="{{value.uuid}}">
+            {{value.name}}
+            <a href="javascript:void(0)" class="j-delete btn btn-danger btn-xs pull-right">删除</a>
+        </li>
+        {{/each}}
+    </script>
+
+    <input type="hidden" id="pduuids">
+</form>
+<script>
+    //获取属性配置JSON
+    var pageJson = ${webPageModelJsonStr};
+
+    //构建属性配置
+    var componentsParam = {
+        initParamData: function (paramJson) { //初始化渲染属性配置
+            if (typeof(paramJson) == "string") {
+                paramJson = JSON.parse(paramJson);
+            }
+
+            if(paramJson.pduuids == undefined){
+                paramJson.pduuids = "";
+            }
+
+            if (pageJson.mdetail_url) {
+                $("#mdetail_url").val(pageJson.mdetail_url);
+            }
+
+
+            $('#pduuids').val(paramJson.pduuids);
+        },
+        saveParamData: function () { //返回属性配置JSON
+
+
+            var paramJson = {
+                compId: 'cart',
+                pduuids:$('#pduuids').val()==""?'':$('#pduuids').val(),
+                "mdetail_url":$("#mdetail_url").val()
+            };
+
+            return paramJson;
+        },
+        validateData:function(){
+
+        }
+    };
+
+    componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+</script>
+
+<script>
+    var sliderParams = {
+        targetDataList:[],
+        selectDataList:[],
+        selectUuids:[],
+        searchProduct:function(nowPage,pageShow,initPage){
+            var pagingDiv = $("#pageDiv");
+            var _self = this;
+            var reqdata = {
+                "storeUuid":'',
+                "productUuids":"",
+                "nowPage" : nowPage,
+                "pageShow" : pageShow
+            };
+
+            $.ajax({
+                type : "GET",
+                url : ContextPath+"/comps/integration/getProduct4Showcase4Mobile",
+                data : reqdata,
+                dataType : "json",
+                success : function(data) {
+                    //渲染列表数据
+                    _self.renderAdList(data);
+                    if(initPage){
+                        //渲染分页插件
+                        _self.renderAdPaging(data.totalPage, pagingDiv);
+                    }
+                }
+            })
+        },
+        initRenderData:function(uuids){
+            if(uuids.length>0){
+                uuids = uuids.split(',');
+                var _self = this;
+
+                var reqdata = {
+                    "storeUuid":'',
+                    "productUuids":uuids.join(),
+                    "nowPage" : "1",
+                    "pageShow" : "100"
+                };
+
+                $.ajax({
+                    type : "GET",
+                    url : ContextPath+"/comps/integration/getProduct4Showcase4Mobile",
+                    async:false,
+                    data : reqdata,
+                    dataType : "json",
+                    success : function(data) {
+                        _self.selectDataList = data.rows;
+                        _self.selectUuids = uuids;
+                        _self.renderSelectListTpl();
+                        console.log(data)
+                    }
+                })
+            }
+
+        },
+        renderAdList:function(data){
+            this.targetDataList = data.rows;
+            var html = template('list-tpl', data);
+            $('.list-group').html(html);
+            this.initSelect();
+
+            //$('#adUuid').val("");
+            this.renderSelectItem();
+        },
+        renderSelectItem:function(){
+            var _self = this;
+            this.selectDataList.forEach(function(e){
+                if(!_self.targetDataList.in_array(e)){
+                    $('.list-item[data-uuid='+e.uuid+']').find('input').prop('checked',true);
+                }
+            })
+
+        },
+        renderSelectList:function(data,selectVal,action){
+            var _self = this;
+            data.forEach(function(e){
+                if(action == 'push'){
+                    if(e.uuid == selectVal && !_self.selectDataList.in_array(e)){
+                        _self.selectDataList.push(e)
+                    }
+                }else if(action == 'delete'){
+                    if(e.uuid == selectVal){
+                        _self.selectDataList.splice(e,1)
+                    }
+
+                }
+            });
+
+            this.setSelectUuids(selectVal);
+            this.renderSelectListTpl();
+            this.syncUuids();
+        },
+        renderSelectListTpl:function(){
+            var dataList = [];
+            dataList.rows = this.selectDataList;
+
+            var html = template('list-select-tpl', dataList);
+            $('.list-select-group').html(html);
+            $('.selectNum').html(this.selectDataList.length)
+        },
+        renderAdPaging:function(totalPage,pageEle){
+            var _self = this;
+            layui.use(['laypage', 'layer'], function(){
+                var laypage = layui.laypage  ,layer = layui.layer;
+                laypage({
+                    cont: pageEle,
+                    pages: totalPage,
+                    jump: function(obj, first){
+                        if(!first){
+                            _self.searchProduct(obj.curr,8,false);
+                        }
+                    }
+                });
+            });
+        },
+        setSelectUuids:function(uuid){
+            var _self = this;
+
+            if(!_self.selectUuids.in_array(uuid)){
+                _self.selectUuids.push(uuid)
+            }else{
+                _self.selectUuids.splice(uuid,1)
+            }
+
+        },
+        selectAd:function(){
+            var _self = this;
+            $(document).off('click.select').on('click.select','.list-item .j-select',function(){
+                var uuid = $(this).parents(".list-group-item").attr('data-uuid');
+
+                if($(this).is(':checked')){
+                    _self.renderSelectList(_self.targetDataList,uuid,"push");
+                }else{
+                    _self.renderSelectList(_self.targetDataList,uuid,"delete");
+                }
+            })
+        },
+        deleteSelect:function(){
+            var _self = this;
+            $(document).off('click.delete').on('click.delete','.list-select-item .j-delete',function(){
+                var uuid = $(this).parents(".list-select-item").attr('data-uuid');
+
+                _self.selectDataList.forEach(function(e){
+                    if(e.uuid == uuid){
+                        _self.selectDataList.splice(e,1);
+                        _self.setSelectUuids(uuid);
+                    }
+                })
+
+                $.each($('.list-item'),function(){
+                    if($(this).attr('data-uuid') == uuid){
+                        $(this).find('input').removeAttr('checked');
+                    }
+                })
+
+                $(this).parents('.list-select-item').remove();
+
+                $('.selectNum').html(_self.selectDataList.length);
+
+                _self.syncUuids();
+
+            })
+        },
+        initSelect:function(){
+            $.each($('.list-group-item'),function(){
+                var uuid = $(this).attr('data-uuid');
+
+                if(uuid == $('#adUuid').val()){
+                    $(this).find('a').html('已选').removeClass("btn-primary").prop('disabled','disabled');
+                }
+            })
+        },
+        syncUuids:function(){
+            var _self = this;
+            $('#pduuids').val(_self.selectUuids.join())
+            $('#pdList').val(JSON.stringify(_self.selectDataList))
+        }
+    }
+
+    sliderParams.searchProduct(1, 8, true);
+    sliderParams.selectAd();
+    sliderParams.deleteSelect();
+    sliderParams.initRenderData($('#pduuids').val())
+
+    Array.prototype.S = String.fromCharCode(2);
+    Array.prototype.in_array = function(e) {
+        var r = new RegExp(this.S+e+this.S);
+        return (r.test(this.S+this.join(this.S)+this.S));
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+<div class="modal-body no-p">
+    <div class="row">
+        <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+                <header class="panel-heading clearfix brtl brtr">
+                    <div class="overflow-hidden">
+                        <a href="javascript:;" class="h4 show no-m pt5">Cms_review</a>
+                        <small>${obj.id}</small>
+                    </div>
+                </header>
+                <div class="list-group">
+                    <table class="table table-bordered table-striped mg-t datatable">
+                        <tbody>
+                                                        <tr>
+                                <td>商城ID</td><td>${obj.storeId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>内容类型 1黏土教程 2视频专区</td><td>${obj.cmsType}</td>
+                            </tr>
+                                                        <tr>
+                                <td>内容ID</td><td>${obj.cmsId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>回复父级编号</td><td>${obj.reviewId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>类型 1评论 2回复</td><td>${obj.type}</td>
+                            </tr>
+                                                        <tr>
+                                <td>评论回复内容</td><td>${obj.content}</td>
+                            </tr>
+                                                        <tr>
+                                <td>评论点赞数</td><td>${obj.loveNum}</td>
+                            </tr>
+                                                        <tr>
+                                <td>评论人名称</td><td>${obj.reviewOpName}</td>
+                            </tr>
+                                                        <tr>
+                                <td>评论人编号</td><td>${obj.reviewOpId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>回复父级发布人名称</td><td>${obj.reviewFatherName}</td>
+                            </tr>
+                                                        <tr>
+                                <td>回复父级发布人编号</td><td>${obj.reviewFatherId}</td>
+                            </tr>
+                                                        <tr>
+                                <td>是否为官方 1是 2不是</td><td>${obj.isStore}</td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">知道了</button>
+</div>

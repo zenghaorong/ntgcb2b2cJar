@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<form class="form-horizontal" role="form">
+    <div class="form-group">
+        <label for="searchUrl" class="col-sm-2 control-label">店内搜索结果页:</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="searchUrl" placeholder="">
+        </div>
+    </div>
+</form>
+<script>
+    //获取属性配置JSON
+    var pageJson = ${webPageModelJsonStr};
+
+    //构建属性配置
+    var componentsParam = {
+        initParamData:function(paramJson){ //初始化渲染属性配置
+            if(typeof(paramJson) == "string"){
+                paramJson = JSON.parse(paramJson);
+            }
+            $("#searchUrl").val(paramJson.searchUrl);
+        },
+        saveParamData:function(){ //返回属性配置JSON
+            var searchUrl = $("#searchUrl").val();
+            var paramJson = {
+                compId: 'storeSearch',
+                "searchUrl": searchUrl
+            };
+            var err = this.validateData(paramJson);
+            if(!err.success){
+                return err;
+            }
+            return paramJson;
+        },
+        validateData:function(paramJson){
+            var err={
+                success:true,
+                msg:""
+            }
+            var msg=[];
+            msg = decoration.base.validateSpecial(msg,paramJson.searchUrl,"店内搜索结果页包含特殊字符，请重新输入！<br>");
+            if(msg.length>0){
+                err.success = false;
+                err.msg=msg.join("");
+            }
+            return err;
+        }
+    }
+
+    componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+
+</script>
+</body>
+</html>

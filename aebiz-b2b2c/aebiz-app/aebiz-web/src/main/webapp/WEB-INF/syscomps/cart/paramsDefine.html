@@ -1,0 +1,391 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style type="text/css">
+
+        .mb_0{margin-bottom:0;}
+        .tab-content .p_nopadding,.p_nopadding{padding-left:0;padding-right:0;}
+        .p_left{float:left;padding:0 10px;line-height:34px;}
+        .p_right{float:right;}
+        .p_background{background:#f1f1f1;overflow:hidden;padding:15px 0;}
+        .p_btn{display:inline-block;background:#2D2D2D;line-height:34px;padding:0 15px;color:#fff;}
+        .p_bj_bt{padding-top:20px;}
+        .p_bj_bt b{color:#e51400;font-weight:lighter;}
+        .p_bj_bt li.active b{color:#fff;}
+
+        .module-con .p_bj_list{background:#fff;overflow:hidden;margin-bottom:-15px;padding:0;clear:both;}
+        .p_bj_list dl{width:100%;overflow:hidden;padding:10px 2%;border-bottom:1px solid #ddd}
+        .p_bj_list dl:hover{background:#fffecf;}
+        .p_bj_list dt{width:50px;height:50px;float:left;margin-right:15px;}
+        .p_bj_list dt img{width:50px;height:50px;}
+        .p_bj_list dd{float:left;width:70%;line-height:22px;padding-top:5px;}
+        .p_bj_list dd p{height:22px;overflow:hidden;}
+        .p_bj_list dd.operation{float:right;width:20%;}
+        .p_bj_list dd.operation a,.p_bj_list dd.operation span{margin-right:10px;}
+
+    </style>
+</head>
+<body>
+<form class="form-horizontal" role="form">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">是否异步加载：</label>
+        <div id="needAsyncInit" class="col-sm-10">
+            <label class="radio-inline">
+                <input type="radio" name="needAsyncInit" id="needAsyncInit_t" value="true"> 是
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="needAsyncInit" id="needAsyncInit_f" value="false"> 否
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">简易模式：</label>
+        <div id="isEasyMode" class="col-sm-10">
+            <label class="radio-inline">
+                <input type="radio" name="isEasyMode" id="isEasyMode_t" value="0"> 是
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="isEasyMode" id="isEasyMode_f" value="1"> 否
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="cartShopUrl" class="col-sm-2 control-label">购物车路径：</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="cartShopUrl" placeholder="/cart/cartshow">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="subOrderUrl" class="col-sm-2 control-label">提交订单页面路径：</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="subOrderUrl" placeholder="/order/toBalance">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="productUrl" class="col-sm-2 control-label">商品详情路径：</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="productUrl" placeholder="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="topic" class="col-sm-2 control-label">组件交互订阅主题：</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="topic" placeholder="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="loginTopic" class="col-sm-2 control-label">发布登录检测主题：</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="loginTopic" placeholder="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="categoryUuid" class="col-sm-2 control-label">图片分类：m</label>
+        <div class="col-sm-10">
+            <select id="categoryUuid" name="categoryUuid" class="form-control p_nopadding mr_10">
+                <!--# for(cid in list){
+                      #-->
+                <option value="${cid.categoryUuid}">${cid.categoryName}</option>
+                <!--#
+                }#-->
+
+            </select>
+            <button type="button" class="btn btn-primary"
+                    onclick="javascript:showSearch('1','5')">查询
+            </button>
+        </div>
+    </div>
+    <input type="hidden" id="imgUrl" name="imgUrl">
+    <input type="hidden" id="imgUuid" name="imgUuid">
+    <div class="tab-content p_nopadding">
+        <div class="col-sm-6">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#p_list" data-toggle="tab">全部</a></li>
+                <li><a href="#p_list2" data-toggle="tab">图标（<b
+                        id="recommendNum">未选</b>）
+                </a></li>
+            </ul>
+        </div>
+        <div class="tab-pane active" id="p_list">
+            <div class="tab-content p_bj_list ">
+                <div id="productPage"></div>
+                <div id="pagelayui"></div>
+            </div>
+        </div>
+        <div class="tab-pane p_bj_list" id="p_list2">
+            <div class="tab-content p_bj_list ">
+                <div id="haveTake">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="imageHtml" style="display: none;">
+        <dl id="2edc9c5c40d44ed3b893a0e87dc71995222">
+            <dt>
+                <a href="#"><img height="40" width="40"
+                                 src="http://www.tclo2o.cn/dev1/0/000/001/0000001643.fid"></a>
+            </dt>
+            <dd>
+                <p>
+                    <span>TCL XQB50-1678NS 5公斤 全自动波轮洗衣机 模式可调（浅灰色）</span>
+                </p>
+            </dd>
+            <dd class="operation">
+                <a
+                        href="javascript:recommend('2edc9c5c40d44ed3b893a0e87dc71995222')">推荐</a>
+
+            </dd>
+        </dl>
+    </div>
+</form>
+<script>
+    //获取属性配置JSON
+    var pageJson = ${webPageModelJsonStr};
+
+    //构建属性配置
+    var componentsParam = {
+        initParamData:function(paramJson){ //初始化渲染属性配置
+            if(typeof(paramJson) == "string"){
+                paramJson = JSON.parse(paramJson);
+            }
+            $("#needAsyncInit input[value=" + paramJson.needAsyncInit + "]").prop("checked", true);
+            $("#isEasyMode input[value=" + paramJson.isEasyMode + "]").prop("checked", true);
+            $("#imgUrl").val(paramJson.imgUrl);
+            $("#imgUuid").val(paramJson.imgUuid);
+            $("#cartShopUrl").val(paramJson.cartShopUrl);
+            $("#productUrl").val(paramJson.productUrl);
+            $("#topic").val(paramJson.topic);
+            $("#loginTopic").val(paramJson.loginTopic);
+            $("#subOrderUrl").val(paramJson.subOrderUrl);
+        },
+        saveParamData:function(){ //返回属性配置JSON
+            var needAsyncInit = $("#needAsyncInit input:checked").val();
+            var isEasyMode = $("#isEasyMode input:checked").val();
+            var imgUrl = $("#imgUrl").val();
+            var imgUuid = $("#imgUuid").val();
+            var cartShopUrl = $("#cartShopUrl").val();
+            var productUrl = $("#productUrl").val();
+            var topic = $("#topic").val();
+            var loginTopic = $("#loginTopic").val();
+            var subOrderUrl = $("#subOrderUrl").val();
+            var paramJson = {
+                compId: 'cart',
+                "needAsyncInit": needAsyncInit,
+                "isEasyMode": isEasyMode,
+                "imgUrl": imgUrl,
+                "imgUuid": imgUuid,
+                "cartShopUrl": cartShopUrl,
+                "productUrl": productUrl,
+                "loginTopic": loginTopic,
+                "subOrderUrl": subOrderUrl,
+                "topic": topic
+            };
+            var err = this.validateData(paramJson);
+            if(!err.success){
+                return err;
+            }
+            return paramJson;
+        },
+        showParamData:function(){
+            var paramData = [];
+            var labelName = {
+                type:'src',
+                target:'img',
+                value:$("#imgUrl").val()
+            }
+            paramData.push(labelName);
+            return paramData;
+        },
+        validateData:function(paramJson){
+            var err={
+                success:true,
+                msg:""
+            }
+            var msg=[];
+            msg = decoration.base.validateSpecial(msg,paramJson.cartShopUrl,"购物车路径包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.productUrl,"商品详情路径包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.loginTopic,"发布登录检测主题包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,paramJson.topic,"组件交互订阅主题包含特殊字符，请重新输入！<br>");
+            if(msg.length>0){
+                err.success = false;
+                err.msg=msg.join("");
+            }
+            return err;
+        }
+    }
+
+    componentsParam.initParamData(pageJson); //初始化渲染属性配置调用
+    function recommend(uuid, imgUrl) {
+        $("#imgUrl").val(imgUrl);
+        $("#imgUuid").val(uuid);
+        $("#haveTake").html(" ");
+        var dlhtml = $("#" + uuid).clone();
+        dlhtml.attr("id", uuid + uuid)
+        dlhtml.find("a").last().text("取消推荐");
+        dlhtml.find("a").last().attr("href",
+            "javascript:cancelRecommend('" + uuid + "')")
+        $("#haveTake").append(dlhtml);
+        $("#recommendNum").html("<font color='red'>已选</font>");
+        $("#productPage").find("dl").each(function(){
+            if(uuid==$(this).attr("id")){
+                $(this).find("a").eq(1).text("");
+            }
+            else {
+                $(this).find("a").eq(1).text("选为图标");
+            }
+        })
+    }
+    function cancelRecommend(uuid){
+        $("#imgUuid").val("");
+        $("#imgUrl").val("");
+        $("#haveTake").html(" ");
+        $("#recommendNum").html("");
+        $("#productPage").find("dl").each(function(){
+            if(uuid==$(this).attr("id")){
+                $(this).find("a").eq(1).text("选为图标");
+            }
+        })
+    }
+    function loadData(totalNum, pageShow) {
+        console.log(totalNum + "totalNum11");
+        layui.use([ 'laypage', 'layer' ], function() {
+            var laypage = layui.laypage, layer = layui.layer;
+            var pages = Math.ceil(totalNum / pageShow);
+            if (pages < 1) {
+                pages = 1;
+            }
+
+            var uri = window.location.href;
+            var reg = new RegExp("(^|&)nowPage=([^&]*)");
+            var r = uri.match(reg);
+            if (!$.isEmptyObject(r)) {
+                var curr = r[2];
+            }
+
+
+            laypage({
+                cont : $("#pagelayui"),
+                pages : pages //总页数
+                ,
+                groups : 5 //连续显示分页数
+                ,
+                curr : curr,
+                jump : function(obj, first) {
+
+                    if (!first) {
+
+                        //点击下一页的时候不需要从新计算totalNum
+                        showSearch2(obj.curr, "5");
+
+                    }
+
+                }
+            });
+        })
+    }
+    //列表展示
+    function showSearch(nowPage, pageShow) {
+        $("#pageShow").val(pageShow);
+        $("#nowPage").val(nowPage);
+        var categoryUuid = $("select[name='categoryUuid']").val();
+        var uuid= $("#uuid").val();
+        var data = {
+            "nowPage" : nowPage,
+            "pageShow" : pageShow,
+            "categoryUuid" : categoryUuid,
+            "uuid":uuid
+        };
+        $.ajax({
+            type : "GET",
+            url : ContextPath+"/pictureAdComp/getPageData",
+            data : data,
+            dataType : "json",
+            async : false,
+            success : function(data) {
+                console.log(data);
+                data=eval("("+data+")");
+                var totalNum = data.totalNum;
+                var pageShow = "5";
+                loadData(totalNum, pageShow);
+                $("#productPage").html("");
+                $.each(data.rows, function(index, colum) {
+                    var oneHtml = $("#imageHtml").children().clone();
+                    oneHtml.attr("id", colum.imgUuid);
+                    oneHtml.find("img").attr("src", colum.imgSrc);
+                    oneHtml.find("a").eq(1).text("选为图标");
+                    oneHtml.find("span").text(colum.imgName);
+                    oneHtml.find("a").eq(1).attr(
+                        "href",
+                        "javascript:recommend('" + colum.imgUuid + "','"
+                        + colum.imgSrc + "')");
+                    $("#productPage").append(oneHtml[0].outerHTML);
+                })
+            }
+        })
+    }
+
+    function showSearch2(nowPage, pageShow) {
+        $("#pageShow").val(pageShow);
+        $("#nowPage").val(nowPage);
+        var categoryUuid = $("select[name='categoryUuid']").val();
+        var data = {
+            "nowPage" : nowPage,
+            "pageShow" : pageShow,
+            "categoryUuid" : categoryUuid
+        };
+
+        $.ajax({
+            type : "GET",
+            url : ContextPath+"/pictureAdComp/getPageData",
+            data : data,
+            dataType : "json",
+            async : false,
+            success : function(data) {
+                console.log(data);
+                data=eval("("+data+")");
+                var totalNum = data.totalNum;
+
+                var pageShow = "5";
+                $("#productPage").html("");
+
+                $.each(data.rows, function(index, colum) {
+
+                    var oneHtml = $("#imageHtml").children().clone();
+                    oneHtml.attr("id", colum.imgUuid);
+
+                    oneHtml.attr("id", colum.productUuid);
+
+                    oneHtml.find("img").attr("src", colum.imgSrc);
+                    oneHtml.find("a").eq(1).text("选为图标");
+                    oneHtml.find("span").text(colum.imgName);
+
+                    oneHtml.find("a").eq(1).attr(
+                        "href",
+                        "javascript:recommend('" + colum.imgUuid + "','"
+                        + colum.imgSrc + "')");
+
+                    $("#productPage").append(oneHtml[0].outerHTML);
+
+                })
+
+            }
+
+        })
+
+    }
+
+    $(function() {
+
+        showSearch("1", "5");
+        if(!$.isEmptyObject($("#imgUuid").val())) {
+            recommend($("#imgUuid").val(), $("#imgUrl").val());
+        }
+    })
+</script>
+</body>
+
+</html>

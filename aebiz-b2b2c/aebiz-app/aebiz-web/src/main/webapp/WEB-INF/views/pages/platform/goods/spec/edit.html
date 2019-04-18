@@ -1,0 +1,207 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base!}/platform/goods/spec" data-pjax id="goback"><i
+                class="ti-angle-left"></i> ${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base!}/platform/goods/spec/editDo" method="post">
+                <input id="id" name="id" value="${obj.id!}" type="hidden">
+
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">${msg['goods.type.spec.column.standardName']}</label>
+
+                            <div class="col-sm-8">
+                                <input type="text" id="name" class="form-control" name="name" data-parsley-required="true"
+                                       placeholder="${msg['goods.type.spec.column.standardName']}" value="${obj.name!}">
+                            </div>
+                        </div>
+
+                        <div class="form-group" >
+                            <label for="aliasName" class="col-sm-2 control-label">${msg['goods.type.spec.column.alias']}</label>
+
+                            <div class="col-sm-8">
+                                <input type="text" id="aliasName" class="form-control" name="aliasName"
+                                       placeholder="${msg['goods.type.spec.column.alias']}" value="${obj.aliasName!}">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="type" class="col-sm-2 control-label">${msg['goods.type.spec.column.showType']}</label>
+
+                            <div class="col-sm-8">
+                                <input type="radio" <!--#if(obj.type=='text'){#-->checked<!--#}#--> value="text" name="type">${msg['goods.type.spec.column.text']}
+                                <input type="radio" <!--#if(obj.type=='image'){#-->checked<!--#}#--> value="image" name="type">${msg['goods.type.spec.column.pic']}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="btnAdd" class="col-sm-2 control-label"></label>
+
+                            <div class="col-sm-8">
+                                <button id="btnAdd" type="button" class="btn btn-default"><i class="fa fa-plus mr5"></i>${msg['goods.type.spec.column.addValues']}</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tab" class="col-sm-2 control-label"></label>
+                            <div class="col-sm-8">
+                                <table id="tab" width="600" border="0" cellspacing="0" cellpadding="0" >
+                                    <thead>
+                                    <tr align="center">
+                                        <td>${msg['goods.type.spec.column.nameOfValue']}</td>
+                                        <td width="2"></td>
+                                        <td>${msg['goods.type.spec.column.aliasOfValue']}</td>
+                                        <td width="2"></td>
+                                        <td style="display: none">${msg['goods.type.spec.column.specPic']}</td>
+                                        <td>${msg['goods.type.spec.column.operation']}</td>
+                                    </tr>
+                                    </thead>
+                                    <TBODY>                  　
+                                    <!--#for(o in obj.specValues){#-->
+                                    <tr align="center"><td height="45">
+                                        <input type="hidden" name="spec_value_id" value="${o.id!}"  />
+                                        <input type="text" name="spec_value" value="${o.spec_value!}" class="form-control" data-parsley-required="true"></td>
+                                        <td width="2"></td><td><input type="text" name="spec_alias" value="${o.spec_alias!}" class="form-control"></td><td width="2"></td>
+                                        <td <!--#if(obj.type=='text'){#-->style="display: none"<!--#}#-->><button type="button" class="btn btn-default btn-sm mr5">
+                                            <img src="<!--#if(isEmpty(o.spec_picurl)){#-->${base!}/assets/platform/images/empty.bmp<!--#}else{#-->${o.spec_picurl!}<!--#}#-->" style="height: 20px;width: 20px;">
+                                            <input name="spec_picurl" type="hidden" value="${o.spec_picurl!}"><i class="ti-upload ml5"></i> </button></td>
+                                        <td><i class="up fa fa-arrow-up" style="cursor:pointer;padding: 5px;" title="向上移动"></i>
+                                            <i class="down fa fa-arrow-down" style="cursor:pointer;padding: 5px;" title="向下移动"></i>
+                                            <i class="del fa fa-remove" style="cursor:pointer;padding: 5px;" title="删除"></i></td></tr>
+                                    <!--#}#-->
+                                    </TBODY>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                        <div>
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="正在提交...">提 交</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<div id="buttom"></div>
+<script language="JavaScript">
+    function binEvent(){
+        $("#tab .up").unbind("click").on("click",function(){
+            var p=$(this).parent().parent();
+            var nextTR = p.prev();
+            if (nextTR.length > 0) {
+                nextTR.insertAfter(p);
+            }
+        });
+        $("#tab .down").unbind("click").on("click",function(){
+            var p=$(this).parent().parent();
+            var nextTR = p.next();
+            if (nextTR.length > 0) {
+                nextTR.insertBefore(p);
+            }
+        });
+        $("#tab .del").unbind("click").on("click",function(){
+            var tr=$("#tab tbody").find("tr");
+            if (tr.length > 0) {
+                var specId = $(this).parent().parent().find("input[type=hidden]").val();
+                var line = $(this).parent().parent();
+                $.post("${base!}/platform/goods/spec/canNotDel/" + specId, {}, function (data) {
+                    if (data.code == 0) {
+                        Toast.error(data.msg);
+                    } else {
+                        line.remove();
+                    }
+
+                },"json")
+//                $(this).parent().parent().remove();
+            }
+        });
+        $("#tab .btn").unbind("click").on("click",function(){
+            var btn=$(this);
+            $("#buttom").load( "${base!}/platform/goods/spec/image?w=36&h=36", function( response, status, xhr ) {
+                $("#buttom").html(response);
+                $("#imgUploadOK").unbind("click").on("click",function(){
+                    btn.find("img").attr("src",$("#imgUploadPicurl").val());
+                    btn.find("input[type=hidden]").val($("#imgUploadPicurl").val());
+                    $("#imgUpload").modal("hide");
+                });
+                $("#imgUpload").modal("show");
+            });
+        });
+    }
+
+    function initType(){
+        $("input[type=radio]").on("click",function(){
+            if('image'==$(this).val()){
+                $("#tab tr").each(function () {
+                    $(this).children('td').eq(4).show();
+                });
+            }else{
+                $("#tab tr").each(function () {
+                    $(this).children('td').eq(4).hide();
+                });
+            }
+        });
+    }
+    $(document).ready(function () {
+        binEvent();
+        initType();
+        $("#btnAdd").on("click",function(){
+            var t=$('input:radio[name=type]:checked').val();
+            var str="";
+            if(t=='text'){
+                str='style="display: none"';
+            }
+            $("#tab tbody").append('<tr align="center"><td height="45">' +
+                    '<input type="hidden" name="spec_value_id" />' +
+                    '<input type="text" name="spec_value" class="form-control" data-parsley-required="true"></td>' +
+                    '<td width="2"></td><td><input type="text" name="spec_alias" class="form-control"></td><td width="2"></td>' +
+                    '<td '+str+'><button type="button" class="btn btn-default btn-sm mr5"> ' +
+                    '<img src="${base!}/assets/platform/images/empty.bmp" style="height: 20px;width: 20px;"> ' +
+                    '<input name="spec_picurl" type="hidden" value=""><i class="ti-upload ml5"></i> </button></td>' +
+                    '<td><i class="up fa fa-arrow-up" style="cursor:pointer;padding: 5px;" title="向上移动"></i>' +
+                    '<i class="down fa fa-arrow-down" style="cursor:pointer;padding: 5px;" title="向下移动"></i>' +
+                    '<i class="del fa fa-remove" style="cursor:pointer;padding: 5px;" title="删除"></i></td></tr>');
+            binEvent();
+        });
+
+        $('#addForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goback").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+
+
+<!--#}#-->

@@ -1,0 +1,515 @@
+<!doctype html>
+<html>
+<head>
+
+	<style type="text/css">
+
+
+		.p_bj_list dl {
+			width: 100%;
+			overflow: hidden;
+			padding: 10px 2%;
+			border-bottom: 1px solid #ddd;
+		}
+		.p_bj_list dt {
+			width: 50px;
+			height: 50px;
+			float: left;
+			margin-right: 15px;
+		}
+		.p_bj_list dt img {
+			width: 50px;
+			height: 50px;
+		}
+		.p_bj_list dd {
+			float: left;
+			width: 70%;
+			line-height: 22px;
+			padding-top: 5px;
+		}
+		.p_bj_list dd p {
+			height: 22px;
+			overflow: hidden;
+		}
+		.p_bj_list dd.operation {
+			float: right;
+			width: 20%;
+		}
+		.p_bj_list dd.operation a, .p_bj_list dd.operation span {
+			margin-right: 10px;
+		}
+
+
+		.operation .j_recomend {
+			display:block;
+		}
+		.operation .j_h-recomend ,.operation .j_cancel-recomend {
+			display:none;
+		}
+		.j_active .j_recomend {
+			display:none;
+		}
+		.j_active .j_h-recomend ,.j_active .j_cancel-recomend {
+			display:block;
+		}
+
+		#search-condition{
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+		#mainForm .nav-tabs>li {
+			float: left;
+			margin-bottom: -2px;
+		}
+	</style>
+</head>
+<body>
+<div class="container-fiuld">
+	<div class="module-con">
+		<form id="mainForm" action="#" method="post" class='form-horizontal form-bordered form-validate'>
+			<ul class="nav nav-tabs nav-tabs-zx">
+				<li class="active"><a href="#contentSetting" data-toggle="tab">选择商品</a></li>
+				<li><a href="#displaySetting" data-toggle="tab">显示设置</a></li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active " id="contentSetting">
+					<input class="j_product-data" type="hidden" id="productUuids">
+					<div id="search-condition">
+						<div class="form-inline">
+							<div class="form-group col-sm-3">
+								<select name="categoryUuid" class="form-control p_nopadding mr_10 j_category">
+									<option value="">所有分类</option>
+									<!--# for(cid in prodList){
+#-->
+									<option value="${cid.categoryUuid}">${cid.categoryName}</option>
+									<!--#
+                                    }#-->
+								</select>
+							</div>
+							<div class="form-group col-sm-3">
+								<input type="text" name="productName1"  class="form-control j_searchKey" placeholder="关键字">
+							</div>
+							<div class="form-group col-sm-4">
+								<div class="input-group ">
+									<input type="text" name="startPrice1" class="form-control j_startPrice" placeholder="价格区间">
+									<div class="input-group-addon">-</div>
+									<input type="text" name="endPrice1" class="form-control j_endPrice" placeholder="价格区间" >
+								</div>
+							</div>
+							<div class="form-group" style="margin-left:20px">
+								<button type="button" onclick="searchProduct(1,8,true)" class="btn btn-primary"><i class="fa fa-search">搜索</i></button>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-12 p_bj_bt">
+						<ul class="nav nav-tabs nav-tabs-zx">
+							<li class="active"><a href="#p_list" data-toggle="tab" class="j_product-list">商品列表</a></li>
+							<li><a href="#p_selected" data-toggle="tab" class="j_selected" >已选择<span class="j_selected-count badge" id="j_selected-count">0</span></a></li>
+						</ul>
+					</div>
+					<div class="tab-content p_bj_list" id="product-list">
+						<div class="tab-pane active j_product-list-content" id="p_list">
+							<div class="j_producttab-list-item" id="product-list-container">
+								<!-- 内容是下面 j_tmp-product 的模板内容 -->
+							</div>
+							<div class="j_page"></div>
+						</div>
+						<div class="tab-pane j_selected-content" id="p_selected">
+							<!-- 已选择列表 -->
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane" id="displaySetting">
+					<div class="form-horizontal">
+						<div class="form-group"  id="needAsyncInit">
+							<label class="checkbox-inline">是否异步加载</label>
+							<label class="checkbox-inline">
+								是&nbsp;&nbsp;<input type="radio" name="needAsyncInit" class="j_yes" value="true" checked>
+							</label>
+							<label class="checkbox-inline">
+								否&nbsp;&nbsp;<input type="radio" name="needAsyncInit" class="j_no" value="false"  >
+							</label>
+						</div>
+						<div class="form-group" id="slider-auto">
+							<label class="checkbox-inline">是否自动轮播</label>
+							<label class="checkbox-inline">
+								是&nbsp;&nbsp;<input type="radio" name="slider-auto"  class="j_yes" value="true" >
+							</label>
+							<label class="checkbox-inline">
+								否&nbsp;&nbsp;<input type="radio" name="slider-auto" class="j_no" value="false" checked >
+							</label>
+						</div>
+						<div class="form-group" style="display:none">
+							<label for="firstname" class="col-sm-4 control-label">轮播数量</label>
+							<div class="col-sm-6">
+								<input type="number" class="form-control" id="slider-count" placeholder="轮播数量">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="firstname" class="col-sm-4 control-label">自动轮播速度(ms)/自动轮播间隔时间</label>
+							<div class="col-sm-6">
+								<select id="slider-interTime" class="form-control">
+									<option value="1000">1s</option>
+									<option value="2000">2s</option>
+									<option value="3000">3s</option>
+									<option value="4000">4s</option>
+									<option value="5000" selected>5s</option>
+									<option value="6000">6s</option>
+									<option value="7000">7s</option>
+									<option value="8000">8s</option>
+									<option value="9000">9s</option>
+									<option value="10000">10s</option>
+									<option value="0">0</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="firstname" class="col-sm-4 control-label">轮播效果速度(ms)</label>
+							<div class="col-sm-6">
+								<select name="delayTime" id="slider-speed" class="form-control">
+									<option value="300">300</option>
+									<option value="500">500</option>
+									<option value="700">700</option>
+									<option value="1000">1000</option>
+									<option value="0">0</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="firstname" class="col-sm-4 control-label">商品详情URL</label>
+							<div class="col-sm-6">
+								<input type="text" class="form-control" id="productdetail-url" placeholder="商品详情URL">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="firstname" class="col-sm-4 control-label">收藏夹路径</label>
+							<div class="col-sm-6">
+								<input type="text" class="form-control" id="collectUrl" placeholder="收藏夹路径" value="/usercenter/productfavorite/toPage">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="firstname" class="col-sm-4 control-label">登陆发布的主题</label>
+							<div class="col-sm-6">
+								<input type="text" class="form-control" id="loginTopic" placeholder="登陆发布的主题" value="login">
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+
+
+
+	<!--  下面为页面模板   -->
+
+	<div id = "j_tmp-product" style="display:none">
+		<dl >
+			<dt><a href="#"><img src="" class="j_product-img" ></a></dt>
+			<dd>
+				<p><a href="#" class="j_product-name"></a></p>
+				￥<span class="j_product-price"></span>
+			</dd>
+			<dd class="operation ">
+				<span class="j_h-recomend">已选择</span>
+				<a class="j_cancel-recomend"   data-productUuid="" href="javascript:;">取消选择</a>
+				<a class="j_recomend"  data-productUuid="" href="javascript:;">选择</a>
+			</dd>
+		</dl>
+	</div>
+
+	<!-- 已选择的模板 -->
+	<div id = "j_tmp-selected-product" style="display:none">
+		<dl >
+			<dt><a href="#"><img src="" class="j_product-img" ></a></dt>
+			<dd>
+				<p><a href="#" class="j_product-name"></a></p>
+				￥<span class="j_product-price"></span>
+			</dd>
+			<dd  class="operation ">
+				<span class="j_h-recomend">已选择</span>
+				<a class="j_cancel-recomend"   data-productUuid="" href="javascript:;">取消选择</a>
+			</dd>
+		</dl>
+	</div>
+</div>
+<script type="text/javascript">
+
+
+
+    //搜索商品，首次搜索初始化分页 (initPage:是否需要初始化分页)
+    var searchProduct =  function(nowPage,pageShow,initPage){
+        var condition = $("#search-condition");
+        var searchkey  = condition.find(".j_searchKey").val();
+        var startPrice  = condition.find(".j_startPrice").val();
+        var endPrice  = condition.find(".j_endPrice").val();
+        var category =  condition.find(".j_category").val();
+        var data = {
+            "nowPage" : nowPage,
+            "pageShow" : pageShow,
+            "categoryUuid" : category,
+            "searchKey" : searchkey,
+            "startPrice" : startPrice,
+            "endPrice" : endPrice,
+            "param_inProductUuids" : ""
+        };
+
+        $.ajax({
+            type : "GET",
+            url : ContextPath+"/slideproducts/getPageData",
+            data : data,
+            dataType : "json",
+            success : function(data) {
+                data=eval("("+data+")");
+                //渲染列表数据
+                renderProductList(data.list);
+                if(initPage){
+                    //渲染分页插件
+                    renderPaging(data.totalPage);
+                }
+            }
+        })
+    }
+
+
+    var renderProductList = function(data){
+        var productUuidsStr = $("#productUuids").val();
+        var productUuids = JSON.parse(productUuidsStr);
+        var template = $("#j_tmp-product");
+        var listContainer = $("#product-list-container");
+        listContainer.empty();
+        //渲染数据
+        if(data.length > 0){
+            $.each(data,function(index,obj){
+                var newProduct = template.clone().removeAttr("id").addClass("j_select-item");
+                newProduct.find(".j_product-img").attr("src",obj.pic);
+                newProduct.find(".j_product-name").html(obj.name);
+                newProduct.find(".j_product-price").html(obj.price);
+                newProduct.find(".j_product-img").attr("src",obj.pic);
+                newProduct.find(".j_recomend").attr("data-productUuid",obj.uuid);
+                newProduct.find(".j_cancel-recomend").attr("data-productUuid",obj.uuid);
+                //分页数据包含  已经选择的商品，则包含的该商品 添加j_active,j_active 将显示 取消选择
+                if($.inArray(obj.uuid,productUuids) != -1){
+                    newProduct.find(".operation").addClass("j_active");
+                }
+
+                newProduct.css("display","block");
+
+                listContainer.append(newProduct);
+            });
+        }else{
+            listContainer.append("<p style='text-align:center;padding-top:10px'>没有符合条件的数据</p>");
+        }
+    }
+
+    //渲染分页组件
+    var renderPaging = function(totalPage){
+        var pageEle = $("#product-list").find(".j_page");
+        layui.use(['laypage', 'layer'], function(){
+            var laypage = layui.laypage  ,layer = layui.layer;
+            laypage({
+                cont: pageEle,
+                pages: totalPage,
+                jump: function(obj, first){
+                    if(!first){
+                        searchProduct(obj.curr,8,false);
+                    }
+                }
+            });
+        });
+    }
+
+    //将一个商品uuid加入到tab页下的数组
+    var addProductUuid = function(tabDataObj,productUuid){
+        var tabDataStr = tabDataObj.val();
+        var productUuids = JSON.parse(tabDataStr);
+        if($.inArray(productUuid,productUuids) == -1){
+            productUuids.push(productUuid);
+        }
+        tabDataObj.val(JSON.stringify(productUuids));
+        return productUuids.length;
+    }
+
+    //选择事件
+    $("#contentSetting").on("click","#product-list-container .j_recomend",function(e){
+        $(e.target).parent().addClass("j_active");
+        var productUuid = $(e.target).attr("data-productUuid");
+        var tabDataObj =  $("#productUuids");
+        //将已推荐的 商品写入隐藏域，暂时存储
+        var selectedCount = addProductUuid(tabDataObj,productUuid);
+        $("#j_selected-count").html(selectedCount);
+    });
+
+    //点击 商品列表页面的 取消选择
+    $("#contentSetting").on("click","#product-list-container .j_cancel-recomend",function(e){
+        $(e.target).parent().removeClass("j_active");
+        var productUuid = $(e.target).attr("data-productUuid");
+        var tabDataObj =  $("#productUuids");
+        var productUuidsStr = tabDataObj.val();
+        var productUuidArr = JSON.parse(productUuidsStr);
+        productUuidArr.splice($.inArray(productUuid,productUuidArr),1);
+        tabDataObj.val(JSON.stringify(productUuidArr));
+        $("#j_selected-count").html(productUuidArr.length);
+    });
+
+    //点击商品列表页面，刷新数据
+    $(".j_product-list").on("click",function(e){
+        searchProduct(1,8,true);//重新分页
+    });
+
+    //点击 已选择 页签 事件
+    $(".j_selected").on("click",function(e){
+        var tabDataObj = $("#productUuids");
+        var tabDataStr = tabDataObj.val();
+        var tabData = JSON.parse(tabDataStr);//tab 数据
+        var productUuidArr = tabData;
+        $.ajax({
+            url:ContextPath+"/producttab/getProducts",
+            type:"POST",
+            data:{productUuids:productUuidArr.join(",")},
+            dataType : "json",
+            success:function(data){
+                var renderDiv = $("#p_selected");
+                //渲染数据
+                renderSelected(data,renderDiv);
+            }
+        });
+    });
+    //渲染已选择页签
+    function renderSelected(data,renderDiv){
+        renderDiv.empty();
+        var productTmp = $("#j_tmp-selected-product");
+        if(data&& data.length > 0){
+            for(var i =0 ;i <data.length;i++){
+                var obj = data[i];
+                var newProduct = productTmp.clone().removeAttr("id").addClass("j_select-item");
+                newProduct.find(".j_product-img").attr("src",obj.pic);
+                newProduct.find(".j_product-name").html(obj.productName);
+                newProduct.find(".j_product-price").html(obj.price);
+                newProduct.find(".j_product-img").attr("src",obj.pic);
+                newProduct.find(".j_cancel-recomend").attr("data-productUuid",obj.uuid);
+                newProduct.find(".operation").addClass("j_active");
+                newProduct.css("display","block");
+                renderDiv.append(newProduct);
+            }
+        }else{
+            renderDiv.append("<div style='text-align:center'>还未选择商品！</div>");
+        }
+    }
+
+    //已选择页签的取消选择
+    $(document.body).on("click","#p_selected .j_cancel-recomend",function(e){
+        var tabDataObj =  $("#productUuids");
+        var productUuid = $(e.target).attr("data-productUuid");
+        var tabDataStr = tabDataObj.val();
+        var productUuidArr = JSON.parse(tabDataStr);//tab 数据
+        //将ID移除
+        productUuidArr.splice($.inArray(productUuid,productUuidArr),1);
+        //将移除后的商品数值重新写入隐藏域
+        tabDataObj.val(JSON.stringify(productUuidArr));
+        //移除本商品
+        $(e.target).parents(".j_select-item").remove();
+        $("#j_selected-count").html(productUuidArr.length);
+
+    });
+</script>
+
+<script type="text/javascript">
+    var pageJson = ${webPageModelJsonStr};
+    var componentsParam = {
+        initParamData : function(config) {
+            if (typeof (config) == "string") {
+                config = JSON.parse(pageJson);
+            }
+
+            if (config.needAsyncInit) {
+                $("#needAsyncInit").find(".j_yes").attr("checked",true);
+            }else{
+                $("#needAsyncInit").find(".j_no").attr("checked",true);
+            }
+            if (config.slideAuto) {
+                $("#slider-auto").find(".j_yes").attr("checked",true);
+            }else{
+                $("#slider-auto").find(".j_no").attr("checked",true);
+            }
+
+            $("#slider-speed").val(config.slideSpeed);
+
+            $("#slider-interTime").val(config.interTime);
+
+            var selectedUuidsStr = config.productUuids;
+            if(selectedUuidsStr){
+                var selectedUuidArr = selectedUuidsStr.split(",");
+                $("#productUuids").val(JSON.stringify(selectedUuidArr));
+                $("#j_selected-count").html(selectedUuidArr.length);
+            }else{
+                $("#productUuids").val(JSON.stringify([]));
+            }
+
+            $("#loginTopic").val(config.loginTopic);
+
+            $("#productdetail-url").val(config.productDetailUrl);
+
+            if(config.collectUrl && config.collectUrl != ""){
+                $("#collectUrl").val(config.collectUrl);
+            }
+
+            searchProduct(0, 8, true);
+        },
+        saveParamData : function() {
+            var needAsyncInit = $("#needAsyncInit input[name='needAsyncInit']:checked").val();
+            needAsyncInit = needAsyncInit=="true"?true:false;
+            var slideAuto =  $("#slider-auto input[name='slider-auto']:checked").val();
+            slideAuto = slideAuto == "true"?true:false;
+            var productUuidsStr = $("#productUuids").val();
+            var productUuids = JSON.parse(productUuidsStr);
+            var speed = $("#slider-speed").val();
+            if(speed!=""){
+                speed = parseInt(speed);
+            }
+            var interTime  = $("#slider-interTime").val();
+            if(interTime != ""){
+                interTime = parseInt(interTime);
+            }
+            var config = {
+                "needAsyncInit" : needAsyncInit,
+                "productUuids" : productUuids.join(","),
+                "slideSpeed":speed,
+                "slideCount":4,
+                "slideAuto":slideAuto,
+                "interTime":interTime,
+                "productDetailUrl":$("#productdetail-url").val(),
+                "loginTopic":$("#loginTopic").val(),
+                "collectUrl":$("#collectUrl").val()
+            };
+            var err = this.validateData(config);
+            if(!err.success){
+                return err;
+            }
+            return config;
+        },
+        validateData:function(config){
+            var err={
+                success:true,
+                msg:""
+            }
+            var msg=[];
+            msg = decoration.base.validateSpecial(msg,config.loginTopic,"登陆时发布主题包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,config.productDetailUrl,"商品详情URL包含特殊字符，请重新输入！<br>");
+            msg = decoration.base.validateSpecial(msg,config.collectUrl,"收藏夹路径包含特殊字符，请重新输入！<br>");
+            if(msg.length>0){
+                err.success = false;
+                err.msg = msg.join("");
+            }
+            return err;
+        }
+    }
+    componentsParam.initParamData(pageJson);
+
+</script>
+
+</body>
+</html>

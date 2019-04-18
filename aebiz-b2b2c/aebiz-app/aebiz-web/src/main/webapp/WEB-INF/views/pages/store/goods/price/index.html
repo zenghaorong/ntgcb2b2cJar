@@ -1,0 +1,268 @@
+<!--#
+layout("/layouts/store.html"){
+#-->
+<style>
+    .goods-search-class {
+        width: 30%;min-width: 160px;
+    }
+    #classId{
+        cursor: pointer;
+    }
+</style>
+<section class="content-wrap bg-white">
+    <header class="header navbar bg-white shadow">
+        <div class="btn-group tool-button">
+            <div class="btn-group tool-button" style="padding-top: 8px;">
+                <form class="form-inline" id="search_form">
+                    <div class="form-group">
+                        <label class="control-label"></label>
+                        <input type="hidden" name="classId" value="">
+                        <input id="classId" type="text" class="form-control" placeholder="${msg['goods.main.tip.selectplease']}${msg['goods.main.column.classId']}" readonly value="" data-toggle="modal" data-target="#dialogSelectClass"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"></label>
+                        <input type="text" class="form-control" name="name" placeholder="${msg['goods.main.column.name']}/${msg['goods.product.column.sku']}">
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary js-search-ok" >${msg['goods.main.search.btn.searchBtn']}</button>
+                        <button type="button" class="btn btn-default js-search-reset" >${msg['goods.main.search.btn.resetBtn']}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </header>
+    <div class=panel-body style="padding-top: 50px;">
+        <div class="table-responsive no-border"  style="min-height: 500px;">
+            <table class="table table-bordered table-striped mg-t datatable" id="price_datetable">
+                <thead>
+                <tr>
+                    <th>${msg['goods.main.column.name']}</th>
+                    <th>${msg['goods.product.column.sku']}</th>
+                    <th>${msg['goods.product.column.name']}</th>
+                    <th>${msg['goods.product.column.costPrice']}</th>
+                    <th>${msg['goods.product.column.salePrice']}</th>
+                    <th>${msg['goods.product.column.marketPrice']}</th>
+                    <th>${msg['goods.product.column.stock']}</th>
+                    <th>${msg['goods.product.column.saleToMemberType']}</th>
+                    <th>${msg['goods.product.column.deliveryTime']}</th>
+                    <th>${msg['globals.table.column.operation']}</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="dialogSelectClass" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <div class="modal-title input-group goods-search-class">
+                    <input type="text" class="form-control input-sm js-search-class-input" placeholder="${msg['goods.main.column.classId']}" />
+                    <span class="input-group-btn "><button class="btn btn-default input-sm js-search-class" type="button"><span class="ti-search"></span></button></span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="jsTreeClass" class="demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${msg["globals.button.cancel"]}</button>
+                <button type="button" class="btn btn-primary" onclick="selectClass()">${msg["goods.class.column.enter"]}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+    var datatable;
+    function initDatatable() {
+        datatable = $('#price_datetable').DataTable({
+            "dom": '<"toolbar">frtip',
+            "searching":false,
+            "processing": false,
+            "serverSide": true,
+            "select": true,
+            "ordering": true,
+            "language": {
+                "url": "${base}/assets/platform/vendor/datatables/locale/${lang}.json"
+            },
+            "preDrawCallback": function () {
+                sublime.showLoadingbar($(".main-content"));
+            },
+            "drawCallback": function () {
+                sublime.closeLoadingbar($(".main-content"));
+            },
+            "ajax": {
+                "url": "${base}/store/goods/price/products/data",
+                "type": "post",
+                "data": function (d) {
+                    var $searchForm = $("#search_form");
+                    d.classId = $("input[name=classId]:hidden", $searchForm).val();
+                    d.name = $("input[name='name']", $searchForm).val();
+                }
+            },
+            "order": [[0, "desc"]],
+            "columns": [
+                {"data": "goods.name", "bSortable": true},
+                {"data": "product.sku", "bSortable": true},
+                {"data": "name", "bSortable": true},
+                {"data": "costPrice", "bSortable": true},
+                {"data": "salePrice", "bSortable": true},
+                {"data": "marketPrice", "bSortable": true},
+                {"data": "stock", "bSortable": true},
+                {"data": "saleToMemberType", "bSortable": true},
+                {"data": "deliveryTime", "bSortable": true}
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        return row.goodsMain.name;
+                    },
+                    "targets": 0
+                },
+                {
+                    "render": function (data, type, row) {
+                        return row.sku;
+                    },
+                    "targets": 1
+                },
+                {
+                    "render": function (data, type, row) {
+                        return fenToYuan(row.costPrice);
+                    },
+                    "targets": 3
+                },
+                {
+                    "render": function (data, type, row) {
+                        return fenToYuan(row.salePrice);
+                    },
+                    "targets": 4
+                },
+                {
+                    "render": function (data, type, row) {
+                        return fenToYuan(row.marketPrice);
+                    },
+                    "targets": 5
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (row.saleToMemberType == "0") return '${msg["goods.product.saleToMemberType.select.option0"]}';
+                        <!--#for(o in memberTypeList){#-->
+                        if(row.saleToMemberType == "${o.id!}" ) return '${o.name!}';
+                        <!--#}#-->
+                    },
+                    "targets": 7
+                },
+                {
+                    "render": function (data, type, row) {
+                        if (row.deliveryTime == "0") return '${msg["goods.product.deliveryTime.select.option0"]}';
+                        if (row.deliveryTime == "1") return '${msg["goods.product.deliveryTime.select.option1"]}';
+                        return '';
+                    },
+                    "targets": 8
+                },
+                {
+                    "render": function (data, type, row) {
+                        return '<a style="color: #0a5eea" href="${base}/store/goods/price/setting/' + row.id + '" data-pjax>设置价格</a>';
+                    },
+                    "targets": 9
+                }
+            ]
+        });
+        $("#searchBtn").on('click', function () {
+            datatable.ajax.reload();
+        });
+    }
+
+    function fenToYuan(fen) {
+        var yuan = Math.round(fen);
+        if (!yuan) {
+            return "";
+        }
+        yuan = yuan.toString()
+        var before = yuan.substr(0, yuan.length - 2);
+        var end = yuan.substr(yuan.length - 2, 2);
+        yuan = before + "." + end;
+        var re = /(-?\d+)(\d{3})/;
+        while (re.test(yuan)) {
+            yuan = yuan.replace(re, "$1,$2")
+        }
+        return yuan;
+    }
+
+    function initTreeView() {
+        $("#jsTreeClass").jstree({
+            plugins: ["wholerow", "json_data", "search"],
+            core: {
+                data: function (node, callback) {
+                    $.get("${base}/store/goods/list/class/tree", function (ret) {
+                        var classes = [];
+                        if (ret) {
+                            for (var i = 0; i < ret.length; i++) {
+                                classes.push({
+                                    id: ret[i].id,
+                                    text: ret[i].name,
+                                    parent: ret[i].parentId == "" ? "#" : ret[i].parentId,
+                                    hasChildren: ret[i].hasChildren
+                                });
+                            }
+                        }
+                        callback(classes);
+                    }, "json");
+                },
+                multiple: false
+            }
+        }).on("dblclick.jstree", function (event) {
+            selectClass();
+        });
+
+        var to = false;
+        $('.js-search-class-input').keyup(function () {
+            if(to) {
+                clearTimeout(to);
+            }
+            to = setTimeout(function () {
+                var text = $.trim($('.js-search-class-input').val());
+                if (text != "") {
+                    $('#jsTreeClass').jstree(true).search(text);
+                }
+            }, 250);
+        });
+        $(".js-search-class").click(function () {
+            var text = $.trim($(".js-search-class-input").val());
+            if (text != "") {
+                $('#jsTreeClass').jstree(true).search(text);
+            }
+        });
+    }
+
+    //选择商品分类
+    function selectClass() {
+        var tree = $.jstree.reference("#jsTreeClass");
+        var nodes = tree.get_selected(true);
+        if (nodes.length == 0) return false;
+        var id = nodes[0].id;
+        $("#classId").val(nodes[0].text);
+        $("#search_form input[name='classId']").val(id);
+        $("#dialogSelectClass").modal("hide");
+    }
+
+    $(function () {
+        initTreeView();
+        initDatatable();
+
+        // 查询
+        $(".js-search-ok").click(function () {
+            datatable.ajax.reload();
+        });
+        // 重置查询条件
+        $(".js-search-reset").click(function () {
+            $("#classId,input[name=classId]").val("");
+            $("#search_form").resetForm();
+        });
+    });
+</script>
+<!--#}#-->

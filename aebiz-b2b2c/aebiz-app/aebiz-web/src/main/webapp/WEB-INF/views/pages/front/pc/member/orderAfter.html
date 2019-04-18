@@ -1,0 +1,67 @@
+<!--#
+include("/pages/front/pc/member/inc/header.html"){}
+#-->
+<div class="m-bd">
+    <div class="g-center f-push-30-t">
+        <!--#
+            include("/pages/front/pc/member/inc/left.html"){}
+        #-->
+        <div class="ps-main f-fl">
+            <div class="hd f-cb">
+                <ul class="tab-bar f-cb">
+                    <li class="active" data-label><a href="#">售后管理</a></li>
+                </ul>
+
+            </div>
+            <div class="select-type">
+                售后类型：
+                <select id="applyType" name="applyType">
+                    <option value="">全部</option>
+                    <option value="0">仅退款</option>
+                    <option value="1">退货退款</option>
+                </select>
+                <button type="button" onclick="query()" style="width: 50px;line-height: 26px;">查 询</button>
+                <div class="qwang-search">
+                    <div class="search-input">
+                        <input type="text" name="id" id="" value="" placeholder="输入售后单号搜索" /><button type="button" onclick="search()">搜索</button>
+                    </div>
+                </div>
+            </div>
+            <div id="content" class="bd">
+
+            </div>
+
+            <div class="f-tar">
+                <div class="u-page-l f-cb">
+                    <a class="perv">上一页</a>
+                    <ul class="f-cb">
+                        <li class="active" data-label><a>1</a></li>
+                    </ul>
+                    <a class="next disable">下一页</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!--#
+	include("/pages/front/pc/member/inc/foot.html"){}
+#-->
+</div>
+<div id="ly-delete" class="m-layer-pop">
+    <div class="info">确认删除售后申请单?</div>
+</div>
+<!--#
+			include("/pages/front/pc/member/inc/tail.html"){}
+		#-->
+<!-- end -->
+
+<script src="${base!}/assets/front/pc/member/vendor/page/page.js"></script>
+<script src="${base!}/assets/front/pc/member/scripts/orderAfter.js"></script>
+<script language="JavaScript">
+    $(document).ready(function () {
+        //设置左侧选择框被选中是变红
+        $("#member_left li a[href|='/member/orderAfter']").parent("li").addClass("active").siblings("li").removeClass("active");
+
+
+    });
+</script>

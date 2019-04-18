@@ -1,0 +1,145 @@
+<!--#
+layout("/layouts/platform.html"){
+#-->
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.config.js"></script>
+<script src="${base!}/assets/platform/vendor/ueditor/ueditor.all.js"></script>
+<header class="header navbar bg-white shadow">
+    <div class="btn-group tool-button">
+        <a class="btn btn-primary navbar-btn" href="${base}/platform/dec/templates/style/${versionType}" id="goBack" data-pjax><i class="ti-angle-left"></i>${msg['globals.button.back']}</a>
+    </div>
+</header>
+
+<div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+        <section class="panel panel-form">
+            <form id="editForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+                  action="${base}/platform/dec/templates/style/editDo" method="post">
+                <input name="id" type="hidden" value="${obj.id}">
+                <div class="row mb10 mt10">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="templateUuid" class="col-sm-2 control-label">${msg['dec.templates.style.column.templateUuid']}</label>
+                            <div class="col-sm-8">
+                                <select id="templateUuid" class="form-control" name="templateUuid">
+                                    <!--# for(o in list){
+        #-->
+                                    <option value="${o.id}" <!--#if(o.id==obj.templateUuid){#-->selected<!--#}#-->>${o.templateZhName}</option>
+                                    <!--#
+                    }#-->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="styleName" class="col-sm-2 control-label">${msg['dec.templates.style.column.styleName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="styleName" class="form-control" name="styleName" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.style.column.styleName']}" value="${obj.styleName}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="styleFileName" class="col-sm-2 control-label">${msg['dec.templates.style.column.styleFileName']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="styleFileName" class="form-control" name="styleFileName" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.style.column.styleFileName']}" value="${obj.styleFileName}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="styleImage" class="col-sm-2 control-label">${msg['dec.templates.style.column.styleImage']}</label>
+                            <div class="col-sm-8">
+                                <div id="queue"></div>
+                                <div>
+                                    <input id="file_upload" name="file_upload" type="file" multiple="false">
+                                </div>
+                                <div id="img" style="padding: 5px;">
+                                    <!--#if(!isEmpty(obj.styleImage)){#-->
+                                    <img src='${obj.styleImage!}' style='width:150px;'>
+                                    <i class="fa fa-close" onclick="$('#imgurl').val('');$('#img').html('');"></i>
+                                    <!--#}#-->
+                                </div>
+                                <input type="hidden" id="styleImage" name="styleImage" value="${obj.styleImage!}" >
+                            </div>
+                        </div>
+                        <div class="form-group" hidden="hidden">
+                            <label for="disabled" class="col-sm-2 control-label">${msg['dec.templates.style.column.disabled']}</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="disabled" class="form-control" name="disabled" data-parsley-required="true"
+                                       placeholder="${msg['dec.templates.style.column.disabled']}" value="${obj.disabled}" >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-group text-center">
+                        <label></label>
+
+                        <div>
+                            <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="${msg['globals.button.submit.tip']}">${msg['globals.button.submit']}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </div>
+</div>
+<script language="JavaScript">
+    function clearFile() {
+        $("#img").html("");
+        $("#queue").html("");
+        $("#imgurl").val("");
+    }
+    $(document).ready(function () {
+        $('#file_upload').uploadifive({
+            'auto': true,
+            'multi': false,
+            'width': '100%',
+            'height': '35',
+            'buttonText': '${msg['cms.article.column.selectpicture']}',
+            'fileType': 'image/jpg,image/jpeg,image/png',
+            'fileSizeLimit': 1024,
+            'queueSizeLimit': 1,
+            'formData': {},
+        'queueID': 'queue',
+            'uploadScript': '${base}/open/file/upload/image',
+            'onUploadComplete': function (file, data) {
+            data = JSON.parse(data);
+            if (data.code == 0) {
+                Toast.success(data.msg);
+                $("#img").html("<img src='" + data.data + "' style='width:150px;height:95px;'>");
+                $("#styleImage").val(data.data);
+            } else {
+                clearFile();
+                Toast.error(data.msg);
+            }
+        },
+        'onDrop': function (file, fileDropCount) {
+            clearFile();
+        },
+        'onClearQueue': function (queue) {
+            clearFile();
+        },
+        'onCancel': function () {
+            clearFile();
+        }
+    });
+        $('#editForm').ajaxForm({
+            dataType: 'json',
+            beforeSubmit: function (arr, form, options) {
+                form.find("button:submit").button("loading");
+            },
+            success: function (data, statusText, xhr, form) {
+                if (data.code == 0) {
+                    Toast.success(data.msg);
+                    setTimeout(function () {
+                        $("#goBack").trigger("click");
+                    }, 1000);
+                } else {
+                    Toast.error(data.msg);
+                }
+                form.find("button:submit").button("reset");
+            }
+        });
+    });
+</script>
+<!--#}#-->

@@ -1,0 +1,10 @@
+/*����banner*/
+.y_dqslides{width:100%;height:463px;margin:0 auto;text-align:center;overflow:hidden}
+.y_dqslides .flex-control-nav li a{background:#fff;}
+.y_dqslides .flex-control-nav li a:hover{background:#eb5e58}
+.y_dqslides .flex-control-nav li a.flex-active{background:#eb5e58;transform:scale(1.2)}
+.y_dqslides .flex-direction-nav a{width:45px;height:70px;visibility:hidden;opacity:0;position:absolute;left:20px;top:50%;margin-top:-35px;border:none;box-shadow:none;}
+.y_dqslides .flex-direction-nav a:hover{background-color:rgba(0,0,0,0.5)}
+.y_dqslides .flex-direction-nav .flex-prev{background:url(../img/prev.png) no-repeat;transform:translateX(-20px)}
+.y_dqslides .flex-direction-nav .flex-next{left:auto;right:20px;background:url(../img/next.png) no-repeat;transform:translateX(20px)}
+.y_dqslides:hover .flex-direction-nav li a{visibility:visible;opacity:1;transform:translateX(0)}

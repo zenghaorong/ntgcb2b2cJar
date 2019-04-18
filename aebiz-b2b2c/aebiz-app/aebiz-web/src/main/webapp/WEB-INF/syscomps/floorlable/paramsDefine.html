@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+<form class="form-horizontal">
+	<div class="form-group">
+		<label for="loginname" class="col-sm-3 control-label">是否异步加载</label>
+		<div class="col-sm-3">
+			是 <input type="radio" name="needAsyncInit" value="false" placeholder="" checked="checked">
+			否 <input type="radio" name="needAsyncInit" value="false" placeholder="">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="loginname" class="col-sm-3 control-label">标签名称</label>
+		<div class="col-sm-3">
+			<input type="text" name="lableName" id="lableName" class="form-control"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="loginname" class="col-sm-3 control-label">对应楼层的名称</label>
+		<div class="col-sm-3">
+			<input type="text" name="floorName" id="floorName" class="form-control"/>
+		</div>
+		<div class="col-sm-2 control-label">
+			<span  style="display: inline-block;color: red;float: left;">最多四个字符</span>
+		</div>
+	</div>
+</form>
+</body>
+<script type="text/javascript">
+    var pageJson = ${webPageModelJsonStr};
+    var componentsParam = {
+        initParamData: function (pageJson) {
+            if (typeof (pageJson) == "string") {
+                pageJson = JSON.parse(pageJson);
+            }
+            if (pageJson.needAsyncInit) {
+                $("input[name='needAsyncInit'][value=" + pageJson.needAsyncInit + "]")
+                    .attr("checked", true);
+                if (pageJson.lableName) {
+                    $("#lableName").val(pageJson.lableName);
+                }
+                if (pageJson.floorName) {
+                    $("#floorName").val(pageJson.floorName);
+                }
+            }
+        },
+        saveParamData:function () {
+            var needAsyncInit = $("input[name='needAsyncInit']:checked").val();
+            var lableName = $("#lableName").val();
+            var floorName = $("#floorName").val();
+            var pageJson = {
+                compId: 'floorlable',
+                "needAsyncInit": needAsyncInit,
+                "lableName": lableName,
+                "floorName": floorName
+
+            };
+            var err = {
+                success: true,
+                msg: ''
+            };
+            if (floorName.length > 4) {
+                err.msg = "对应楼层的名称超过四个字符！";
+                err.success = false;
+                return err;
+            }
+            return pageJson;
+        }
+        ,
+        showParamData:function () {
+            var paramData = [];
+            var labelName = {
+                type: 'text',
+                target: 'lablename',
+                value: $("#lableName").val()
+            }
+
+            paramData.push(labelName);
+
+            return paramData;
+        }
+    }
+    componentsParam.initParamData(pageJson);
+</script>
+</html>
